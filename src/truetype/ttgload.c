@@ -2262,14 +2262,20 @@
     /* unless FT_LOAD_COMPUTE_METRICS is set or backward compatibility */
     /* mode of the v40 interpreter is active.  See `ttinterp.h' for    */
     /* details on backward compatibility mode.                         */
-    if (
+    if ( IS_HINTED( loader->load_flags )                                &&
+         !( loader->load_flags & FT_LOAD_COMPUTE_METRICS )              &&
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
          !( driver->interpreter_version == TT_INTERPRETER_VERSION_40  &&
             ( loader->exec && loader->exec->backward_compatibility  ) ) &&
 #endif
-         !face->postscript.isFixedPitch                                 &&
-         IS_HINTED( loader->load_flags )                                &&
-         !( loader->load_flags & FT_LOAD_COMPUTE_METRICS )              )
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+         !( driver->interpreter_version == TT_INTERPRETER_VERSION_38  &&
+            !SPH_OPTION_BITMAP_WIDTHS                                 &&
+            FT_LOAD_TARGET_MODE( loader->load_flags ) !=
+                                                 FT_RENDER_MODE_MONO  &&
+            ( loader->exec && !loader->exec->compatible_widths )      ) &&
+#endif
+         !face->postscript.isFixedPitch                                 )
     {
       FT_Byte*  widthp;
 
@@ -2278,30 +2284,8 @@
                                            size->metrics->x_ppem,
                                            glyph_index );
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-      {
-        FT_Bool  ignore_x_mode;
-
-
-        ignore_x_mode = FT_BOOL( FT_LOAD_TARGET_MODE( loader->load_flags ) !=
-                                 FT_RENDER_MODE_MONO );
-
-        if ( widthp                                                   &&
-             ( ( ignore_x_mode && loader->exec->compatible_widths ) ||
-                !ignore_x_mode                                      ||
-                SPH_OPTION_BITMAP_WIDTHS                            ) )
-          glyph->metrics.horiAdvance = *widthp * 64;
-      }
-      else
-
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
-      {
-        if ( widthp )
-          glyph->metrics.horiAdvance = *widthp * 64;
-      }
+      if ( widthp )
+        glyph->metrics.horiAdvance = *widthp * 64;
     }
 
     /* set glyph dimensions */
