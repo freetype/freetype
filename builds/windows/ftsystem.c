@@ -233,6 +233,10 @@
                         dwFlagsAndAttributes, hTemplateFile );
   }
 
+#endif
+
+#if defined( _WIN32_WCE ) || defined ( _WIN32_WINDOWS ) || \
+    !defined( _WIN32_WINNT ) || _WIN32_WINNT <= 0x0400
 
   FT_LOCAL_DEF( BOOL )
   GetFileSizeEx( HANDLE         hFile,
@@ -248,7 +252,7 @@
       return TRUE;
   }
 
-#endif /* _WIN32_WCE */
+#endif
 
 
   /* documentation is in ftobjs.h */
