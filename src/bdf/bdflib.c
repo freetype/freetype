@@ -613,7 +613,7 @@
           if ( FT_QREALLOC( buf, buf_size, new_size ) )
             goto Exit;
 
-          cursor   = (ptrdiff_t)buf_size;
+          cursor   = avail;
           buf_size = new_size;
         }
         else
@@ -623,7 +623,6 @@
           FT_MEM_MOVE( buf, buf + start, bytes );
 
           cursor = bytes;
-          avail -= bytes;
           start  = 0;
         }
         refill = 1;
