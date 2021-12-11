@@ -2945,6 +2945,15 @@
     if ( error )
       goto Exit;
 
+    /* done if we are only interested in the `hdmx` advance */
+    if ( load_flags & FT_LOAD_ADVANCE_ONLY         &&
+         !( load_flags & FT_LOAD_VERTICAL_LAYOUT ) &&
+         loader.widthp                             )
+    {
+      glyph->metrics.horiAdvance = loader.widthp[glyph_index] * 64;
+      goto Done;
+    }
+
     glyph->format        = FT_GLYPH_FORMAT_OUTLINE;
     glyph->num_subglyphs = 0;
     glyph->outline.flags = 0;
@@ -3023,6 +3032,7 @@
                 glyph->outline.n_points,
                 glyph->outline.flags ));
 
+  Done:
     tt_loader_done( &loader );
 
   Exit:
