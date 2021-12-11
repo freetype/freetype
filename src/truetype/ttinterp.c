@@ -5260,10 +5260,15 @@
       }
     }
 
-    exc->GS.instruct_control &= ~(FT_Byte)Kf;
-    exc->GS.instruct_control |= (FT_Byte)L;
+    /* INSTCTRL should only be used in the CVT program */
+    if ( exc->iniRange == tt_coderange_cvt )
+    {
+      exc->GS.instruct_control &= ~(FT_Byte)Kf;
+      exc->GS.instruct_control |= (FT_Byte)L;
+    }
 
-    if ( K == 3 )
+    /* except to change the subpixel flags temporarily */
+    else if ( exc->iniRange == tt_coderange_glyph && K == 3 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
       /* INSTCTRL modifying flag 3 also has an effect */
