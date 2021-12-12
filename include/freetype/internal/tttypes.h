@@ -1390,8 +1390,8 @@ FT_BEGIN_HEADER
    *   hdmx_record_size ::
    *     The size of a single hdmx record.
    *
-   *   hdmx_record_sizes ::
-   *     An array holding the ppem sizes available in the 'hdmx' table.
+   *   hdmx_records ::
+   *     A array of pointers to the 'hdmx' table records sorted by ppem.
    *
    *   sbit_table ::
    *     A pointer to the font's embedded bitmap location table.
@@ -1605,7 +1605,7 @@ FT_BEGIN_HEADER
     FT_ULong              hdmx_table_size;
     FT_UInt               hdmx_record_count;
     FT_ULong              hdmx_record_size;
-    FT_Byte*              hdmx_record_sizes;
+    FT_Byte**             hdmx_records;
 
     FT_Byte*              sbit_table;
     FT_ULong              sbit_table_size;
