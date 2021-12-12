@@ -2689,8 +2689,6 @@
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 &&
            exec->GS.instruct_control & 4                            )
         exec->ignore_x_mode = FALSE;
-
-      exec->iup_called = FALSE;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -2713,9 +2711,6 @@
         exec->backward_compatibility = !( exec->GS.instruct_control & 4 );
       else
         exec->backward_compatibility = FALSE;
-
-      exec->iupx_called = FALSE;
-      exec->iupy_called = FALSE;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */
 
       exec->pedantic_hinting = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );

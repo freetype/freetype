@@ -516,6 +516,14 @@
     exec->GS.round_state = 1;
     exec->GS.loop        = 1;
 
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+    exec->iup_called  = FALSE;
+#endif
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    exec->iupx_called = FALSE;
+    exec->iupy_called = FALSE;
+#endif
+
     /* some glyphs leave something on the stack. so we clean it */
     /* before a new execution.                                  */
     exec->top     = 0;
