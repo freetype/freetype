@@ -5260,16 +5260,21 @@
       }
     }
 
-    exc->GS.instruct_control &= ~(FT_Byte)Kf;
-    exc->GS.instruct_control |= (FT_Byte)L;
+    /* INSTCTRL should only be used in the CVT program */
+    if ( exc->iniRange == tt_coderange_cvt )
+    {
+      exc->GS.instruct_control &= ~(FT_Byte)Kf;
+      exc->GS.instruct_control |= (FT_Byte)L;
+    }
 
-    if ( K == 3 )
+    /* except to change the subpixel flags temporarily */
+    else if ( exc->iniRange == tt_coderange_glyph && K == 3 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
       /* INSTCTRL modifying flag 3 also has an effect */
       /* outside of the CVT program                   */
       if ( SUBPIXEL_HINTING_INFINALITY )
-        exc->ignore_x_mode = FT_BOOL( L == 4 );
+        exc->ignore_x_mode = !FT_BOOL( L == 4 );
 #endif
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -5280,6 +5285,8 @@
         exc->backward_compatibility = !FT_BOOL( L == 4 );
 #endif
     }
+    else if ( exc->pedantic_hinting )
+      exc->error = FT_THROW( Invalid_Reference );
   }
 
 
