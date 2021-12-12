@@ -1769,6 +1769,9 @@ FT_BEGIN_HEADER
     /* since version 2.6.2 */
     FT_ListRec       composites;
 
+    /* since version 2.11.2 */
+    FT_Byte*         widthp;
+
   } TT_LoaderRec;
 
 
