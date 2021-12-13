@@ -2736,9 +2736,7 @@
 #endif
            !face->postscript.isFixedPitch                                 )
       {
-        loader->widthp = tt_face_get_device_metrics( face,
-                                                     size->metrics->x_ppem,
-                                                     0 );
+        loader->widthp = size->widthp;
       }
       else
         loader->widthp = NULL;
