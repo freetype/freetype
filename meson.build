@@ -36,8 +36,7 @@ project('freetype2', 'c',
 # variable; we thus use an external command to have this functionality
 # with older versions, too.
 
-python = import('python')
-python_exe = python.find_installation(required: true)
+python_exe = find_program('python3')
 
 ft2_so_version = run_command(python_exe,
   files('builds/meson/extract_libtool_version.py'),
