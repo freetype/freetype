@@ -5729,7 +5729,7 @@
     SFNT_Service  sfnt;
 
 
-    if ( !face || !paint || !paint )
+    if ( !face || !paint )
       return 0;
 
     if ( !FT_IS_SFNT( face ) )

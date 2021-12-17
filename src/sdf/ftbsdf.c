@@ -756,8 +756,6 @@
             byte  = (FT_Byte)( 1 << mod );
 
             t[t_index].alpha = pixel & byte ? 255 : 0;
-
-            pixel = 0;
           }
         }
       }

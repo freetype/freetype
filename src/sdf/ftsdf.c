@@ -1277,8 +1277,10 @@
 
         default:
           error = FT_THROW( Invalid_Argument );
-          goto Exit;
         }
+
+        if ( error != FT_Err_Ok )
+          goto Exit;
 
         edges = edges->next;
       }

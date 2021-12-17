@@ -1174,7 +1174,6 @@
                             font->props_size + 1 ) )
         goto Exit;
 
-      fp = font->props + font->props_size;
       font->props_size++;
     }
 
