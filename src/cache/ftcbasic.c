@@ -26,6 +26,7 @@
 #include "ftccback.h"
 #include "ftcerror.h"
 
+#undef  FT_COMPONENT
 #define FT_COMPONENT  cache
 
 
