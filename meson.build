@@ -172,6 +172,7 @@ ft2_public_headers = files([
   'include/freetype/fttrigon.h',
   'include/freetype/fttypes.h',
   'include/freetype/ftwinfnt.h',
+  'include/freetype/otsvg.h',
   'include/freetype/t1tables.h',
   'include/freetype/ttnameid.h',
   'include/freetype/tttables.h',

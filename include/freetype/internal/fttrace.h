@@ -49,6 +49,9 @@ FT_TRACE_DEF( synth )     /* bold/slant synthesizer  (ftsynth.c)  */
 FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
 FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
 
+  /* ot-svg module */
+FT_TRACE_DEF( otsvg )     /* OT-SVG renderer         (ftsvg.c)    */
+
   /* cache sub-system */
 FT_TRACE_DEF( cache )     /* cache sub-system   (ftcache.c, etc.) */
 

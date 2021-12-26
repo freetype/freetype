@@ -87,6 +87,7 @@ def generate_ftmodule(lists):
         name = {
             "raster": "ft_raster1",
             "smooth": "ft_smooth",
+            "svg": "ft_svg",
         }.get(module)
         result += (
             "FT_USE_MODULE( FT_Renderer_Class, %s_renderer_class )\n" % name

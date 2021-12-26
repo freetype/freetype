@@ -30,6 +30,217 @@
 
 FT_BEGIN_HEADER
 
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Init_Func
+   *
+   * @description:
+   *   A callback that is called when the first OT-SVG glyph is rendered in
+   *   the lifetime of an @FT_Library object.  In a typical implementation,
+   *   one would want to allocate a structure and point the `data_pointer`
+   *   to it and perform any library initializations that might be needed.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on Librsvg in the 'FreeType Demo Programs' repository.
+   *
+   * @inout:
+   *   data_pointer ::
+   *     The SVG rendering module stores a pointer variable that can be used
+   *     by clients to store any data that needs to be shared across
+   *     different hooks.  `data_pointer` is essentially a pointer to that
+   *     pointer such that it can be written to as well as read from.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @since:
+   *   2.12
+   */
+  typedef FT_Error
+  (*SVG_Lib_Init_Func)( FT_Pointer  *data_pointer );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Free_Func
+   *
+   * @description:
+   *   A callback that is called when the `ot-svg` module is being freed.
+   *   It is only called if the init hook was called earlier.  This means
+   *   that neither the init nor the free hook is called if no OT-SVG glyph
+   *   is rendered.
+   *
+   *   In a typical implementation, one would want to free any state
+   *   structure that was allocated in the init hook and perform any
+   *   library-related closure that might be needed.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on Librsvg in the 'FreeType Demo Programs' repository.
+   *
+   * @inout:
+   *   data_pointer ::
+   *     The SVG rendering module stores a pointer variable that can be used
+   *     by clients to store any data that needs to be shared across
+   *     different hooks.  `data_pointer` is essentially a pointer to that
+   *     pointer such that it can be written to as well as read from.
+   *
+   * @since:
+   *   2.12
+   */
+  typedef void
+  (*SVG_Lib_Free_Func)( FT_Pointer  *data_pointer );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Render_Func
+   *
+   * @description:
+   *   A callback that is called to render an OT-SVG glyph.  This callback
+   *   hook is called right after the preset hook @SVG_Lib_Preset_SlotFunc
+   *   has been called with `cache` set to `TRUE`.  The data necessary to
+   *   render is available through the handle @FT_SVG_Document, which is set
+   *   in the `other` field of @FT_GlyphSlotRec.
+   *
+   *   The render hook is expected to render the SVG glyph to the bitmap
+   *   buffer that is allocated already at `slot->bitmap.buffer`.  It also
+   *   sets the `num_grays` value as well as `slot->format`.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on Librsvg in the 'FreeType Demo Programs' repository.
+   *
+   * @input:
+   *   slot ::
+   *     The slot to render.
+   *
+   * @inout:
+   *   data_pointer ::
+   *     The SVG rendering module stores a pointer variable that can be used
+   *     by clients to store any data that needs to be shared across
+   *     different hooks.  `data_pointer` is essentially a pointer to that
+   *     pointer such that it can be written to as well as read from.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @since:
+   *   2.12
+   */
+  typedef FT_Error
+  (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot,
+                          FT_Pointer   *data_pointer );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Preset_Slot_Func
+   *
+   * @description:
+   *   A callback that is called to preset the glyph slot.  It is called from
+   *   two places.
+   *
+   *   1. When `FT_Load_Glyph` needs to preset the glyph slot.
+   *   2. Right before the `svg` module calls the render callback hook.
+   *
+   *   When it is the former, the argument `cache` is set to `FALSE`.  When
+   *   it is the latter, the argument `cache` is set to `TRUE`.  This
+   *   distinction has been made because many calculations that are necessary
+   *   for presetting a glyph slot are the same needed later for the render
+   *   callback hook.  Thus, if `cache` is `TRUE`, the hook can _cache_ those
+   *   calculations in a memory block referenced by the state pointer.
+   *
+   *   This hook is expected to preset the slot by setting parameters such as
+   *   `bitmap_left`, `bitmap_top`, `width`, `rows`, `pitch`, and
+   *   `pixel_mode`.  It is also expected to set all the metrics for the slot
+   *   including the vertical advance if it is not already set.  Typically,
+   *   fonts have horizontal advances but not vertical ones.  If those are
+   *   available, they had already been set, otherwise they have to be
+   *   estimated and set manually.  The hook must take into account the
+   *   transformations that have been set, and translate the transformation
+   *   matrices into the SVG coordinate system, as the original matrix is
+   *   intended for the TTF/CFF coordinate system.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on Librsvg in the 'FreeType Demo Programs' repository.
+   *
+   * @input:
+   *   slot ::
+   *     The glyph slot that has the SVG document loaded.
+   *
+   *   cache ::
+   *     See description.
+   *
+   * @inout:
+   *   data_pointer ::
+   *     The SVG rendering module stores a pointer variable that can be used
+   *     by clients to store any data that needs to be shared across
+   *     different hooks.  `data_pointer` is essentially a pointer to that
+   *     pointer such that it can be written to as well as read from.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @since:
+   *   2.12
+   */
+  typedef FT_Error
+  (*SVG_Lib_Preset_Slot_Func)( FT_GlyphSlot  slot,
+                               FT_Bool       cache,
+                               FT_Pointer   *state );
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   SVG_RendererHooks
+   *
+   * @description:
+   *   A structure that stores the four hooks needed to render OT-SVG glyphs
+   *   properly.  The structure is publicly used to set the hooks via driver
+   *   properties.
+   *
+   *   The behavior of each hook is described in its documentation.  One
+   *   thing to note is that the preset hook and the render hook often need
+   *   to do the same operations; therefore, it's better to cache the
+   *   intermediate data in a state structure to avoid calculating it twice.
+   *   For example, in the preset hook one can draw the glyph on a recorder
+   *   surface and later create a bitmap surface from it in the render hook.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on Librsvg in the 'FreeType Demo Programs' repository.
+   *
+   * @fields:
+   *   init_svg ::
+   *     The initialization hook.
+   *
+   *   free_svg ::
+   *     The cleanup hook.
+   *
+   *   render_hook ::
+   *     The render hook.
+   *
+   *   preset_slot ::
+   *     The preset hook.
+   *
+   * @since:
+   *   2.12
+   */
+  typedef struct SVG_RendererHooks_
+  {
+    SVG_Lib_Init_Func    init_svg;
+    SVG_Lib_Free_Func    free_svg;
+    SVG_Lib_Render_Func  render_svg;
+
+    SVG_Lib_Preset_Slot_Func  preset_slot;
+
+  } SVG_RendererHooks;
+
+
   /**************************************************************************
    *
    * @struct:

@@ -299,7 +299,7 @@
     if ( ( doc_list[0] == 0x1F ) && ( doc_list[1] == 0x8B )
                                  && ( doc_list[2] == 0x08 ) )
     {
-#ifdef FT_CONFIG_OPTION_SYSTEM_ZLIB
+#ifdef FT_CONFIG_OPTION_USE_ZLIB
 
       FT_ULong  uncomp_size;
       FT_Byte*  uncomp_buffer;
@@ -339,12 +339,12 @@
       doc_list   = uncomp_buffer;
       doc_length = uncomp_size;
 
-#else /* !FT_CONFIG_OPTION_SYSTEM_ZLIB */
+#else /* !FT_CONFIG_OPTION_USE_ZLIB */
 
       error = FT_THROW( Unimplemented_Feature );
       goto Exit;
 
-#endif /* !FT_CONFIG_OPTION_SYSTEM_ZLIB */
+#endif /* !FT_CONFIG_OPTION_USE_ZLIB */
     }
 
     svg_document->svg_document        = doc_list;

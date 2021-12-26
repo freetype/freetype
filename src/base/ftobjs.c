@@ -28,6 +28,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>          /* for SFNT_Load_Table_Func */
 #include <freetype/internal/psaux.h>         /* for PS_Driver            */
+#include <freetype/internal/svginterface.h>
 
 #include <freetype/tttables.h>
 #include <freetype/tttags.h>
@@ -386,7 +387,18 @@
     FT_Pos   width, height, pitch;
 
 
-    if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
+    if ( slot->format == FT_GLYPH_FORMAT_SVG )
+    {
+      FT_Module    module;
+      SVG_Service  svg_service;
+
+
+      module      = FT_Get_Module( slot->library, "ot-svg" );
+      svg_service = (SVG_Service)module->clazz->module_interface;
+
+      return (FT_Bool)svg_service->preset_slot( module, slot, FALSE );
+    }
+    else if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
       return 1;
 
     if ( origin )
@@ -4539,7 +4551,7 @@
       render->glyph_format = clazz->glyph_format;
 
       /* allocate raster object if needed */
-      if ( clazz->raster_class->raster_new )
+      if ( clazz->raster_class && clazz->raster_class->raster_new )
       {
         error = clazz->raster_class->raster_new( memory, &render->raster );
         if ( error )
@@ -4548,6 +4560,11 @@
         render->raster_render = clazz->raster_class->raster_render;
         render->render        = clazz->render_glyph;
       }
+
+#ifdef FT_CONFIG_OPTION_SVG
+      if ( clazz->glyph_format == FT_GLYPH_FORMAT_SVG )
+        render->render = clazz->render_glyph;
+#endif
 
       /* add to list */
       node->data = module;
