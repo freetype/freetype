@@ -95,6 +95,7 @@ FT_BEGIN_HEADER
 #define TTAG_sbix  FT_MAKE_TAG( 's', 'b', 'i', 'x' )
 #define TTAG_sfnt  FT_MAKE_TAG( 's', 'f', 'n', 't' )
 #define TTAG_SING  FT_MAKE_TAG( 'S', 'I', 'N', 'G' )
+#define TTAG_SVG   FT_MAKE_TAG( 'S', 'V', 'G', ' ' )
 #define TTAG_trak  FT_MAKE_TAG( 't', 'r', 'a', 'k' )
 #define TTAG_true  FT_MAKE_TAG( 't', 'r', 'u', 'e' )
 #define TTAG_ttc   FT_MAKE_TAG( 't', 't', 'c', ' ' )

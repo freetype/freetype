@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A handle to an object used to model an outline glyph image.  This is a
-   *   sub-class of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec.
+   *   'sub-class' of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec.
    */
   typedef struct FT_OutlineGlyphRec_*  FT_OutlineGlyph;
 

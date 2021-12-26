@@ -153,6 +153,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_GLYPH_NAMES
    *   FT_FACE_FLAG_EXTERNAL_STREAM
    *   FT_FACE_FLAG_HINTER
+   *   FT_FACE_FLAG_SVG
    *
    *   FT_HAS_HORIZONTAL
    *   FT_HAS_VERTICAL
@@ -161,6 +162,7 @@ FT_BEGIN_HEADER
    *   FT_HAS_GLYPH_NAMES
    *   FT_HAS_COLOR
    *   FT_HAS_MULTIPLE_MASTERS
+   *   FT_HAS_SVG
    *
    *   FT_IS_SFNT
    *   FT_IS_SCALABLE
@@ -1230,6 +1232,9 @@ FT_BEGIN_HEADER
    *     altered with @FT_Set_MM_Design_Coordinates,
    *     @FT_Set_Var_Design_Coordinates, or @FT_Set_Var_Blend_Coordinates.
    *     This flag is unset by a call to @FT_Set_Named_Instance.
+   *
+   *   FT_FACE_FLAG_SVG ::
+   *     [Since 2.12] The face has an 'SVG~' OpenType table.
    */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
@@ -1247,6 +1252,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
+#define FT_FACE_FLAG_SVG               ( 1L << 16 )
 
 
   /**************************************************************************
@@ -1485,6 +1491,22 @@ FT_BEGIN_HEADER
    */
 #define FT_HAS_COLOR( face ) \
           ( !!( (face)->face_flags & FT_FACE_FLAG_COLOR ) )
+
+
+  /**************************************************************************
+   *
+   * @macro:
+   *   FT_HAS_SVG
+   *
+   * @description:
+   *   A macro that returns true whenever a face object contains an 'SVG~'
+   *   OpenType table.
+   *
+   * @since:
+   *   2.12
+   */
+#define FT_HAS_SVG( face ) \
+          ( !!( (face)->face_flags & FT_FACE_FLAG_SVG ) )
 
 
   /**************************************************************************
@@ -3075,15 +3097,15 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_LOAD_DEFAULT                      0x0
-#define FT_LOAD_NO_SCALE                     ( 1L << 0 )
-#define FT_LOAD_NO_HINTING                   ( 1L << 1 )
-#define FT_LOAD_RENDER                       ( 1L << 2 )
-#define FT_LOAD_NO_BITMAP                    ( 1L << 3 )
-#define FT_LOAD_VERTICAL_LAYOUT              ( 1L << 4 )
-#define FT_LOAD_FORCE_AUTOHINT               ( 1L << 5 )
-#define FT_LOAD_CROP_BITMAP                  ( 1L << 6 )
-#define FT_LOAD_PEDANTIC                     ( 1L << 7 )
-#define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  ( 1L << 9 )
+#define FT_LOAD_NO_SCALE                     ( 1L << 0  )
+#define FT_LOAD_NO_HINTING                   ( 1L << 1  )
+#define FT_LOAD_RENDER                       ( 1L << 2  )
+#define FT_LOAD_NO_BITMAP                    ( 1L << 3  )
+#define FT_LOAD_VERTICAL_LAYOUT              ( 1L << 4  )
+#define FT_LOAD_FORCE_AUTOHINT               ( 1L << 5  )
+#define FT_LOAD_CROP_BITMAP                  ( 1L << 6  )
+#define FT_LOAD_PEDANTIC                     ( 1L << 7  )
+#define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  ( 1L << 9  )
 #define FT_LOAD_NO_RECURSE                   ( 1L << 10 )
 #define FT_LOAD_IGNORE_TRANSFORM             ( 1L << 11 )
 #define FT_LOAD_MONOCHROME                   ( 1L << 12 )
@@ -3097,8 +3119,9 @@ FT_BEGIN_HEADER
   /* */
 
   /* used internally only by certain font drivers */
-#define FT_LOAD_ADVANCE_ONLY                 ( 1L << 8 )
+#define FT_LOAD_ADVANCE_ONLY                 ( 1L << 8  )
 #define FT_LOAD_SBITS_ONLY                   ( 1L << 14 )
+#define FT_LOAD_SVG_ONLY                     ( 1L << 23 )
 
 
   /**************************************************************************

@@ -418,7 +418,8 @@ FT_BEGIN_HEADER
    *     initializing the glyph slot.
    */
 
-#define FT_GLYPH_OWN_BITMAP  0x1U
+#define FT_GLYPH_OWN_BITMAP    0x1U
+#define FT_GLYPH_OWN_GZIP_SVG  0x2U
 
   typedef struct  FT_Slot_InternalRec_
   {

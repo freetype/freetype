@@ -777,6 +777,18 @@
 #define FT_COLOR_H  <freetype/ftcolor.h>
 
 
+  /**************************************************************************
+   *
+   * @macro:
+   *   FT_OTSVG_H
+   *
+   * @description:
+   *   A macro used in `#include` statements to name the file containing the
+   *   FreeType~2 API which handles the OpenType 'SVG~' glyphs.
+   */
+#define FT_OTSVG_H  <freetype/otsvg.h>
+
+
   /* */
 
   /* These header files don't need to be included by the user. */

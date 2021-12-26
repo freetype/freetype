@@ -1644,6 +1644,9 @@ FT_BEGIN_HEADER
     void*                 cpal;
     void*                 colr;
 
+    /* since 2.12 */
+    void*                 svg;
+
   } TT_FaceRec;
 
 
