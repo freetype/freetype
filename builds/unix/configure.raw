@@ -317,6 +317,12 @@ if test x"$with_zlib" = xyes -a "$have_zlib" = no; then
   AC_MSG_ERROR([external zlib support requested but library not found])
 fi
 
+SYSTEM_ZLIB=
+if test "$have_zlib" != no; then
+  SYSTEM_ZLIB=yes
+fi
+AC_SUBST([SYSTEM_ZLIB])
+
 
 # check for system libbz2
 
