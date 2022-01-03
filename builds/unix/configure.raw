@@ -514,19 +514,36 @@ if test x"$with_brotli" = xyes -a "$have_brotli" = no; then
 fi
 
 
-# check for librt
+# Checks for the demo programs.
 #
-# We need `clock_gettime' for the `ftbench' demo program.
-#
-# The code is modeled after gnulib's file `clock_time.m4', ignoring
-# very old Solaris systems.
+# FreeType doesn't need this.  However, since the demo program repository
+# doesn't come with a `configure` script of its own, we integrate the tests
+# here for simplicity.
 
+# We need `clock_gettime` from 'librt' for the `ftbench` demo program.
+#
+# The code is modeled after gnulib's file `clock_time.m4`, ignoring
+# very old Solaris systems.
 LIB_CLOCK_GETTIME=
 AC_SEARCH_LIBS([clock_gettime],
                [rt],
                [test "$ac_cv_search_clock_gettime" = "none required" \
                 || LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
-AC_SUBST([LIB_CLOCK_GETTIME])
+
+# 'librsvg' is needed to demonstrate SVG support.
+PKG_CHECK_MODULES([LIBRSVG], [librsvg-2.0],
+                  [have_librsvg="yes (pkg-config)"], [have_librsvg=no])
+
+FT_DEMO_CFLAGS=""
+FT_DEMO_LDFLAGS="$LIB_CLOCK_GETTIME"
+
+if test "$have_librsvg" != no; then
+  FT_DEMO_CFLAGS="$FT_DEMO_CFLAGS $LIBRSVG_CFLAGS"
+  FT_DEMO_LDFLAGS="$FT_DEMO_LDFLAGS $LIBRSVG_LIBS"
+fi
+
+AC_SUBST([FT_DEMO_CFLAGS])
+AC_SUBST([FT_DEMO_LDFLAGS])
 
 
 # Some options handling SDKs/archs in CFLAGS should be copied
