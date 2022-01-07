@@ -188,7 +188,7 @@
       goto Exit;
 
     table->max_hints   = count;
-    table->sort_global = table->sort + count;
+    table->sort_global = FT_OFFSET( table->sort, count );
     table->num_hints   = 0;
     table->num_zones   = 0;
     table->zone        = NULL;
