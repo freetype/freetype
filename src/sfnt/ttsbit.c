@@ -730,6 +730,9 @@
     pitch      = bitmap->pitch;
     line       = bitmap->buffer;
 
+    if ( !line )
+      goto Exit;
+
     width  = decoder->metrics->width;
     height = decoder->metrics->height;
 
