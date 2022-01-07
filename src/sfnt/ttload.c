@@ -200,7 +200,7 @@
 
     for ( nn = 0; nn < sfnt->num_tables; nn++ )
     {
-      TT_TableRec  table;
+      TT_TableRec  table = { 0, 0, 0, 0 };
 
 
       if ( FT_STREAM_READ_FIELDS( table_dir_entry_fields, &table ) )
