@@ -718,7 +718,9 @@
               goto Fail;
             }
 
-            if ( FT_QREALLOC( face->ttf_data, 12, face->ttf_size ) )
+            /* To handle bad fonts with an invalid table directory */
+            /* we don't use `FT_QREALLOC` here.                    */
+            if ( FT_REALLOC( face->ttf_data, 12, face->ttf_size ) )
               goto Fail;
           }
           /* fall through */
@@ -767,8 +769,13 @@
             FT_TRACE2(( "  allocating %ld bytes\n", face->ttf_size + 1 ));
             FT_TRACE2(( "\n" ));
 
-            if ( FT_QREALLOC( face->ttf_data, 12 + 16 * num_tables,
-                              face->ttf_size + 1 ) )
+            /* To handle bad fonts we don't use `FT_QREALLOC` here:    */
+            /* chances are high that due to incorrect values in the    */
+            /* table directory the computation of `ttf_size` would be  */
+            /* incorrect otherwise, causing run-time errors because of */
+            /* accessing uninitialized memory.                         */
+            if ( FT_REALLOC( face->ttf_data, 12 + 16 * num_tables,
+                             face->ttf_size + 1 ) )
               goto Fail;
           }
           /* fall through */
