@@ -824,7 +824,7 @@
   {
     Colr*  colr;
 
-    FT_Byte  *p, *p1, *clip_base;
+    FT_Byte  *p, *p1, *clip_base, *limit;
 
     FT_Byte    clip_list_format;
     FT_ULong   num_clip_boxes, i;
@@ -847,15 +847,27 @@
 
     p = colr->clip_list;
 
+    limit = (FT_Byte*)colr->table + colr->table_size;
+
+    /* Check whether we can extract one `uint8` and one `uint32`. */
+    if ( p >= limit - ( 1 + 4 ) )
+      return 0;
+
     clip_base        = p;
     clip_list_format = FT_NEXT_BYTE ( p );
 
     /* Format byte used here to be able to upgrade ClipList for >16bit */
-    /* glyph ids; for now we can expect it to be 0. */
+    /* glyph ids; for now we can expect it to be 0.                    */
     if ( !( clip_list_format == 1 ) )
       return 0;
 
     num_clip_boxes = FT_NEXT_ULONG( p );
+
+    /* Check whether we can extract two `uint16` and one `Offset24`, */
+    /* `num_clip_boxes` times.                                       */
+    if ( colr->table_size / ( 2 + 2 + 3 ) < num_clip_boxes ||
+         p >= limit - ( 2 + 2 + 3 ) * num_clip_boxes       )
+      return 0;
 
     for ( i = 0; i < num_clip_boxes; ++i )
     {
@@ -867,12 +879,17 @@
       {
         p1 = (FT_Byte*)( clip_base + clip_box_offset );
 
-        if ( p1 >= ( (FT_Byte*)colr->table + colr->table_size ) )
+        /* Check whether we can extract one `uint8`. */
+        if ( p1 >= limit - 1 )
           return 0;
 
         format = FT_NEXT_BYTE( p1 );
 
         if ( format > 1 )
+          return 0;
+
+        /* Check whether we can extract four `FWORD`. */
+        if ( p1 >= limit - ( 2 + 2 + 2 + 2 ) )
           return 0;
 
         /* `face->root.size->metrics.x_scale` and `y_scale` are factors   */
