@@ -481,7 +481,9 @@
     FT_ZERO( stream );
     stream->memory = memory;
 
-    if ( !FT_QNEW( zip ) )
+    /* Don't use `FT_QNEW` here to avoid problems with uninitialized */
+    /* memory later on if the font is malformed.                     */
+    if ( !FT_NEW( zip ) )
     {
       error = ft_bzip2_file_init( zip, stream, source );
       if ( error )
