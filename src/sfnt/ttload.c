@@ -205,7 +205,6 @@
 
       if ( FT_STREAM_READ_FIELDS( table_dir_entry_fields, &table ) )
       {
-        nn--;
         FT_TRACE2(( "check_table_dir:"
                     " can read only %d table%s in font (instead of %d)\n",
                     nn, nn == 1 ? "" : "s", sfnt->num_tables ));
