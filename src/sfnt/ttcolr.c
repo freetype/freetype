@@ -522,19 +522,29 @@
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT )
     {
+      FT_Pos  tmp;
+
+
       if ( !read_color_line( child_table_p,
                              &apaint->u.radial_gradient.colorline ) )
         return 0;
 
+      /* In the OpenType specification, `r0` and `r1` are defined as   */
+      /* `UFWORD`.  Since FreeType doesn't have a corresponding 16.16  */
+      /* format we convert to `FWORD` and replace negative values with */
+      /* (32bit) `FT_INT_MAX`.                                         */
+
       apaint->u.radial_gradient.c0.x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.radial_gradient.c0.y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
 
-      apaint->u.radial_gradient.r0 = FT_NEXT_USHORT( p ) << 16;
+      tmp                          = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
+      apaint->u.radial_gradient.r0 = tmp < 0 ? FT_INT_MAX : tmp;
 
       apaint->u.radial_gradient.c1.x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.radial_gradient.c1.y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
 
-      apaint->u.radial_gradient.r1 = FT_NEXT_USHORT( p ) << 16;
+      tmp                          = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
+      apaint->u.radial_gradient.r1 = tmp < 0 ? FT_INT_MAX : tmp;
 
       return 1;
     }
