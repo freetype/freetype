@@ -350,10 +350,20 @@ index f09cdaf1e..1807c0645 100644
  #ifdef __cplusplus
  }
 diff --git b/src/gzip/zutil.h a/src/gzip/zutil.h
-index b079ea6a8..a38573878 100644
+index b079ea6a8..2d734a835 100644
 --- b/src/gzip/zutil.h
 +++ a/src/gzip/zutil.h
-@@ -185,6 +185,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+@@ -30,7 +30,9 @@
+ #endif
+ 
+ #ifdef Z_SOLO
++#  ifndef Z_FREETYPE
+    typedef long ptrdiff_t;  /* guess -- will be caught if guess is wrong */
++#  endif
+ #endif
+ 
+ #ifndef local
+@@ -185,6 +187,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
    #pragma warn -8066
  #endif
  
@@ -362,7 +372,7 @@ index b079ea6a8..a38573878 100644
  /* provide prototypes for these when building zlib without LFS */
  #if !defined(_WIN32) && \
      (!defined(_LARGEFILE64_SOURCE) || _LFS64_LARGEFILE-0 == 0)
-@@ -192,6 +194,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+@@ -192,6 +196,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
      ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off_t));
  #endif
  
@@ -371,7 +381,7 @@ index b079ea6a8..a38573878 100644
          /* common defaults */
  
  #ifndef OS_CODE
-@@ -223,9 +227,9 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+@@ -223,9 +229,9 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
  #    define zmemcmp _fmemcmp
  #    define zmemzero(dest, len) _fmemset(dest, 0, len)
  #  else
