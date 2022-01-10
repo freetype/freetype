@@ -18,5 +18,5 @@ The files in this directory have been prepared as follows.
 
  - Take the unmodified source code files from the zlib distribution that are
    included by `ftgzip.c`.
- - Apply the diff file(s) in the `patches` folder.
  - Run zlib's `zlib2ansi` script on all `.c` files.
+ - Apply the diff file(s) in the `patches` folder.

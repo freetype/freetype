@@ -163,7 +163,7 @@
 
 /* values for gz_state how */
 #define LOOK 0      /* look for a gzip header */
-#define COPY__ 1      /* copy input directly */
+#define COPY__ 1    /* copy input directly */
 #define GZIP 2      /* decompress a gzip stream */
 
 /* internal gzip file state data structure */

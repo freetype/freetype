@@ -1,48 +1,34 @@
-From 2977ff0df909f939517e9857943938ff84201a26 Mon Sep 17 00:00:00 2001
-From: David Turner <david@freetype.org>
-Date: Wed, 18 Aug 2021 00:17:35 +0200
-Subject: [zlib] Fix zlib sources to compile for FreeType
+[zlib] Fix zlib sources for compilation with FreeType
 
-Fix misc zlib sources to ensure that they do not issue compiler
-warnings when they are compiled as part of src/gzip/ftgzip.c.
+We must ensure that they do not issue compiler errors or warnings when they
+are compiled as part of `src/gzip/ftgzip.c`.
 
-* src/gzip/adler32.c: Do not define unused functions when Z_FREETYPE
-  is set.
+* src/gzip/adler32.c: Do not define unused functions when `Z_FREETYPE`
+is set.
 
-* src/gzip/crc32.c: Undefined DO1 and DO8 macros that are already
-  defined in adler32.c.
+* src/gzip/crc32.c (DO1, DO8): Undefine.  Already defined in `adler32.c`.
 
-* src/gzip/gzguts.h: Rename COPY macro to COPY__ since COPY and
-  COPY_ conflict with enum values with the same name in
-  zlib.h.
+* src/gzip/gzguts.h (COPY): Rename to...
+(COPY__): ... this since `COPY` and `COPY_` conflict with enum values,
+which have the same name in `zlib.h`.
 
 * src/gzip/inflate.c, src/gzip/adler32.c: Omit unused function
-  declarations when Z_FREETYPE is defined.
+declarations when `Z_FREETYPE` is defined.
 
-* src/gzip/zlib.h: Include "ftzconf.h" instead of "zconf.h" to
-  avoid conflicts with system-installed headers. Omit unused
-  function declarations when Z_FREETYPE is defined.
+* src/gzip/zlib.h: Include `ftzconf.h` instead of `zconf.h` to avoid
+conflicts with system-installed headers.
+Omit unused function declarations when `Z_FREETYPE` is defined.
 
-* src/gzip/zutil.h: Use ft_memxxx() functions instead of memxxx().
-  Omit unused function declarations when Z_FREETYPE is defined.
+* src/gzip/zutil.h: Use `ft_memxxx` functions instead of `memxxx`.
+Omit unused function declarations when `Z_FREETYPE` is defined.
 
-* src/gzip/inflate.h, src/gzip/inftrees.h: Add header guard macros
-  to prevent compiler errors.
----
- src/gzip/adler32.c  |  6 ++++++
- src/gzip/crc32.c    |  2 ++
- src/gzip/gzguts.h   |  2 +-
- src/gzip/inflate.c  | 18 ++++++++++++++++++
- src/gzip/inflate.h  |  5 +++++
- src/gzip/inftrees.h |  5 +++++
- src/gzip/zlib.h     | 39 ++++++++++++++++++++++++++++++++++++---
- src/gzip/zutil.h    | 10 +++++++---
- 8 files changed, 80 insertions(+), 7 deletions(-)
+* src/gzip/inflate.h, src/gzip/inftrees.h: Add header guard macros to
+prevent compiler errors.
 
-diff --git a/src/gzip/adler32.c b/src/gzip/adler32.c
-index d0be4380a..a8242ba13 100644
---- a/src/gzip/adler32.c
-+++ b/src/gzip/adler32.c
+diff --git b/src/gzip/adler32.c a/src/gzip/adler32.c
+index be5e8a247..aa032e1dd 100644
+--- b/src/gzip/adler32.c
++++ a/src/gzip/adler32.c
 @@ -7,7 +7,9 @@
  
  #include "zutil.h"
@@ -53,25 +39,25 @@ index d0be4380a..a8242ba13 100644
  
  #define BASE 65521U     /* largest prime smaller than 65536 */
  #define NMAX 5552
-@@ -139,6 +141,8 @@ uLong ZEXPORT adler32(adler, buf, len)
+@@ -139,6 +141,8 @@ uLong ZEXPORT adler32(
      return adler32_z(adler, buf, len);
  }
  
 +#ifndef Z_FREETYPE
 +
  /* ========================================================================= */
- local uLong adler32_combine_(adler1, adler2, len2)
-     uLong adler1;
-@@ -184,3 +188,5 @@ uLong ZEXPORT adler32_combine64(adler1, adler2, len2)
+ local uLong adler32_combine_(
+     uLong adler1,
+@@ -184,3 +188,5 @@ uLong ZEXPORT adler32_combine64(
  {
      return adler32_combine_(adler1, adler2, len2);
  }
 +
 +#endif  /* !Z_FREETYPE */
-diff --git a/src/gzip/crc32.c b/src/gzip/crc32.c
-index 9580440c0..d67663a4e 100644
---- a/src/gzip/crc32.c
-+++ b/src/gzip/crc32.c
+diff --git b/src/gzip/crc32.c a/src/gzip/crc32.c
+index 3e3eb1794..ffced1ea7 100644
+--- b/src/gzip/crc32.c
++++ a/src/gzip/crc32.c
 @@ -195,6 +195,8 @@ const z_crc_t FAR * ZEXPORT get_crc_table()
  }
  
@@ -81,23 +67,23 @@ index 9580440c0..d67663a4e 100644
  #define DO1 crc = crc_table[0][((int)crc ^ (*buf++)) & 0xff] ^ (crc >> 8)
  #define DO8 DO1; DO1; DO1; DO1; DO1; DO1; DO1; DO1
  
-diff --git a/src/gzip/gzguts.h b/src/gzip/gzguts.h
-index 990a4d251..a27f38998 100644
---- a/src/gzip/gzguts.h
-+++ b/src/gzip/gzguts.h
+diff --git b/src/gzip/gzguts.h a/src/gzip/gzguts.h
+index 990a4d251..c81f8f392 100644
+--- b/src/gzip/gzguts.h
++++ a/src/gzip/gzguts.h
 @@ -163,7 +163,7 @@
  
  /* values for gz_state how */
  #define LOOK 0      /* look for a gzip header */
 -#define COPY 1      /* copy input directly */
-+#define COPY__ 1      /* copy input directly */
++#define COPY__ 1    /* copy input directly */
  #define GZIP 2      /* decompress a gzip stream */
  
  /* internal gzip file state data structure */
-diff --git a/src/gzip/inflate.c b/src/gzip/inflate.c
-index ac333e8c2..fa61003ce 100644
---- a/src/gzip/inflate.c
-+++ b/src/gzip/inflate.c
+diff --git b/src/gzip/inflate.c a/src/gzip/inflate.c
+index 3f7ea647b..7387e6f57 100644
+--- b/src/gzip/inflate.c
++++ a/src/gzip/inflate.c
 @@ -99,8 +99,10 @@ local int updatewindow OF((z_streamp strm, const unsigned char FAR *end,
  #ifdef BUILDFIXED
     void makefixed OF((void));
@@ -107,18 +93,18 @@ index ac333e8c2..fa61003ce 100644
                                unsigned len));
 +#endif
  
- local int inflateStateCheck(strm)
- z_streamp strm;
-@@ -244,6 +246,8 @@ int stream_size;
+ local int inflateStateCheck(
+     z_streamp strm)
+@@ -244,6 +246,8 @@ int ZEXPORT inflateInit_(
      return inflateInit2_(strm, DEF_WBITS, version, stream_size);
  }
  
 +#ifndef Z_FREETYPE
 +
- int ZEXPORT inflatePrime(strm, bits, value)
- z_streamp strm;
- int bits;
-@@ -265,6 +269,8 @@ int value;
+ int ZEXPORT inflatePrime(
+     z_streamp strm,
+     int bits,
+@@ -265,6 +269,8 @@ int ZEXPORT inflatePrime(
      return Z_OK;
  }
  
@@ -127,16 +113,16 @@ index ac333e8c2..fa61003ce 100644
  /*
     Return state with length and distance decoding tables and index sizes set to
     fixed code decoding.  Normally this returns fixed tables from inffixed.h.
-@@ -1288,6 +1294,8 @@ z_streamp strm;
+@@ -1288,6 +1294,8 @@ int ZEXPORT inflateEnd(
      return Z_OK;
  }
  
 +#ifndef Z_FREETYPE
 +
- int ZEXPORT inflateGetDictionary(strm, dictionary, dictLength)
- z_streamp strm;
- Bytef *dictionary;
-@@ -1440,6 +1448,8 @@ z_streamp strm;
+ int ZEXPORT inflateGetDictionary(
+     z_streamp strm,
+     Bytef *dictionary,
+@@ -1440,6 +1448,8 @@ int ZEXPORT inflateSync(
      return Z_OK;
  }
  
@@ -145,43 +131,43 @@ index ac333e8c2..fa61003ce 100644
  /*
     Returns true if inflate is currently at the end of a block generated by
     Z_SYNC_FLUSH or Z_FULL_FLUSH. This function is used by one PPP
-@@ -1458,6 +1468,8 @@ z_streamp strm;
+@@ -1458,6 +1468,8 @@ int ZEXPORT inflateSyncPoint(
      return state->mode == STORED && state->bits == 0;
  }
  
 +#if !Z_FREETYPE
 +
- int ZEXPORT inflateCopy(dest, source)
- z_streamp dest;
- z_streamp source;
-@@ -1505,6 +1517,8 @@ z_streamp source;
+ int ZEXPORT inflateCopy(
+     z_streamp dest,
+     z_streamp source)
+@@ -1505,6 +1517,8 @@ int ZEXPORT inflateCopy(
      return Z_OK;
  }
  
 +#endif  /* !Z_FREETYPE */
 +
- int ZEXPORT inflateUndermine(strm, subvert)
- z_streamp strm;
- int subvert;
-@@ -1538,6 +1552,8 @@ int check;
+ int ZEXPORT inflateUndermine(
+     z_streamp strm,
+     int subvert)
+@@ -1538,6 +1552,8 @@ int ZEXPORT inflateValidate(
      return Z_OK;
  }
  
 +#ifndef Z_FREETYPE
 +
- long ZEXPORT inflateMark(strm)
- z_streamp strm;
+ long ZEXPORT inflateMark(
+     z_streamp strm)
  {
-@@ -1559,3 +1575,5 @@ z_streamp strm;
+@@ -1559,3 +1575,5 @@ unsigned long ZEXPORT inflateCodesUsed(
      state = (struct inflate_state FAR *)strm->state;
      return (unsigned long)(state->next - state->codes);
  }
 +
 +#endif  /* !Z_FREETYPE */
-diff --git a/src/gzip/inflate.h b/src/gzip/inflate.h
+diff --git b/src/gzip/inflate.h a/src/gzip/inflate.h
 index a46cce6b6..92ea758e2 100644
---- a/src/gzip/inflate.h
-+++ b/src/gzip/inflate.h
+--- b/src/gzip/inflate.h
++++ a/src/gzip/inflate.h
 @@ -3,6 +3,9 @@
   * For conditions of distribution and use, see copyright notice in zlib.h
   */
@@ -198,10 +184,10 @@ index a46cce6b6..92ea758e2 100644
  };
 +
 +#endif  /* INFLATE_H */
-diff --git a/src/gzip/inftrees.h b/src/gzip/inftrees.h
+diff --git b/src/gzip/inftrees.h a/src/gzip/inftrees.h
 index baa53a0b1..c94eb78b5 100644
---- a/src/gzip/inftrees.h
-+++ b/src/gzip/inftrees.h
+--- b/src/gzip/inftrees.h
++++ a/src/gzip/inftrees.h
 @@ -3,6 +3,9 @@
   * For conditions of distribution and use, see copyright notice in zlib.h
   */
@@ -218,10 +204,10 @@ index baa53a0b1..c94eb78b5 100644
                               unsigned FAR *bits, unsigned short FAR *work));
 +
 +#endif  /* INFTREES_H_ */
-diff --git a/src/gzip/zlib.h b/src/gzip/zlib.h
-index f09cdaf1e..ff5ae736d 100644
---- a/src/gzip/zlib.h
-+++ b/src/gzip/zlib.h
+diff --git b/src/gzip/zlib.h a/src/gzip/zlib.h
+index f09cdaf1e..1807c0645 100644
+--- b/src/gzip/zlib.h
++++ a/src/gzip/zlib.h
 @@ -31,7 +31,7 @@
  #ifndef ZLIB_H
  #define ZLIB_H
@@ -319,22 +305,6 @@ index f09cdaf1e..ff5ae736d 100644
  ZEXTERN uLong ZEXPORT crc32_z OF((uLong adler, const Bytef *buf,
                                    z_size_t len));
  /*
-@@ -1755,7 +1771,6 @@ ZEXTERN uLong ZEXPORT crc32_combine OF((uLong crc1, uLong crc2, z_off_t len2));
-    len2.
- */
- 
--
-                         /* various hacks, don't look :) */
- 
- /* deflateInit and inflateInit are macros to allow checking the zlib version
-@@ -1763,6 +1778,7 @@ ZEXTERN uLong ZEXPORT crc32_combine OF((uLong crc1, uLong crc2, z_off_t len2));
-  */
- ZEXTERN int ZEXPORT deflateInit_ OF((z_streamp strm, int level,
-                                      const char *version, int stream_size));
-+
- ZEXTERN int ZEXPORT inflateInit_ OF((z_streamp strm,
-                                      const char *version, int stream_size));
- ZEXTERN int ZEXPORT deflateInit2_ OF((z_streamp strm, int  level, int  method,
 @@ -1805,6 +1821,19 @@ ZEXTERN int ZEXPORT inflateBackInit_ OF((z_streamp strm, int windowBits,
                             ZLIB_VERSION, (int)sizeof(z_stream))
  #endif
@@ -379,10 +349,10 @@ index f09cdaf1e..ff5ae736d 100644
  
  #ifdef __cplusplus
  }
-diff --git a/src/gzip/zutil.h b/src/gzip/zutil.h
+diff --git b/src/gzip/zutil.h a/src/gzip/zutil.h
 index b079ea6a8..a38573878 100644
---- a/src/gzip/zutil.h
-+++ b/src/gzip/zutil.h
+--- b/src/gzip/zutil.h
++++ a/src/gzip/zutil.h
 @@ -185,6 +185,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
    #pragma warn -8066
  #endif
@@ -414,6 +384,3 @@ index b079ea6a8..a38573878 100644
  #  endif
  #else
     void ZLIB_INTERNAL zmemcpy OF((Bytef* dest, const Bytef* source, uInt len));
--- 
-2.30.2
-
