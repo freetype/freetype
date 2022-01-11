@@ -857,10 +857,14 @@
 
     p = colr->clip_list;
 
+    /* limit points to the first byte after the end of the color table.        */
+    /* Thus, in subsequent limit checks below we need to check whether the     */
+    /* read pointer is strictly greater than a position offset                 */
+    /* by certain field sizes to the left of that position.                    */
     limit = (FT_Byte*)colr->table + colr->table_size;
 
     /* Check whether we can extract one `uint8` and one `uint32`. */
-    if ( p >= limit - ( 1 + 4 ) )
+    if ( p > limit - ( 1 + 4 ) )
       return 0;
 
     clip_base        = p;
@@ -876,7 +880,7 @@
     /* Check whether we can extract two `uint16` and one `Offset24`, */
     /* `num_clip_boxes` times.                                       */
     if ( colr->table_size / ( 2 + 2 + 3 ) < num_clip_boxes ||
-         p >= limit - ( 2 + 2 + 3 ) * num_clip_boxes       )
+         p > limit - ( 2 + 2 + 3 ) * num_clip_boxes        )
       return 0;
 
     for ( i = 0; i < num_clip_boxes; ++i )
@@ -890,7 +894,7 @@
         p1 = (FT_Byte*)( clip_base + clip_box_offset );
 
         /* Check whether we can extract one `uint8`. */
-        if ( p1 >= limit - 1 )
+        if ( p1 > limit - 1 )
           return 0;
 
         format = FT_NEXT_BYTE( p1 );
@@ -899,7 +903,7 @@
           return 0;
 
         /* Check whether we can extract four `FWORD`. */
-        if ( p1 >= limit - ( 2 + 2 + 2 + 2 ) )
+        if ( p1 > limit - ( 2 + 2 + 2 + 2 ) )
           return 0;
 
         /* `face->root.size->metrics.x_scale` and `y_scale` are factors   */
