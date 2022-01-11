@@ -8,7 +8,7 @@
  * parse compressed PCF fonts, as found with many X11 server
  * distributions.
  *
- * Copyright (C) 2010-2021 by
+ * Copyright (C) 2010-2022 by
  * Joel Klinghed.
  *
  * based on `src/gzip/ftgzip.c'
