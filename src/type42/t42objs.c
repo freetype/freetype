@@ -44,7 +44,8 @@
 
     parser = &loader.parser;
 
-    if ( FT_QALLOC( face->ttf_data, 12 ) )
+    /* To handle buggy fonts we don't use `FT_QALLOC` here. */
+    if ( FT_ALLOC( face->ttf_data, 12 ) )
       goto Exit;
 
     /* while parsing the font we always update `face->ttf_size' so that */
