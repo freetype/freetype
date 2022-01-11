@@ -538,7 +538,8 @@
     FT_Byte*    limit  = parser->root.limit;
     FT_Error    error;
     FT_Int      num_tables = 0;
-    FT_Long     count;
+    FT_Long     ttf_count;
+    FT_Long     ttf_reserved;
 
     FT_ULong    n, string_size, old_string_size, real_size;
     FT_Byte*    string_buf = NULL;
@@ -546,6 +547,9 @@
 
     T42_Load_Status  status;
 
+    /** There should only be one sfnts array, but free any previous. */
+    FT_FREE( face->ttf_data );
+    face->ttf_size = 0;
 
     /* The format is                                */
     /*                                              */
@@ -574,7 +578,10 @@
     status          = BEFORE_START;
     string_size     = 0;
     old_string_size = 0;
-    count           = 0;
+    ttf_count       = 0;
+    ttf_reserved    = 12;
+    if ( FT_QALLOC( face->ttf_data, ttf_reserved ) )
+      goto Fail;
 
     FT_TRACE2(( "\n" ));
     FT_TRACE2(( "t42_parse_sfnts:\n" ));
@@ -589,6 +596,7 @@
       if ( *cur == ']' )
       {
         parser->root.cursor++;
+        face->ttf_size = ttf_count;
         goto Exit;
       }
 
@@ -684,7 +692,7 @@
       }
 
       FT_TRACE2(( "  PS string size %5lu bytes, offset 0x%08lx (%lu)\n",
-                  string_size, count, count ));
+                  string_size, ttf_count, ttf_count ));
 
       /* The whole TTF is now loaded into `string_buf'.  We are */
       /* checking its contents while copying it to `ttf_data'.  */
@@ -697,45 +705,48 @@
         {
         case BEFORE_START:
           /* load offset table, 12 bytes */
-          if ( count < 12 )
+          if ( ttf_count < 12 )
           {
-            face->ttf_data[count++] = string_buf[n];
+            face->ttf_data[ttf_count++] = string_buf[n];
             continue;
           }
           else
           {
-            num_tables     = 16 * face->ttf_data[4] + face->ttf_data[5];
-            status         = BEFORE_TABLE_DIR;
-            face->ttf_size = 12 + 16 * num_tables;
+            FT_Long ttf_reserved_prev = ttf_reserved;
+
+
+            num_tables   = 16 * face->ttf_data[4] + face->ttf_data[5];
+            status       = BEFORE_TABLE_DIR;
+            ttf_reserved = 12 + 16 * num_tables;
 
             FT_TRACE2(( "  SFNT directory contains %d tables\n",
                         num_tables ));
 
-            if ( (FT_Long)size < face->ttf_size )
+            if ( (FT_Long)size < ttf_reserved )
             {
               FT_ERROR(( "t42_parse_sfnts: invalid data in sfnts array\n" ));
               error = FT_THROW( Invalid_File_Format );
               goto Fail;
             }
 
-            /* To handle bad fonts with an invalid table directory */
-            /* we don't use `FT_QREALLOC` here.                    */
-            if ( FT_REALLOC( face->ttf_data, 12, face->ttf_size ) )
+            if ( FT_QREALLOC( face->ttf_data, ttf_reserved_prev,
+                              ttf_reserved ) )
               goto Fail;
           }
           /* fall through */
 
         case BEFORE_TABLE_DIR:
           /* the offset table is read; read the table directory */
-          if ( count < face->ttf_size )
+          if ( ttf_count < ttf_reserved )
           {
-            face->ttf_data[count++] = string_buf[n];
+            face->ttf_data[ttf_count++] = string_buf[n];
             continue;
           }
           else
           {
             int       i;
             FT_ULong  len;
+            FT_Long ttf_reserved_prev = ttf_reserved;
 
 
             FT_TRACE2(( "\n" ));
@@ -751,7 +762,7 @@
               FT_TRACE2(( "   %4i  0x%08lx (%lu)\n", i, len, len ));
 
               if ( len > size                               ||
-                   face->ttf_size > (FT_Long)( size - len ) )
+                   ttf_reserved > (FT_Long)( size - len ) )
               {
                 FT_ERROR(( "t42_parse_sfnts:"
                            " invalid data in sfnts array\n" ));
@@ -760,35 +771,31 @@
               }
 
               /* Pad to a 4-byte boundary length */
-              face->ttf_size += (FT_Long)( ( len + 3 ) & ~3U );
+              ttf_reserved += (FT_Long)( ( len + 3 ) & ~3U );
             }
+            ttf_reserved += 1;
 
             status = OTHER_TABLES;
 
             FT_TRACE2(( "\n" ));
-            FT_TRACE2(( "  allocating %ld bytes\n", face->ttf_size + 1 ));
+            FT_TRACE2(( "  allocating %ld bytes\n", ttf_reserved ));
             FT_TRACE2(( "\n" ));
 
-            /* To handle bad fonts we don't use `FT_QREALLOC` here:    */
-            /* chances are high that due to incorrect values in the    */
-            /* table directory the computation of `ttf_size` would be  */
-            /* incorrect otherwise, causing run-time errors because of */
-            /* accessing uninitialized memory.                         */
-            if ( FT_REALLOC( face->ttf_data, 12 + 16 * num_tables,
-                             face->ttf_size + 1 ) )
+            if ( FT_QREALLOC( face->ttf_data, ttf_reserved_prev,
+                              ttf_reserved ) )
               goto Fail;
           }
           /* fall through */
 
         case OTHER_TABLES:
           /* all other tables are just copied */
-          if ( count >= face->ttf_size )
+          if ( ttf_count >= ttf_reserved )
           {
             FT_ERROR(( "t42_parse_sfnts: too much binary data\n" ));
             error = FT_THROW( Invalid_File_Format );
             goto Fail;
           }
-          face->ttf_data[count++] = string_buf[n];
+          face->ttf_data[ttf_count++] = string_buf[n];
         }
       }
 
@@ -802,6 +809,11 @@
     parser->root.error = error;
 
   Exit:
+    if ( parser->root.error )
+    {
+      FT_FREE( face->ttf_data );
+      face->ttf_size = 0;
+    }
     if ( allocated )
       FT_FREE( string_buf );
   }

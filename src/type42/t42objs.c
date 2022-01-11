@@ -44,15 +44,8 @@
 
     parser = &loader.parser;
 
-    /* To handle buggy fonts we don't use `FT_QALLOC` here. */
-    if ( FT_ALLOC( face->ttf_data, 12 ) )
-      goto Exit;
-
-    /* while parsing the font we always update `face->ttf_size' so that */
-    /* even in case of buggy data (which might lead to premature end of */
-    /* scanning without causing an error) the call to `FT_Open_Face' in */
-    /* `T42_Face_Init' passes the correct size                          */
-    face->ttf_size = 12;
+    face->ttf_data = NULL;
+    face->ttf_size = 0;
 
     error = t42_parser_init( parser,
                              face->root.stream,
@@ -153,6 +146,11 @@
 
   Exit:
     t42_loader_done( &loader );
+    if ( error )
+    {
+      FT_FREE(face->ttf_data);
+      face->ttf_size = 0;
+    }
     return error;
   }
 
