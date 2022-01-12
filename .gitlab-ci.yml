@@ -40,6 +40,9 @@ variables:
     #   -Dfoo=enabled
     #   -Dbar=disabled
   before_script:
+    # Update RootCAs in order to access to some sites.
+    - certutil -generateSSTFromWU "C:\roots.sst"
+    - Import-Certificate -CertStoreLocation "Cert:\LocalMachine\Root" "C:\roots.sst"
     # Make sure meson is up to date, so we don't need to rebuild the image
     # with each release.
     - pip3 install meson==0.59.1
