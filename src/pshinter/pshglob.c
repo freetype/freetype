@@ -646,11 +646,11 @@
                    T1_Private*   priv,
                    PSH_Globals  *aglobals )
   {
-    PSH_Globals  globals = NULL;
+    PSH_Globals  globals;
     FT_Error     error;
 
 
-    if ( !FT_NEW( globals ) )
+    if ( !FT_QNEW( globals ) )
     {
       FT_UInt    count;
       FT_Short*  read;
