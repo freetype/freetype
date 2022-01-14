@@ -1535,8 +1535,6 @@
           /* kept.                                                */
           FT_FREE( p->glyph_name );
         }
-
-        p->glyph_name = NULL;
       }
 
       /* Clear the flags that might be added when width and height are */
