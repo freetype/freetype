@@ -408,6 +408,19 @@ FT_BEGIN_HEADER
 
 #endif
 
+#elif defined( __WATCOMC__ ) && defined( __386__ )
+
+  extern __inline FT_Int32
+  FT_MSB_i386( FT_UInt32  x );
+
+#pragma aux FT_MSB_i386 =     \
+  "bsr eax, eax"              \
+  parm [eax] nomemory         \
+  value [eax]                 \
+  modify exact [eax] nomemory;
+
+#define FT_MSB( x )  FT_MSB_i386( x )
+
 #elif defined( __DECC ) || defined( __DECCXX )
 
 #include <builtins.h>
