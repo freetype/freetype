@@ -2110,14 +2110,17 @@
       FT_Fixed  old_x_scale = x_scale;
       FT_Fixed  old_y_scale = y_scale;
 
-      FT_Fixed  scaled;
-      FT_Fixed  fitted;
+      FT_Fixed  scaled = 0;
+      FT_Fixed  fitted = 0;
 
       FT_Bool  rescale = FALSE;
 
 
-      scaled = FT_MulFix( globals->blues.normal_top.zones->org_ref, y_scale );
-      fitted = FT_PIX_ROUND( scaled );
+      if ( globals->blues.normal_top.count )
+      {
+        scaled = FT_MulFix( globals->blues.normal_top.zones->org_ref, y_scale );
+        fitted = FT_PIX_ROUND( scaled );
+      }
 
       if ( fitted != 0 && scaled != fitted )
       {
