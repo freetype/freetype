@@ -177,11 +177,11 @@
    *
    * @Fields:
    *   dist ::
-   *     Vector length of the `near` parameter.  Can be squared or absolute
+   *     Vector length of the `prox` parameter.  Can be squared or absolute
    *     depending on the `USE_SQUARED_DISTANCES` macro defined in file
    *     `ftsdfcommon.h`.
    *
-   *   near ::
+   *   prox ::
    *     Vector to the nearest edge.  Can also be interpreted as shortest
    *     distance of a point.
    *
@@ -194,7 +194,7 @@
   typedef struct  ED_
   {
     FT_16D16      dist;
-    FT_16D16_Vec  near;
+    FT_16D16_Vec  prox;
     FT_Byte       alpha;
 
   } ED;
@@ -595,18 +595,18 @@
                            worker->rows ) )
         {
           /* approximate the edge distance for edge pixels */
-          ed[index].near = compute_edge_distance( ed + index,
+          ed[index].prox = compute_edge_distance( ed + index,
                                                   i, j,
                                                   worker->width,
                                                   worker->rows );
-          ed[index].dist = VECTOR_LENGTH_16D16( ed[index].near );
+          ed[index].dist = VECTOR_LENGTH_16D16( ed[index].prox );
         }
         else
         {
           /* for non-edge pixels assign far away distances */
           ed[index].dist   = 400 * ONE;
-          ed[index].near.x = 200 * ONE;
-          ed[index].near.y = 200 * ONE;
+          ed[index].prox.x = 200 * ONE;
+          ed[index].prox.y = 200 * ONE;
         }
       }
     }
@@ -871,7 +871,7 @@
 
     if ( dist < current->dist )
     {
-      dist_vec = to_check->near;
+      dist_vec = to_check->prox;
 
       dist_vec.x += x_offset * ONE;
       dist_vec.y += y_offset * ONE;
@@ -880,7 +880,7 @@
       if ( dist < current->dist )
       {
         current->dist = dist;
-        current->near = dist_vec;
+        current->prox = dist_vec;
       }
     }
   }
