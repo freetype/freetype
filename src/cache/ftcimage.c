@@ -61,10 +61,10 @@
   {
     FT_Memory  memory = cache->memory;
     FT_Error   error;
-    FTC_INode  inode  = NULL;
+    FTC_INode  inode;
 
 
-    if ( !FT_NEW( inode ) )
+    if ( !FT_QNEW( inode ) )
     {
       FTC_GNode         gnode  = FTC_GNODE( inode );
       FTC_Family        family = gquery->family;

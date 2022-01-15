@@ -233,7 +233,7 @@
       goto Exit;
     }
 
-    if ( !FT_NEW( snode ) )
+    if ( !FT_QNEW( snode ) )
     {
       FT_UInt  count, start;
 
