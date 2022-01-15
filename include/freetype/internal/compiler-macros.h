@@ -299,9 +299,9 @@ FT_BEGIN_HEADER
 #define FT_CALLBACK_DEF( x )  static  x
 #endif
 
-#if defined( __i386__ )
+#if defined( __GNUC__ ) && defined( __i386__ )
 #define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x ) __attribute__(( cdecl ))
-#elif defined( _M_IX86 )
+#elif defined( _MSC_VER ) && defined( _M_IX86 )
 #define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x ) __cdecl
 #else
 #define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x )
