@@ -1772,7 +1772,7 @@
 
       if ( !loader->subrs_hash )
       {
-        if ( FT_NEW( loader->subrs_hash ) )
+        if ( FT_QNEW( loader->subrs_hash ) )
           goto Fail;
 
         error = ft_hash_num_init( loader->subrs_hash, memory );

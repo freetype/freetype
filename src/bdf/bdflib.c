@@ -1949,7 +1949,7 @@
         }
       }
 
-      if ( FT_ALLOC( p->font->internal, sizeof ( FT_HashRec ) ) )
+      if ( FT_QALLOC( p->font->internal, sizeof ( FT_HashRec ) ) )
         goto Exit;
       error = ft_hash_str_init( (FT_Hash)p->font->internal, memory );
       if ( error )
