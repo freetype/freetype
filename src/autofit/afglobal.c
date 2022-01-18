@@ -337,10 +337,12 @@
 
     /* we allocate an AF_FaceGlobals structure together */
     /* with the glyph_styles array                      */
-    if ( FT_ALLOC( globals,
-                   sizeof ( *globals ) +
-                     (FT_ULong)face->num_glyphs * sizeof ( FT_UShort ) ) )
+    if ( FT_QALLOC( globals,
+                    sizeof ( *globals ) +
+                      (FT_ULong)face->num_glyphs * sizeof ( FT_UShort ) ) )
       goto Exit;
+
+    FT_ZERO( &globals->metrics );
 
     globals->face                      = face;
     globals->glyph_count               = face->num_glyphs;
