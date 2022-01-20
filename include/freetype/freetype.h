@@ -526,9 +526,11 @@ FT_BEGIN_HEADER
    *   functions like @FT_Load_Glyph to determine the scaling transformation
    *   that in turn is used to load and hint glyphs and metrics.
    *
-   *   You can use @FT_Set_Char_Size, @FT_Set_Pixel_Sizes, @FT_Request_Size
+   *   A newly created `FT_Size` object contains only meaningless zero values.
+   *   You must use @FT_Set_Char_Size, @FT_Set_Pixel_Sizes, @FT_Request_Size
    *   or even @FT_Select_Size to change the content (i.e., the scaling
-   *   values) of the active `FT_Size`.
+   *   values) of the active `FT_Size`.  Otherwise, the scaling and hinting
+   *   will not be performed.
    *
    *   You can use @FT_New_Size to create additional size objects for a given
    *   @FT_Face, but they won't be used by other functions until you activate
@@ -2828,10 +2830,9 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   For proper scaling and hinting, the active @FT_Size object owned by
-   *   the face has to be meaningfully non-trivially initialized by
-   *   calling @FT_Set_Char_Size before this function, for example.
-   *   The loaded glyph may be transformed.  See @FT_Set_Transform for the
-   *   details.
+   *   the face has to be meaningfully initialized by calling
+   *   @FT_Set_Char_Size before this function, for example.  The loaded
+   *   glyph may be transformed.  See @FT_Set_Transform for the details.
    *
    *   For subsetted CID-keyed fonts, `FT_Err_Invalid_Argument` is returned
    *   for invalid CID values (this is, for CID values that don't have a
