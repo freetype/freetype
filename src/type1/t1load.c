@@ -1530,8 +1530,8 @@
 
       /* we use a T1_Table to store our charnames */
       loader->num_chars = encode->num_chars = array_size;
-      if ( FT_NEW_ARRAY( encode->char_index, array_size )     ||
-           FT_NEW_ARRAY( encode->char_name,  array_size )     ||
+      if ( FT_QNEW_ARRAY( encode->char_index, array_size )    ||
+           FT_QNEW_ARRAY( encode->char_name,  array_size )    ||
            FT_SET_ERROR( psaux->ps_table_funcs->init(
                            char_table, array_size, memory ) ) )
       {
