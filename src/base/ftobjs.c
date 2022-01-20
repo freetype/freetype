@@ -858,6 +858,11 @@
     library = driver->root.library;
     hinter  = library->auto_hinter;
 
+    /* undefined scale means no scale */
+    if ( face->size->metrics.x_ppem == 0 ||
+         face->size->metrics.y_ppem == 0 )
+      load_flags |= FT_LOAD_NO_SCALE;
+
     /* resolve load flags dependencies */
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
