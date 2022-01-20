@@ -182,9 +182,9 @@
     count = hints->num_hints;
 
     /* allocate our tables */
-    if ( FT_NEW_ARRAY( table->sort,  2 * count     ) ||
-         FT_NEW_ARRAY( table->hints,     count     ) ||
-         FT_NEW_ARRAY( table->zones, 2 * count + 1 ) )
+    if ( FT_QNEW_ARRAY( table->sort,  2 * count     ) ||
+         FT_QNEW_ARRAY( table->hints,     count     ) ||
+         FT_QNEW_ARRAY( table->zones, 2 * count + 1 ) )
       goto Exit;
 
     table->max_hints   = count;
@@ -1167,8 +1167,8 @@
     memory = glyph->memory = globals->memory;
 
     /* allocate and setup points + contours arrays */
-    if ( FT_NEW_ARRAY( glyph->points,   outline->n_points   ) ||
-         FT_NEW_ARRAY( glyph->contours, outline->n_contours ) )
+    if ( FT_QNEW_ARRAY( glyph->points,   outline->n_points   ) ||
+         FT_QNEW_ARRAY( glyph->contours, outline->n_contours ) )
       goto Exit;
 
     glyph->num_points   = (FT_UInt)outline->n_points;
@@ -1797,7 +1797,7 @@
       FT_Error  error;
 
 
-      if ( FT_NEW_ARRAY( strongs, num_strongs ) )
+      if ( FT_QNEW_ARRAY( strongs, num_strongs ) )
         return;
     }
 
