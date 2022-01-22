@@ -78,8 +78,8 @@
 
 
     table->memory = memory;
-    if ( FT_QNEW_ARRAY( table->elements, count ) ||
-         FT_QNEW_ARRAY( table->lengths,  count ) )
+    if ( FT_NEW_ARRAY( table->elements, count ) ||
+         FT_NEW_ARRAY( table->lengths,  count ) )
       goto Exit;
 
     table->max_elems = count;
