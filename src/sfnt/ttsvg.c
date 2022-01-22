@@ -38,6 +38,14 @@
 #include "ttsvg.h"
 
 
+  /* NOTE: These table sizes are given by the specification. */
+#define SVG_TABLE_HEADER_SIZE           10U
+#define SVG_DOCUMENT_RECORD_SIZE        12U
+#define SVG_DOCUMENT_LIST_MINIMUM_SIZE  2U + SVG_DOCUMENT_RECORD_SIZE
+#define SVG_MINIMUM_SIZE                SVG_TABLE_HEADER_SIZE +        \
+                                        SVG_DOCUMENT_LIST_MINIMUM_SIZE
+
+
   typedef struct  Svg_
   {
     FT_UShort  version;                 /* table version (starting at 0)  */
@@ -79,6 +87,9 @@
     if ( error )
       goto NoSVG;
 
+    if ( table_size < SVG_MINIMUM_SIZE )
+      goto InvalidTable;
+
     if ( FT_FRAME_EXTRACT( table_size, table ) )
       goto NoSVG;
 
@@ -90,7 +101,9 @@
     svg->version            = FT_NEXT_USHORT( p );
     offsetToSVGDocumentList = FT_NEXT_ULONG( p );
 
-    if ( offsetToSVGDocumentList == 0 )
+    if ( offsetToSVGDocumentList < SVG_TABLE_HEADER_SIZE            ||
+         offsetToSVGDocumentList > table_size -
+                                     SVG_DOCUMENT_LIST_MINIMUM_SIZE )
       goto InvalidTable;
 
     svg->svg_doc_list = (FT_Byte*)( table + offsetToSVGDocumentList );
@@ -100,6 +113,10 @@
 
     FT_TRACE3(( "version: %d\n", svg->version ));
     FT_TRACE3(( "number of entries: %d\n", svg->num_entries ));
+
+    if ( offsetToSVGDocumentList +
+           svg->num_entries * SVG_DOCUMENT_RECORD_SIZE > table_size )
+      goto InvalidTable;
 
     svg->table      = table;
     svg->table_size = table_size;
