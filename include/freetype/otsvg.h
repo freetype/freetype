@@ -33,6 +33,29 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   svg_fonts
+   *
+   * @title:
+   *   OpenType SVG Fonts
+   *
+   * @abstract:
+   *   OT-SVG API between FreeType and an external SVG rendering library.
+   *
+   * @description:
+   *   This section describes the four hooks necessary to render SVG
+   *   'documents' that are contained in an OpenType font's 'SVG~' table.
+   *
+   *   For more information on the implementation, see our standard hooks
+   *   based on 'librsvg' in the [FreeType Demo
+   *   Programs](https://gitlab.freedesktop.org/freetype/freetype-demos)
+   *   repository.
+   *
+   */
+
+
+  /**************************************************************************
+   *
    * @functype:
    *   SVG_Lib_Init_Func
    *
@@ -41,9 +64,6 @@ FT_BEGIN_HEADER
    *   the lifetime of an @FT_Library object.  In a typical implementation,
    *   one would want to allocate a structure and point the `data_pointer`
    *   to it and perform any library initializations that might be needed.
-   *
-   *   For more information on the implementation, see our standard hooks
-   *   based on Librsvg in the 'FreeType Demo Programs' repository.
    *
    * @inout:
    *   data_pointer ::
@@ -77,9 +97,6 @@ FT_BEGIN_HEADER
    *   structure that was allocated in the init hook and perform any
    *   library-related closure that might be needed.
    *
-   *   For more information on the implementation, see our standard hooks
-   *   based on Librsvg in the 'FreeType Demo Programs' repository.
-   *
    * @inout:
    *   data_pointer ::
    *     The SVG rendering module stores a pointer variable that can be used
@@ -101,7 +118,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A callback that is called to render an OT-SVG glyph.  This callback
-   *   hook is called right after the preset hook @SVG_Lib_Preset_SlotFunc
+   *   hook is called right after the preset hook @SVG_Lib_Preset_Slot_Func
    *   has been called with `cache` set to `TRUE`.  The data necessary to
    *   render is available through the handle @FT_SVG_Document, which is set
    *   in the `other` field of @FT_GlyphSlotRec.
@@ -109,9 +126,6 @@ FT_BEGIN_HEADER
    *   The render hook is expected to render the SVG glyph to the bitmap
    *   buffer that is allocated already at `slot->bitmap.buffer`.  It also
    *   sets the `num_grays` value as well as `slot->format`.
-   *
-   *   For more information on the implementation, see our standard hooks
-   *   based on Librsvg in the 'FreeType Demo Programs' repository.
    *
    * @input:
    *   slot ::
@@ -145,6 +159,7 @@ FT_BEGIN_HEADER
    *   two places.
    *
    *   1. When `FT_Load_Glyph` needs to preset the glyph slot.
+   *
    *   2. Right before the `svg` module calls the render callback hook.
    *
    *   When it is the former, the argument `cache` is set to `FALSE`.  When
@@ -164,9 +179,6 @@ FT_BEGIN_HEADER
    *   transformations that have been set, and translate the transformation
    *   matrices into the SVG coordinate system, as the original matrix is
    *   intended for the TTF/CFF coordinate system.
-   *
-   *   For more information on the implementation, see our standard hooks
-   *   based on Librsvg in the 'FreeType Demo Programs' repository.
    *
    * @input:
    *   slot ::
@@ -201,8 +213,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure that stores the four hooks needed to render OT-SVG glyphs
-   *   properly.  The structure is publicly used to set the hooks via driver
-   *   properties.
+   *   properly.  The structure is publicly used to set the hooks via the
+   *   @svg-hooks driver property.
    *
    *   The behavior of each hook is described in its documentation.  One
    *   thing to note is that the preset hook and the render hook often need
@@ -210,9 +222,6 @@ FT_BEGIN_HEADER
    *   intermediate data in a state structure to avoid calculating it twice.
    *   For example, in the preset hook one can draw the glyph on a recorder
    *   surface and later create a bitmap surface from it in the render hook.
-   *
-   *   For more information on the implementation, see our standard hooks
-   *   based on Librsvg in the 'FreeType Demo Programs' repository.
    *
    * @fields:
    *   init_svg ::
@@ -244,7 +253,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_SVG_DocumentRec_
+   *   FT_SVG_DocumentRec
    *
    * @description:
    *   A structure that models one SVG document.
@@ -276,12 +285,12 @@ FT_BEGIN_HEADER
    *     The translation to apply to the glyph while rendering.
    *
    * @note:
-   *   When the slot is passed down to a renderer, the renderer can only
-   *   access the `metrics` and `units_per_EM` fields via `slot->face`.
-   *   However, when `FT_Glyph_To_Bitmap` sets up a dummy object, it has no
-   *   way to set a `face` object.  Thus, metrics information and
-   *   `units_per_EM` (which is necessary for OT-SVG) has to be stored
-   *   separately.
+   *   When an @FT_GlyphSlot object `slot` is passed down to a renderer, the
+   *   renderer can only access the `metrics` and `units_per_EM` fields via
+   *   `slot->face`.  However, when @FT_Glyph_To_Bitmap sets up a dummy
+   *   object, it has no way to set a `face` object.  Thus, metrics
+   *   information and `units_per_EM` (which is necessary for OT-SVG) has to
+   *   be stored separately.
    *
    * @since:
    *   2.12
