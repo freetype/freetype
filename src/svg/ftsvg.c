@@ -162,7 +162,7 @@
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
 
-    if ( !ft_strcmp( property_name, "svg_hooks" ) )
+    if ( !ft_strcmp( property_name, "svg-hooks" ) )
     {
       SVG_RendererHooks*  hooks;
 
@@ -191,7 +191,7 @@
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
 
-    if ( !ft_strcmp( property_name, "svg_hooks" ) )
+    if ( !ft_strcmp( property_name, "svg-hooks" ) )
     {
       SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
 
