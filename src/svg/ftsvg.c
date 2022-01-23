@@ -168,9 +168,26 @@
 
 
       if ( value_is_string == TRUE )
-        return FT_THROW( Invalid_Argument );
+      {
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
 
       hooks = (SVG_RendererHooks*)value;
+
+      if ( !hooks->init_svg    ||
+           !hooks->free_svg    ||
+           !hooks->render_svg  ||
+           !hooks->preset_slot )
+      {
+        FT_TRACE0(( "ft_svg_property_set:"
+                    " SVG rendering hooks not set because\n" ));
+        FT_TRACE0(( "                    "
+                    " at least one function pointer is NULL\n" ));
+
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
 
       renderer->hooks     = *hooks;
       renderer->hooks_set = TRUE;
@@ -178,6 +195,7 @@
     else
       error = FT_THROW( Missing_Property );
 
+  Exit:
     return error;
   }
 

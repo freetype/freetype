@@ -223,6 +223,8 @@ FT_BEGIN_HEADER
    *   For example, in the preset hook one can draw the glyph on a recorder
    *   surface and later create a bitmap surface from it in the render hook.
    *
+   *   All four hooks must be non-NULL.
+   *
    * @fields:
    *   init_svg ::
    *     The initialization hook.
