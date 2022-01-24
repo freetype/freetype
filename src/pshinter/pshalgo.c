@@ -1228,8 +1228,9 @@
         FT_Pos  dxi, dyi, dxo, dyo;
 
 
+        point->flags = 0;
         if ( !( outline->tags[n] & FT_CURVE_TAG_ON ) )
-          point->flags = PSH_POINT_OFF;
+          psh_point_set_off( point );
 
         dxi = vec[n].x - vec[n_prev].x;
         dyi = vec[n].y - vec[n_prev].y;
@@ -1242,14 +1243,14 @@
         point->dir_out = psh_compute_dir( dxo, dyo );
 
         /* detect smooth points */
-        if ( point->flags & PSH_POINT_OFF )
-          point->flags |= PSH_POINT_SMOOTH;
+        if ( psh_point_is_off( point ) )
+          psh_point_set_smooth( point );
 
         else if ( point->dir_in == point->dir_out )
         {
           if ( point->dir_out != PSH_DIR_NONE           ||
                psh_corner_is_flat( dxi, dyi, dxo, dyo ) )
-            point->flags |= PSH_POINT_SMOOTH;
+            psh_point_set_smooth( point );
         }
       }
     }
