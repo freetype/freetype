@@ -3054,10 +3054,11 @@ FT_BEGIN_HEADER
    *     the OpenType specification), make @FT_Render_Glyph provide a default
    *     blending of the color glyph layers associated with the glyph index,
    *     using the same bitmap format as embedded color bitmap images.  This
-   *     is mainly for convenience; for full control of color layers use
-   *     @FT_Get_Color_Glyph_Layer and FreeType's color functions like
-   *     @FT_Palette_Select instead of setting @FT_LOAD_COLOR for rendering
-   *     so that the client application can handle blending by itself.
+   *     is mainly for convenience and works for 'COLR' v1 tables only.  For
+   *     full control of color layers use @FT_Get_Color_Glyph_Layer and
+   *     FreeType's color functions like @FT_Palette_Select instead of
+   *     setting @FT_LOAD_COLOR for rendering so that the client application
+   *     can handle blending by itself.
    *
    *   FT_LOAD_COMPUTE_METRICS ::
    *     [Since 2.6.1] Compute glyph metrics from the glyph data, without the
