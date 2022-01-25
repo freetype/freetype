@@ -3032,16 +3032,24 @@ FT_BEGIN_HEADER
    *     Disable the auto-hinter.  See also the note below.
    *
    *   FT_LOAD_COLOR ::
-   *     Load colored glyphs.  There are slight differences depending on the
-   *     font format.
+   *     Load colored glyphs.  FreeType searches in the following order;
+   *     there are slight differences depending on the font format.
    *
-   *     [Since 2.5] Load embedded color bitmap images.  The resulting color
-   *     bitmaps, if available, will have the @FT_PIXEL_MODE_BGRA format,
-   *     with pre-multiplied color channels.  If the flag is not set and
-   *     color bitmaps are found, they are converted to 256-level gray
-   *     bitmaps, using the @FT_PIXEL_MODE_GRAY format.
+   *     [Since 2.5] Load embedded color bitmap images (provided
+   *     @FT_LOAD_NO_BITMAP is not set).  The resulting color bitmaps, if
+   *     available, have the @FT_PIXEL_MODE_BGRA format, with pre-multiplied
+   *     color channels.  If the flag is not set and color bitmaps are found,
+   *     they are converted to 256-level gray bitmaps, using the
+   *     @FT_PIXEL_MODE_GRAY format.
    *
-   *     [Since 2.10, experimental] If the glyph index contains an entry in
+   *     [Since 2.12] If the glyph index maps to an entry in the face's
+   *     'SVG~' table, load the associated SVG document from this table and
+   *     set the `format` field of @FT_GlyphSlotRec to @FT_GLYPH_FORMAT_SVG.
+   *     Note that FreeType itself can't render SVG documents; however, the
+   *     library provides hooks to seamlessly integrate an external renderer.
+   *     See sections @ot_svg_driver and @svg_fonts for more.
+   *
+   *     [Since 2.10, experimental] If the glyph index maps to an entry in
    *     the face's 'COLR' table with a 'CPAL' palette table (as defined in
    *     the OpenType specification), make @FT_Render_Glyph provide a default
    *     blending of the color glyph layers associated with the glyph index,
