@@ -27,10 +27,14 @@ How to prepare a new release
     make distclean; make devel CC=g++; make multi CC=g++
 
     sh autogen.sh
-    make distclean; ./configure; make
     make distclean; ./configure CC=g++; make
 
   in the cloned repository to test compilation with both gcc and g++.
+
+  Note that it is normally not necessary to test standard C
+  compilation with the `configure`, `meson`, and `cmake` build tools
+  since this is done by the CI process of 'gitlab.freetype.org' for
+  every commit.
 
 . Test C++ compilation for 'freetype-demos' too (using `git clone` as
   above).
@@ -177,7 +181,11 @@ How to prepare a new release
   'freetype-web' repository.
 
 . Announce new release on 'freetype-announce@nongnu.org' and to
-  relevant newsgroups.
+  relevant newsgroups.  The text should include
+
+  - SHA256 checksums of all files,
+  - instructions how to verify the bundles using the `.sig` file data,
+  - the PGP public key used to sign the archives.
 
 ----------------------------------------------------------------------
 
