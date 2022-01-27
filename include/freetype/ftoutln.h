@@ -109,11 +109,13 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   A contour that contains a single point only is represented by a 'move
-   *   to' operation followed by 'line to' to the same point.  In most cases,
-   *   it is best to filter this out before using the outline for stroking
-   *   purposes (otherwise it would result in a visible dot when round caps
-   *   are used).
+   *   Degenerate contours, segments, and Bezier arcs may be reported.  In
+   *   most cases, it is best to filter these out before using the outline
+   *   for stroking or other path modification purposes (which may cause
+   *   degenerate segments to become non-degenrate and visible, like when
+   *   stroke caps are used or the path is otherwise outset).  Some glyph
+   *   outlines may contain deliberate degenerate single points for mark
+   *   attachement.
    *
    *   Similarly, the function returns success for an empty outline also
    *   (doing nothing, this is, not calling any emitter); if necessary, you
