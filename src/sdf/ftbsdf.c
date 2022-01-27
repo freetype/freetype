@@ -1096,7 +1096,7 @@
     FT_Int  i, j;
 
     FT_SDFFormat*  t_buffer;
-    FT_16D16       spread;
+    FT_16D16       sp_sq, spread;
 
 
     if ( !worker || !target )
@@ -1116,11 +1116,13 @@
       goto Exit;
     }
 
-#if USE_SQUARED_DISTANCES
-    spread = FT_INT_16D16( worker->params.spread *
-                           worker->params.spread );
-#else
     spread = FT_INT_16D16( worker->params.spread );
+
+#if USE_SQUARED_DISTANCES
+    sp_sq = FT_INT_16D16( worker->params.spread *
+                          worker->params.spread );
+#else
+    sp_sq = FT_INT_16D16( worker->params.spread );
 #endif
 
     for ( j = 0; j < r; j++ )
@@ -1136,8 +1138,8 @@
         index = j * w + i;
         dist  = worker->distance_map[index].dist;
 
-        if ( dist < 0 || dist > spread )
-          dist = spread;
+        if ( dist < 0 || dist > sp_sq )
+          dist = sp_sq;
 
 #if USE_SQUARED_DISTANCES
         dist = square_root( dist );

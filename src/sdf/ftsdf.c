@@ -3242,7 +3242,7 @@
     buffer   = (FT_SDFFormat*)bitmap->buffer;
 
     if ( USE_SQUARED_DISTANCES )
-      sp_sq = fixed_spread * fixed_spread;
+      sp_sq = FT_INT_16D16( spread * spread );
     else
       sp_sq = fixed_spread;
 
