@@ -495,14 +495,12 @@
                   char_type_func  char_type,
                   FT_Bool         report_invalid_characters )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error;
 
     char*       result = NULL;
     FT_String*  r;
     FT_Char*    p;
     FT_UInt     len;
-
-    FT_UNUSED( error );
 
 
     if ( FT_QALLOC( result, entry->stringLength / 2 + 1 ) )
@@ -554,14 +552,12 @@
                     char_type_func  char_type,
                     FT_Bool         report_invalid_characters )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error;
 
     char*       result = NULL;
     FT_String*  r;
     FT_Char*    p;
     FT_UInt     len;
-
-    FT_UNUSED( error );
 
 
     if ( FT_QALLOC( result, entry->stringLength + 1 ) )

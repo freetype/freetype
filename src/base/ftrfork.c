@@ -868,9 +868,7 @@
     const char*  tmp;
     const char*  slash;
     size_t       new_length;
-    FT_Error     error = FT_Err_Ok;
-
-    FT_UNUSED( error );
+    FT_Error     error;
 
 
     new_length = ft_strlen( original_name ) + ft_strlen( insertion );

@@ -411,9 +411,7 @@
     FT_String*  result;
 
 
-    (void)FT_STRDUP( result, source );
-
-    FT_UNUSED( error );
+    FT_MEM_STRDUP( result, source );
 
     return result;
   }
