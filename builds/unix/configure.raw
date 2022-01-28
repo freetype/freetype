@@ -531,7 +531,7 @@ AC_SEARCH_LIBS([clock_gettime],
                 || LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
 
 # 'librsvg' is needed to demonstrate SVG support.
-PKG_CHECK_MODULES([LIBRSVG], [librsvg-2.0],
+PKG_CHECK_MODULES([LIBRSVG], [librsvg-2.0 >= 2.46.0],
                   [have_librsvg="yes (pkg-config)"], [have_librsvg=no])
 
 FT_DEMO_CFLAGS=""
