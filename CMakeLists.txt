@@ -271,11 +271,16 @@ if (NOT FT_DISABLE_ZLIB)
 endif ()
 
 if (NOT FT_DISABLE_BZIP2)
+  # Genuine BZip2 does not provide bzip2.pc, but some platforms have it.
+  # For better dependency in freetype2.pc, bzip2.pc is searched
+  # regardless of the availability of libbz2. If bzip2.pc is found,
+  # Requires.private is used instead of Libs.private.
   if (FT_REQUIRE_BZIP2)
     find_package(BZip2 REQUIRED)
   else ()
     find_package(BZip2)
   endif ()
+  pkg_check_modules(PC_BZIP2 bzip2)
 endif ()
 
 if (NOT FT_DISABLE_BROTLI)
@@ -504,7 +509,11 @@ endif ()
 if (BZIP2_FOUND)
   target_link_libraries(freetype PRIVATE ${BZIP2_LIBRARIES})
   target_include_directories(freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
-  list(APPEND PKG_CONFIG_LIBS_PRIVATE "-lbz2")
+  if (PC_BZIP2_FOUND)
+    list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "bzip2")
+  else ()
+    list(APPEND PKG_CONFIG_LIBS_PRIVATE "-lbz2")
+  endif ()
 endif ()
 if (PNG_FOUND)
   target_link_libraries(freetype PRIVATE ${PNG_LIBRARIES})
