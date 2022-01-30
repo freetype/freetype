@@ -1096,7 +1096,6 @@
     {
       FT_Byte*    q      = (FT_Byte*)objects[idx] + field->offset;
       FT_Long     val;
-      FT_String*  string = NULL;
 
 
       skip_spaces( &cur, limit );
@@ -1146,8 +1145,9 @@
       case T1_FIELD_TYPE_STRING:
       case T1_FIELD_TYPE_KEY:
         {
-          FT_Memory  memory = parser->memory;
-          FT_UInt    len    = (FT_UInt)( limit - cur );
+          FT_Memory   memory = parser->memory;
+          FT_UInt     len    = (FT_UInt)( limit - cur );
+          FT_String*  string;
 
 
           if ( cur >= limit )
