@@ -74,6 +74,7 @@
 
       /* initialize its inner fields */
       FTC_GNode_Init( gnode, gindex, family );
+      inode->glyph = NULL;
 
       /* we will now load the glyph image */
       error = clazz->family_load_glyph( family, gindex, cache,

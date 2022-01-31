@@ -248,7 +248,9 @@
       snode->count = count;
       for ( node_count = 0; node_count < count; node_count++ )
       {
-        snode->sbits[node_count].width = 255;
+        snode->sbits[node_count].width  = 255;
+        snode->sbits[node_count].height = 0;
+        snode->sbits[node_count].buffer = NULL;
       }
 
       error = ftc_snode_load( snode,
