@@ -1674,7 +1674,6 @@
     FT_FREE( stream->base );
 
     stream->size  = 0;
-    stream->base  = NULL;
     stream->close = NULL;
   }
 

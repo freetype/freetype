@@ -415,7 +415,6 @@
           FT_FREE( blend->avar_segment[j].correspondence );
 
         FT_FREE( blend->avar_segment );
-        blend->avar_segment = NULL;
         goto Exit;
       }
 
@@ -2747,7 +2746,6 @@
         /* The cvt table has been loaded already; every time we change the */
         /* blend we may need to reload and remodify the cvt table.         */
         FT_FREE( face->cvt );
-        face->cvt = NULL;
 
         error = tt_face_load_cvt( face, face->root.stream );
         break;
@@ -2766,7 +2764,6 @@
 
     /* enforce recomputation of the PostScript name; */
     FT_FREE( face->postscript_name );
-    face->postscript_name = NULL;
 
   Exit:
     return error;

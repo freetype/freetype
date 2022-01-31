@@ -1188,7 +1188,6 @@
             FT_TRACE0(( "ps_parser_load_field: overwriting field %s\n",
                         field->ident ));
             FT_FREE( *(FT_String**)q );
-            *(FT_String**)q = NULL;
           }
 
           if ( FT_QALLOC( string, len + 1 ) )
