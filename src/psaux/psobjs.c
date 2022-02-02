@@ -99,45 +99,31 @@
   }
 
 
-  static void
-  shift_elements( PS_Table  table,
-                  FT_Byte*  old_base )
-  {
-    FT_PtrDist  delta  = table->block - old_base;
-    FT_Byte**   offset = table->elements;
-    FT_Byte**   limit  = offset + table->max_elems;
-
-
-    for ( ; offset < limit; offset++ )
-    {
-      if ( offset[0] )
-        offset[0] += delta;
-    }
-  }
-
-
   static FT_Error
-  reallocate_t1_table( PS_Table   table,
-                       FT_Offset  new_size )
+  ps_table_realloc( PS_Table   table,
+                    FT_Offset  new_size )
   {
     FT_Memory  memory   = table->memory;
     FT_Byte*   old_base = table->block;
     FT_Error   error;
 
 
-    /* allocate new base block */
-    if ( FT_ALLOC( table->block, new_size ) )
-    {
-      table->block = old_base;
+    /* (re)allocate the base block */
+    if ( FT_REALLOC( table->block, table->capacity, new_size ) )
       return error;
-    }
 
-    /* copy elements and shift offsets */
-    if ( old_base )
+    /* rebase offsets if necessary */
+    if ( old_base && table->block != old_base )
     {
-      FT_MEM_COPY( table->block, old_base, table->capacity );
-      shift_elements( table, old_base );
-      FT_FREE( old_base );
+      FT_Byte**   offset = table->elements;
+      FT_Byte**   limit  = offset + table->max_elems;
+
+
+      for ( ; offset < limit; offset++ )
+      {
+        if ( *offset )
+          *offset = table->block + ( *offset - old_base );
+      }
     }
 
     table->capacity = new_size;
@@ -204,7 +190,7 @@
         new_size  = FT_PAD_CEIL( new_size, 1024 );
       }
 
-      error = reallocate_t1_table( table, new_size );
+      error = ps_table_realloc( table, new_size );
       if ( error )
         return error;
 
@@ -234,30 +220,12 @@
    * @InOut:
    *   table ::
    *     The target table.
-   *
-   * @Note:
-   *   This function does NOT release the heap's memory block.  It is up
-   *   to the caller to clean it, or reference it in its own structures.
    */
   FT_LOCAL_DEF( void )
   ps_table_done( PS_Table  table )
   {
-    FT_Memory  memory = table->memory;
-    FT_Error   error;
-    FT_Byte*   old_base = table->block;
-
-
-    /* should never fail, because rec.cursor <= rec.size */
-    if ( !old_base )
-      return;
-
-    if ( FT_QALLOC( table->block, table->cursor ) )
-      return;
-    FT_MEM_COPY( table->block, old_base, table->cursor );
-    shift_elements( table, old_base );
-
-    table->capacity = table->cursor;
-    FT_FREE( old_base );
+    /* no problem if shrinking fails */
+    ps_table_realloc( table, table->cursor );
   }
 
 
