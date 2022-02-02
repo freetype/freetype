@@ -240,7 +240,7 @@ if (BUILD_FRAMEWORK)
     message(FATAL_ERROR
       "You should use Xcode generator with BUILD_FRAMEWORK enabled")
   endif ()
-  set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_64_BIT)")
+  set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
   set(BUILD_SHARED_LIBS ON)
 endif ()
 
