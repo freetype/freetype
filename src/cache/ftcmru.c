@@ -262,6 +262,8 @@
       if ( list->clazz.node_done )
         list->clazz.node_done( node, list->data );
     }
+
+    /* zero new node in case of node_init failure */
     else if ( FT_ALLOC( node, list->clazz.node_size ) )
       goto Exit;
 
