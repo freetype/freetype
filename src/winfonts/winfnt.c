@@ -352,6 +352,10 @@
 
           count = FT_GET_USHORT_LE();
 
+          FT_TRACE2(( type_id == 0x8007U ? "RT_FONTDIR count %hu\n" :
+                      type_id == 0x8008U ? "RT_FONT count %hu\n" : "",
+                                           count ));
+
           if ( type_id == 0x8008U )
           {
             font_count  = count;
