@@ -584,9 +584,9 @@ FT_BEGIN_HEADER
    *   The glyph image is translated with the `origin` vector before
    *   rendering.
    *
-   *   The first parameter is a pointer to an @FT_Glyph handle, that will be
+   *   The first parameter is a pointer to an @FT_Glyph handle that will be
    *   _replaced_ by this function (with newly allocated data).  Typically,
-   *   you would use (omitting error handling):
+   *   you would do something like the following (omitting error handling).
    *
    *   ```
    *     FT_Glyph        glyph;
@@ -603,7 +603,7 @@ FT_BEGIN_HEADER
    *     if ( glyph->format != FT_GLYPH_FORMAT_BITMAP )
    *     {
    *       error = FT_Glyph_To_Bitmap( &glyph, FT_RENDER_MODE_NORMAL,
-   *                                     0, 1 );
+   *                                   0, 1 );
    *       if ( error ) // `glyph' unchanged
    *         ...
    *     }
@@ -618,7 +618,7 @@ FT_BEGIN_HEADER
    *     FT_Done_Glyph( glyph );
    *   ```
    *
-   *   Here is another example, again without error handling:
+   *   Here is another example, again without error handling.
    *
    *   ```
    *     FT_Glyph  glyphs[MAX_GLYPHS]

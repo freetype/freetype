@@ -2787,11 +2787,12 @@
    *   A function used to load a single glyph within a given glyph slot,
    *   for a given size.
    *
-   * @Input:
+   * @InOut:
    *   glyph ::
    *     A handle to a target slot object where the glyph
    *     will be loaded.
    *
+   * @Input:
    *   size ::
    *     A handle to the source face size at which the glyph
    *     must be scaled/loaded.
