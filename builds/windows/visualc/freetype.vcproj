@@ -442,6 +442,10 @@
 				RelativePath="..\..\..\src\smooth\smooth.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\svg\svg.c"
+				>
+			</File>
 			<Filter
 				Name="FT_MODULES"
 				>
