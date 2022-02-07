@@ -1580,15 +1580,32 @@
 
     if ( !error )
     {
-      FT_Short   abearing;
+      FT_Short   abearing; /* not used here */
       FT_UShort  aadvance;
 
 
       tt_face_get_metrics( face, FALSE, glyph_index, &abearing, &aadvance );
 
       metrics->horiBearingX = (FT_Short)originOffsetX;
-      metrics->horiBearingY = (FT_Short)( -originOffsetY + metrics->height );
+      metrics->vertBearingX = (FT_Short)originOffsetX;
+
+      metrics->horiBearingY = (FT_Short)( originOffsetY + metrics->height );
+      metrics->vertBearingY = (FT_Short)originOffsetY;
+
       metrics->horiAdvance  = (FT_UShort)( aadvance *
+                                           face->root.size->metrics.x_ppem /
+                                           face->header.Units_Per_EM );
+
+      if ( face->vertical_info )
+        tt_face_get_metrics( face, TRUE, glyph_index, &abearing, &aadvance );
+      else if ( face->os2.version != 0xFFFFU )
+        aadvance = (FT_UShort)FT_ABS( face->os2.sTypoAscender -
+                                      face->os2.sTypoDescender );
+      else
+        aadvance = (FT_UShort)FT_ABS( face->horizontal.Ascender -
+                                      face->horizontal.Descender );
+
+      metrics->vertAdvance  = (FT_UShort)( aadvance *
                                            face->root.size->metrics.x_ppem /
                                            face->header.Units_Per_EM );
     }

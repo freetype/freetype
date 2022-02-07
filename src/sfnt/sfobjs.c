@@ -851,12 +851,6 @@
     is_apple_sbit = 0;
     is_apple_sbix = !face->goto_table( face, TTAG_sbix, stream, 0 );
 
-    /* Apple 'sbix' color bitmaps are rendered scaled and then the 'glyf'
-     * outline rendered on top.  We don't support that yet, so just ignore
-     * the 'glyf' outline and advertise it as a bitmap-only font. */
-    if ( is_apple_sbix )
-      has_outline = FALSE;
-
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline && sfnt->load_bhed )
@@ -1059,10 +1053,12 @@
 
       if ( has_outline == TRUE )
       {
-        flags |= FT_FACE_FLAG_SCALABLE;   /* scalable outlines */
-
-        if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX )
-          flags |= FT_FACE_FLAG_SBIX;     /* and 'sbix' bitmaps */
+        /* by default (and for backward compatibility) we handle */
+        /* fonts with an 'sbix' table as bitmap-only             */
+        if ( is_apple_sbix )
+          flags |= FT_FACE_FLAG_SBIX;     /* with 'sbix' bitmaps */
+        else
+          flags |= FT_FACE_FLAG_SCALABLE; /* scalable outlines */
       }
 
       /* The sfnt driver only supports bitmap fonts natively, thus we */
@@ -1286,7 +1282,8 @@
        *
        * Set up metrics.
        */
-      if ( FT_IS_SCALABLE( root ) )
+      if ( FT_IS_SCALABLE( root ) ||
+           FT_HAS_SBIX( root )    )
       {
         /* XXX What about if outline header is missing */
         /*     (e.g. sfnt wrapped bitmap)?             */

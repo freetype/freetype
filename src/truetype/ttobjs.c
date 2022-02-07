@@ -727,7 +727,8 @@
     if ( error )
       goto Exit;
 
-    if ( FT_IS_SCALABLE( ttface ) )
+    if ( FT_IS_SCALABLE( ttface ) ||
+         FT_HAS_SBIX( ttface )    )
     {
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
       if ( !ttface->internal->incremental_interface )
