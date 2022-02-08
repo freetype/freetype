@@ -131,14 +131,15 @@
                   FT_UInt    count,
                   FT_Memory  memory )
   {
-    FT_UInt   old_max = ( mask->max_bits + 7 ) >> 3;
-    FT_UInt   new_max = ( count          + 7 ) >> 3;
+    FT_UInt   old_max = mask->max_bits >> 3;
+    FT_UInt   new_max = ( count + 7 ) >> 3;
     FT_Error  error   = FT_Err_Ok;
 
 
     if ( new_max > old_max )
     {
       new_max = FT_PAD_CEIL( new_max, 8 );
+      /* added bytes are zeroed here */
       if ( !FT_RENEW_ARRAY( mask->bytes, old_max, new_max ) )
         mask->max_bits = new_max * 8;
     }
@@ -155,22 +156,6 @@
       return 0;
 
     return mask->bytes[idx >> 3] & ( 0x80 >> ( idx & 7 ) );
-  }
-
-
-  /* clear a given bit */
-  static void
-  ps_mask_clear_bit( PS_Mask  mask,
-                     FT_UInt  idx )
-  {
-    FT_Byte*  p;
-
-
-    if ( idx >= mask->num_bits )
-      return;
-
-    p    = mask->bytes + ( idx >> 3 );
-    p[0] = (FT_Byte)( p[0] & ~( 0x80 >> ( idx & 7 ) ) );
   }
 
 
@@ -432,15 +417,14 @@
 
 
         /* if "count2" is greater than "count1", we need to grow the */
-        /* first bitset, and clear the highest bits                  */
+        /* first bitset                                              */
         if ( count2 > count1 )
         {
           error = ps_mask_ensure( mask1, count2, memory );
           if ( error )
             goto Exit;
 
-          for ( pos = count1; pos < count2; pos++ )
-            ps_mask_clear_bit( mask1, pos );
+          mask1->num_bits = count2;
         }
 
         /* merge (unite) the bitsets */
