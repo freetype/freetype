@@ -63,16 +63,14 @@
   {
     FT_UInt   old_max = table->max_hints;
     FT_UInt   new_max = count;
-    FT_Error  error   = FT_Err_Ok;
+    FT_Error  error;
 
 
-    if ( new_max > old_max )
-    {
-      /* try to grow the table */
-      new_max = FT_PAD_CEIL( new_max, 8 );
-      if ( !FT_RENEW_ARRAY( table->hints, old_max, new_max ) )
-        table->max_hints = new_max;
-    }
+    /* try to grow the table */
+    new_max = FT_PAD_CEIL( new_max, 8 );
+    if ( !FT_QRENEW_ARRAY( table->hints, old_max, new_max ) )
+      table->max_hints = new_max;
+
     return error;
   }
 
@@ -90,17 +88,14 @@
     count = table->num_hints;
     count++;
 
-    if ( count >= table->max_hints )
+    if ( count > table->max_hints )
     {
       error = ps_hint_table_ensure( table, count, memory );
       if ( error )
         goto Exit;
     }
 
-    hint        = table->hints + count - 1;
-    hint->pos   = 0;
-    hint->len   = 0;
-    hint->flags = 0;
+    hint = table->hints + count - 1;  /* initialized upstream */
 
     table->num_hints = count;
 
