@@ -154,6 +154,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_EXTERNAL_STREAM
    *   FT_FACE_FLAG_HINTER
    *   FT_FACE_FLAG_SVG
+   *   FT_FACE_FLAG_SBIX
    *
    *   FT_HAS_HORIZONTAL
    *   FT_HAS_VERTICAL
@@ -163,6 +164,7 @@ FT_BEGIN_HEADER
    *   FT_HAS_COLOR
    *   FT_HAS_MULTIPLE_MASTERS
    *   FT_HAS_SVG
+   *   FT_HAS_SBIX
    *
    *   FT_IS_SFNT
    *   FT_IS_SCALABLE
@@ -1236,6 +1238,12 @@ FT_BEGIN_HEADER
    *
    *   FT_FACE_FLAG_SVG ::
    *     [Since 2.12] The face has an 'SVG~' OpenType table.
+   *
+   *   FT_FACE_FLAG_SBIX ::
+   *     [Since 2.12] The face has an 'sbix' OpenType table *and* outlines.
+   *     For such fonts, @FT_FACE_FLAG_SCALABLE is not set by default to
+   *     retain backward compatibility.
+   *
    */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
@@ -1254,6 +1262,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
 #define FT_FACE_FLAG_SVG               ( 1L << 16 )
+#define FT_FACE_FLAG_SBIX              ( 1L << 17 )
 
 
   /**************************************************************************
@@ -1508,6 +1517,22 @@ FT_BEGIN_HEADER
    */
 #define FT_HAS_SVG( face ) \
           ( !!( (face)->face_flags & FT_FACE_FLAG_SVG ) )
+
+
+  /**************************************************************************
+   *
+   * @macro:
+   *   FT_HAS_SBIX
+   *
+   * @description:
+   *   A macro that returns true whenever a face object contains an 'sbix'
+   *   OpenType table *and* outline glyphs.
+   *
+   * @since:
+   *   2.12
+   */
+#define FT_HAS_SBIX( face ) \
+          ( !!( (face)->face_flags & FT_FACE_FLAG_SBIX ) )
 
 
   /**************************************************************************
