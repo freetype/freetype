@@ -249,6 +249,10 @@
     mask             = table->masks + count - 1;
     mask->num_bits   = 0;
     mask->end_point  = 0;
+    /* reused mask must be cleared */
+    if ( mask->max_bits )
+      FT_MEM_ZERO( mask->bytes, mask->max_bits >> 3 );
+
     table->num_masks = count;
 
   Exit:
