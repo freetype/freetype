@@ -227,6 +227,7 @@ FT_BEGIN_HEADER
    *   FT_LOAD_NO_SCALE
    *   FT_LOAD_NO_HINTING
    *   FT_LOAD_NO_BITMAP
+   *   FT_LOAD_SBITS_ONLY
    *   FT_LOAD_NO_AUTOHINT
    *   FT_LOAD_COLOR
    *
@@ -2976,6 +2977,15 @@ FT_BEGIN_HEADER
    *
    *     @FT_LOAD_NO_SCALE always sets this flag.
    *
+   *   FT_LOAD_SBITS_ONLY ::
+   *     [Since 2.12] This is the opposite of @FT_LOAD_NO_BITMAP, more or
+   *     less: @FT_Load_Glyph returns `FT_Err_Invalid_Argument` if the face
+   *     contains a bitmap strike for the given size (or the strike selected
+   *     by @FT_Select_Size) but there is no glyph in the strike.
+   *
+   *     Note that this load flag was part of FreeType since version 2.0.6
+   *     but previously tagged as internal.
+   *
    *   FT_LOAD_VERTICAL_LAYOUT ::
    *     Load the glyph for vertical text layout.  In particular, the
    *     `advance` value in the @FT_GlyphSlotRec structure is set to the
@@ -3120,6 +3130,7 @@ FT_BEGIN_HEADER
 #define FT_LOAD_IGNORE_TRANSFORM             ( 1L << 11 )
 #define FT_LOAD_MONOCHROME                   ( 1L << 12 )
 #define FT_LOAD_LINEAR_DESIGN                ( 1L << 13 )
+#define FT_LOAD_SBITS_ONLY                   ( 1L << 14 )
 #define FT_LOAD_NO_AUTOHINT                  ( 1L << 15 )
   /* Bits 16-19 are used by `FT_LOAD_TARGET_` */
 #define FT_LOAD_COLOR                        ( 1L << 20 )
@@ -3130,7 +3141,6 @@ FT_BEGIN_HEADER
 
   /* used internally only by certain font drivers */
 #define FT_LOAD_ADVANCE_ONLY                 ( 1L << 8  )
-#define FT_LOAD_SBITS_ONLY                   ( 1L << 14 )
 #define FT_LOAD_SVG_ONLY                     ( 1L << 23 )
 
 
