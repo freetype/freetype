@@ -150,9 +150,9 @@
   /* test a bit value in a given mask */
   static FT_Int
   ps_mask_test_bit( PS_Mask  mask,
-                    FT_Int   idx )
+                    FT_UInt  idx )
   {
-    if ( (FT_UInt)idx >= mask->num_bits )
+    if ( idx >= mask->num_bits )
       return 0;
 
     return mask->bytes[idx >> 3] & ( 0x80 >> ( idx & 7 ) );
@@ -406,7 +406,7 @@
       PS_Mask  mask2  = table->masks + index2;
       FT_UInt  count1 = mask1->num_bits;
       FT_UInt  count2 = mask2->num_bits;
-      FT_Int   delta;
+      FT_UInt  delta;
 
 
       if ( count2 > 0 )
@@ -446,7 +446,7 @@
       mask2->end_point = 0;
 
       /* number of masks to move */
-      delta = (FT_Int)( table->num_masks - 1 - index2 );
+      delta = table->num_masks - 1 - index2;
       if ( delta > 0 )
       {
         /* move to end of table for reuse */
@@ -455,7 +455,7 @@
 
         ft_memmove( mask2,
                     mask2 + 1,
-                    (FT_UInt)delta * sizeof ( PS_MaskRec ) );
+                    delta * sizeof ( PS_MaskRec ) );
 
         mask2[delta] = dummy;
       }
@@ -626,7 +626,7 @@
                            FT_Int        pos,
                            FT_Int        len,
                            FT_Memory     memory,
-                           FT_Int       *aindex )
+                           FT_UInt      *aindex )
   {
     FT_Error  error = FT_Err_Ok;
     FT_UInt   flags = 0;
@@ -643,9 +643,6 @@
       }
       len = 0;
     }
-
-    if ( aindex )
-      *aindex = -1;
 
     /* now, lookup stem in the current hints table */
     {
@@ -683,7 +680,7 @@
         goto Exit;
 
       if ( aindex )
-        *aindex = (FT_Int)idx;
+        *aindex = idx;
     }
 
   Exit:
@@ -694,9 +691,9 @@
   /* add a "hstem3/vstem3" counter to our dimension table */
   static FT_Error
   ps_dimension_add_counter( PS_Dimension  dim,
-                            FT_Int        hint1,
-                            FT_Int        hint2,
-                            FT_Int        hint3,
+                            FT_UInt       hint1,
+                            FT_UInt       hint2,
+                            FT_UInt       hint3,
                             FT_Memory     memory )
   {
     FT_Error  error   = FT_Err_Ok;
@@ -723,26 +720,17 @@
     }
 
     /* now, set the bits for our hints in the counter mask */
-    if ( hint1 >= 0 )
-    {
-      error = ps_mask_set_bit( counter, (FT_UInt)hint1, memory );
-      if ( error )
-        goto Exit;
-    }
+    error = ps_mask_set_bit( counter, hint1, memory );
+    if ( error )
+      goto Exit;
 
-    if ( hint2 >= 0 )
-    {
-      error = ps_mask_set_bit( counter, (FT_UInt)hint2, memory );
-      if ( error )
-        goto Exit;
-    }
+    error = ps_mask_set_bit( counter, hint2, memory );
+    if ( error )
+      goto Exit;
 
-    if ( hint3 >= 0 )
-    {
-      error = ps_mask_set_bit( counter, (FT_UInt)hint3, memory );
-      if ( error )
-        goto Exit;
-    }
+    error = ps_mask_set_bit( counter, hint3, memory );
+    if ( error )
+      goto Exit;
 
   Exit:
     return error;
@@ -871,7 +859,7 @@
       PS_Dimension  dim;
       FT_Memory     memory = hints->memory;
       FT_Int        count;
-      FT_Int        idx[3];
+      FT_UInt       idx[3];
 
 
       /* limit "dimension" to 0..1 */
