@@ -490,18 +490,28 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   afont_info ::
-   *     Output font info structure pointer.
+   *     A pointer to a @PS_FontInfoRec object.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
    *   String pointers within the @PS_FontInfoRec structure are owned by the
-   *   face and don't need to be freed by the caller.  Missing entries in
-   *   the font's FontInfo dictionary are represented by `NULL` pointers.
+   *   face and don't need to be freed by the caller.  Missing entries in the
+   *   font's FontInfo dictionary are represented by `NULL` pointers.
    *
-   *   If the font's format is not PostScript-based, this function will
-   *   return the `FT_Err_Invalid_Argument` error code.
+   *   The following font formats support this feature: 'Type~1', 'Type~42',
+   *   'CFF', 'CID~Type~1'.  For other font formats this function returns the
+   *   `FT_Err_Invalid_Argument` error code.
+   *
+   * @example:
+   *   ```
+   *     PS_FontInfoRec  font_info;
+   *
+   *
+   *     error = FT_Get_PS_Font_Info( face, &font_info );
+   *     ...
+   *   ```
    *
    */
   FT_EXPORT( FT_Error )
@@ -524,7 +534,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   afont_private ::
-   *     Output private dictionary structure pointer.
+   *     A pointer to a @PS_PrivateRec object.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -533,8 +543,18 @@ FT_BEGIN_HEADER
    *   The string pointers within the @PS_PrivateRec structure are owned by
    *   the face and don't need to be freed by the caller.
    *
-   *   If the font's format is not PostScript-based, this function returns
-   *   the `FT_Err_Invalid_Argument` error code.
+   *   Only the 'Type~1' font format supports this feature.  For other font
+   *   formats this function returns the `FT_Err_Invalid_Argument` error
+   *   code.
+   *
+   * @example:
+   *   ```
+   *     PS_PrivateRec  font_private;
+   *
+   *
+   *     error = FT_Get_PS_Font_Private( face, &font_private );
+   *     ...
+   *   ```
    *
    */
   FT_EXPORT( FT_Error )
