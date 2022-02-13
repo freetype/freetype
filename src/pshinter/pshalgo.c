@@ -1548,8 +1548,9 @@
   /* the accepted shift for strong points in fractional pixels */
 #define PSH_STRONG_THRESHOLD  32
 
-  /* the maximum shift value in font units */
-#define PSH_STRONG_THRESHOLD_MAXIMUM  30
+  /* the maximum shift value in font units tuned to distinguish */
+  /* between stems and serifs in URW+ font collection           */
+#define PSH_STRONG_THRESHOLD_MAXIMUM  12
 
 
   /* find strong points in a glyph */
