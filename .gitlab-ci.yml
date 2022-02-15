@@ -48,7 +48,17 @@ variables:
     # Make sure meson is up to date so we don't need to rebuild the image
     # with each release.
     - pip3 install meson==0.59.1
+    - pip3 install --upgrade certifi
     - pip3 install -U ninja
+
+    # Generate a UWP cross-file in case it's used
+    - $PSDefaultParameterValues['Out-File:Encoding'] = 'ASCII'
+    - echo "[binaries]" > uwp-crossfile.meson
+    - echo "c = 'cl'" >> uwp-crossfile.meson
+    - echo "strip = ['true']" >> uwp-crossfile.meson
+    - echo "[built-in options]" >> uwp-crossfile.meson
+    - echo "c_args = ['-DWINAPI_FAMILY=WINAPI_FAMILY_APP', '-DUNICODE', '-D_WIN32_WINNT=0x0A00', '-we4013']" >> uwp-crossfile.meson
+    - echo "c_winlibs = ['windowsapp.lib']" >> uwp-crossfile.meson
   script:
     # For some reason, options are separated by newlines instead of spaces,
     # so we have to replace them first.
@@ -59,11 +69,10 @@ variables:
     # script.  Environment variables substitutions is done by PowerShell
     # before calling `cmd.exe`, that's why we use `$env:FOO` instead of
     # `%FOO%`.
-    - cmd.exe /C "C:\BuildTools\Common7\Tools\VsDevCmd.bat -host_arch=amd64 -arch=$env:ARCH &&
-        meson setup build $env:MESON_ARGS_WINDOWS &&
-        meson compile --verbose -C build &&
-        meson test -C build &&
-        meson test -C build --benchmark"
+    - cmd.exe /C "C:\BuildTools\Common7\Tools\VsDevCmd.bat -host_arch=amd64 -arch=$env:ARCH $env:VS_UWP &&
+        meson setup build $env:MESON_ARGS_WINDOWS $env:MESON_ARGS_UWP &&
+        meson compile --verbose -C build
+        $env:MESON_WINDOWS_TESTS"
 
 
 # Format of job names:
@@ -76,12 +85,20 @@ windows meson vs2017 amd64:
   extends: '.build windows meson'
   variables:
     ARCH: 'amd64'
+    MESON_WINDOWS_TESTS: '&& meson test -C build && meson test -C build --benchmark'
 
 windows meson vs2017 x86:
   extends: '.build windows meson'
   variables:
     ARCH: 'x86'
+    MESON_WINDOWS_TESTS: '&& meson test -C build && meson test -C build --benchmark'
 
+windows meson vs2017 amd64 uwp:
+  extends: '.build windows meson'
+  variables:
+    ARCH: 'amd64'
+    VS_UWP: '-app_platform=UWP'
+    MESON_ARGS_UWP: '--cross-file uwp-crossfile.meson -Dc_winlibs="windowsapp.lib"'
 
 # Linux Jobs.
 #
