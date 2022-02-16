@@ -47,6 +47,9 @@ FT_BEGIN_HEADER
    *   MM fonts, others will work with all three types.  They are similar
    *   enough that a consistent interface makes sense.
    *
+   *   For Adobe MM fonts, macro @FT_IS_SFNT returns false.  For GX and
+   *   OpenType variation fonts, it returns true.
+   *
    */
 
 
