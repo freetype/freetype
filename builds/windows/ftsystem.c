@@ -196,7 +196,25 @@
   }
 
 
-#ifdef _WIN32_WCE
+#if defined( NTDDI_VERSION ) && NTDDI_VERSION < 0x0A000007 && \
+    defined( WINAPI_FAMILY_PARTITION )                 &&     \
+    !WINAPI_FAMILY_PARTITION( WINAPI_PARTITION_DESKTOP )
+
+#define PACK_DWORD64( hi, lo )  ( ( (DWORD64)(hi) << 32 ) | (DWORD)(lo) )
+
+#define CreateFileW( a, b, c, d, e, f, g ) \
+        CreateFileFromAppW( a, b, c, d, e, f, g )
+#define CreateFileMapping( a, b, c, d, e, f ) \
+        CreateFileMappingFromApp( a, b, c, PACK_DWORD64( d, e ), f )
+#define MapViewOfFile( a, b, c, d, e ) \
+        MapViewOfFileFromApp( a, b, PACK_DWORD64( c, d ), e )
+
+#define UWP_LEGACY
+
+#endif
+
+
+#if defined( _WIN32_WCE ) || defined( UWP_LEGACY )
 
   FT_LOCAL_DEF( HANDLE )
   CreateFileA( LPCSTR                lpFileName,
