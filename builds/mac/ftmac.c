@@ -97,7 +97,7 @@
 
 #define FT_DEPRECATED_ATTRIBUTE
 
-#include FT_MAC_H
+#include <freetype/ftmac.h>
 
   /* undefine blocking-macros in ftmac.h */
 #undef FT_GetFile_From_Mac_Name
