@@ -106,10 +106,9 @@
 #   (this is compatible with the same CMake variables in zlib's CMake
 #   support).
 
-# FreeType explicitly marks the API to be exported and relies on the compiler
-# to hide all other symbols. CMake supports a C_VISBILITY_PRESET property
-# starting with 2.8.12.
-cmake_minimum_required(VERSION 2.8.12)
+# To minimize the number of cmake_policy() workarounds,
+# CMake >= 3 is requested.
+cmake_minimum_required(VERSION 3.0)
 
 if (NOT CMAKE_VERSION VERSION_LESS 3.3)
   # Allow symbol visibility settings also on static libraries. CMake < 3.3
