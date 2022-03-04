@@ -1137,9 +1137,10 @@
                    FT_Int        max_splits,
                    SDF_Edge**    out )
   {
-    FT_Error     error = FT_Err_Ok;
-    FT_26D6_Vec  cpos[7];
-    SDF_Edge*    left,*  right;
+    FT_Error       error = FT_Err_Ok;
+    FT_26D6_Vec    cpos[7];
+    SDF_Edge*      left,*  right;
+    const FT_26D6  threshold = ONE_PIXEL / 4;
 
 
     if ( !memory || !out  )
@@ -1148,11 +1149,24 @@
       goto Exit;
     }
 
-    /* split the conic */
+    /* split the cubic */
     cpos[0] = control_points[0];
     cpos[1] = control_points[1];
     cpos[2] = control_points[2];
     cpos[3] = control_points[3];
+    
+    /* If the segment is flat enough, we won't get any benifit by */
+    /* splitting it further, so we can just stop splitting. Here, */
+    /* we check the deviation of the bezier and stop if it is     */
+    /* lower than a pre-defined `threhold` value.                 */
+    if ( FT_ABS( 2 * cpos[0].x - 3 * cpos[1].x + cpos[3].x ) < threshold &&
+	       FT_ABS( 2 * cpos[0].y - 3 * cpos[1].y + cpos[3].y ) < threshold &&
+         FT_ABS( cpos[0].x - 3 * cpos[2].x + 2 * cpos[3].x ) < threshold &&
+	       FT_ABS( cpos[0].y - 3 * cpos[2].y + 2 * cpos[3].y ) < threshold )
+    {
+      split_cubic( cpos );
+      goto Append;
+    }
 
     split_cubic( cpos );
 
@@ -1250,13 +1264,31 @@
           /* Subdivide the curve and add it to the list. */
           {
             FT_26D6_Vec  ctrls[3];
+            FT_26D6      dx, dy;
+            FT_UInt      num_splits;
 
 
             ctrls[0] = edge->start_pos;
             ctrls[1] = edge->control_a;
             ctrls[2] = edge->end_pos;
 
-            error = split_sdf_conic( memory, ctrls, 32, &new_edges );
+       	    dx = FT_ABS( ctrls[2].x + ctrls[0].x - 2 * ctrls[1].x );
+       	    dy = FT_ABS( ctrls[2].y + ctrls[0].y - 2 * ctrls[1].y );
+            if ( dx < dy )
+       	      dx = dy;
+
+       	    /* Here we calculate the number of necessary bisections. Each */
+       	    /* bisection reduces the deviation by exactly 4-fold, hence   */
+       	    /* we bisect the bezier until the deviation becomes less than */
+       	    /* 1/8th of a pixel. For more details check `ftgrays.c`.      */
+       	    num_splits = 1;
+       	    while ( dx > ONE_PIXEL / 8 )
+       	    {
+       	      dx >>= 2;
+       	      num_splits <<= 1;
+       	    }
+       
+            error = split_sdf_conic( memory, ctrls, num_splits, &new_edges );
           }
           break;
 
