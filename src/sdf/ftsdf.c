@@ -738,6 +738,18 @@
 
     contour = shape->contours;
 
+    /* If the control point coincides with any of the end points */
+    /* then it is a line and should be treated as one to avoid   */
+    /* unnecessary complexity later in the algorithm.            */
+    if ( ( contour->last_pos.x == control_1->x &&
+           contour->last_pos.y == control_1->y ) ||
+         ( control_1->x == to->x &&
+           control_1->y == to->y )               )
+    {
+      sdf_line_to( to, user );
+      goto Exit;
+    }
+
     FT_CALL( sdf_edge_new( memory, &edge ) );
 
     edge->edge_type = SDF_EDGE_CONIC;
@@ -3320,6 +3332,7 @@
             FT_26D6_Vec          grid_point = zero_vector;
             SDF_Signed_Distance  dist       = max_sdf;
             FT_UInt              index      = 0;
+            FT_16D16             diff       = 0;
 
 
             if ( x < 0 || x >= width )
@@ -3347,7 +3360,7 @@
             if ( dist.distance > sp_sq )
               continue;
 
-            /* square_root the values and fit in a 6.10 fixed-point */
+            /* take the square root of the distance if required */
             if ( USE_SQUARED_DISTANCES )
               dist.distance = square_root( dist.distance );
 
@@ -3359,11 +3372,15 @@
             /* check whether the pixel is set or not */
             if ( dists[index].sign == 0 )
               dists[index] = dist;
-            else if ( dists[index].distance > dist.distance )
-              dists[index] = dist;
-            else if ( FT_ABS( dists[index].distance - dist.distance )
-                        < CORNER_CHECK_EPSILON )
-              dists[index] = resolve_corner( dists[index], dist );
+            else
+            {
+              diff = FT_ABS( dists[index].distance - dist.distance );
+
+              if ( diff <= CORNER_CHECK_EPSILON )
+                dists[index] = resolve_corner( dists[index], dist );
+              else if ( dists[index].distance > dist.distance )
+                dists[index] = dist;
+            }
           }
         }
 
