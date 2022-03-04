@@ -3409,6 +3409,45 @@ FT_BEGIN_HEADER
    *   }
    *
    *   ```
+   *
+   *   FreeType has two rasterizers for generating SDF, namely:
+   *
+   *   1. `sdf`  - For generating SDF directly from glyph's outline.
+   *
+   *   2. `bsdf` - For generating SDF from rasterized bitmaps.
+   *
+   *   Depending on the glyph type (i.e. outline or bitmap), one of the two
+   *   rasterizer is chosen at runtime and used for generating SDF.  To
+   *   force use `bsdf` you can simply render the glyph using any of the
+   *   FreeType's other rendering modes (e.g. `FT_RENDER_MODE_NORMAL`) and
+   *   then re-render using `FT_RENDER_MODE_SDF`.
+   *
+   *   Now, a few notes on the stability and point of failures for the SDF
+   *   renderers (specifically `sdf`):
+   *
+   *   1. The `sdf` rasterizer is sensitive to really small features (e.g.
+   *      sharp turns which are less than 1 pixel) and imperfections in the
+   *      glyph's outline.  Having these in the outline can cause artifats
+   *      in the final output.
+   *
+   *   2. The `sdf` rasterizer has limited support for handling intersecting
+   *      contours and *cannot* handle self-intersecting contours whatsoever.
+   *      Self intersection happens when a single connected contour intersect
+   *      itself at some point and having these in your font will definately
+   *      pose a problem to the rasterizer and cause artifacts.
+   *
+   *   3. Generating SDF for really small glyphs may result in undesirable
+   *      output due to limited availability of pixel grid to store distance
+   *      information.
+   *
+   *   4. Since the output buffer is normalized, precision at smaller spread
+   *      will be greater than precision at larger spread values, because the
+   *      output range of [0 .. 255] will be mapped to a smaller sdf range.
+   *      A spread of 2 should be sufficient in most cases.
+   *
+   *   Point (1) and (2) can be avoided by using `bsdf` and overall it is
+   *   more stable than the `sdf` rasterizer.
+   *
    */
   typedef enum  FT_Render_Mode_
   {
