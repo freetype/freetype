@@ -3409,6 +3409,44 @@ FT_BEGIN_HEADER
    *   }
    *
    *   ```
+   *
+   *   FreeType has two rasterizers for generating SDF, namely:
+   *
+   *   1. `sdf` for generating SDF directly from glyph's outline, and
+   *
+   *   2. `bsdf` for generating SDF from rasterized bitmaps.
+   *
+   *   Depending on the glyph type (i.e., outline or bitmap), one of the two
+   *   rasterizers is chosen at runtime and used for generating SDFs.  To
+   *   force the use of `bsdf` you should render the glyph with any of the
+   *   FreeType's other rendering modes (e.g., `FT_RENDER_MODE_NORMAL`) and
+   *   then re-render with `FT_RENDER_MODE_SDF`.
+   *
+   *   There are some issues with stability and possible failures of the SDF
+   *   renderers (specifically `sdf`).
+   *
+   *   1. The `sdf` rasterizer is sensitive to really small features (e.g.,
+   *      sharp turns that are less than 1~pixel) and imperfections in the
+   *      glyph's outline, causing artifacts in the final output.
+   *
+   *   2. The `sdf` rasterizer has limited support for handling intersecting
+   *      contours and *cannot* handle self-intersecting contours whatsoever.
+   *      Self-intersection happens when a single connected contour intersect
+   *      itself at some point; having these in your font definitely pose a
+   *      problem to the rasterizer and cause artifacts, too.
+   *
+   *   3. Generating SDF for really small glyphs may result in undesirable
+   *      output; the pixel grid (which stores distance information) becomes
+   *      too coarse.
+   *
+   *   4. Since the output buffer is normalized, precision at smaller spreads
+   *      is greater than precision at larger spread values because the
+   *      output range of [0..255] gets mapped to a smaller SDF range.  A
+   *      spread of~2 should be sufficient in most cases.
+   *
+   *   Points (1) and (2) can be avoided by using the `bsdf` rasterizer,
+   *   which is more stable than the `sdf` rasterizer in general.
+   *
    */
   typedef enum  FT_Render_Mode_
   {
