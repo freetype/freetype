@@ -1537,7 +1537,7 @@ FT_BEGIN_HEADER
 
     /* glyph colors */
     FT_Palette_Data       palette_data;         /* since 2.10 */
-    FT_UShort             palette_index;
+    FT_Int                palette_index;
     FT_Color*             palette;
     FT_Bool               have_foreground_color;
     FT_Color              foreground_color;

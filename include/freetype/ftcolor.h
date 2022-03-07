@@ -45,6 +45,12 @@ FT_BEGIN_HEADER
    * @description:
    *   The functions described here allow access and manipulation of color
    *   palette entries in OpenType's 'CPAL' tables.
+   *
+   *   FreeType maintains a 'working palette' (together with a corresponding
+   *   'working palette index'), which can be set either to a palette stored
+   *   in the font (function @FT_Palette_Select) or to a user-defined palette
+   *   (function @FT_Palette_Set).  For user-defined palettes, the working
+   *   palette index is negative, and positive otherwise.
    */
 
 
@@ -218,18 +224,13 @@ FT_BEGIN_HEADER
    *   FT_Palette_Select
    *
    * @description:
-   *   This function has two purposes.
+   *   This function copies a palette entry in the font's 'CPAL' table into a
+   *   'working palette', which is a read-write array managed by FreeType.
+   *   It also sets the 'working palette index' to the index value given as
+   *   an argument.
    *
-   *   (1) It activates a palette for rendering color glyphs, and
-   *
-   *   (2) it retrieves all (unmodified) color entries of this palette.  This
-   *       function returns a read-write array, which means that a calling
-   *       application can modify the palette entries on demand.
-   *
-   * A corollary of (2) is that calling the function, then modifying some
-   * values, then calling the function again with the same arguments resets
-   * all color entries to the original 'CPAL' values; all user modifications
-   * are lost.
+   *   The current working palette and palette index can be retrieved with
+   *   @FT_Palette_Get.
    *
    * @input:
    *   face ::
@@ -240,10 +241,10 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   apalette ::
-   *     An array of color entries for a palette with index `palette_index`,
-   *     having `num_palette_entries` elements (as found in the
-   *     `FT_Palette_Data` structure).  If `apalette` is set to `NULL`, no
-   *     array gets returned (and no color entries can be modified).
+   *     A pointer to the 'working palette', which is an array of color
+   *     entries for a palette with index `palette_index`, having
+   *     `num_palette_entries` elements (as found in the `FT_Palette_Data`
+   *     structure).  If `apalette` is set to `NULL`, no array gets returned.
    *
    *     In case the font doesn't support color palettes, `NULL` is returned.
    *
@@ -269,6 +270,92 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @function:
+   *   FT_Palette_Set
+   *
+   * @description:
+   *   Set FreeType's 'working palette' and 'working palette index' to the
+   *   given arguments.  Use this function if you want to provide a
+   *   user-defined palette, not being part of the font's 'CPAL' table.
+   *
+   *   The current working palette and palette index can be retrieved with
+   *   @FT_Palette_Get.
+   *
+   * @input:
+   *   face ::
+   *     The source face handle.
+   *
+   *   palette_index ::
+   *     A palette index, which must be an arbitrary, negative integer (since
+   *     positive values are reserved for indices from the 'CPAL' table).
+   *     FreeType sets the 'working palette index' to this value.
+   *
+   *   palette ::
+   *     A pointer to an array of color entries, having `num_palette_entries`
+   *     elements (as found in the `FT_Palette_Data` structure).  FreeType
+   *     copies this array into its 'working palette'.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   This function always returns an error if the config macro
+   *   `TT_CONFIG_OPTION_COLOR_LAYERS` is not defined in `ftoption.h`.
+   *
+   * @since:
+   *   2.12
+   */
+  FT_EXPORT( FT_Error )
+  FT_Palette_Set( FT_Face    face,
+                  FT_Int     index,
+                  FT_Color*  palette );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Palette_Get
+   *
+   * @description:
+   *   Get FreeType's 'working palette' and 'working palette index'.
+   *
+   *   The working palette and palette index can be set with @FT_Palette_Set.
+   *
+   * @input:
+   *   face ::
+   *     The source face handle.
+   *
+   * @output:
+   *   anindex ::
+   *     The 'working palette index'.  If the value is zero or positive, the
+   *     working palette represents an entry from the font's 'CPAL' table
+   *     (with the given index).  Otherwise it is a user-defined palette.  If
+   *     `anindex` is set to `NULL`, no value gets returned.
+   *
+   *   apalette ::
+   *     A pointer to the 'working palette', which is an array of color
+   *     entries for a palette having `num_palette_entries` elements (as
+   *     found in the `FT_Palette_Data` structure).  If `apalette` is set to
+   *     `NULL`, no array gets returned.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   This function always returns an error if the config macro
+   *   `TT_CONFIG_OPTION_COLOR_LAYERS` is not defined in `ftoption.h`.
+   *
+   * @since:
+   *   2.12
+   */
+  FT_EXPORT( FT_Error )
+  FT_Palette_Get( FT_Face     face,
+                  FT_Int     *anindex,
+                  FT_Color*  *apalette );
+
+
+  /**************************************************************************
+   *
+   * @function:
    *   FT_Palette_Set_Foreground_Color
    *
    * @description:
@@ -286,11 +373,9 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   If this function isn't called, the text foreground color is set to
-   *   white opaque (BGRA value 0xFFFFFFFF) if
-   *   @FT_PALETTE_FOR_DARK_BACKGROUND is present for the current palette,
-   *   and black opaque (BGRA value 0x000000FF) otherwise, including the case
-   *   that no palette types are available in the 'CPAL' table.
+   *   See function @FT_Palette_Get_Foreground_Color for details on what
+   *   foreground color is used if `FT_Palette_Set_Foreground_Color` is not
+   *   called.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS` is not defined in `ftoption.h`.
@@ -301,6 +386,53 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Palette_Set_Foreground_Color( FT_Face   face,
                                    FT_Color  foreground_color );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Palette_Get_Foreground_Color
+   *
+   * @description:
+   *   Get the 'text foreground color' as set by a previous call to
+   *   @FT_Palette_Set_Foreground_Color.
+   *
+   * @input:
+   *   face ::
+   *     The source face handle.
+   *
+   * @output:
+   *   aforeground_color ::
+   *     The text foreground color.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   The returned color is as follows.
+   *
+   *   * If a foreground color was set with @FT_Palette_Get_Foreground_Color,
+   *     return this value.
+   *
+   *   * Otherwise, return black opaque (BGRA value 0x000000FF) if the
+   *     'working palette' is a user-defined palette.
+   *
+   *   * Otherwise, return white opaque (BGRA value 0xFFFFFFFF) if
+   *     @FT_PALETTE_FOR_DARK_BACKGROUND is present for the current palette.
+   *
+   *   * Otherwise, return black opaque (BGRA value 0x000000FF).  This
+   *     includes the case that no palette types are available in the 'CPAL'
+   *     table.
+   *
+   *   This function always returns an error if the config macro
+   *   `TT_CONFIG_OPTION_COLOR_LAYERS` is not defined in `ftoption.h`.
+   *
+   * @since:
+   *   2.12
+   */
+  FT_EXPORT( FT_Error )
+  FT_Palette_Get_Foreground_Color( FT_Face    face,
+                                   FT_Color*  aforeground_color );
 
 
   /**************************************************************************
