@@ -566,7 +566,7 @@
     face_index = FT_ABS( face_instance_index ) & 0xFFFF;
 
     /* value -(N+1) requests information on index N */
-    if ( face_instance_index < 0 )
+    if ( face_instance_index < 0 && face_index > 0 )
       face_index--;
 
     if ( face_index >= face->ttc_header.count )
