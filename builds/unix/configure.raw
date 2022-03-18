@@ -985,32 +985,32 @@ fi
 
 
 # entries in Requires.private are separated by commas
-REQUIRES_PRIVATE="$zlib_reqpriv,     \
-                  $bzip2_reqpriv,    \
-                  $libpng_reqpriv,   \
-                  $harfbuzz_reqpriv, \
-                  $brotli_reqpriv"
+PKGCONFIG_REQUIRES_PRIVATE="$zlib_reqpriv,     \
+                            $bzip2_reqpriv,    \
+                            $libpng_reqpriv,   \
+                            $harfbuzz_reqpriv, \
+                            $brotli_reqpriv"
 # beautify
-REQUIRES_PRIVATE=`echo "$REQUIRES_PRIVATE" \
-                  | sed -e 's/^  *//'      \
-                        -e 's/  *$//'      \
-                        -e 's/, */,/g'     \
-                        -e 's/,,*/,/g'     \
-                        -e 's/^,*//'       \
-                        -e 's/,*$//'       \
-                        -e 's/,/, /g'`
+PKGCONFIG_REQUIRES_PRIVATE=`echo "$PKGCONFIG_REQUIRES_PRIVATE" \
+                            | sed -e 's/^  *//'      \
+                                  -e 's/  *$//'      \
+                                  -e 's/, */,/g'     \
+                                  -e 's/,,*/,/g'     \
+                                  -e 's/^,*//'       \
+                                  -e 's/,*$//'       \
+                                  -e 's/,/, /g'`
 
-LIBS_PRIVATE="$zlib_libspriv     \
-              $bzip2_libspriv    \
-              $libpng_libspriv   \
-              $harfbuzz_libspriv \
-              $brotli_libspriv   \
-              $ft2_extra_libs"
+PKGCONFIG_LIBS_PRIVATE="$zlib_libspriv     \
+                        $bzip2_libspriv    \
+                        $libpng_libspriv   \
+                        $harfbuzz_libspriv \
+                        $brotli_libspriv   \
+                        $ft2_extra_libs"
 # beautify
-LIBS_PRIVATE=`echo "$LIBS_PRIVATE"  \
-              | sed -e 's/^  *//'   \
-                    -e 's/  *$//'   \
-                    -e 's/  */ /g'`
+PKGCONFIG_LIBS_PRIVATE=`echo "$PKGCONFIG_LIBS_PRIVATE"  \
+                        | sed -e 's/^  *//'   \
+                              -e 's/  *$//'   \
+                              -e 's/  */ /g'`
 
 LIBSSTATIC_CONFIG="-lfreetype               \
                    $zlib_libsstaticconf     \
@@ -1028,10 +1028,28 @@ LIBSSTATIC_CONFIG=`echo "$LIBSSTATIC_CONFIG"          \
                          -e 's/  *$//'                \
                          -e 's/  */ /g'`
 
+# If FreeType gets installed with `--disable-shared', don't use
+# 'private' fields.  `pkg-config' only looks into `.pc' files and is
+# completely agnostic to whether shared libraries are actually present
+# or not.  As a consequence, the user had to specify `--static' while
+# calling `pkg-config', which configure scripts are normally not
+# prepared for.
+
+PKGCONFIG_REQUIRES=
+PKGCONFIG_LIBS='-L${libdir} -lfreetype'
+
+if test $enable_shared = "no"; then
+  PKGCONFIG_REQUIRES="$PKGCONFIG_REQUIRES $PKGCONFIG_REQUIRES_PRIVATE"
+  PKGCONFIG_REQUIRES_PRIVATE=
+  PKGCONFIG_LIBS="$PKGCONFIG_LIBS $PKGCONFIG_LIBS_PRIVATE"
+  PKGCONFIG_LIBS_PRIVATE=
+fi
 
 AC_SUBST([ftmac_c])
-AC_SUBST([REQUIRES_PRIVATE])
-AC_SUBST([LIBS_PRIVATE])
+AC_SUBST([PKGCONFIG_REQUIRES])
+AC_SUBST([PKGCONFIG_LIBS])
+AC_SUBST([PKGCONFIG_REQUIRES_PRIVATE])
+AC_SUBST([PKGCONFIG_LIBS_PRIVATE])
 AC_SUBST([LIBSSTATIC_CONFIG])
 
 AC_SUBST([hardcode_libdir_flag_spec])
