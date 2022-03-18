@@ -56,6 +56,7 @@ FT_BEGIN_HEADER
 #define GLYF_REPEAT          1 << 3
 #define GLYF_THIS_X_IS_SAME  1 << 4
 #define GLYF_THIS_Y_IS_SAME  1 << 5
+#define GLYF_OVERLAP_SIMPLE  1 << 6
 
   /* Other constants */
 #define CONTOUR_OFFSET_END_POINT  10
