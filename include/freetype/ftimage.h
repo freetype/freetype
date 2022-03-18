@@ -401,11 +401,11 @@ FT_BEGIN_HEADER
    *     information.
    *
    *   FT_OUTLINE_OVERLAP ::
-   *     This flag indicates that this outline contains overlapping contrours
-   *     and the anti-aliased renderer should perform oversampling to
-   *     mitigate possible artifacts.  This flag should _not_ be set for
-   *     well designed glyphs without overlaps because it quadruples the
-   *     rendering time.
+   *     [Since 2.10.3] This flag indicates that this outline contains
+   *     overlapping contours and the anti-aliased renderer should perform
+   *     oversampling to mitigate possible artifacts.  This flag should _not_
+   *     be set for well designed glyphs without overlaps because it quadruples
+   *     the rendering time.
    *
    *   FT_OUTLINE_HIGH_PRECISION ::
    *     This flag indicates that the scan-line converter should try to
