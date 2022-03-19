@@ -2527,6 +2527,15 @@
 #endif
 
 
+    /* only use lower 31 bits together with sign bit */
+    if ( face_index > 0 )
+      face_index &= 0x7FFFFFFFL;
+    else
+    {
+      face_index &= 0x7FFFFFFFL;
+      face_index  = -face_index;
+    }
+
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_TRACE3(( "FT_Open_Face: " ));
     if ( face_index < 0 )
