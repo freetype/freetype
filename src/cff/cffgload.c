@@ -29,6 +29,14 @@
 
 #include "cfferrs.h"
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#define IS_DEFAULT_INSTANCE( _face )             \
+          ( !( FT_IS_NAMED_INSTANCE( _face ) ||  \
+               FT_IS_VARIATION( _face )      ) )
+#else
+#define IS_DEFAULT_INSTANCE( _face )  1
+#endif
+
 
   /**************************************************************************
    *
@@ -255,8 +263,8 @@
 
 
       if ( size->strike_index != 0xFFFFFFFFUL      &&
-           sfnt->load_eblc                         &&
-           ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
+           ( load_flags & FT_LOAD_NO_BITMAP ) == 0 &&
+           IS_DEFAULT_INSTANCE( size->root.face )  )
       {
         TT_SBit_MetricsRec  metrics;
 
