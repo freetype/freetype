@@ -115,6 +115,21 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @enum:
+   *   FT_PARAM_TAG_IGNORE_SBIX
+   *
+   * @description:
+   *   A tag for @FT_Parameter to make @FT_Open_Face ignore an 'sbix' table
+   *   while loading a font.  Use this if @FT_FACE_FLAG_SBIX is set and you
+   *   want to access the outline glyphs in the font.
+   *
+   */
+#define FT_PARAM_TAG_IGNORE_SBIX \
+          FT_MAKE_TAG( 'i', 's', 'b', 'x' )
+
+
+  /**************************************************************************
+   *
+   * @enum:
    *   FT_PARAM_TAG_LCD_FILTER_WEIGHTS
    *
    * @description:

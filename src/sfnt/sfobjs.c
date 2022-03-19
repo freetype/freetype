@@ -784,17 +784,23 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error      error;
+    FT_Error  error;
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    FT_Error      psnames_error;
+    FT_Error  psnames_error;
 #endif
-    FT_Bool       has_outline;
-    FT_Bool       is_apple_sbit;
-    FT_Bool       is_apple_sbix;
-    FT_Bool       has_CBLC;
-    FT_Bool       has_CBDT;
-    FT_Bool       ignore_typographic_family    = FALSE;
-    FT_Bool       ignore_typographic_subfamily = FALSE;
+
+    FT_Bool  has_outline;
+    FT_Bool  is_apple_sbit;
+
+    FT_Bool  has_CBLC;
+    FT_Bool  has_CBDT;
+    FT_Bool  has_EBLC;
+    FT_Bool  has_bloc;
+    FT_Bool  has_sbix;
+
+    FT_Bool  ignore_typographic_family    = FALSE;
+    FT_Bool  ignore_typographic_subfamily = FALSE;
+    FT_Bool  ignore_sbix                  = FALSE;
 
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
@@ -813,6 +819,8 @@
           ignore_typographic_family = TRUE;
         else if ( params[i].tag == FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY )
           ignore_typographic_subfamily = TRUE;
+        else if ( params[i].tag == FT_PARAM_TAG_IGNORE_SBIX )
+          ignore_sbix = TRUE;
       }
     }
 
@@ -848,8 +856,17 @@
                            tt_face_lookup_table( face, TTAG_CFF2 ) );
 #endif
 
-    is_apple_sbit = 0;
-    is_apple_sbix = !face->goto_table( face, TTAG_sbix, stream, 0 );
+    /* check which sbit formats are present */
+    has_CBLC = !face->goto_table( face, TTAG_CBLC, stream, 0 );
+    has_CBDT = !face->goto_table( face, TTAG_CBDT, stream, 0 );
+    has_EBLC = !face->goto_table( face, TTAG_EBLC, stream, 0 );
+    has_bloc = !face->goto_table( face, TTAG_bloc, stream, 0 );
+    has_sbix = !face->goto_table( face, TTAG_sbix, stream, 0 );
+
+    is_apple_sbit = FALSE;
+
+    if ( ignore_sbix )
+      has_sbix = FALSE;
 
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
@@ -861,15 +878,12 @@
 
     /* load the font header (`head' table) if this isn't an Apple */
     /* sbit font file                                             */
-    if ( !is_apple_sbit || is_apple_sbix )
+    if ( !is_apple_sbit || has_sbix )
     {
       LOAD_( head );
       if ( error )
         goto Exit;
     }
-
-    has_CBLC = !face->goto_table( face, TTAG_CBLC, stream, 0 );
-    has_CBDT = !face->goto_table( face, TTAG_CBDT, stream, 0 );
 
     /* Ignore outlines for CBLC/CBDT fonts. */
     if ( has_CBLC || has_CBDT )
@@ -980,7 +994,11 @@
     /* the optional tables */
 
     /* embedded bitmap support */
-    if ( sfnt->load_eblc )
+    /* TODO: Replace this clumsy check for all possible sbit tables     */
+    /*       with something better (for example, by passing a parameter */
+    /*       to suppress 'sbix' loading).                               */
+    if ( sfnt->load_eblc                                  &&
+         ( has_CBLC || has_EBLC || has_bloc || has_sbix ) )
       LOAD_( eblc );
 
     /* colored glyph support */
@@ -1055,7 +1073,7 @@
       {
         /* by default (and for backward compatibility) we handle */
         /* fonts with an 'sbix' table as bitmap-only             */
-        if ( is_apple_sbix )
+        if ( has_sbix )
           flags |= FT_FACE_FLAG_SBIX;     /* with 'sbix' bitmaps */
         else
           flags |= FT_FACE_FLAG_SCALABLE; /* scalable outlines */
