@@ -3409,6 +3409,9 @@
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
+    if ( !face->size )
+      return FT_THROW( Invalid_Size_Handle );
+
     if ( !req || req->width < 0 || req->height < 0 ||
          req->type >= FT_SIZE_REQUEST_TYPE_MAX )
       return FT_THROW( Invalid_Argument );
