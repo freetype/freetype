@@ -172,17 +172,8 @@
           goto Exit;
         }
 
-#ifdef FT_DEBUG_LEVEL_TRACE
-        /* we currently don't support bit 1; however, it is better to */
-        /* draw at least something...                                 */
         if ( flags == 3 )
-        {
-          FT_TRACE1(( "tt_face_load_sbit_strikes:"
-                      " sbix overlay not supported yet\n" ));
-          FT_TRACE1(( "                          "
-                      " expect bad rendering results\n" ));
-        }
-#endif
+          face->root.face_flags |= FT_FACE_FLAG_SBIX_OVERLAY;
 
         /*
          * Count the number of strikes available in the table.  We are a bit

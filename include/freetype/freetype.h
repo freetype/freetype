@@ -155,6 +155,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_HINTER
    *   FT_FACE_FLAG_SVG
    *   FT_FACE_FLAG_SBIX
+   *   FT_FACE_FLAG_SBIX_OVERLAY
    *
    *   FT_HAS_HORIZONTAL
    *   FT_HAS_VERTICAL
@@ -165,6 +166,7 @@ FT_BEGIN_HEADER
    *   FT_HAS_MULTIPLE_MASTERS
    *   FT_HAS_SVG
    *   FT_HAS_SBIX
+   *   FT_HAS_SBIX_OVERLAY
    *
    *   FT_IS_SFNT
    *   FT_IS_SCALABLE
@@ -1244,6 +1246,10 @@ FT_BEGIN_HEADER
    *     For such fonts, @FT_FACE_FLAG_SCALABLE is not set by default to
    *     retain backward compatibility.
    *
+   *   FT_FACE_FLAG_SBIX_OVERLAY ::
+   *     [Since 2.12] The face has an 'sbix' OpenType table where outlines
+   *     should be drawn on top of bitmap strikes.
+   *
    */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
@@ -1263,6 +1269,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
 #define FT_FACE_FLAG_SVG               ( 1L << 16 )
 #define FT_FACE_FLAG_SBIX              ( 1L << 17 )
+#define FT_FACE_FLAG_SBIX_OVERLAY      ( 1L << 18 )
 
 
   /**************************************************************************
@@ -1528,11 +1535,96 @@ FT_BEGIN_HEADER
    *   A macro that returns true whenever a face object contains an 'sbix'
    *   OpenType table *and* outline glyphs.
    *
+   *   Currently, FreeType only supports bitmap glyphs in PNG format for this
+   *   table (i.e., JPEG and TIFF formats are unsupported, as are
+   *   Apple-specific formats not part of the OpenType specification).
+   *
+   * @note:
+   *   For backward compatibility, a font with an 'sbix' table is treated as
+   *   a bitmap-only face.  Using @FT_Open_Face with @FT_PARAM_TAG_NO_SBIX,
+   *   an application can switch off 'sbix' handling so that the face is
+   *   treated as an ordinary outline font with scalable outlines.
+   *
+   *   Here is some pseudo code that roughly illustrates how to implement
+   *   'sbix' handling according to the OpenType specification.
+   *
+   * ```
+   *   if ( FT_HAS_SBIX( face ) )
+   *   {
+   *     // open font as a scalable one without sbix handling
+   *     FT_Face       face2;
+   *     FT_Parameter  param = { FT_PARAM_TAG_IGNORE_SBIX, NULL };
+   *     FT_Open_Args  args  = { FT_OPEN_PARAMS | ...,
+   *                             ...,
+   *                             1, &param };
+   *
+   *
+   *     FT_Open_Face( library, &args, 0, &face2 );
+   *
+   *     <sort `face->available_size` as necessary into
+   *      `preferred_sizes`[*]>
+   *
+   *     for ( i = 0; i < face->num_fixed_sizes; i++ )
+   *     {
+   *       size = preferred_sizes[i].size;
+   *
+   *       error = FT_Set_Pixel_Sizes( face, size, size );
+   *       <error handling omitted>
+   *
+   *       // check whether we have a glyph in a bitmap strike
+   *       error = FT_Load_Glyph( face,
+   *                              glyph_index,
+   *                              FT_LOAD_SBITS_ONLY          |
+   *                              FT_LOAD_BITMAP_METRICS_ONLY );
+   *       if ( error == FT_Err_Invalid_Argument )
+   *         continue;
+   *       else if ( error )
+   *         <other error handling omitted>
+   *       else
+   *         break;
+   *     }
+   *
+   *     if ( i != face->num_fixed_sizes )
+   *       <load embedded bitmap with `FT_Load_Glyph`,
+   *        scale it, display it, etc.>
+   *
+   *     if ( i == face->num_fixed_sizes  ||
+   *          FT_HAS_SBIX_OVERLAY( face ) )
+   *       <use `face2` to load outline glyph with `FT_Load_Glyph`,
+   *        scale it, display it on top of the bitmap, etc.>
+   *   }
+   * ```
+   *
+   * [*] Assuming a target value of 400dpi and available strike sizes 100,
+   * 200, 300, and 400dpi, a possible order might be [400, 200, 300, 100]:
+   * scaling 200dpi to 400dpi usually gives better results than scaling
+   * 300dpi to 400dpi; it is also much faster.  However, scaling 100dpi to
+   * 400dpi can yield a too pixelated result, thus the preference might be
+   * 300dpi over 100dpi.
+   *
    * @since:
    *   2.12
    */
 #define FT_HAS_SBIX( face ) \
           ( !!( (face)->face_flags & FT_FACE_FLAG_SBIX ) )
+
+
+  /**************************************************************************
+   *
+   * @macro:
+   *   FT_HAS_SBIX_OVERLAY
+   *
+   * @description:
+   *   A macro that returns true whenever a face object contains an 'sbix'
+   *   OpenType table with bit~1 in its `flags` field set, instructing the
+   *   application to overlay the bitmap strike with the corresponding
+   *   outline glyph.  See @FT_HAS_SBIX for pseudo code how to use it.
+   *
+   * @since:
+   *   2.12
+   */
+#define FT_HAS_SBIX_OVERLAY( face ) \
+          ( !!( (face)->face_flags & FT_FACE_FLAG_SBIX_OVERLAY ) )
 
 
   /**************************************************************************
