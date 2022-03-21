@@ -190,9 +190,15 @@
     FT_Int   result = 0;
     FT_UInt  count, mask;
 
-    FT_Byte*  p       = face->kern_table;
-    FT_Byte*  p_limit = p + face->kern_table_size;
+    FT_Byte*  p;
+    FT_Byte*  p_limit;
 
+
+    if ( !face->kern_table )
+      return result;
+
+    p       = face->kern_table;
+    p_limit = p + face->kern_table_size;
 
     p   += 4;
     mask = 0x0001;
