@@ -253,6 +253,8 @@
 
 
 #if defined( _WIN32_WCE )
+  /* malloc.h provides implementation of alloca()/_alloca() */
+  #include <malloc.h>
 
   FT_LOCAL_DEF( HANDLE )
   CreateFileA( LPCSTR                lpFileName,
