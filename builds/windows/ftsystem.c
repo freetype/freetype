@@ -197,35 +197,35 @@
 
 
   /* non-desktop Universal Windows Platform */
-#if defined( WINAPI_FAMILY_PARTITION )                 &&     \
+#if defined( WINAPI_FAMILY_PARTITION )                 && \
     !WINAPI_FAMILY_PARTITION( WINAPI_PARTITION_DESKTOP )
 
 #define PACK_DWORD64( hi, lo )  ( ( (DWORD64)(hi) << 32 ) | (DWORD)(lo) )
 
-#define CreateFileMapping( a, b, c, d, e, f ) \
-        CreateFileMappingFromApp( a, b, c, PACK_DWORD64( d, e ), f )
-#define MapViewOfFile( a, b, c, d, e ) \
-        MapViewOfFileFromApp( a, b, PACK_DWORD64( c, d ), e )
+#define CreateFileMapping( a, b, c, d, e, f )                          \
+          CreateFileMappingFromApp( a, b, c, PACK_DWORD64( d, e ), f )
+#define MapViewOfFile( a, b, c, d, e )                                 \
+          MapViewOfFileFromApp( a, b, PACK_DWORD64( c, d ), e )
 
   FT_LOCAL_DEF( HANDLE )
-  CreateFileA( LPCSTR                lpFileName,
-               DWORD                 dwDesiredAccess,
-               DWORD                 dwShareMode,
-               LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-               DWORD                 dwCreationDisposition,
-               DWORD                 dwFlagsAndAttributes,
-               HANDLE                hTemplateFile )
+  CreateFileA( LPCSTR                 lpFileName,
+               DWORD                  dwDesiredAccess,
+               DWORD                  dwShareMode,
+               LPSECURITY_ATTRIBUTES  lpSecurityAttributes,
+               DWORD                  dwCreationDisposition,
+               DWORD                  dwFlagsAndAttributes,
+               HANDLE                 hTemplateFile )
   {
-    int            len;
-    LPWSTR         lpFileNameW;
+    int     len;
+    LPWSTR  lpFileNameW;
 
     CREATEFILE2_EXTENDED_PARAMETERS  createExParams = {
-                               sizeof ( CREATEFILE2_EXTENDED_PARAMETERS ),
-                               dwFlagsAndAttributes & 0x0000FFFF,
-                               dwFlagsAndAttributes & 0xFFF00000,
-                               dwFlagsAndAttributes & 0x000F0000,
-                               lpSecurityAttributes,
-                               hTemplateFile };
+      sizeof ( CREATEFILE2_EXTENDED_PARAMETERS ),
+      dwFlagsAndAttributes & 0x0000FFFF,
+      dwFlagsAndAttributes & 0xFFF00000,
+      dwFlagsAndAttributes & 0x000F0000,
+      lpSecurityAttributes,
+      hTemplateFile };
 
 
     /* allocate memory space for converted path name */
@@ -253,20 +253,21 @@
 
 
 #if defined( _WIN32_WCE )
+
   /* malloc.h provides implementation of alloca()/_alloca() */
   #include <malloc.h>
 
   FT_LOCAL_DEF( HANDLE )
-  CreateFileA( LPCSTR                lpFileName,
-               DWORD                 dwDesiredAccess,
-               DWORD                 dwShareMode,
-               LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-               DWORD                 dwCreationDisposition,
-               DWORD                 dwFlagsAndAttributes,
-               HANDLE                hTemplateFile )
+  CreateFileA( LPCSTR                 lpFileName,
+               DWORD                  dwDesiredAccess,
+               DWORD                  dwShareMode,
+               LPSECURITY_ATTRIBUTES  lpSecurityAttributes,
+               DWORD                  dwCreationDisposition,
+               DWORD                  dwFlagsAndAttributes,
+               HANDLE                 hTemplateFile )
   {
-    int            len;
-    LPWSTR         lpFileNameW;
+    int     len;
+    LPWSTR  lpFileNameW;
 
 
     /* allocate memory space for converted path name */
@@ -293,12 +294,13 @@
 
 #endif
 
+
 #if defined( _WIN32_WCE ) || defined ( _WIN32_WINDOWS ) || \
     !defined( _WIN32_WINNT ) || _WIN32_WINNT <= 0x0400
 
   FT_LOCAL_DEF( BOOL )
-  GetFileSizeEx( HANDLE         hFile,
-                 PLARGE_INTEGER lpFileSize )
+  GetFileSizeEx( HANDLE          hFile,
+                 PLARGE_INTEGER  lpFileSize )
   {
     lpFileSize->u.LowPart = GetFileSize( hFile,
                                          (DWORD *)&lpFileSize->u.HighPart );
