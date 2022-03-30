@@ -77,13 +77,14 @@ How to prepare a new release
 
     #!/bin/sh
 
-    VERSION=2.10.4
+    VERSION=2.12.0
     SAVANNAH_USER=wl
     SOURCEFORGE_USER=wlemb
+    GPG_KEY_ID=BE6C3AAC63AD8E3F
 
     #####################################################################
 
-    GPG='/usr/bin/gpg --batch --no-tty'
+    GPG="/usr/bin/gpg --batch --no-tty --local-user $GPG_KEY_ID"
 
     version=`echo $VERSION | sed "s/\\.//g"`
 

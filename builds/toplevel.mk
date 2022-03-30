@@ -304,13 +304,12 @@ do-dist: distclean refdoc
 	cp $(CONFIG_GUESS) builds/unix
 	cp $(CONFIG_SUB) builds/unix
 
-	@# Generate `ChangeLog' file with commits since previous release.
+	@# Generate `ChangeLog' file with commits since release 2.11.0
+	@# (when we stopped creating this file manually).
 	$(CHANGELOG_SCRIPT) \
 	  --format='%B%n' \
 	  --no-cluster \
-	  -- `git describe --tags \
-	                   --abbrev=0 \
-	                   $(version_tag)^`..$(version_tag) \
+	  -- VER-2-11-0..$(version_tag) \
 	> ChangeLog
 
 	@# Remove intermediate files created by the `refdoc' target.
