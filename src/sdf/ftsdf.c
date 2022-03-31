@@ -1077,7 +1077,7 @@
   static FT_Error
   split_sdf_conic( FT_Memory     memory,
                    FT_26D6_Vec*  control_points,
-                   FT_Int        max_splits,
+                   FT_UInt       max_splits,
                    SDF_Edge**    out )
   {
     FT_Error     error = FT_Err_Ok;
@@ -1146,7 +1146,7 @@
   static FT_Error
   split_sdf_cubic( FT_Memory     memory,
                    FT_26D6_Vec*  control_points,
-                   FT_Int        max_splits,
+                   FT_UInt       max_splits,
                    SDF_Edge**    out )
   {
     FT_Error       error = FT_Err_Ok;
@@ -3288,7 +3288,7 @@
     buffer   = (FT_SDFFormat*)bitmap->buffer;
 
     if ( USE_SQUARED_DISTANCES )
-      sp_sq = FT_INT_16D16( spread * spread );
+      sp_sq = FT_INT_16D16( (FT_Int)( spread * spread ) );
     else
       sp_sq = fixed_spread;
 

@@ -112,7 +112,7 @@
     FTC_CMapQuery  query  = (FTC_CMapQuery)ftcquery;
     FT_Error       error;
     FT_Memory      memory = cache->memory;
-    FTC_CMapNode   node;
+    FTC_CMapNode   node   = NULL;
     FT_UInt        nn;
 
 

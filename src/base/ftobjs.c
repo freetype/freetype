@@ -334,7 +334,7 @@
     /* if SVG table exists, allocate the space in `slot->other` */
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
     {
-      FT_SVG_Document  document;
+      FT_SVG_Document  document = NULL;
 
 
       if ( FT_NEW( document ) )

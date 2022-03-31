@@ -61,7 +61,7 @@
   {
     FT_Memory  memory = cache->memory;
     FT_Error   error;
-    FTC_INode  inode;
+    FTC_INode  inode  = NULL;
 
 
     if ( !FT_QNEW( inode ) )

@@ -344,7 +344,7 @@
   {
     FT_Error    error;
     FT_Memory   memory;
-    FT_LZWFile  zip;
+    FT_LZWFile  zip = NULL;
 
 
     if ( !stream || !source )

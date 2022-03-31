@@ -469,7 +469,7 @@
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = svg_glyph->library->memory;
 
-    FT_SVG_Document  document;
+    FT_SVG_Document  document = NULL;
 
 
     if ( FT_NEW( document ) )

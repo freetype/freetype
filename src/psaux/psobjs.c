@@ -1115,7 +1115,7 @@
         {
           FT_Memory   memory = parser->memory;
           FT_UInt     len    = (FT_UInt)( limit - cur );
-          FT_String*  string;
+          FT_String*  string = NULL;
 
 
           if ( cur >= limit )

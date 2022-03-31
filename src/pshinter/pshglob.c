@@ -646,7 +646,7 @@
                    T1_Private*   priv,
                    PSH_Globals  *aglobals )
   {
-    PSH_Globals  globals;
+    PSH_Globals  globals = NULL;
     FT_Error     error;
 
 
