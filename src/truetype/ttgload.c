@@ -1228,8 +1228,8 @@
       p1 = gloader->base.outline.points + k;
       p2 = gloader->base.outline.points + l;
 
-      x = p1->x - p2->x;
-      y = p1->y - p2->y;
+      x = SUB_LONG(p1->x, p2->x);
+      y = SUB_LONG(p1->y, p2->y);
     }
     else
     {
