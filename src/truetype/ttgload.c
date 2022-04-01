@@ -1228,8 +1228,8 @@
       p1 = gloader->base.outline.points + k;
       p2 = gloader->base.outline.points + l;
 
-      x = SUB_LONG(p1->x, p2->x);
-      y = SUB_LONG(p1->y, p2->y);
+      x = SUB_LONG( p1->x, p2->x );
+      y = SUB_LONG( p1->y, p2->y );
     }
     else
     {
@@ -2255,7 +2255,7 @@
     if ( loader->widthp )
       glyph->metrics.horiAdvance = loader->widthp[glyph_index] * 64;
     else
-      glyph->metrics.horiAdvance = SUB_LONG(loader->pp2.x, loader->pp1.x);
+      glyph->metrics.horiAdvance = SUB_LONG( loader->pp2.x, loader->pp1.x );
 
     /* set glyph dimensions */
     glyph->metrics.width  = SUB_LONG( bbox.xMax, bbox.xMin );
