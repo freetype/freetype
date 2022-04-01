@@ -973,7 +973,7 @@
         /* composite glyph */
         FT_Bool    have_instructions = FALSE;
         FT_UShort  instruction_size  = 0;
-        FT_ULong   composite_size;
+        FT_ULong   composite_size    = 0;
         FT_ULong   size_needed;
         FT_Byte*   pointer           = NULL;
 
