@@ -370,8 +370,8 @@
       SFNT_Service  sfnt;
 
 
-      if ( size->root.metrics.x_ppem < 1 ||
-           size->root.metrics.y_ppem < 1 )
+      if ( size && (size->root.metrics.x_ppem < 1 ||
+                    size->root.metrics.y_ppem < 1 ) )
       {
         error = FT_THROW( Invalid_Size_Handle );
         return error;
