@@ -1104,8 +1104,8 @@
 
           for ( ; vec < limit; vec++, u++ )
           {
-            vec->x = ( FT_MulFix( u->x, x_scale ) + 32 ) >> 6;
-            vec->y = ( FT_MulFix( u->y, y_scale ) + 32 ) >> 6;
+            vec->x = ADD_LONG( FT_MulFix( u->x, x_scale ), 32 ) >> 6;
+            vec->y = ADD_LONG( FT_MulFix( u->y, y_scale ), 32 ) >> 6;
           }
         }
         else
