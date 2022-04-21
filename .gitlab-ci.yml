@@ -5,7 +5,7 @@ stages:
 
 # FIXME: Use --werror once warnings are fixed.
 variables:
-  MESON_ARGS: --fatal-meson-warnings
+  MESON_ARGS: --fatal-meson-warnings --default-library=both
   MESON_ARGS_WINDOWS: ${MESON_ARGS} --force-fallback-for=zlib
 
 .build windows common:
@@ -147,7 +147,8 @@ linux autotools libs clang:
 linux meson:
   extends: '.build linux common'
   script: |
-    meson setup build -Dbrotli=disabled \
+    meson setup build ${MESON_ARGS} \
+                      -Dbrotli=disabled \
                       -Dbzip2=disabled \
                       -Dharfbuzz=disabled \
                       -Dpng=disabled \
@@ -159,7 +160,8 @@ linux meson:
 linux meson libs:
   extends: '.build linux common'
   script: |
-    meson setup build -Dbrotli=enabled \
+    meson setup build ${MESON_ARGS} \
+                      -Dbrotli=enabled \
                       -Dbzip2=enabled \
                       -Dharfbuzz=disabled \
                       -Dpng=disabled \
@@ -222,7 +224,7 @@ macos meson:
     - pip3 install -U meson
     - pip3 install --upgrade certifi
     - pip3 install -U ninja
-    
-    - meson setup build
+
+    - meson setup build ${MESON_ARGS}
     - meson compile --verbose -C build
     - sudo meson install -C build
