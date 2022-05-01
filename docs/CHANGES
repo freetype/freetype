@@ -1,3 +1,33 @@
+CHANGES BETWEEN 2.12.0 and 2.12.1
+
+  I. IMPORTANT BUG FIXES
+
+  - Loading CFF fonts sometimes made FreeType crash (bug introduced in
+    version 2.12.0)
+
+  - Loading  a fully  hinted  TrueType glyph  a  second time  (without
+    caching) sometimes yielded different rendering results if TrueType
+    hinting was active (bug introduced in version 2.12.0).
+
+  - The generation of the pkg-config file `freetype2.pc` was broken if
+    the build was done with cmake (bug introduced in version 2.12.0).
+
+
+  II. MISCELLANEOUS
+
+  - New option `--with-librsvg` for  the `configure` script for better
+    FreeType demo support.
+
+  - The  meson  build  no  longer enforces  both  static  and  dynamic
+    versions of the library by default.
+
+  - The internal  zlib library was  updated to version  1.2.12.  Note,
+    however, that  FreeType is *not* affected  by CVE-2018-25032 since
+    it only does decompression.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.11.1 and 2.12.0
 
   I. IMPORTANT CHANGES
