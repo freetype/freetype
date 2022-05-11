@@ -484,6 +484,16 @@
       goto Exit;
     }
 
+    /* new in OpenType 1.8.4: inner & outer index equal to 0xFFFF    */
+    /* has a special meaning (i.e., no variation data for this item) */
+    if ( itemStore->dataCount == 0xFFFFU )
+    {
+      FT_TRACE2(( "ft_var_load_item_variation_store:"
+                  " dataCount too large\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     /* make temporary copy of item variation data offsets; */
     /* we will parse region list first, then come back     */
     if ( FT_QNEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
@@ -756,6 +766,16 @@
           goto Exit;
 
         mapData = ( mapData << 8 ) | data;
+      }
+
+      /* new in OpenType 1.8.4 */
+      if ( mapData == 0xFFFFFFFFUL )
+      {
+        /* no variation data for this item */
+        map->outerIndex[i] = 0xFFFFU;
+        map->innerIndex[i] = 0xFFFFU;
+
+        continue;
       }
 
       outerIndex = mapData >> innerBitCount;
@@ -1128,19 +1148,29 @@
       }
     }
 
-    delta = ft_var_get_item_delta( face,
-                                   &table->itemStore,
-                                   outerIndex,
-                                   innerIndex );
+    /* new test introduced in OpenType 1.8.4 */
+    if ( outerIndex == 0xFFFFU && innerIndex == 0xFFFFU )
+    {
+      FT_TRACE5(( "no adjustment to %s value %d\n",
+                  vertical ? "vertical height" : "horizontal width",
+                  *avalue ));
+    }
+    else
+    {
+      delta = ft_var_get_item_delta( face,
+                                     &table->itemStore,
+                                     outerIndex,
+                                     innerIndex );
 
-    FT_TRACE5(( "%s value %d adjusted by %d unit%s (%s)\n",
-                vertical ? "vertical height" : "horizontal width",
-                *avalue,
-                delta,
-                delta == 1 ? "" : "s",
-                vertical ? "VVAR" : "HVAR" ));
+      FT_TRACE5(( "%s value %d adjusted by %d unit%s (%s)\n",
+                  vertical ? "vertical height" : "horizontal width",
+                  *avalue,
+                  delta,
+                  delta == 1 ? "" : "s",
+                  vertical ? "VVAR" : "HVAR" ));
 
-    *avalue += delta;
+      *avalue += delta;
+    }
 
   Exit:
     return error;
@@ -1332,6 +1362,13 @@
       value->outerIndex = FT_GET_USHORT();
       value->innerIndex = FT_GET_USHORT();
 
+      /* new in OpenType 1.8.4 */
+      if ( value->outerIndex == 0xFFFFU && value->innerIndex == 0xFFFFU )
+      {
+        /* no variation data for this item */
+        continue;
+      }
+
       if ( value->outerIndex >= itemStore->dataCount                  ||
            value->innerIndex >= itemStore->varData[value->outerIndex]
                                                   .itemCount          )
@@ -1421,6 +1458,13 @@
       FT_Short*  p = ft_var_get_value_pointer( face, value->tag );
       FT_Int     delta;
 
+
+      /* new test introduced in OpenType 1.8.4 */
+      if ( value->outerIndex == 0xFFFFU && value->innerIndex == 0xFFFFU )
+      {
+        /* no variation data for this item */
+        continue;
+      }
 
       delta = ft_var_get_item_delta( face,
                                      &blend->mvar_table->itemStore,
