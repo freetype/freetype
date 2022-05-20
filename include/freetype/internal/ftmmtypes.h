@@ -24,14 +24,16 @@
 FT_BEGIN_HEADER
 
 
+  typedef FT_Long FT_ItemVarDelta;
+
   typedef struct  GX_ItemVarDataRec_
   {
-    FT_UInt    itemCount;      /* number of delta sets per item         */
-    FT_UInt    regionIdxCount; /* number of region indices in this data */
-    FT_UInt*   regionIndices;  /* array of `regionCount' indices;       */
-                               /* these index `varRegionList'           */
-    FT_Short*  deltaSet;       /* array of `itemCount' deltas           */
-                               /* use `innerIndex' for this array       */
+    FT_UInt            itemCount;       /* number of delta sets per item    */
+    FT_UInt            regionIdxCount;  /* number of region indices         */
+    FT_UInt*           regionIndices;   /* array of `regionCount' indices;  */
+                                        /* these index `varRegionList'      */
+    FT_ItemVarDelta*   deltaSet;        /* array of `itemCount' deltas      */
+                                        /* use `innerIndex' for this array  */
 
   } GX_ItemVarDataRec, *GX_ItemVarData;
 

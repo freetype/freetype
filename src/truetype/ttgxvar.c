@@ -631,44 +631,25 @@
                          varData->regionIdxCount * varData->itemCount ) )
         goto Exit;
 
-      /* the delta set is stored as a 2-dimensional array of shorts */
-      if ( long_words )
+      for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
       {
-        /* new in OpenType 1.9, currently for 'COLR' table only;          */
-        /* the deltas are interpreted as 16.16 fixed-point scaling values */
-
-        /* not supported yet */
-
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
-      }
-      else
-      {
-        for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
+        if ( long_words )
         {
           for ( k = 0; k < wordDeltaCount; k++, j++ )
-          {
-            /* read the short deltas */
-            FT_Short  delta;
-
-
-            if ( FT_READ_SHORT( delta ) )
+            if ( FT_READ_LONG( varData->deltaSet[j] ) )
               goto Exit;
-
-            varData->deltaSet[j] = delta;
-          }
-
           for ( ; k < varData->regionIdxCount; k++, j++ )
-          {
-            /* read the (signed) byte deltas */
-            FT_Char  delta;
-
-
-            if ( FT_READ_CHAR( delta ) )
+            if ( FT_READ_SHORT( varData->deltaSet[j] ) )
               goto Exit;
-
-            varData->deltaSet[j] = delta;
-          }
+        }
+        else
+        {
+          for ( k = 0; k < wordDeltaCount; k++, j++ )
+            if ( FT_READ_SHORT( varData->deltaSet[j] ) )
+              goto Exit;
+          for ( ; k < varData->regionIdxCount; k++, j++ )
+            if ( FT_READ_CHAR( varData->deltaSet[j] ) )
+              goto Exit;
         }
       }
     }
@@ -964,8 +945,8 @@
                          FT_UInt          outerIndex,
                          FT_UInt          innerIndex )
   {
-    GX_ItemVarData  varData;
-    FT_Short*       deltaSet;
+    GX_ItemVarData    varData;
+    FT_ItemVarDelta*  deltaSet;
 
     FT_UInt   master, j;
     FT_Fixed  netAdjustment = 0;     /* accumulated adjustment */
