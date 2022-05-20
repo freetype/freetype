@@ -972,6 +972,10 @@
     FT_Fixed  scaledDelta;
     FT_Fixed  delta;
 
+    /* OpenType 1.8.4+: No variation data for this item
+     *  as indices have special value 0xFFFF. */
+    if (outerIndex == 0xFFFF && innerIndex == 0xFFFF)
+      return 0;
 
     /* See pseudo code from `Font Variations Overview' */
     /* in the OpenType specification.                  */
@@ -1148,20 +1152,12 @@
       }
     }
 
-    /* new test introduced in OpenType 1.8.4 */
-    if ( outerIndex == 0xFFFFU && innerIndex == 0xFFFFU )
-    {
-      FT_TRACE5(( "no adjustment to %s value %d\n",
-                  vertical ? "vertical height" : "horizontal width",
-                  *avalue ));
-    }
-    else
-    {
-      delta = tt_var_get_item_delta( face,
-                                     &table->itemStore,
-                                     outerIndex,
-                                     innerIndex );
+    delta = tt_var_get_item_delta( face,
+                                   &table->itemStore,
+                                   outerIndex,
+                                   innerIndex );
 
+    if ( delta ) {
       FT_TRACE5(( "%s value %d adjusted by %d unit%s (%s)\n",
                   vertical ? "vertical height" : "horizontal width",
                   *avalue,
@@ -1459,19 +1455,12 @@
       FT_Int     delta;
 
 
-      /* new test introduced in OpenType 1.8.4 */
-      if ( value->outerIndex == 0xFFFFU && value->innerIndex == 0xFFFFU )
-      {
-        /* no variation data for this item */
-        continue;
-      }
-
       delta = tt_var_get_item_delta( face,
                                      &blend->mvar_table->itemStore,
                                      value->outerIndex,
                                      value->innerIndex );
 
-      if ( p )
+      if ( p && delta )
       {
         FT_TRACE5(( "value %c%c%c%c (%d unit%s) adjusted by %d unit%s (MVAR)\n",
                     (FT_Char)( value->tag >> 24 ),
