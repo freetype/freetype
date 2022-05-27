@@ -605,7 +605,7 @@
 
 
         FT_FREE( doc->svg_document );
-        slot->internal->load_flags &= ~FT_GLYPH_OWN_GZIP_SVG;
+        slot->internal->flags &= ~FT_GLYPH_OWN_GZIP_SVG;
       }
     }
 #endif
