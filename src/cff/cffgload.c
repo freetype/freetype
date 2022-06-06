@@ -404,6 +404,9 @@
                            &dummy,
                            &advanceY );
 
+        glyph->root.linearHoriAdvance = advanceX;
+        glyph->root.linearVertAdvance = advanceY;
+
         advanceX =
           (FT_UShort)FT_MulDiv( advanceX,
                                 glyph->root.face->size->metrics.x_ppem,

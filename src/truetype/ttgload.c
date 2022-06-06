@@ -3005,6 +3005,9 @@
                            &topBearing,
                            &advanceY );
 
+        glyph->linearHoriAdvance = advanceX;
+        glyph->linearVertAdvance = advanceY;
+
         advanceX = (FT_UShort)FT_MulDiv( advanceX,
                                          glyph->face->size->metrics.x_ppem,
                                          glyph->face->units_per_EM );
