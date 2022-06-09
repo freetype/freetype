@@ -1909,7 +1909,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_convert_glyph_inner( RAS_ARG,
+  gray_convert_glyph_inner( RAS_ARG_
                             int  continued )
   {
     int  error;
@@ -2004,7 +2004,7 @@ typedef ptrdiff_t  FT_PtrDist;
         ras.max_ey    = band[0];
         ras.count_ey  = width;
 
-        error     = gray_convert_glyph_inner( RAS_VAR, continued );
+        error     = gray_convert_glyph_inner( RAS_VAR_ continued );
         continued = 1;
 
         if ( !error )
