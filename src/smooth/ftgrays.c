@@ -1912,7 +1912,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_convert_glyph_inner( RAS_ARG_
                             int  continued )
   {
-    int  error;
+    volatile int  error;
 
 
     if ( ft_setjmp( ras.jump_buffer ) == 0 )
