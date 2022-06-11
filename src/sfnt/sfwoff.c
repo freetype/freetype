@@ -196,8 +196,8 @@
     /* tag value, the tables themselves are not.  We thus have to */
     /* sort them by offset and check that they don't overlap.     */
 
-    if ( FT_NEW_ARRAY( tables, woff.num_tables )  ||
-         FT_NEW_ARRAY( indices, woff.num_tables ) )
+    if ( FT_QNEW_ARRAY( tables, woff.num_tables )  ||
+         FT_QNEW_ARRAY( indices, woff.num_tables ) )
       goto Exit;
 
     FT_TRACE2(( "\n" ));
@@ -328,9 +328,9 @@
     }
 
     /* Now use `totalSfntSize'. */
-    if ( FT_REALLOC( sfnt,
-                     12 + woff.num_tables * 16UL,
-                     woff.totalSfntSize ) )
+    if ( FT_QREALLOC( sfnt,
+                      12 + woff.num_tables * 16UL,
+                      woff.totalSfntSize ) )
       goto Exit;
 
     sfnt_header = sfnt + 12;
