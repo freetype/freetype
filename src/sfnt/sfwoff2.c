@@ -2004,7 +2004,8 @@
 
       FT_TRACE4(( "Number of fonts in TTC: %d\n", woff2.num_fonts ));
 
-      if ( FT_QNEW_ARRAY( woff2.ttc_fonts, woff2.num_fonts ) )
+      /* pre-zero pointers within in case of failure */
+      if ( FT_NEW_ARRAY( woff2.ttc_fonts, woff2.num_fonts ) )
         goto Exit;
 
       for ( nn = 0; nn < woff2.num_fonts; nn++ )
