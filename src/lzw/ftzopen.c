@@ -143,7 +143,7 @@
           return -1;
       }
 
-      if ( FT_QRENEW_ARRAY( state->stack, old_size, new_size ) )
+      if ( FT_QREALLOC( state->stack, old_size, new_size ) )
         return -1;
 
       /* if relocating to heap */
