@@ -790,6 +790,9 @@
     if ( err == Z_DATA_ERROR )
       return FT_THROW( Invalid_Table );
 
+    if ( err == Z_NEED_DICT )
+      return FT_THROW( Invalid_Table );
+
     return FT_Err_Ok;
   }
 
