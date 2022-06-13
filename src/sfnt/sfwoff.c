@@ -162,8 +162,7 @@
     }
 
     /* Don't trust `totalSfntSize' before thorough checks. */
-    if ( FT_QALLOC( sfnt, 12 + woff.num_tables * 16UL ) ||
-         FT_NEW( sfnt_stream )                          )
+    if ( FT_QALLOC( sfnt, 12 ) || FT_NEW( sfnt_stream ) )
       goto Exit;
 
     sfnt_header = sfnt;
@@ -328,9 +327,7 @@
     }
 
     /* Now use `totalSfntSize'. */
-    if ( FT_QREALLOC( sfnt,
-                      12 + woff.num_tables * 16UL,
-                      woff.totalSfntSize ) )
+    if ( FT_QREALLOC( sfnt, 12, woff.totalSfntSize ) )
       goto Exit;
 
     sfnt_header = sfnt + 12;
