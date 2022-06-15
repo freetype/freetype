@@ -3827,39 +3827,37 @@
    * @Description:
    *   Apply the appropriate deltas to the current glyph.
    *
-   * @Input:
-   *   face ::
-   *     A handle to the target face object.
-   *
-   *   glyph_index ::
-   *     The index of the glyph being modified.
-   *
-   *   n_points ::
-   *     The number of the points in the glyph, including
-   *     phantom points.
-   *
    * @InOut:
+   *   loader ::
+   *     A handle to the loader object.
+   *
    *   outline ::
-   *     The outline to change.
+   *     The outline to change, with appended phantom points.
    *
    * @Output:
    *   unrounded ::
    *     An array with `n_points' elements that is filled with unrounded
    *     point coordinates (in 26.6 format).
    *
+   * @Input
+   *   n_points ::
+   *     The number of the points in the glyph, including
+   *     phantom points.
+   *
    * @Return:
    *   FreeType error code.  0 means success.
    */
   FT_LOCAL_DEF( FT_Error )
-  TT_Vary_Apply_Glyph_Deltas( TT_Face      face,
-                              FT_UInt      glyph_index,
+  TT_Vary_Apply_Glyph_Deltas( TT_Loader    loader,
                               FT_Outline*  outline,
                               FT_Vector*   unrounded,
                               FT_UInt      n_points )
   {
     FT_Error   error;
+    TT_Face    face = loader->face;
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = stream->memory;
+    FT_UInt    glyph_index = loader->glyph_index;
 
     FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
     FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
@@ -4254,6 +4252,15 @@
       outline->points[i].x += FT_fixedToInt( point_deltas_x[i] );
       outline->points[i].y += FT_fixedToInt( point_deltas_y[i] );
     }
+
+    /* recalculate linear horizontal and vertical advances */
+    /* if we don't have HVAR and VVAR, respectively        */
+    if ( !( face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+      loader->linear   = FT_PIX_ROUND( unrounded[n_points - 3].x -
+                                       unrounded[n_points - 4].x ) / 64;
+    if ( !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+      loader->vadvance = FT_PIX_ROUND( unrounded[n_points - 1].x -
+                                       unrounded[n_points - 2].x ) / 64;
 
   Fail3:
     FT_FREE( point_deltas_x );

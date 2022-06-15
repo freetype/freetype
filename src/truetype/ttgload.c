@@ -985,24 +985,10 @@
         goto Exit;
 
       /* Deltas apply to the unscaled data. */
-      error = TT_Vary_Apply_Glyph_Deltas( loader->face,
-                                          loader->glyph_index,
+      error = TT_Vary_Apply_Glyph_Deltas( loader,
                                           outline,
                                           unrounded,
                                           (FT_UInt)n_points );
-
-      /* recalculate linear horizontal and vertical advances */
-      /* if we don't have HVAR and VVAR, respectively        */
-
-      /* XXX: change all FreeType modules to store `linear' and `vadvance' */
-      /*      in 26.6 format before the `base' module scales them to 16.16 */
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-        loader->linear = FT_PIX_ROUND( unrounded[n_points - 3].x -
-                                       unrounded[n_points - 4].x ) / 64;
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-        loader->vadvance = FT_PIX_ROUND( unrounded[n_points - 1].x -
-                                         unrounded[n_points - 2].x ) / 64;
-
       if ( error )
         goto Exit;
     }
@@ -1786,8 +1772,7 @@
         outline.contours   = contours;
 
         /* this must be done before scaling */
-        error = TT_Vary_Apply_Glyph_Deltas( loader->face,
-                                            glyph_index,
+        error = TT_Vary_Apply_Glyph_Deltas( loader,
                                             &outline,
                                             unrounded,
                                             (FT_UInt)outline.n_points );
@@ -1803,15 +1788,6 @@
         loader->pp3.y = points[2].y;
         loader->pp4.x = points[3].x;
         loader->pp4.y = points[3].y;
-
-        /* recalculate linear horizontal and vertical advances */
-        /* if we don't have HVAR and VVAR, respectively        */
-        if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-          loader->linear = FT_PIX_ROUND( unrounded[1].x -
-                                         unrounded[0].x ) / 64;
-        if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-          loader->vadvance = FT_PIX_ROUND( unrounded[3].x -
-                                           unrounded[2].x ) / 64;
       }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
@@ -2015,8 +1991,7 @@
         /* this call provides additional offsets */
         /* for each component's translation      */
         if ( FT_SET_ERROR( TT_Vary_Apply_Glyph_Deltas(
-                             face,
-                             glyph_index,
+                             loader,
                              &outline,
                              unrounded,
                              (FT_UInt)outline.n_points ) ) )
