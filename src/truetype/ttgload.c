@@ -2018,17 +2018,6 @@
         loader->pp4.x = points[i + 3].x;
         loader->pp4.y = points[i + 3].y;
 
-        /* recalculate linear horizontal and vertical advances */
-        /* if we don't have HVAR and VVAR, respectively        */
-        if ( !( face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-          loader->linear =
-            FT_PIX_ROUND( unrounded[outline.n_points - 3].x -
-                          unrounded[outline.n_points - 4].x ) / 64;
-        if ( !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-          loader->vadvance =
-            FT_PIX_ROUND( unrounded[outline.n_points - 1].x -
-                          unrounded[outline.n_points - 2].x ) / 64;
-
       Exit1:
         FT_FREE( outline.points );
         FT_FREE( outline.tags );
