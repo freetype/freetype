@@ -4259,8 +4259,8 @@
       loader->linear   = FT_PIX_ROUND( unrounded[n_points - 3].x -
                                        unrounded[n_points - 4].x ) / 64;
     if ( !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-      loader->vadvance = FT_PIX_ROUND( unrounded[n_points - 1].x -
-                                       unrounded[n_points - 2].x ) / 64;
+      loader->vadvance = FT_PIX_ROUND( unrounded[n_points - 1].y -
+                                       unrounded[n_points - 2].y ) / 64;
 
   Fail3:
     FT_FREE( point_deltas_x );
