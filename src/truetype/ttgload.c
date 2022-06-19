@@ -801,7 +801,7 @@
                    FT_UInt       start_point,
                    FT_UInt       start_contour )
   {
-    zone->n_points    = (FT_UShort)load->outline.n_points -
+    zone->n_points    = (FT_UShort)load->outline.n_points + 4 -
                           (FT_UShort)start_point;
     zone->n_contours  = load->outline.n_contours -
                           (FT_Short)start_contour;
@@ -970,11 +970,6 @@
     outline->points[n_points + 2] = loader->pp3;
     outline->points[n_points + 3] = loader->pp4;
 
-    outline->tags[n_points    ] = 0;
-    outline->tags[n_points + 1] = 0;
-    outline->tags[n_points + 2] = 0;
-    outline->tags[n_points + 3] = 0;
-
     n_points += 4;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
@@ -987,8 +982,7 @@
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader,
                                           outline,
-                                          unrounded,
-                                          (FT_UInt)n_points );
+                                          unrounded );
       if ( error )
         goto Exit;
     }
@@ -1000,7 +994,7 @@
       tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
 
       FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
-                     loader->zone.n_points + 4 );
+                     loader->zone.n_points );
     }
 
     {
@@ -1142,11 +1136,7 @@
     }
 
     if ( IS_HINTED( loader->load_flags ) )
-    {
-      loader->zone.n_points += 4;
-
       error = TT_Hint_Glyph( loader, 0 );
-    }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
   Exit:
@@ -1359,11 +1349,6 @@
     outline->points[outline->n_points + 2] = loader->pp3;
     outline->points[outline->n_points + 3] = loader->pp4;
 
-    outline->tags[outline->n_points    ] = 0;
-    outline->tags[outline->n_points + 1] = 0;
-    outline->tags[outline->n_points + 2] = 0;
-    outline->tags[outline->n_points + 3] = 0;
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     {
@@ -1422,10 +1407,8 @@
 
     /* Some points are likely touched during execution of  */
     /* instructions on components.  So let's untouch them. */
-    for ( i = 0; i < loader->zone.n_points; i++ )
+    for ( i = 0; i < loader->zone.n_points - 4; i++ )
       loader->zone.tags[i] &= ~FT_CURVE_TAG_TOUCH_BOTH;
-
-    loader->zone.n_points += 4;
 
     return TT_Hint_Glyph( loader, 1 );
   }
@@ -1747,35 +1730,27 @@
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
         FT_Vector   points[4];
-        char        tags[4]     = { 1, 1, 1, 1 };
-        short       contours[4] = { 0, 1, 2, 3 };
         FT_Outline  outline;
 
         /* unrounded values */
         FT_Vector  unrounded[4] = { {0, 0}, {0, 0}, {0, 0}, {0, 0} };
 
 
-        points[0].x = loader->pp1.x;
-        points[0].y = loader->pp1.y;
-        points[1].x = loader->pp2.x;
-        points[1].y = loader->pp2.y;
+        points[0] = loader->pp1;
+        points[1] = loader->pp2;
+        points[2] = loader->pp3;
+        points[3] = loader->pp4;
 
-        points[2].x = loader->pp3.x;
-        points[2].y = loader->pp3.y;
-        points[3].x = loader->pp4.x;
-        points[3].y = loader->pp4.y;
-
-        outline.n_points   = 4;
-        outline.n_contours = 4;
+        outline.n_points   = 0;
+        outline.n_contours = 0;
         outline.points     = points;
-        outline.tags       = tags;
-        outline.contours   = contours;
+        outline.tags       = NULL;
+        outline.contours   = NULL;
 
         /* this must be done before scaling */
         error = TT_Vary_Apply_Glyph_Deltas( loader,
                                             &outline,
-                                            unrounded,
-                                            (FT_UInt)outline.n_points );
+                                            unrounded );
         if ( error )
           goto Exit;
       }
@@ -1925,17 +1900,16 @@
 
         /* construct an outline structure for              */
         /* communication with `TT_Vary_Apply_Glyph_Deltas' */
-        outline.n_points   = (short)( gloader->current.num_subglyphs + 4 );
-        outline.n_contours = outline.n_points;
+        outline.n_contours = outline.n_points = limit;
 
         outline.points   = NULL;
         outline.tags     = NULL;
         outline.contours = NULL;
 
-        if ( FT_NEW_ARRAY( points, outline.n_points )    ||
-             FT_NEW_ARRAY( tags, outline.n_points )      ||
-             FT_NEW_ARRAY( contours, outline.n_points )  ||
-             FT_NEW_ARRAY( unrounded, outline.n_points ) )
+        if ( FT_NEW_ARRAY( points, limit + 4 )    ||
+             FT_NEW_ARRAY( tags, limit + 4 )      ||
+             FT_NEW_ARRAY( contours, limit + 4 )  ||
+             FT_NEW_ARRAY( unrounded, limit + 4 ) )
           goto Exit1;
 
         subglyph = gloader->current.subglyphs;
@@ -1951,28 +1925,10 @@
           contours[i] = i;
         }
 
-        points[i].x = loader->pp1.x;
-        points[i].y = loader->pp1.y;
-        tags[i]     = 1;
-        contours[i] = i;
-
-        i++;
-        points[i].x = loader->pp2.x;
-        points[i].y = loader->pp2.y;
-        tags[i]     = 1;
-        contours[i] = i;
-
-        i++;
-        points[i].x = loader->pp3.x;
-        points[i].y = loader->pp3.y;
-        tags[i]     = 1;
-        contours[i] = i;
-
-        i++;
-        points[i].x = loader->pp4.x;
-        points[i].y = loader->pp4.y;
-        tags[i]     = 1;
-        contours[i] = i;
+        points[i++] = loader->pp1;
+        points[i++] = loader->pp2;
+        points[i++] = loader->pp3;
+        points[i  ] = loader->pp4;
 
         outline.points   = points;
         outline.tags     = tags;
@@ -1980,11 +1936,9 @@
 
         /* this call provides additional offsets */
         /* for each component's translation      */
-        if ( FT_SET_ERROR( TT_Vary_Apply_Glyph_Deltas(
-                             loader,
-                             &outline,
-                             unrounded,
-                             (FT_UInt)outline.n_points ) ) )
+        if ( FT_SET_ERROR( TT_Vary_Apply_Glyph_Deltas( loader,
+                                                       &outline,
+                                                       unrounded ) ) )
           goto Exit1;
 
         subglyph = gloader->current.subglyphs;

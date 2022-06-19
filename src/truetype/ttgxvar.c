@@ -3839,25 +3839,20 @@
    *     An array with `n_points' elements that is filled with unrounded
    *     point coordinates (in 26.6 format).
    *
-   * @Input
-   *   n_points ::
-   *     The number of the points in the glyph, including
-   *     phantom points.
-   *
    * @Return:
    *   FreeType error code.  0 means success.
    */
   FT_LOCAL_DEF( FT_Error )
   TT_Vary_Apply_Glyph_Deltas( TT_Loader    loader,
                               FT_Outline*  outline,
-                              FT_Vector*   unrounded,
-                              FT_UInt      n_points )
+                              FT_Vector*   unrounded )
   {
     FT_Error   error;
     TT_Face    face = loader->face;
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = stream->memory;
     FT_UInt    glyph_index = loader->glyph_index;
+    FT_UInt    n_points = (FT_UInt)outline->n_points + 4;
 
     FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
     FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
