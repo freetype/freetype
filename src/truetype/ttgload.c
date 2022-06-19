@@ -1778,16 +1778,6 @@
                                             (FT_UInt)outline.n_points );
         if ( error )
           goto Exit;
-
-        loader->pp1.x = points[0].x;
-        loader->pp1.y = points[0].y;
-        loader->pp2.x = points[1].x;
-        loader->pp2.y = points[1].y;
-
-        loader->pp3.x = points[2].x;
-        loader->pp3.y = points[2].y;
-        loader->pp4.x = points[3].x;
-        loader->pp4.y = points[3].y;
       }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
@@ -2007,16 +1997,6 @@
             subglyph->arg2 = (FT_Int16)points[i].y;
           }
         }
-
-        loader->pp1.x = points[i + 0].x;
-        loader->pp1.y = points[i + 0].y;
-        loader->pp2.x = points[i + 1].x;
-        loader->pp2.y = points[i + 1].y;
-
-        loader->pp3.x = points[i + 2].x;
-        loader->pp3.y = points[i + 2].y;
-        loader->pp4.x = points[i + 3].x;
-        loader->pp4.y = points[i + 3].y;
 
       Exit1:
         FT_FREE( outline.points );
