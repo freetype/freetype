@@ -707,7 +707,7 @@
 	[base] Fix integer overflow.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Normalize incoming and
-	outgoing vectors and use fixed point arithmetic.
+	outgoing vectors and use fixed-point arithmetic.
 
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

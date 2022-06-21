@@ -2411,9 +2411,9 @@
 	units per em (e.g. Inter). This patch fixes it.
 
 	The return value of af_loader_compute_darkening was also changed to
-	use 16.16 fixed point to get rid of a redundant truncation operation.
+	use 16.16 fixed-point to get rid of a redundant truncation operation.
 	This should slightly improve the precision, although it's still
-	bottlenecked by the emboldening function, which uses 26.6 fixed point.
+	bottlenecked by the emboldening function, which uses 26.6 fixed-point.
 
 	* src/autofit/afloader.[ch]
 	(af_loader_compute_darkening): Return FT_Fixed.

@@ -657,7 +657,7 @@
 
 
   /*
-   * Find the shortest decimal representation of a 16.16 fixed point
+   * Find the shortest decimal representation of a 16.16 fixed-point
    * number.  The function fills `buf' with the result, returning a pointer
    * to the position after the representation's last byte.
    */
@@ -733,7 +733,7 @@
         an equivalent representation of `fixed'.
 
         The above FOR loop always finds the larger of the two values; I
-        verified this by iterating over all possible fixed point numbers.
+        verified this by iterating over all possible fixed-point numbers.
 
         If the remainder is 17232*10, both values are equally good, and we
         take the next even number (following IEEE 754's `round to nearest,
@@ -741,7 +741,7 @@
 
         If the remainder is smaller than 17232*10, the lower of the two
         numbers is nearer to the exact result (values 17232 and 34480 were
-        also found by testing all possible fixed point values).
+        also found by testing all possible fixed-point values).
 
         We use this to find a shorter decimal representation.  If not ending
         with digit zero, we take the representation with less error.

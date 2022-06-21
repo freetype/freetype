@@ -33,7 +33,7 @@
    *
    *   https://github.com/chmike/fpsqrt
    *
-   * Use this to compute the square root of a 16.16 fixed point number.
+   * Use this to compute the square root of a 16.16 fixed-point number.
    */
   FT_LOCAL_DEF( FT_16D16 )
   square_root( FT_16D16  val )
@@ -72,8 +72,8 @@
    */
 
   /*
-   * Convert 16.16 fixed point values to the desired output format.
-   * In this case we reduce 16.16 fixed point values to normalized
+   * Convert 16.16 fixed-point values to the desired output format.
+   * In this case we reduce 16.16 fixed-point values to normalized
    * 8-bit values.
    *
    * The `max_value` in the parameter is the maximum value in the

@@ -315,7 +315,7 @@ FT_BEGIN_HEADER
     /* The normal stack then points to these values instead of the DICT   */
     /* because all other operators in Private DICT clear the stack.       */
     /* `blend_stack' could be cleared at each operator other than blend.  */
-    /* Blended values are stored as 5-byte fixed point values.            */
+    /* Blended values are stored as 5-byte fixed-point values.            */
 
     FT_Byte*  blend_stack;    /* base of stack allocation     */
     FT_Byte*  blend_top;      /* first empty slot             */

@@ -1939,7 +1939,7 @@
     /* now factor is 16.16 */
     factor = FT_DivFix( factor, sq_line_length );
 
-    /* clamp the factor between 0.0 and 1.0 in fixed point */
+    /* clamp the factor between 0.0 and 1.0 in fixed-point */
     if ( factor > FT_INT_16D16( 1 ) )
       factor = FT_INT_16D16( 1 );
     if ( factor < 0 )
@@ -3164,7 +3164,7 @@
         if ( min_dist.distance > sp_sq )
           min_dist.distance = sp_sq;
 
-        /* square_root the values and fit in a 6.10 fixed point */
+        /* square_root the values and fit in a 6.10 fixed-point */
         if ( USE_SQUARED_DISTANCES )
           min_dist.distance = square_root( min_dist.distance );
 
