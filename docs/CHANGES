@@ -1,3 +1,19 @@
+CHANGES BETWEEN 2.12.1 and 2.12.2
+
+  I. IMPORTANT BUG FIXES
+  
+  II. MISCELLANEOUS
+
+  - TrueType interpreter version 38  (aka Infinality)  that was  first
+  introduced about 10 years ago  in FreeType 2.4.11  is now deprecated
+  and slated  to be removed in the next version.  TrueType interpreter
+  version 40  has been  FreeType default version  for  6 years now and
+  provides an excelent alternative.  This is the last FreeType version
+  with TT_INTERPRETER_VERSION_38 and TT_INTERPRETER_VERSION_40 treated
+  differently.
+  
+====================================================================== 
+
 CHANGES BETWEEN 2.12.0 and 2.12.1
 
   I. IMPORTANT BUG FIXES
