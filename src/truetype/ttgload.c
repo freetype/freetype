@@ -1407,7 +1407,7 @@
 
     /* Some points are likely touched during execution of  */
     /* instructions on components.  So let's untouch them. */
-    for ( i = 0; i < loader->zone.n_points - 4; i++ )
+    for ( i = 0; i < loader->zone.n_points - 4U; i++ )
       loader->zone.tags[i] &= ~FT_CURVE_TAG_TOUCH_BOTH;
 
     return TT_Hint_Glyph( loader, 1 );
