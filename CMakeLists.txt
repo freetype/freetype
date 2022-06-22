@@ -121,7 +121,6 @@ endif ()
 
 include(CheckIncludeFile)
 include(CMakeDependentOption)
-include(FindPkgConfig)
 
 # CMAKE_TOOLCHAIN_FILE must be set before `project' is called, which
 # configures the base build environment and references the toolchain file
@@ -245,6 +244,8 @@ endif ()
 
 
 # Find dependencies
+include(FindPkgConfig)
+
 if (NOT FT_DISABLE_HARFBUZZ)
   set(HARFBUZZ_MIN_VERSION "2.0.0")
   if (FT_REQUIRE_HARFBUZZ)
