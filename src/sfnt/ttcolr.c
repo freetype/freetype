@@ -1054,7 +1054,7 @@
     /* Iterator points at first `ColorStop` of `ColorLine`. */
     p = iterator->p;
 
-    color_stop->stop_offset = FT_NEXT_SHORT( p );
+    color_stop->stop_offset = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
 
     color_stop->color.palette_index = FT_NEXT_USHORT( p );
 

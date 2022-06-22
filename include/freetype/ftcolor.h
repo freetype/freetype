@@ -592,7 +592,8 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   stop_offset ::
-   *     The stop offset between 0 and 1 along the gradient.
+   *     The stop offset along the gradient, expressed as a 16.16 fixed-point
+   *     coordinate.
    *
    *   color ::
    *     The color information for this stop, see @FT_ColorIndex.
@@ -604,7 +605,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_ColorStop_
   {
-    FT_F2Dot14     stop_offset;
+    FT_Fixed       stop_offset;
     FT_ColorIndex  color;
 
   } FT_ColorStop;
