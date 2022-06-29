@@ -109,7 +109,7 @@ FT_BEGIN_HEADER
                                       FT_ULong         offset,
                                       GX_ItemVarStore  itemStore );
 
-  typedef FT_Int
+  typedef FT_ItemVarDelta
   (*FT_Var_Get_Item_Delta_Func)( FT_Face          face,
                                  GX_ItemVarStore  itemStore,
                                  FT_UInt          outerIndex,

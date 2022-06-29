@@ -24,7 +24,7 @@
 FT_BEGIN_HEADER
 
 
-  typedef FT_Long FT_ItemVarDelta;
+  typedef FT_Int32  FT_ItemVarDelta;
 
   typedef struct  GX_ItemVarDataRec_
   {

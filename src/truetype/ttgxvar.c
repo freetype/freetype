@@ -939,19 +939,23 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Int )
+  FT_LOCAL_DEF( FT_ItemVarDelta )
   tt_var_get_item_delta( TT_Face          face,
                          GX_ItemVarStore  itemStore,
                          FT_UInt          outerIndex,
                          FT_UInt          innerIndex )
   {
+    FT_Stream  stream = FT_FACE_STREAM( face );
+    FT_Memory  memory = stream->memory;
+    FT_Error   error  = FT_Err_Ok;
+
     GX_ItemVarData    varData;
     FT_ItemVarDelta*  deltaSet;
 
-    FT_UInt   master, j;
-    FT_Fixed  netAdjustment = 0;     /* accumulated adjustment */
-    FT_Fixed  scaledDelta;
-    FT_Fixed  delta;
+    FT_UInt           master, j;
+    FT_Fixed*         scalars;
+    FT_ItemVarDelta   returnValue;
+
 
     /* OpenType 1.8.4+: No variation data for this item
      *  as indices have special value 0xFFFF. */
@@ -963,6 +967,9 @@
 
     varData  = &itemStore->varData[outerIndex];
     deltaSet = &varData->deltaSet[varData->regionIdxCount * innerIndex];
+
+    if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
+      return 0;
 
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
@@ -1013,18 +1020,33 @@
             FT_MulDiv( scalar,
                        axis->endCoord - face->blend->normalizedcoords[j],
                        axis->endCoord - axis->peakCoord );
+
       } /* per-axis loop */
 
-      /* get the scaled delta for this region */
-      delta       = FT_intToFixed( deltaSet[master] );
-      scaledDelta = FT_MulFix( scalar, delta );
-
-      /* accumulate the adjustments from each region */
-      netAdjustment = netAdjustment + scaledDelta;
+      scalars[master] = scalar;
 
     } /* per-region loop */
 
-    return FT_fixedToInt( netAdjustment );
+
+    /* Compute the scaled delta for this region.
+     *
+     * From: https://docs.microsoft.com/en-us/typography/opentype/spec/otvarcommonformats#item-variation-store-header-and-item-variation-data-subtables:
+     *
+     *   `Fixed` is a 32-bit (16.16) type and, in the general case, requires
+     *   32-bit deltas.  As described above, the `DeltaSet` record can
+     *   accommodate deltas that are, logically, either 16-bit or 32-bit.
+     *   When scaled deltas are applied to `Fixed` values, the `Fixed` value
+     *   is treated like a 32-bit integer.
+     *
+     * `FT_MulAddFix` internally uses 64-bit precision; it thus can handle
+     * deltas ranging from small 8-bit to large 32-bit values that are
+     * applied to 16.16 `FT_Fixed` / OpenType `Fixed` values.
+     */
+    returnValue = FT_MulAddFix( scalars, deltaSet, varData->regionIdxCount );
+
+    FT_FREE( scalars );
+
+    return returnValue;
   }
 
 

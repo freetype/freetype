@@ -391,7 +391,7 @@ FT_BEGIN_HEADER
                                        GX_ItemVarStore    itemStore,
                                        FT_ULong           table_len );
 
-  FT_LOCAL( FT_Int )
+  FT_LOCAL( FT_ItemVarDelta )
   tt_var_get_item_delta( TT_Face          face,
                          GX_ItemVarStore  itemStore,
                          FT_UInt          outerIndex,
