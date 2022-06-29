@@ -30,9 +30,14 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
+#include <freetype/internal/services/svmm.h>
 #include <freetype/tttags.h>
 #include <freetype/ftcolor.h>
 #include <freetype/config/integer-types.h>
+
+ /* the next code line is a temporary hack, to be removed together with */
+ /* `VARIABLE_COLRV1_ENABLED` and related code                          */
+#include "../truetype/ttobjs.h"
 
 
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
@@ -48,6 +53,10 @@
 #define COLOR_STOP_SIZE                   6U
 #define LAYER_SIZE                        4U
 #define COLR_HEADER_SIZE                 14U
+
+
+#define VARIABLE_COLRV1_ENABLED                                           \
+          ( ((TT_Driver)FT_FACE_DRIVER( face ))->enable_variable_colrv1 )
 
 
   typedef enum  FT_PaintFormat_Internal_
@@ -104,6 +113,10 @@
      */
     FT_Byte*  paints_start_v1;
 
+    /* Item Variation Store for variable 'COLR' v1. */
+    GX_ItemVarStoreRec    var_store;
+    GX_DeltaSetIdxMapRec  delta_set_idx_map;
+
     /* The memory that backs up the `COLR' table. */
     void*     table;
     FT_ULong  table_size;
@@ -138,7 +151,9 @@
     FT_ULong  base_glyph_offset, layer_offset;
     FT_ULong  base_glyphs_offset_v1, num_base_glyphs_v1;
     FT_ULong  layer_offset_v1, num_layers_v1, clip_list_offset;
+    FT_ULong  var_idx_map_offset, var_store_offset;
     FT_ULong  table_size;
+    FT_ULong  colr_offset_in_stream;
 
 
     /* `COLR' always needs `CPAL' */
@@ -148,6 +163,8 @@
     error = face->goto_table( face, TTAG_COLR, stream, &table_size );
     if ( error )
       goto NoColr;
+
+    colr_offset_in_stream = FT_STREAM_POS();
 
     if ( table_size < COLR_HEADER_SIZE )
       goto InvalidTable;
@@ -239,6 +256,64 @@
         colr->clip_list = (FT_Byte*)( table + clip_list_offset );
       else
         colr->clip_list = 0;
+
+      colr->var_store.dataCount     = 0;
+      colr->var_store.varData       = NULL;
+      colr->var_store.axisCount     = 0;
+      colr->var_store.regionCount   = 0;
+      colr->var_store.varRegionList = 0;
+
+      colr->delta_set_idx_map.mapCount   = 0;
+      colr->delta_set_idx_map.outerIndex = NULL;
+      colr->delta_set_idx_map.innerIndex = NULL;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( face->variation_support & TT_FACE_FLAG_VAR_FVAR &&
+           VARIABLE_COLRV1_ENABLED                         )
+      {
+        FT_Service_MultiMasters  mm  = (FT_Service_MultiMasters)face->mm;
+
+
+        var_idx_map_offset = FT_NEXT_ULONG( p );
+
+        if ( var_idx_map_offset >= table_size )
+          goto InvalidTable;
+
+        var_store_offset = FT_NEXT_ULONG( p );
+        if ( var_store_offset >= table_size )
+          goto InvalidTable;
+
+        if ( var_store_offset )
+        {
+          /* If variation info has not been initialized yet, try doing so, */
+          /* otherwise loading the variation store will fail as it         */
+          /* requires access to `blend` for checking the number of axes.   */
+          if ( !face->blend )
+            if ( mm->get_mm_var( FT_FACE( face ), NULL ) )
+              goto InvalidTable;
+
+          /* Try loading `VarIdxMap` and `VarStore`. */
+          error = mm->load_item_var_store(
+                    FT_FACE( face ),
+                    colr_offset_in_stream + var_store_offset,
+                    &colr->var_store );
+          if ( error != FT_Err_Ok )
+            goto InvalidTable;
+        }
+
+        if ( colr->var_store.axisCount && var_idx_map_offset )
+        {
+          error = mm->load_delta_set_idx_map(
+                   FT_FACE( face ),
+                   colr_offset_in_stream + var_idx_map_offset,
+                   &colr->delta_set_idx_map,
+                   &colr->var_store,
+                   table_size );
+          if ( error != FT_Err_Ok )
+            goto InvalidTable;
+        }
+      }
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
     }
 
     colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );
@@ -251,6 +326,19 @@
     return FT_Err_Ok;
 
   InvalidTable:
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    if ( VARIABLE_COLRV1_ENABLED )
+    {
+      FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+      mm->done_delta_set_idx_map( FT_FACE( face ),
+                                  &colr->delta_set_idx_map );
+      mm->done_item_var_store( FT_FACE( face ),
+                               &colr->var_store );
+    }
+#endif
+
     error = FT_THROW( Invalid_Table );
 
   NoColr:
@@ -272,6 +360,18 @@
 
     if ( colr )
     {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( VARIABLE_COLRV1_ENABLED )
+      {
+        FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+        mm->done_delta_set_idx_map( FT_FACE( face ),
+                                    &colr->delta_set_idx_map );
+        mm->done_item_var_store( FT_FACE( face ),
+                                 &colr->var_store );
+      }
+#endif
       FT_FRAME_RELEASE( colr->table );
       FT_FREE( colr );
     }
