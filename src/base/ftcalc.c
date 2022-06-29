@@ -1085,4 +1085,64 @@
   }
 
 
+  FT_BASE_DEF( FT_Int32 )
+  FT_MulAddFix( FT_Fixed*  s,
+                FT_Int32*  f,
+                FT_UInt    count )
+  {
+    FT_UInt   i;
+    FT_Int64  temp;
+
+
+#ifdef FT_INT64
+
+    for ( i = 0; i < count; ++i )
+      temp += (FT_Int64)s[i] * f[i];
+
+    return temp >> 16;
+
+#else
+
+    temp.hi = 0;
+    temp.lo = 0;
+
+    for ( i = 0; i < count; ++i )
+    {
+      FT_Int64  multResult;
+
+      FT_Int     sign  = 1;
+      FT_UInt32  carry = 0;
+
+      FT_UInt32  scalar;
+      FT_UInt32  factor;
+
+
+      scalar = (FT_UInt32)s[i];
+      factor = (FT_UInt32)f[i];
+
+      FT_MOVE_SIGN( s[i], scalar, sign );
+      FT_MOVE_SIGN( f[i], factor, sign );
+
+      ft_multo64( scalar, factor, &multResult );
+
+      if ( sign < 0 )
+      {
+        /* Emulated `FT_Int64` negation. */
+        carry = ( multResult.lo == 0 );
+
+        multResult.lo = ~multResult.lo + 1;
+        multResult.hi = ~multResult.hi + carry;
+      }
+
+      FT_Add64( &temp, &multResult, &temp );
+    }
+
+    return (FT_Int32)( ( (FT_Int32)( temp.hi & 0xFFFF ) << 16 ) |
+                                   ( temp.lo >> 16 )            );
+
+#endif /* !FT_INT64 */
+
+  }
+
+
 /* END */
