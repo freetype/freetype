@@ -1091,7 +1091,7 @@
                 FT_UInt    count )
   {
     FT_UInt   i;
-    FT_Int64  temp;
+    FT_Int64  temp = 0;
 
 
 #ifdef FT_INT64
