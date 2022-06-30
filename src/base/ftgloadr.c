@@ -217,7 +217,7 @@
 
     error = FT_GlyphLoader_CreateExtra( loader );
     if ( error )
-      return error;
+      goto Exit;
 
     /* check points & tags */
     new_max = (FT_UInt)base->n_points + (FT_UInt)current->n_points +
@@ -229,7 +229,10 @@
       new_max = FT_PAD_CEIL( new_max, 8 );
 
       if ( new_max > FT_OUTLINE_POINTS_MAX )
-        return FT_THROW( Array_Too_Large );
+      {
+        error = FT_THROW( Array_Too_Large );
+        goto Exit;
+      }
 
       if ( FT_RENEW_ARRAY( base->points, old_max, new_max ) ||
            FT_RENEW_ARRAY( base->tags,   old_max, new_max ) )
@@ -254,7 +257,7 @@
 
     error = FT_GlyphLoader_CreateExtra( loader );
     if ( error )
-      return error;
+      goto Exit;
 
     /* check contours */
     old_max = loader->max_contours;
@@ -265,7 +268,10 @@
       new_max = FT_PAD_CEIL( new_max, 4 );
 
       if ( new_max > FT_OUTLINE_CONTOURS_MAX )
-        return FT_THROW( Array_Too_Large );
+      {
+        error = FT_THROW( Array_Too_Large );
+        goto Exit;
+      }
 
       if ( FT_RENEW_ARRAY( base->contours, old_max, new_max ) )
         goto Exit;
