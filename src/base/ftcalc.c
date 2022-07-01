@@ -1091,18 +1091,20 @@
                 FT_UInt    count )
   {
     FT_UInt   i;
-    FT_Int64  temp = 0;
+    FT_Int64  temp;
+#ifndef FT_INT64
+    FT_Int64  halfUnit;
+#endif
 
 
 #ifdef FT_INT64
+    temp = 0;
 
     for ( i = 0; i < count; ++i )
       temp += (FT_Int64)s[i] * f[i];
 
-    return temp >> 16;
-
+    return ( temp + 0x8000 ) >> 16;
 #else
-
     temp.hi = 0;
     temp.lo = 0;
 
@@ -1136,6 +1138,11 @@
 
       FT_Add64( &temp, &multResult, &temp );
     }
+
+    /* Round value. */
+    halfUnit.hi = 0;
+    halfUnit.lo = 0x8000;
+    FT_Add64( &temp, &halfUnit, &temp );
 
     return (FT_Int32)( ( (FT_Int32)( temp.hi & 0xFFFF ) << 16 ) |
                                    ( temp.lo >> 16 )            );
