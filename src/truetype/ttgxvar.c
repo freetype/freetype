@@ -1160,7 +1160,8 @@
                                    outerIndex,
                                    innerIndex );
 
-    if ( delta ) {
+    if ( delta )
+    {
       FT_TRACE5(( "%s value %d adjusted by %d unit%s (%s)\n",
                   vertical ? "vertical height" : "horizontal width",
                   *avalue,
