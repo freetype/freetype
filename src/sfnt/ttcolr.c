@@ -66,6 +66,9 @@
   typedef enum  FT_PaintFormat_Internal_
   {
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID            = 3,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_LINEAR_GRADIENT  = 5,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_RADIAL_GRADIENT  = 7,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT   = 9,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         = 18,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        = 20,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER = 22,
@@ -477,8 +480,9 @@
 
 
   static FT_Bool
-  read_color_line( FT_Byte*      color_line_p,
-                   FT_ColorLine  *colorline )
+  read_color_line( FT_Byte*       color_line_p,
+                   FT_ColorLine*  colorline,
+                   FT_Bool        read_variable )
   {
     FT_Byte*        p = color_line_p;
     FT_PaintExtend  paint_extend;
@@ -493,6 +497,7 @@
     colorline->color_stop_iterator.num_color_stops    = FT_NEXT_USHORT( p );
     colorline->color_stop_iterator.p                  = p;
     colorline->color_stop_iterator.current_color_stop = 0;
+    colorline->color_stop_iterator.read_variable      = read_variable;
 
     return 1;
   }
@@ -604,6 +609,7 @@
   {
     FT_Byte*         paint_base      = p;
     FT_Byte*         child_table_p   = NULL;
+    FT_Bool          do_read_var     = FALSE;
     FT_ULong         var_index_base  = 0;
     /* Longest varIndexBase offset is 5 in the spec. */
     FT_ItemVarDelta  item_deltas[6]  = { 0, 0, 0, 0, 0, 0 };
@@ -691,10 +697,14 @@
     if ( !get_child_table_pointer( colr, paint_base, &p, &child_table_p ) )
       return 0;
 
-    if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT )
+    if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT    ||
+         ( do_read_var =
+           ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_LINEAR_GRADIENT ) ) )
     {
       if ( !read_color_line( child_table_p,
-                             &apaint->u.linear_gradient.colorline ) )
+                             &apaint->u.linear_gradient.colorline,
+                             do_read_var ) )
         return 0;
 
       /*
@@ -708,16 +718,22 @@
       apaint->u.linear_gradient.p2.x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.linear_gradient.p2.y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
 
+      apaint->format = FT_COLR_PAINTFORMAT_LINEAR_GRADIENT;
+
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT    ||
+              ( do_read_var =
+                ( (FT_PaintFormat_Internal)apaint->format ==
+                  FT_COLR_PAINTFORMAT_INTERNAL_VAR_RADIAL_GRADIENT ) ) )
     {
       FT_Pos  tmp;
 
 
       if ( !read_color_line( child_table_p,
-                             &apaint->u.radial_gradient.colorline ) )
+                             &apaint->u.radial_gradient.colorline,
+                             do_read_var ) )
         return 0;
 
       /* In the OpenType specification, `r0` and `r1` are defined as   */
@@ -737,13 +753,19 @@
       tmp                          = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.radial_gradient.r1 = tmp < 0 ? FT_INT_MAX : tmp;
 
+      apaint->format = FT_COLR_PAINTFORMAT_RADIAL_GRADIENT;
+
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_SWEEP_GRADIENT )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SWEEP_GRADIENT    ||
+              ( do_read_var =
+                ( (FT_PaintFormat_Internal)apaint->format ==
+                  FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT ) ) )
     {
       if ( !read_color_line( child_table_p,
-                             &apaint->u.sweep_gradient.colorline ) )
+                             &apaint->u.sweep_gradient.colorline,
+                             do_read_var) )
         return 0;
 
       apaint->u.sweep_gradient.center.x =
@@ -755,6 +777,8 @@
           F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.sweep_gradient.end_angle =
           F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
+
+      apaint->format = FT_COLR_PAINTFORMAT_SWEEP_GRADIENT;
 
       return 1;
     }
@@ -1228,6 +1252,8 @@
     Colr*  colr = (Colr*)face->colr;
 
     FT_Byte*  p;
+    FT_Long   var_index_base;
+    FT_Int    item_deltas[2];
 
 
     if ( !colr || !colr->table )
@@ -1250,6 +1276,28 @@
     color_stop->color.palette_index = FT_NEXT_USHORT( p );
 
     color_stop->color.alpha = FT_NEXT_SHORT( p );
+
+    if ( iterator->read_variable )
+    {
+      /* Pointer p needs to be advanced independently of whether we intend */
+      /* to take variable deltas into account or not.  Otherwise iteration */
+      /* would fail due to wrong offsets.                                  */
+      var_index_base = FT_NEXT_ULONG( p );
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( VARIABLE_COLRV1_ENABLED )
+      {
+        if ( !get_deltas_for_var_index_base( face, colr,
+                                             var_index_base,
+                                             2,
+                                             item_deltas ) )
+          return 0;
+
+        color_stop->stop_offset += (FT_Fixed)item_deltas[0] << 2;
+        color_stop->color.alpha += item_deltas[1];
+      }
+#endif
+    }
 
     iterator->p = p;
     iterator->current_color_stop++;

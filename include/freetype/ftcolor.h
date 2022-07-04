@@ -521,9 +521,10 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This iterator object is needed for @FT_Get_Colorline_Stops.  It keeps
-   *   state while iterating over the stops of an @FT_ColorLine,
-   *   representing the `ColorLine` struct of the v1 extensions to 'COLR',
-   *   see 'https://github.com/googlefonts/colr-gradients-spec'.
+   *   state while iterating over the stops of an @FT_ColorLine, representing
+   *   the `ColorLine` struct of the v1 extensions to 'COLR', see
+   *   'https://github.com/googlefonts/colr-gradients-spec'.  Do not manually
+   *   modify fields of this iterator.
    *
    * @fields:
    *   num_color_stops ::
@@ -537,6 +538,10 @@ FT_BEGIN_HEADER
    *     An opaque pointer into 'COLR' table data.  Set by @FT_Get_Paint.
    *     Updated by @FT_Get_Colorline_Stops.
    *
+   *   read_variable ::
+   *     A boolean keeping track of whether variable color lines are to be
+   *     read.  Set by @FT_Get_Paint.
+   *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
    *   without retaining backward compatibility of both the API and ABI.
@@ -548,6 +553,8 @@ FT_BEGIN_HEADER
     FT_UInt  current_color_stop;
 
     FT_Byte*  p;
+
+    FT_Bool  read_variable;
 
   } FT_ColorStopIterator;
 
