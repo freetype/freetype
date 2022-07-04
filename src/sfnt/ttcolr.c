@@ -65,6 +65,7 @@
 
   typedef enum  FT_PaintFormat_Internal_
   {
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID            = 3,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         = 18,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        = 20,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER = 22,
@@ -532,13 +533,80 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
   static FT_Bool
-  read_paint( Colr*           colr,
+  get_deltas_for_var_index_base ( TT_Face           face,
+                                  Colr*             colr,
+                                  FT_ULong          var_index_base,
+                                  FT_UInt           num_deltas,
+                                  FT_ItemVarDelta*  deltas )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    FT_UInt   outer_index    = 0;
+    FT_UInt   inner_index    = 0;
+    FT_ULong  loop_var_index = var_index_base;
+
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+    FT_UInt  i = 0;
+
+
+    if ( !VARIABLE_COLRV1_ENABLED )
+    {
+      FT_ASSERT( 0 );
+      return 0;
+    }
+
+    if ( var_index_base == 0xFFFFFFFF )
+    {
+      for ( i = 0; i < num_deltas; ++i )
+        deltas[i] = 0;
+      return 1;
+    }
+
+    for ( i = 0; i < num_deltas; ++i )
+    {
+      loop_var_index = var_index_base + i;
+
+      if ( colr->delta_set_idx_map.innerIndex )
+      {
+        if ( loop_var_index >= colr->delta_set_idx_map.mapCount )
+          loop_var_index = colr->delta_set_idx_map.mapCount - 1;
+
+        outer_index = colr->delta_set_idx_map.outerIndex[loop_var_index];
+        inner_index = colr->delta_set_idx_map.innerIndex[loop_var_index];
+      }
+      else
+      {
+        /* TODO: Direct lookup case not implemented or tested yet. */
+        FT_ASSERT( 0 );
+        error = FT_THROW( Unimplemented_Feature );
+        return error;
+      }
+
+      deltas[i] = mm->get_item_delta( FT_FACE( face ), &colr->var_store,
+                                      outer_index, inner_index );
+    }
+
+    return 1;
+  }
+
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
+
+
+  static FT_Bool
+  read_paint( TT_Face         face,
+              Colr*           colr,
               FT_Byte*        p,
               FT_COLR_Paint*  apaint )
   {
-    FT_Byte*  paint_base     = p;
-    FT_Byte*  child_table_p  = NULL;
+    FT_Byte*         paint_base      = p;
+    FT_Byte*         child_table_p   = NULL;
+    FT_ULong         var_index_base  = 0;
+    /* Longest varIndexBase offset is 5 in the spec. */
+    FT_ItemVarDelta  item_deltas[6]  = { 0, 0, 0, 0, 0, 0 };
 
 
     if ( !p || !colr || !colr->table )
@@ -579,10 +647,29 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_SOLID )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SOLID ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                  FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID  )
     {
       apaint->u.solid.color.palette_index = FT_NEXT_USHORT( p );
       apaint->u.solid.color.alpha         = FT_NEXT_SHORT( p );
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID &&
+           VARIABLE_COLRV1_ENABLED                    )
+      {
+        var_index_base = FT_NEXT_ULONG( p );
+
+        if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 1,
+                                             item_deltas ) )
+          return 0;
+
+        apaint->u.solid.color.alpha += item_deltas[0];
+      }
+#endif
+
+      apaint->format = FT_COLR_PAINTFORMAT_SOLID;
 
       return 1;
     }
@@ -1243,7 +1330,7 @@
       return 1;
     }
 
-    return read_paint( colr, opaque_paint.p, paint );
+    return read_paint( face, colr, opaque_paint.p, paint );
   }
 
 
