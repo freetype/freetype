@@ -70,6 +70,7 @@
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_RADIAL_GRADIENT  = 7,
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT   = 9,
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSFORM        = 13,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE        = 15,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         = 18,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        = 20,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER = 22,
@@ -900,13 +901,33 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSLATE )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSLATE ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE    )
     {
       apaint->u.translate.paint.p                     = child_table_p;
       apaint->u.translate.paint.insert_root_transform = 0;
 
       apaint->u.translate.dx = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.translate.dy = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE &&
+           VARIABLE_COLRV1_ENABLED                      )
+      {
+        var_index_base = FT_NEXT_ULONG( p );
+
+        if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 2,
+                                             item_deltas ) )
+          return 0;
+
+        apaint->u.translate.dx += INT_TO_FIXED( item_deltas[0] );
+        apaint->u.translate.dy += INT_TO_FIXED( item_deltas[1] );
+      }
+#endif
+
+      apaint->format = FT_COLR_PAINTFORMAT_TRANSLATE;
 
       return 1;
     }
