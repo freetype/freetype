@@ -81,7 +81,9 @@
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE                = 25,
     FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER             = 26,
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER         = 27,
-    FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER               = 30
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW                  = 29,
+    FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER               = 30,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER           = 31,
 
   } FT_PaintFormat_Internal;
 
@@ -1117,12 +1119,17 @@
 
       apaint->format = FT_COLR_PAINTFORMAT_ROTATE;
 
+
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW ||
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW     ||
               (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER )
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW        ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER     ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER )
     {
       apaint->u.skew.paint.p                     = child_table_p;
       apaint->u.skew.paint.insert_root_transform = 0;
@@ -1131,7 +1138,9 @@
       apaint->u.skew.y_skew_angle = F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
       if ( (FT_PaintFormat_Internal)apaint->format ==
-           FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER )
+             FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER     ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER )
       {
         apaint->u.skew.center_x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
         apaint->u.skew.center_y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
@@ -1141,6 +1150,42 @@
         apaint->u.skew.center_x = 0;
         apaint->u.skew.center_y = 0;
       }
+
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW        ||
+             (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER ) &&
+           VARIABLE_COLRV1_ENABLED                            )
+      {
+        var_index_base = FT_NEXT_ULONG( p );
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 2,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.skew.x_skew_angle += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.skew.y_skew_angle += F2DOT14_TO_FIXED( item_deltas[1] );
+        }
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 4,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.skew.x_skew_angle += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.skew.y_skew_angle += F2DOT14_TO_FIXED( item_deltas[1] );
+          apaint->u.skew.center_x     += INT_TO_FIXED( item_deltas[2] );
+          apaint->u.skew.center_y     += INT_TO_FIXED( item_deltas[3] );
+        }
+      }
+#endif
 
       apaint->format = FT_COLR_PAINTFORMAT_SKEW;
 
