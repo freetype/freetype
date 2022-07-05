@@ -718,6 +718,24 @@
       apaint->u.linear_gradient.p2.x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.linear_gradient.p2.y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      {
+        var_index_base = FT_NEXT_ULONG ( p );
+
+        if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 6,
+                                             item_deltas ) )
+          return 0;
+
+        apaint->u.linear_gradient.p0.x += INT_TO_FIXED( item_deltas[0] );
+        apaint->u.linear_gradient.p0.y += INT_TO_FIXED( item_deltas[1] );
+        apaint->u.linear_gradient.p1.x += INT_TO_FIXED( item_deltas[2] );
+        apaint->u.linear_gradient.p1.y += INT_TO_FIXED( item_deltas[3] );
+        apaint->u.linear_gradient.p2.x += INT_TO_FIXED( item_deltas[4] );
+        apaint->u.linear_gradient.p2.y += INT_TO_FIXED( item_deltas[5] );
+      }
+#endif
+
       apaint->format = FT_COLR_PAINTFORMAT_LINEAR_GRADIENT;
 
       return 1;
@@ -753,6 +771,28 @@
       tmp                          = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
       apaint->u.radial_gradient.r1 = tmp < 0 ? FT_INT_MAX : tmp;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      {
+        var_index_base = FT_NEXT_ULONG ( p );
+
+        if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 6,
+                                             item_deltas ) )
+          return 0;
+
+        apaint->u.radial_gradient.c0.x += INT_TO_FIXED( item_deltas[0] );
+        apaint->u.radial_gradient.c0.y += INT_TO_FIXED( item_deltas[1] );
+
+        // TODO: Anything to be done about UFWORD deltas here?
+        apaint->u.radial_gradient.r0 += INT_TO_FIXED( item_deltas[2] );
+
+        apaint->u.radial_gradient.c1.x += INT_TO_FIXED( item_deltas[3] );
+        apaint->u.radial_gradient.c1.y += INT_TO_FIXED( item_deltas[4] );
+
+        apaint->u.radial_gradient.r1 += INT_TO_FIXED( item_deltas[5] );
+      }
+#endif
+
       apaint->format = FT_COLR_PAINTFORMAT_RADIAL_GRADIENT;
 
       return 1;
@@ -778,6 +818,25 @@
       apaint->u.sweep_gradient.end_angle =
           F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      {
+        var_index_base = FT_NEXT_ULONG ( p );
+
+        if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 4,
+                                             item_deltas ) )
+          return 0;
+
+        // TODO: Handle overflow?
+        apaint->u.sweep_gradient.center.x += INT_TO_FIXED( item_deltas[0] );
+        apaint->u.sweep_gradient.center.y += INT_TO_FIXED( item_deltas[1] );
+
+        apaint->u.sweep_gradient.start_angle +=
+          F2DOT14_TO_FIXED( item_deltas[2] );
+        apaint->u.sweep_gradient.end_angle +=
+          F2DOT14_TO_FIXED( item_deltas[3] );
+      }
+#endif
       apaint->format = FT_COLR_PAINTFORMAT_SWEEP_GRADIENT;
 
       return 1;
