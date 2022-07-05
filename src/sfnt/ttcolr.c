@@ -65,17 +65,21 @@
 
   typedef enum  FT_PaintFormat_Internal_
   {
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID            = 3,
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_LINEAR_GRADIENT  = 5,
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_RADIAL_GRADIENT  = 7,
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT   = 9,
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSFORM        = 13,
-    FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE        = 15,
-    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         = 18,
-    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        = 20,
-    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER = 22,
-    FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER        = 26,
-    FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER          = 30
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID                 = 3,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_LINEAR_GRADIENT       = 5,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_RADIAL_GRADIENT       = 7,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT        = 9,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSFORM             = 13,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE             = 15,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE                 = 17,
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER              = 18,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER          = 19,
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM             = 20,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM         = 21,
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER      = 22,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER  = 23,
+    FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER             = 26,
+    FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER               = 30
 
   } FT_PaintFormat_Internal;
 
@@ -932,14 +936,9 @@
       return 1;
     }
 
-    else if ( apaint->format ==
-                FT_COLR_PAINTFORMAT_SCALE                         ||
-              (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         ||
-              (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        ||
-              (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER )
+    else if ( apaint->format >= FT_COLR_PAINTFORMAT_SCALE             &&
+              (FT_PaintFormat_Internal)apaint->format <=
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER )
     {
       apaint->u.scale.paint.p                     = child_table_p;
       apaint->u.scale.paint.insert_root_transform = 0;
@@ -948,10 +947,13 @@
       apaint->u.scale.scale_x = F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
       /* Non-uniform ones read an extra y value. */
-      if ( apaint->format ==
-             FT_COLR_PAINTFORMAT_SCALE                 ||
+      if ( apaint->format == FT_COLR_PAINTFORMAT_SCALE     ||
            (FT_PaintFormat_Internal)apaint->format ==
-             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER )
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE        ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER     ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER )
         apaint->u.scale.scale_y = F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
       else
         apaint->u.scale.scale_y = apaint->u.scale.scale_x;
@@ -959,9 +961,13 @@
       /* Scale paints that have a center read center coordinates, */
       /* otherwise the center is (0,0).                           */
       if ( (FT_PaintFormat_Internal)apaint->format ==
-             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         ||
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER             ||
            (FT_PaintFormat_Internal)apaint->format ==
-             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER )
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER         ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER     ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER )
       {
         apaint->u.scale.center_x = INT_TO_FIXED( FT_NEXT_SHORT ( p ) );
         apaint->u.scale.center_y = INT_TO_FIXED( FT_NEXT_SHORT ( p ) );
@@ -971,6 +977,71 @@
         apaint->u.scale.center_x = 0;
         apaint->u.scale.center_y = 0;
       }
+
+      /* Base values set, now handle variations. */
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE                ||
+             (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER         ||
+             (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM        ||
+             (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER ) &&
+           VARIABLE_COLRV1_ENABLED                                     )
+      {
+        var_index_base = FT_NEXT_ULONG( p );
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 2,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.scale.scale_x += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.scale.scale_y += F2DOT14_TO_FIXED( item_deltas[1] );
+        }
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 4,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.scale.scale_x  += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.scale.scale_y  += F2DOT14_TO_FIXED( item_deltas[1] );
+          apaint->u.scale.center_x += INT_TO_FIXED( item_deltas[2] );
+          apaint->u.scale.center_y += INT_TO_FIXED( item_deltas[3] );
+        }
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 1,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.scale.scale_x += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.scale.scale_y += F2DOT14_TO_FIXED( item_deltas[0] );
+        }
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base, 3,
+                                               item_deltas ) )
+            return 0;
+
+          apaint->u.scale.scale_x  += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.scale.scale_y  += F2DOT14_TO_FIXED( item_deltas[0] );
+          apaint->u.scale.center_x += INT_TO_FIXED( item_deltas[1] );
+          apaint->u.scale.center_y += INT_TO_FIXED( item_deltas[2] );
+        }
+      }
+#endif
 
       /* FT 'COLR' v1 API output format always returns fully defined */
       /* structs; we thus set the format to the public API value.    */
