@@ -78,7 +78,9 @@
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM         = 21,
     FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER      = 22,
     FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER  = 23,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE                = 25,
     FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER             = 26,
+    FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER         = 27,
     FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER               = 30
 
   } FT_PaintFormat_Internal;
@@ -1050,17 +1052,26 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE ||
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE     ||
               (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER )
+                FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER     ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE        ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER )
     {
+      FT_UInt  num_deltas = 0;
+
+
       apaint->u.rotate.paint.p                     = child_table_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
 
       apaint->u.rotate.angle = F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
       if ( (FT_PaintFormat_Internal)apaint->format ==
-           FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER )
+             FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER     ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER )
       {
         apaint->u.rotate.center_x = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
         apaint->u.rotate.center_y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
@@ -1070,6 +1081,39 @@
         apaint->u.rotate.center_x = 0;
         apaint->u.rotate.center_y = 0;
       }
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      if ( ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE        ||
+             (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER ) &&
+           VARIABLE_COLRV1_ENABLED                              )
+      {
+        var_index_base = FT_NEXT_ULONG( p );
+
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER )
+          num_deltas = 3;
+        if ( (FT_PaintFormat_Internal)apaint->format ==
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE )
+          num_deltas = 1;
+
+        if ( num_deltas > 0 )
+        {
+          if ( !get_deltas_for_var_index_base( face, colr, var_index_base,
+                                               num_deltas, item_deltas ) )
+            return 0;
+
+          apaint->u.rotate.angle += F2DOT14_TO_FIXED( item_deltas[0] );
+
+          if ( num_deltas == 3 )
+          {
+            apaint->u.rotate.center_x += INT_TO_FIXED( item_deltas[1] );
+            apaint->u.rotate.center_y += INT_TO_FIXED( item_deltas[2] );
+          }
+        }
+      }
+#endif
 
       apaint->format = FT_COLR_PAINTFORMAT_ROTATE;
 
