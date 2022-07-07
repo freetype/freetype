@@ -35,9 +35,11 @@
 #include <freetype/ftcolor.h>
 #include <freetype/config/integer-types.h>
 
- /* the next code line is a temporary hack, to be removed together with */
- /* `VARIABLE_COLRV1_ENABLED` and related code                          */
+ /* the next two code lines are a temporary hack, to be removed together */
+ /* with `VARIABLE_COLRV1_ENABLED` and related code as soon as variable  */
+ /* 'COLR' support is complete and tested                                */
 #include "../truetype/ttobjs.h"
+#include "../truetype/ttdriver.h"
 
 
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
@@ -55,8 +57,10 @@
 #define COLR_HEADER_SIZE                 14U
 
 
-#define VARIABLE_COLRV1_ENABLED                                           \
-          ( ((TT_Driver)FT_FACE_DRIVER( face ))->enable_variable_colrv1 )
+#define VARIABLE_COLRV1_ENABLED                                            \
+          ( ((TT_Driver)FT_FACE_DRIVER( face ))->root.clazz ==             \
+              &tt_driver_class                                          && \
+            ((TT_Driver)FT_FACE_DRIVER( face ))->enable_variable_colrv1 )
 
 
   typedef enum  FT_PaintFormat_Internal_
