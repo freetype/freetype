@@ -1451,6 +1451,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_line_to( const FT_Vector*  to,
                 gray_PWorker      worker )
   {
+    printf("gray_line_to: %d, %d\n", to->x, to->y);
     gray_render_line( RAS_VAR_ UPSCALE( to->x ), UPSCALE( to->y ) );
     return 0;
   }

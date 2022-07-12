@@ -57,6 +57,7 @@ dense_move_to( const FT_Vector* to, RasterFP* aRasterFP )
 static int
 dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
+  printf("dense_line_to: %d, %d\n", to->x, to->y);
   RasterFP_Point tp = {UPSCALE(to->x), UPSCALE(to->y)};
   RasterFP_Point lp = {aRasterFP->prev_x, aRasterFP->prev_y};
   RasterFP_DrawLine( aRasterFP, lp, tp );
