@@ -416,6 +416,12 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
                          0  /* delta    */
 )
 
+void swap(unsigned char *a, unsigned char *b){
+  unsigned char temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
 /* @QUES: So, this calls FT_Outline_Decompose, that calls the move to, 
 line to, conic to, cubic to interface methods. The aRasterFP structure stores the
 well, stuff in its m_a and finally renders it to the target->buffer*/
@@ -476,6 +482,18 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
       *dest = 0;
     dest++;
   }
+
+
+  for (int col = 0; col < aRasterFP->m_w; col++)
+  {
+    for (int row = 0; row < aRasterFP->m_h/2; row++)
+    {
+      //printf("Swapping position: %d, %d with %d, %d with rows = %d, cols = %d",row,col, aRasterFP->m_h-row, col, aRasterFP->m_h, aRasterFP->m_w);
+      swap(target->buffer + aRasterFP->m_w*row + col, target->buffer + (aRasterFP->m_h-row-1)*aRasterFP->m_w + col);
+    }
+    
+  }
+  
   return error;
 }
 
