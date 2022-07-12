@@ -24,7 +24,6 @@
 
 
 
-
 typedef struct dense_TRaster_
 {
   void* memory;
@@ -44,7 +43,7 @@ Lerp( float aT, RasterFP_Point aP0, RasterFP_Point aP1 )
 static int
 dense_move_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-  FT_Pos x, y;
+  TPos x, y;
 
   x                 = UPSCALE( to->x );
   y                 = UPSCALE( to->y );
@@ -59,16 +58,28 @@ dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
   printf("dense_line_to: %d, %d\n", to->x, to->y);
   RasterFP_Point tp = {UPSCALE(to->x), UPSCALE(to->y)};
-  RasterFP_Point lp = {aRasterFP->prev_x, aRasterFP->prev_y};
-  RasterFP_DrawLine( aRasterFP, lp, tp );
+  RasterFP_DrawLine( aRasterFP, tp.m_x, tp.m_y );
   dense_move_to( to, aRasterFP );
   return 0;
 }
+void swap(long int *a, long int *b){
+  long int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+void swapold(unsigned char *a, unsigned char *b){
+  unsigned char temp = *a;
+  *a = *b;
+  *b = temp;
+}
 
 void
-RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
+RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y )
 {
-  if ( aP0.m_y == aP1.m_y )
+  TPos from_x = aRasterFP->prev_x;
+  TPos from_y = aRasterFP->prev_y;
+  if ( from_y == to_y )
     return;
 
   /* @QUES: What is this code that I commented out, supposed to do?*/
@@ -77,36 +88,35 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   // aP1.m_x -= aRasterFP->m_origin_x;
   // aP1.m_y -= aRasterFP->m_origin_y;
 
-  aP0.m_x = TRUNC((int)aP0.m_x );
-  aP0.m_y = TRUNC((int)aP0.m_y );
-  aP1.m_x = TRUNC((int)aP1.m_x );
-  aP1.m_y = TRUNC((int)aP1.m_y );
+  from_x = TRUNC((int)from_x );
+  from_y = TRUNC((int)from_y );
+  to_x = TRUNC((int)to_x );
+  to_y = TRUNC((int)to_y );
 
   float dir;
-  if ( aP0.m_y < aP1.m_y )
+  if ( from_y < to_y )
     dir = 1;
   else
   {
     dir                 = -1;
-    RasterFP_Point temp = aP0;
-    aP0                 = aP1;
-    aP1                 = temp;
+    swap(&from_x, &to_x);
+    swap(&from_y, &to_y);
   }
 
   // Clip to the height.
-  if ( aP0.m_y >= aRasterFP->m_h || aP1.m_y <= 0 )
+  if ( from_y >= aRasterFP->m_h || to_y <= 0 )
     return;
 
-  float dxdy = ( aP1.m_x - aP0.m_x ) / ( aP1.m_y - aP0.m_y );
-  if ( aP0.m_y < 0 )
+  float dxdy = ( to_x - from_x ) / (float)( to_y - from_y );
+  if ( from_y < 0 )
   {
-    aP0.m_x -= aP0.m_y * dxdy;
-    aP0.m_y = 0;
+    from_x -= from_y * dxdy;
+    from_y = 0;
   }
-  if ( aP1.m_y > aRasterFP->m_h )
+  if ( to_y > aRasterFP->m_h )
   {
-    aP1.m_x -= ( aP1.m_y - aRasterFP->m_h ) * dxdy;
-    aP1.m_y = (float)aRasterFP->m_h;
+    to_x -= ( to_y - aRasterFP->m_h ) * dxdy;
+    to_y = (float)aRasterFP->m_h;
   }
 
   /**
@@ -121,60 +131,60 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   this code a little, removing it doesn't seem to make any difference*/
   RasterFP_Point intersect = { 0, 0 };
   int            recursive = 0;
-  if ( aP0.m_x >= aRasterFP->m_w && aP1.m_x >= aRasterFP->m_w )
+  if ( from_x >= aRasterFP->m_w && to_x >= aRasterFP->m_w )
   {
-    aP0.m_x = aP1.m_x = (float)aRasterFP->m_w;
+    from_x = to_x = (float)aRasterFP->m_w;
     dxdy              = 0;
   }
-  else if ( aP0.m_x <= 0 && aP1.m_x <= 0 )
+  else if ( from_x <= 0 && to_x <= 0 )
   {
-    aP0.m_x = aP1.m_x = 0;
+    from_x = to_x = 0;
     dxdy              = 0;
   }
-  else if ( ( aP0.m_x < 0 ) != ( aP1.m_x < 0 ) )
+  else if ( ( from_x < 0 ) != ( to_x < 0 ) )
   {
     intersect.m_x = 0;
-    intersect.m_y = aP1.m_y - aP1.m_x / dxdy;
+    intersect.m_y = to_y - to_x / dxdy;
     recursive     = 1;
   }
-  else if ( ( aP0.m_x > aRasterFP->m_w ) != ( aP1.m_x > aRasterFP->m_w ) )
+  else if ( ( from_x > aRasterFP->m_w ) != ( to_x > aRasterFP->m_w ) )
   {
     intersect.m_x = (float)aRasterFP->m_w;
-    intersect.m_y = aP0.m_y + ( aRasterFP->m_w - aP0.m_x ) / dxdy;
+    intersect.m_y = from_y + ( aRasterFP->m_w - from_x ) / dxdy;
     recursive     = 1;
   }
   if ( recursive )
   {
-    aP0.m_x += aRasterFP->m_origin_x;
-    aP0.m_y += aRasterFP->m_origin_y;
-    aP1.m_x += aRasterFP->m_origin_x;
-    aP1.m_y += aRasterFP->m_origin_y;
+    from_x += aRasterFP->m_origin_x;
+    from_y += aRasterFP->m_origin_y;
+    to_x += aRasterFP->m_origin_x;
+    to_y += aRasterFP->m_origin_y;
     intersect.m_x += aRasterFP->m_origin_x;
     intersect.m_y += aRasterFP->m_origin_y;
     if ( dir == 1 )
     {
-      RasterFP_DrawLine( aRasterFP, aP0, intersect );
-      RasterFP_DrawLine( aRasterFP, intersect, aP1 );
+      RasterFP_DrawLine( aRasterFP, intersect.m_x, intersect.m_y );
+      RasterFP_DrawLine( aRasterFP, to_x, to_y );
     }
     else
     {
-      RasterFP_DrawLine( aRasterFP, aP1, intersect );
-      RasterFP_DrawLine( aRasterFP, intersect, aP0 );
+      RasterFP_DrawLine( aRasterFP, intersect.m_x, intersect.m_y );
+      RasterFP_DrawLine( aRasterFP, from_x, from_y );
     }
     return;
   }
 
   /* @QUES: I am still trying to understand this code */
-  float  x       = aP0.m_x;
-  int    y0      = (int)aP0.m_y;
-  int    y_limit = (int)ceil( aP1.m_y );
+  float  x       = from_x;
+  int    y0      = (int)from_y;
+  int    y_limit = (int)ceil( to_y );
   float* m_a     = aRasterFP->m_a;
 
 
   for ( int y = y0; y < y_limit; y++ )
   {
     int   linestart = y * aRasterFP->m_w;
-    float dy        = fmin( y + 1.0f, aP1.m_y ) - fmax( (float)y, aP0.m_y );
+    float dy        = fmin( y + 1.0f, to_y ) - fmax( (float)y, from_y );
     float xnext     = x + dxdy * dy;
     float d         = dy * dir;
 
@@ -236,21 +246,20 @@ dense_conic_to( const FT_Vector* control,
                 const FT_Vector* to,
                 RasterFP*        aRasterFP )
 {
-  RasterFP_Point controlP = { UPSCALE(control->x), UPSCALE(control->y) };
-  RasterFP_Point toP      = { UPSCALE(to->x), UPSCALE(to->y) };
-  RasterFP_Point lP      = { aRasterFP->prev_x, aRasterFP->prev_y };
-  RasterFP_DrawQuadratic( aRasterFP, lP, controlP, toP );
+  // RasterFP_Point controlP = { UPSCALE(control->x), UPSCALE(control->y) };
+  // RasterFP_Point toP      = { UPSCALE(to->x), UPSCALE(to->y) };
+  // RasterFP_Point lP      = { aRasterFP->prev_x, aRasterFP->prev_y };
+  RasterFP_DrawQuadratic( aRasterFP, control, to );
   return 0;
 }
 
 void
 RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
-                        RasterFP_Point aP0,
-                        RasterFP_Point aP1,
-                        RasterFP_Point aP2 )
+                        const FT_Vector* control,
+                        const FT_Vector* to )
 {
+  
   // assert( aRasterFP );
-
   /*
   Calculate devsq as the square of four times the
   distance from the control point to the midpoint of the curve.
@@ -262,13 +271,20 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
 
   The division by four is omitted to save time.
   */
+
+  RasterFP_Point aP0 = {aRasterFP->prev_x, aRasterFP->prev_y};
+  RasterFP_Point aP1 = {UPSCALE(control->x), UPSCALE(control->y)};
+  RasterFP_Point aP2 = {UPSCALE(to->x), UPSCALE(to->y)};
+
   float devx  = aP0.m_x - aP1.m_x - aP1.m_x + aP2.m_x;
   float devy  = aP0.m_y - aP1.m_y - aP1.m_y + aP2.m_y;
   float devsq = devx * devx + devy * devy;
 
+
+
   if ( devsq < 0.333f )
   {
-    RasterFP_DrawLine( aRasterFP, aP0, aP2 );
+    RasterFP_DrawLine(aRasterFP, aP2.m_x, aP2.m_y );
     return;
   }
 
@@ -284,18 +300,18 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
 
   const float    tol    = 3.0f;
   int            n      = (int)floor( sqrt( sqrt( tol * devsq ) ) );
-  RasterFP_Point p      = aP0;
+ // RasterFP_Point p      = aP0;
   float          nrecip = 1.0f / ( n + 1.0f );
   float          t      = 0.0f;
   for ( int i = 0; i < n; i++ )
   {
     t += nrecip;
     RasterFP_Point next = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
-    RasterFP_DrawLine( aRasterFP, p, next );
-    p = next;
+    RasterFP_DrawLine(aRasterFP , next.m_x, next.m_y);
+    //p = next;
   }
 
-  RasterFP_DrawLine( aRasterFP, p, aP2 );
+  RasterFP_DrawLine( aRasterFP, aP2.m_x, aP2.m_y);
 }
 
 static int
@@ -333,7 +349,7 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
 
   if ( devsq < 0.333f )
   {
-    RasterFP_DrawLine( aRasterFP, aP0, aP3 );
+    RasterFP_DrawLine( aRasterFP, aP3.m_x , aP3.m_y);
     return;
   }
 
@@ -348,11 +364,11 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
     RasterFP_Point a    = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
     RasterFP_Point b    = Lerp( t, Lerp( t, aP1, aP2 ), Lerp( t, aP2, aP3 ) );
     RasterFP_Point next = Lerp( t, a, b );
-    RasterFP_DrawLine( aRasterFP, p, next );
+    RasterFP_DrawLine( aRasterFP, next.m_x, next.m_y );
     p = next;
   }
 
-  RasterFP_DrawLine( aRasterFP, p, aP3 );
+  RasterFP_DrawLine( aRasterFP, aP3.m_x, aP3.m_y );
 }
 
 /* @QUES: This is the first method called on the module. I suspect
@@ -416,11 +432,6 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
                          0  /* delta    */
 )
 
-void swap(unsigned char *a, unsigned char *b){
-  unsigned char temp = *a;
-  *a = *b;
-  *b = temp;
-}
 
 /* @QUES: So, this calls FT_Outline_Decompose, that calls the move to, 
 line to, conic to, cubic to interface methods. The aRasterFP structure stores the
@@ -489,7 +500,7 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
     for (int row = 0; row < aRasterFP->m_h/2; row++)
     {
       //printf("Swapping position: %d, %d with %d, %d with rows = %d, cols = %d",row,col, aRasterFP->m_h-row, col, aRasterFP->m_h, aRasterFP->m_w);
-      swap(target->buffer + aRasterFP->m_w*row + col, target->buffer + (aRasterFP->m_h-row-1)*aRasterFP->m_w + col);
+      swapold(target->buffer + aRasterFP->m_w*row + col, target->buffer + (aRasterFP->m_h-row-1)*aRasterFP->m_w + col);
     }
     
   }

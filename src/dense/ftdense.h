@@ -85,6 +85,7 @@ extern "C"
 {
 #endif
 
+  typedef long  TPos; 
   typedef struct
   {
     float m_x;
@@ -113,13 +114,10 @@ extern "C"
 
   void RasterFP_Create( RasterFP* aRasterFP );
   void RasterFP_Destroy( RasterFP* aRasterFP );
-  void RasterFP_DrawLine( RasterFP*      aRasterFP,
-                          RasterFP_Point aP0,
-                          RasterFP_Point aP1 );
+  void RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y );
   void RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
-                               RasterFP_Point aP0,
-                               RasterFP_Point aP1,
-                               RasterFP_Point aP2 );
+                        const FT_Vector* control,
+                        const FT_Vector* to );
   void RasterFP_DrawCubic( RasterFP*      aRasterFP,
                            RasterFP_Point aP0,
                            RasterFP_Point aP1,
