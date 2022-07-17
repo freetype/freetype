@@ -4,11 +4,11 @@
 #undef FT_COMPONENT
 #define FT_COMPONENT dense
 
-#include "ftdense.h"
 #include <freetype/ftoutln.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
+#include "ftdense.h"
 
 #include <math.h>
 #include "ftdenseerrs.h"
@@ -17,19 +17,16 @@
 #define PIXEL_BITS 8
 
 #define ONE_PIXEL  ( 1 << PIXEL_BITS )
-#define TRUNC( x ) ( int )( ( x ) >> PIXEL_BITS )
+#define TRUNC( x ) (int)( ( x ) >> PIXEL_BITS )
 
 #define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
 #define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
-
-
 
 typedef struct dense_TRaster_
 {
   void* memory;
 
 } dense_TRaster, *dense_PRaster;
-
 
 static RasterFP_Point
 Lerp( float aT, RasterFP_Point aP0, RasterFP_Point aP1 )
@@ -49,29 +46,33 @@ dense_move_to( const FT_Vector* to, RasterFP* aRasterFP )
   y                 = UPSCALE( to->y );
   aRasterFP->prev_x = x;
   aRasterFP->prev_y = y;
-  //printf( "last point is {%f, %f}", lp.m_x, lp.m_y );
+  // printf( "last point is {%f, %f}", lp.m_x, lp.m_y );
   return 0;
 }
 
 static int
 dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-  printf("dense_line_to: %d, %d\n", to->x, to->y);
-  RasterFP_Point tp = {UPSCALE(to->x), UPSCALE(to->y)};
+  printf( "dense_line_to: %d, %d\n", to->x, to->y );
+  RasterFP_Point tp = { UPSCALE( to->x ), UPSCALE( to->y ) };
   RasterFP_DrawLine( aRasterFP, tp.m_x, tp.m_y );
   dense_move_to( to, aRasterFP );
   return 0;
 }
-void swap(long int *a, long int *b){
+void
+swap( long int* a, long int* b )
+{
   long int temp = *a;
-  *a = *b;
-  *b = temp;
+  *a            = *b;
+  *b            = temp;
 }
 
-void swapold(unsigned char *a, unsigned char *b){
+void
+swapold( unsigned char* a, unsigned char* b )
+{
   unsigned char temp = *a;
-  *a = *b;
-  *b = temp;
+  *a                 = *b;
+  *b                 = temp;
 }
 
 void
@@ -88,19 +89,19 @@ RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y )
   // aP1.m_x -= aRasterFP->m_origin_x;
   // aP1.m_y -= aRasterFP->m_origin_y;
 
-  from_x = TRUNC((int)from_x );
-  from_y = TRUNC((int)from_y );
-  to_x = TRUNC((int)to_x );
-  to_y = TRUNC((int)to_y );
+  from_x = TRUNC( (int)from_x );
+  from_y = TRUNC( (int)from_y );
+  to_x   = TRUNC( (int)to_x );
+  to_y   = TRUNC( (int)to_y );
 
   float dir;
   if ( from_y < to_y )
     dir = 1;
   else
   {
-    dir                 = -1;
-    swap(&from_x, &to_x);
-    swap(&from_y, &to_y);
+    dir = -1;
+    swap( &from_x, &to_x );
+    swap( &from_y, &to_y );
   }
 
   // Clip to the height.
@@ -125,21 +126,21 @@ RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y )
   by recursive calls.
   */
 
-  /* @QUES: This code isn't present in font-rs. It was added later by graham asher
-  I have a very strong feeling that this isn't necessary.
-  Since probably the outline is already fitted in the bounding box. I tested
-  this code a little, removing it doesn't seem to make any difference*/
+  /* @QUES: This code isn't present in font-rs. It was added later by graham
+  asher I have a very strong feeling that this isn't necessary. Since probably
+  the outline is already fitted in the bounding box. I tested this code a
+  little, removing it doesn't seem to make any difference*/
   RasterFP_Point intersect = { 0, 0 };
   int            recursive = 0;
   if ( from_x >= aRasterFP->m_w && to_x >= aRasterFP->m_w )
   {
     from_x = to_x = (float)aRasterFP->m_w;
-    dxdy              = 0;
+    dxdy          = 0;
   }
   else if ( from_x <= 0 && to_x <= 0 )
   {
     from_x = to_x = 0;
-    dxdy              = 0;
+    dxdy          = 0;
   }
   else if ( ( from_x < 0 ) != ( to_x < 0 ) )
   {
@@ -179,7 +180,6 @@ RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y )
   int    y0      = (int)from_y;
   int    y_limit = (int)ceil( to_y );
   float* m_a     = aRasterFP->m_a;
-
 
   for ( int y = y0; y < y_limit; y++ )
   {
@@ -254,11 +254,10 @@ dense_conic_to( const FT_Vector* control,
 }
 
 void
-RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
+RasterFP_DrawQuadratic( RasterFP*        aRasterFP,
                         const FT_Vector* control,
                         const FT_Vector* to )
 {
-  
   // assert( aRasterFP );
   /*
   Calculate devsq as the square of four times the
@@ -272,21 +271,23 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
   The division by four is omitted to save time.
   */
 
-  RasterFP_Point aP0 = {aRasterFP->prev_x, aRasterFP->prev_y};
-  RasterFP_Point aP1 = {UPSCALE(control->x), UPSCALE(control->y)};
-  RasterFP_Point aP2 = {UPSCALE(to->x), UPSCALE(to->y)};
+  RasterFP_Point aP0 = { aRasterFP->prev_x, aRasterFP->prev_y };
+  RasterFP_Point aP1 = { UPSCALE( control->x ), UPSCALE( control->y ) };
+  RasterFP_Point aP2 = { UPSCALE( to->x ), UPSCALE( to->y ) };
+
 
   float devx  = aP0.m_x - aP1.m_x - aP1.m_x + aP2.m_x;
   float devy  = aP0.m_y - aP1.m_y - aP1.m_y + aP2.m_y;
   float devsq = devx * devx + devy * devy;
 
-
-
   if ( devsq < 0.333f )
   {
-    RasterFP_DrawLine(aRasterFP, aP2.m_x, aP2.m_y );
+    RasterFP_DrawLine( aRasterFP, aP2.m_x, aP2.m_y );
+    aRasterFP->prev_x = aP2.m_x;
+    aRasterFP->prev_y = aP2.m_y;
     return;
   }
+  
 
   /*
   According to Raph Levien, the reason for the subdivision by n (instead of
@@ -298,20 +299,25 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
   expected to be 33% more in the limit".
   */
 
+
   const float    tol    = 3.0f;
   int            n      = (int)floor( sqrt( sqrt( tol * devsq ) ) );
- // RasterFP_Point p      = aP0;
+  RasterFP_Point p      = aP0;
   float          nrecip = 1.0f / ( n + 1.0f );
   float          t      = 0.0f;
   for ( int i = 0; i < n; i++ )
   {
     t += nrecip;
     RasterFP_Point next = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
-    RasterFP_DrawLine(aRasterFP , next.m_x, next.m_y);
-    //p = next;
+    RasterFP_DrawLine( aRasterFP, next.m_x, next.m_y );
+    aRasterFP->prev_x = next.m_x;
+    aRasterFP->prev_y = next.m_y;
+    p = next;
   }
 
-  RasterFP_DrawLine( aRasterFP, aP2.m_x, aP2.m_y);
+    RasterFP_DrawLine(aRasterFP,aP2.m_x,aP2.m_y);
+    aRasterFP->prev_x = aP2.m_x;
+    aRasterFP->prev_y = aP2.m_y;
 }
 
 static int
@@ -320,11 +326,11 @@ dense_cubic_to( const FT_Vector* control1,
                 const FT_Vector* to,
                 RasterFP*        aRasterFP )
 {
-  RasterFP_Point ap1 = { UPSCALE(control1->x), UPSCALE(control1->y) };
-  RasterFP_Point ap2 = { UPSCALE(control2->x), UPSCALE(control2->y) };
-  RasterFP_Point ap3 = { UPSCALE(to->x), UPSCALE(to->y) };
+  RasterFP_Point ap1 = { UPSCALE( control1->x ), UPSCALE( control1->y ) };
+  RasterFP_Point ap2 = { UPSCALE( control2->x ), UPSCALE( control2->y ) };
+  RasterFP_Point ap3 = { UPSCALE( to->x ), UPSCALE( to->y ) };
 
-  RasterFP_Point lP = {aRasterFP->prev_x, aRasterFP->prev_y};
+  RasterFP_Point lP = { aRasterFP->prev_x, aRasterFP->prev_y };
 
   RasterFP_DrawCubic( aRasterFP, lP, ap1, ap2, ap3 );
   return 0;
@@ -349,7 +355,7 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
 
   if ( devsq < 0.333f )
   {
-    RasterFP_DrawLine( aRasterFP, aP3.m_x , aP3.m_y);
+    RasterFP_DrawLine( aRasterFP, aP3.m_x, aP3.m_y );
     return;
   }
 
@@ -383,7 +389,7 @@ dense_raster_new( FT_Memory memory, dense_PRaster* araster )
     raster->memory = memory;
 
   *araster = raster;
-  printf("dense_raster_new\n");
+  printf( "dense_raster_new\n" );
   return error;
 }
 
@@ -406,7 +412,7 @@ dense_raster_reset( FT_Raster      raster,
   FT_UNUSED( raster );
   FT_UNUSED( pool_base );
   FT_UNUSED( pool_size );
-  printf("dense_raster_reset\n");
+  printf( "dense_raster_reset\n" );
 }
 
 /* @QUES: This methodisnt't called in normal ftlint execution*/
@@ -417,7 +423,7 @@ dense_raster_set_mode( FT_Raster raster, unsigned long mode, void* args )
   FT_UNUSED( mode );
   FT_UNUSED( args );
 
-  printf("dense_raster_set_mode\n");
+  printf( "dense_raster_set_mode\n" );
   return 0; /* nothing to do */
 }
 
@@ -432,10 +438,9 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
                          0  /* delta    */
 )
 
-
-/* @QUES: So, this calls FT_Outline_Decompose, that calls the move to, 
-line to, conic to, cubic to interface methods. The aRasterFP structure stores the
-well, stuff in its m_a and finally renders it to the target->buffer*/
+/* @QUES: So, this calls FT_Outline_Decompose, that calls the move to,
+line to, conic to, cubic to interface methods. The aRasterFP structure stores
+the well, stuff in its m_a and finally renders it to the target->buffer*/
 static int
 dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
 {
@@ -444,37 +449,36 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
   // Render into bitmap
   const float* source = aRasterFP->m_a;
 
-
-  //printf( "Outputting bitmap\n" );
-  // for ( int i = 0; i < aRasterFP->m_h; i++ )
-  // {
-  //   printf( "\n" );
-  //   for ( int j = 0; j < aRasterFP->m_w; j++ )
-  //   {
-  //     float strength = *( source + ( i * aRasterFP->m_w + j ) );
-  //     if ( strength > 0.90 )
-  //     {
-  //       printf( "@|" );
-  //     }
-  //     else if ( strength > 0.70 )
-  //     {
-  //       printf( "#|" );
-  //     }
-  //     else if ( strength > 0.45 )
-  //     {
-  //       printf( "+|" );
-  //     }
-  //     else if ( strength > 0.20 )
-  //     {
-  //       printf( "*|" );
-  //     }
-  //     else
-  //     {
-  //       printf( ".|" );
-  //     }
-  //   }
-  // }
-  // printf( "\n" );
+  // printf( "Outputting bitmap\n" );
+  //  for ( int i = 0; i < aRasterFP->m_h; i++ )
+  //  {
+  //    printf( "\n" );
+  //    for ( int j = 0; j < aRasterFP->m_w; j++ )
+  //    {
+  //      float strength = *( source + ( i * aRasterFP->m_w + j ) );
+  //      if ( strength > 0.90 )
+  //      {
+  //        printf( "@|" );
+  //      }
+  //      else if ( strength > 0.70 )
+  //      {
+  //        printf( "#|" );
+  //      }
+  //      else if ( strength > 0.45 )
+  //      {
+  //        printf( "+|" );
+  //      }
+  //      else if ( strength > 0.20 )
+  //      {
+  //        printf( "*|" );
+  //      }
+  //      else
+  //      {
+  //        printf( ".|" );
+  //      }
+  //    }
+  //  }
+  //  printf( "\n" );
 
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + aRasterFP->m_w * aRasterFP->m_h;
@@ -494,17 +498,18 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
     dest++;
   }
 
-
-  for (int col = 0; col < aRasterFP->m_w; col++)
+  for ( int col = 0; col < aRasterFP->m_w; col++ )
   {
-    for (int row = 0; row < aRasterFP->m_h/2; row++)
+    for ( int row = 0; row < aRasterFP->m_h / 2; row++ )
     {
-      //printf("Swapping position: %d, %d with %d, %d with rows = %d, cols = %d",row,col, aRasterFP->m_h-row, col, aRasterFP->m_h, aRasterFP->m_w);
-      swapold(target->buffer + aRasterFP->m_w*row + col, target->buffer + (aRasterFP->m_h-row-1)*aRasterFP->m_w + col);
+      // printf("Swapping position: %d, %d with %d, %d with rows = %d, cols =
+      // %d",row,col, aRasterFP->m_h-row, col, aRasterFP->m_h, aRasterFP->m_w);
+      swapold( target->buffer + aRasterFP->m_w * row + col,
+               target->buffer + ( aRasterFP->m_h - row - 1 ) * aRasterFP->m_w +
+                   col );
     }
-    
   }
-  
+
   return error;
 }
 
@@ -541,8 +546,8 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   aRasterFP->m_origin_x = 0;
   aRasterFP->m_origin_y = 0;
   /* @QUES: Why are my bitmaps upsied down 😭*/
-  aRasterFP->m_w        = target_map->pitch;
-  aRasterFP->m_h        = target_map->rows;
+  aRasterFP->m_w = target_map->pitch;
+  aRasterFP->m_h = target_map->rows;
 
   int size = aRasterFP->m_w * aRasterFP->m_h + 4;
 
