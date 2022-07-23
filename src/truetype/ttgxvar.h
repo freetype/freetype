@@ -65,6 +65,23 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @Struct:
+   *   GX_AVarTableRec
+   *
+   * @Description:
+   *   Data from the `avar' table.
+   */
+  typedef struct  GX_AVarTableRec_
+  {
+    GX_AVarSegment        avar_segment;   /* avar_segment[num_axis] */
+    GX_ItemVarStoreRec    itemStore;      /* Item Variation Store   */
+    GX_DeltaSetIdxMapRec  axisMap;        /* Axis Mapping           */
+
+  } GX_AVarTableRec, *GX_AVarTable;
+
+
+  /**************************************************************************
+   *
+   * @Struct:
    *   GX_HVVarTableRec
    *
    * @Description:
@@ -194,7 +211,7 @@ FT_BEGIN_HEADER
    *     A Boolean; if set, FreeType tried to load (and parse) the `avar'
    *     table.
    *
-   *   avar_segment ::
+   *   avar_table ::
    *     Data from the `avar' table.
    *
    *   hvar_loaded ::
@@ -259,7 +276,7 @@ FT_BEGIN_HEADER
                       /* normalized_stylecoords[num_namedstyles][num_axis] */
 
     FT_Bool         avar_loaded;
-    GX_AVarSegment  avar_segment;                /* avar_segment[num_axis] */
+    GX_AVarTable    avar_table;
 
     FT_Bool         hvar_loaded;
     FT_Bool         hvar_checked;
