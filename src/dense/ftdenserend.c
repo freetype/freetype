@@ -32,7 +32,6 @@ initial properties of the renderer ??? */
 static FT_Error
 ft_dense_init( FT_Renderer render )
 {
-  printf( "ft_dense_init\n" );
   return FT_Err_Ok;
 }
 
@@ -41,7 +40,6 @@ so, I guess this is unnecessary ??? */
 static void
 ft_dense_done( FT_Renderer render )
 {
-  printf( "ft_dense_done\n" );
   FT_UNUSED( render );
 }
 
@@ -56,7 +54,6 @@ ft_dense_render( FT_Renderer      render,
                  FT_Render_Mode   mode,
                  const FT_Vector* origin )
 {
-  printf( "ft_dense_render\n" );
   FT_Error    error   = FT_Err_Ok;
   FT_Outline* outline = &slot->outline;
   FT_Bitmap*  bitmap  = &slot->bitmap;
@@ -155,7 +152,6 @@ ft_dense_transform( FT_Renderer      render,
                     const FT_Matrix* matrix,
                     const FT_Vector* delta )
 {
-  printf( "ft_dense_transform\n" );
 
   FT_Error error = FT_Err_Ok;
 
@@ -180,7 +176,6 @@ Exit:
 static void
 ft_dense_get_cbox( FT_Renderer render, FT_GlyphSlot slot, FT_BBox* cbox )
 {
-  printf( "ft_dense_get_cbox\n" );
 
   FT_ZERO( cbox );
 

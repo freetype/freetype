@@ -2,57 +2,12 @@
 #ifndef FTDENSE_H_
 #define FTDENSE_H_
 
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/ftimage.h>
 
 FT_BEGIN_HEADER
 
-/**************************************************************************
- *
- * @struct:
- *   SDF_Raster_Params
- *
- * @description:
- *   This struct must be passed to the raster render function
- *   @FT_Raster_RenderFunc instead of @FT_Raster_Params because the
- *   rasterizer requires some additional information to render properly.
- *
- * @fields:
- *   root ::
- *     The native raster parameters structure.
- *
- *   spread ::
- *     This is an essential parameter/property required by the renderer.
- *     `spread` defines the maximum unsigned value that is present in the
- *     final SDF output.  For the default value check file
- *     `ftsdfcommon.h`.
- *
- *   flip_sign ::
- *     By default positive values indicate positions inside of contours,
- *     i.e., filled by a contour.  If this property is true then that
- *     output will be the opposite of the default, i.e., negative values
- *     indicate positions inside of contours.
- *
- *   flip_y ::
- *     Setting this parameter to true maked the output image flipped
- *     along the y-axis.
- *
- *   overlaps ::
- *     Set this to true to generate SDF for glyphs having overlapping
- *     contours.  The overlapping support is limited to glyphs that do not
- *     have self-intersecting contours.  Also, removing overlaps require a
- *     considerable amount of extra memory; additionally, it will not work
- *     if generating SDF from bitmap.
- *
- * @note:
- *   All properties are valid for both the 'sdf' and 'bsdf' renderers; the
- *   exception is `overlaps`, which gets ignored by the 'bsdf' renderer.
- *
- */
-
-/* rasterizer to convert outline to SDF */
 #ifndef FT_EXPORT_VAR
 #define FT_EXPORT_VAR( x ) extern x
 #endif
@@ -85,12 +40,7 @@ extern "C"
 {
 #endif
 
-  typedef long  TPos; 
-  typedef struct
-  {
-    float m_x;
-    float m_y;
-  } RasterFP_Point;
+  typedef long TPos;
 
   typedef struct
   {
@@ -110,25 +60,20 @@ extern "C"
     FT_Pos prev_x, prev_y;
 
     FT_Outline outline;
-  } RasterFP;
+  } dense_worker;
 
-  void RasterFP_Create( RasterFP* aRasterFP );
-  void RasterFP_Destroy( RasterFP* aRasterFP );
-  void RasterFP_DrawLine( RasterFP* aRasterFP, TPos to_x, TPos to_y );
-  void RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
-                        const FT_Vector* control,
-                        const FT_Vector* to );
-  void RasterFP_DrawCubic( RasterFP*      aRasterFP,
-                           RasterFP_Point aP0,
-                           RasterFP_Point aP1,
-                           RasterFP_Point aP2,
-                           RasterFP_Point aP3 );
-  void RasterFP_GetBitmap( RasterFP* aRasterFP, unsigned char* aBitmap );
+  void dense_render_line( dense_worker* aRasterFP, TPos to_x, TPos to_y );
+  void dense_render_quadratic( dense_worker*    aRasterFP,
+                               const FT_Vector* control,
+                               const FT_Vector* to );
+  void dense_render_cubic( dense_worker* aRasterFP,
+                           FT_Vector*    aP1,
+                           FT_Vector*    aP2,
+                           FT_Vector*    aP3 );
 
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-
 
 FT_END_HEADER
 
