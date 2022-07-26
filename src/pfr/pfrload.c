@@ -852,6 +852,14 @@
     phy_font->bbox.yMax          = PFR_NEXT_SHORT( p );
     phy_font->flags      = flags = PFR_NEXT_BYTE( p );
 
+    if ( !phy_font->outline_resolution ||
+         !phy_font->metrics_resolution )
+    {
+      error = FT_THROW( Invalid_Table );
+      FT_ERROR(( "pfr_phy_font_load: invalid resolution\n" ));
+      goto Fail;
+    }
+
     /* get the standard advance for non-proportional fonts */
     if ( !( flags & PFR_PHY_PROPORTIONAL ) )
     {
@@ -968,6 +976,13 @@
 
       phy_font->num_chars    = count = PFR_NEXT_USHORT( p );
       phy_font->chars_offset = offset + (FT_Offset)( p - stream->cursor );
+
+      if ( !phy_font->num_chars )
+      {
+        error = FT_THROW( Invalid_Table );
+        FT_ERROR(( "pfr_phy_font_load: no glyphs\n" ));
+        goto Fail;
+      }
 
       Size = 1 + 1 + 2;
       if ( flags & PFR_PHY_2BYTE_CHARCODE )
