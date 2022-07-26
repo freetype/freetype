@@ -130,14 +130,14 @@
     if ( error )
       goto Exit;
 
-    /* now load the physical font descriptor */
+    /* load the physical font descriptor */
     error = pfr_phy_font_load( &face->phy_font, stream,
                                face->log_font.phys_offset,
                                face->log_font.phys_size );
     if ( error )
       goto Exit;
 
-    /* now set up all root face fields */
+    /* set up all root face fields */
     {
       PFR_PhyFont  phy_font = &face->phy_font;
 
@@ -160,7 +160,7 @@
         if ( nn == phy_font->num_chars )
         {
           if ( phy_font->num_strikes > 0 )
-            pfrface->face_flags = 0;        /* not scalable */
+            pfrface->face_flags &= ~FT_FACE_FLAG_SCALABLE;
           else
           {
             FT_ERROR(( "pfr_face_init: font doesn't contain glyphs\n" ));
@@ -170,7 +170,7 @@
         }
       }
 
-      if ( ( phy_font->flags & PFR_PHY_PROPORTIONAL ) == 0 )
+      if ( !( phy_font->flags & PFR_PHY_PROPORTIONAL ) )
         pfrface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
       if ( phy_font->flags & PFR_PHY_VERTICAL )
@@ -338,7 +338,7 @@
     }
 
     /* try to load an embedded bitmap */
-    if ( ( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP ) ) == 0 )
+    if ( !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP ) ) )
     {
       error = pfr_slot_load_bitmap(
                 slot,

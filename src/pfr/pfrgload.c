@@ -42,8 +42,7 @@
   {
     FT_ZERO( glyph );
 
-    glyph->loader     = loader;
-    glyph->path_begun = 0;
+    glyph->loader = loader;
 
     FT_GlyphLoader_Rewind( loader );
   }
@@ -409,7 +408,7 @@
           break;
 
         case 6:                            /* horizontal to vertical curve */
-          FT_TRACE6(( "- hv curve " ));
+          FT_TRACE6(( "- hv curve" ));
           args_format = 0xB8E;
           args_count  = 3;
           break;

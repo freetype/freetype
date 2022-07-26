@@ -391,7 +391,7 @@
   }
 
 
-  /* load bitmap metrics.  `*padvance' must be set to the default value */
+  /* load bitmap metrics.  `*aadvance' must be set to the default value */
   /* before calling this function                                       */
   /*                                                                    */
   static FT_Error
@@ -628,7 +628,7 @@
       if ( strike->flags & PFR_BITMAP_3BYTE_OFFSET )
         char_len += 1;
 
-      /* access data directly in the frame to speed lookups */
+      /* access data directly in the frame to speed up lookups */
       if ( FT_STREAM_SEEK( phys->bct_offset + strike->bct_offset ) ||
            FT_FRAME_ENTER( char_len * strike->num_bitmaps )        )
         goto Exit;
@@ -744,8 +744,8 @@
            ypos > FT_INT_MAX - (FT_Long)ysize ||
            ypos + (FT_Long)ysize < FT_INT_MIN )
       {
-        FT_TRACE1(( "pfr_slot_load_bitmap:" ));
-        FT_TRACE1(( "huge bitmap glyph %ldx%ld over FT_GlyphSlot\n",
+        FT_TRACE1(( "pfr_slot_load_bitmap:"
+                    " huge bitmap glyph %ldx%ld over FT_GlyphSlot\n",
                      xpos, ypos ));
         error = FT_THROW( Invalid_Pixel_Size );
       }
