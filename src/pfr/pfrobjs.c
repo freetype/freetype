@@ -486,17 +486,16 @@
     kerning->x = 0;
     kerning->y = 0;
 
-    if ( glyph1 > 0 )
-      glyph1--;
+    /* PFR indexing skips .notdef, which becomes UINT_MAX */
+    glyph1--;
+    glyph2--;
 
-    if ( glyph2 > 0 )
-      glyph2--;
-
-    /* convert glyph indices to character codes */
-    if ( glyph1 > phy_font->num_chars ||
-         glyph2 > phy_font->num_chars )
+    /* check the array bounds, .notdef is automacally out */
+    if ( glyph1 >= phy_font->num_chars ||
+         glyph2 >= phy_font->num_chars )
       goto Exit;
 
+    /* convert glyph indices to character codes */
     code1 = phy_font->chars[glyph1].char_code;
     code2 = phy_font->chars[glyph2].char_code;
     pair  = PFR_KERN_INDEX( code1, code2 );
