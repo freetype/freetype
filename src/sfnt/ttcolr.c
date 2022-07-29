@@ -30,10 +30,13 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
-#include <freetype/internal/services/svmm.h>
 #include <freetype/tttags.h>
 #include <freetype/ftcolor.h>
 #include <freetype/config/integer-types.h>
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include <freetype/internal/services/svmm.h>
+#endif
 
  /* the next two code lines are a temporary hack, to be removed together */
  /* with `VARIABLE_COLRV1_ENABLED` and related code as soon as variable  */
@@ -131,9 +134,11 @@
      */
     FT_Byte*  paints_start_v1;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     /* Item Variation Store for variable 'COLR' v1. */
     GX_ItemVarStoreRec    var_store;
     GX_DeltaSetIdxMapRec  delta_set_idx_map;
+#endif
 
     /* The memory that backs up the `COLR' table. */
     void*     table;
@@ -169,10 +174,10 @@
     FT_ULong  base_glyph_offset, layer_offset;
     FT_ULong  base_glyphs_offset_v1, num_base_glyphs_v1;
     FT_ULong  layer_offset_v1, num_layers_v1, clip_list_offset;
-    FT_ULong  var_idx_map_offset, var_store_offset;
     FT_ULong  table_size;
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_ULong  colr_offset_in_stream;
-
+#endif
 
     /* `COLR' always needs `CPAL' */
     if ( !face->cpal )
@@ -182,7 +187,9 @@
     if ( error )
       goto NoColr;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     colr_offset_in_stream = FT_STREAM_POS();
+#endif
 
     if ( table_size < COLR_HEADER_SIZE )
       goto InvalidTable;
@@ -275,6 +282,7 @@
       else
         colr->clip_list = 0;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       colr->var_store.dataCount     = 0;
       colr->var_store.varData       = NULL;
       colr->var_store.axisCount     = 0;
@@ -285,11 +293,12 @@
       colr->delta_set_idx_map.outerIndex = NULL;
       colr->delta_set_idx_map.innerIndex = NULL;
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       if ( face->variation_support & TT_FACE_FLAG_VAR_FVAR &&
            VARIABLE_COLRV1_ENABLED                         )
       {
-        FT_Service_MultiMasters  mm  = (FT_Service_MultiMasters)face->mm;
+        FT_ULong  var_idx_map_offset, var_store_offset;
+
+        FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
         var_idx_map_offset = FT_NEXT_ULONG( p );
@@ -614,12 +623,17 @@
               FT_Byte*        p,
               FT_COLR_Paint*  apaint )
   {
-    FT_Byte*         paint_base      = p;
-    FT_Byte*         child_table_p   = NULL;
-    FT_Bool          do_read_var     = FALSE;
-    FT_ULong         var_index_base  = 0;
+    FT_Byte*  paint_base    = p;
+    FT_Byte*  child_table_p = NULL;
+    FT_Bool   do_read_var   = FALSE;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_ULong         var_index_base = 0;
     /* Longest varIndexBase offset is 5 in the spec. */
-    FT_ItemVarDelta  item_deltas[6]  = { 0, 0, 0, 0, 0, 0 };
+    FT_ItemVarDelta  item_deltas[6] = { 0, 0, 0, 0, 0, 0 };
+#else
+    FT_UNUSED( face );
+#endif
 
 
     if ( !p || !colr || !colr->table )
@@ -1059,9 +1073,6 @@
               (FT_PaintFormat_Internal)apaint->format ==
                 FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER )
     {
-      FT_UInt  num_deltas = 0;
-
-
       apaint->u.rotate.paint.p                     = child_table_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
 
@@ -1088,6 +1099,9 @@
                FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER ) &&
            VARIABLE_COLRV1_ENABLED                              )
       {
+        FT_UInt  num_deltas = 0;
+
+
         var_index_base = FT_NEXT_ULONG( p );
 
         if ( (FT_PaintFormat_Internal)apaint->format ==
@@ -1515,7 +1529,6 @@
 
     FT_Byte*  p;
     FT_ULong  var_index_base;
-    FT_Int    item_deltas[2];
 
 
     if ( !colr || !colr->table )
@@ -1549,6 +1562,9 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       if ( VARIABLE_COLRV1_ENABLED )
       {
+        FT_Int  item_deltas[2];
+
+
         if ( !get_deltas_for_var_index_base( face, colr,
                                              var_index_base,
                                              2,
@@ -1558,6 +1574,8 @@
         color_stop->stop_offset += (FT_Fixed)item_deltas[0] << 2;
         color_stop->color.alpha += item_deltas[1];
       }
+#else
+      FT_UNUSED( var_index_base );
 #endif
     }
 
