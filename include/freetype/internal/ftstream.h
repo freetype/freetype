@@ -314,8 +314,8 @@ FT_BEGIN_HEADER
 #define FT_GET_ULONG()      FT_GET_MACRO( FT_Stream_GetULong, FT_UInt32 )
 #define FT_GET_TAG4()       FT_GET_MACRO( FT_Stream_GetULong, FT_UInt32 )
 
-#define FT_GET_SHORT_LE()   FT_GET_MACRO( FT_Stream_GetUShortLE, FT_Int32 )
-#define FT_GET_USHORT_LE()  FT_GET_MACRO( FT_Stream_GetUShortLE, FT_UInt32 )
+#define FT_GET_SHORT_LE()   FT_GET_MACRO( FT_Stream_GetUShortLE, FT_Int16 )
+#define FT_GET_USHORT_LE()  FT_GET_MACRO( FT_Stream_GetUShortLE, FT_UInt16 )
 #define FT_GET_LONG_LE()    FT_GET_MACRO( FT_Stream_GetULongLE, FT_Int32 )
 #define FT_GET_ULONG_LE()   FT_GET_MACRO( FT_Stream_GetULongLE, FT_UInt32 )
 #endif

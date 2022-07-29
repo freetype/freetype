@@ -557,8 +557,6 @@
                                   FT_UInt           num_deltas,
                                   FT_ItemVarDelta*  deltas )
   {
-    FT_Error  error = FT_Err_Ok;
-
     FT_UInt   outer_index    = 0;
     FT_UInt   inner_index    = 0;
     FT_ULong  loop_var_index = var_index_base;
@@ -597,8 +595,7 @@
       {
         /* TODO: Direct lookup case not implemented or tested yet. */
         FT_ASSERT( 0 );
-        error = FT_THROW( Unimplemented_Feature );
-        return error;
+        return 0;
       }
 
       deltas[i] = mm->get_item_delta( FT_FACE( face ), &colr->var_store,
@@ -1517,7 +1514,7 @@
     Colr*  colr = (Colr*)face->colr;
 
     FT_Byte*  p;
-    FT_Long   var_index_base;
+    FT_ULong  var_index_base;
     FT_Int    item_deltas[2];
 
 
