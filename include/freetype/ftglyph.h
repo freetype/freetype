@@ -355,7 +355,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   aglyph ::
-   *     A handle to the glyph object.
+   *     A handle to the glyph object.  `NULL` in case of error.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -385,7 +385,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   target ::
-   *     A handle to the target glyph object.  0~in case of error.
+   *     A handle to the target glyph object.  `NULL` in case of error.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -671,7 +671,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   glyph ::
-   *     A handle to the target glyph object.
+   *     A handle to the target glyph object.  Can be `NULL`.
    */
   FT_EXPORT( void )
   FT_Done_Glyph( FT_Glyph  glyph );
