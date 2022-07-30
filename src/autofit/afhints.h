@@ -308,12 +308,12 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_AxisHintsRec_
   {
-    FT_Int        num_segments; /* number of used segments      */
-    FT_Int        max_segments; /* number of allocated segments */
+    FT_UInt       num_segments; /* number of used segments      */
+    FT_UInt       max_segments; /* number of allocated segments */
     AF_Segment    segments;     /* segments array               */
 
-    FT_Int        num_edges;    /* number of used edges      */
-    FT_Int        max_edges;    /* number of allocated edges */
+    FT_UInt       num_edges;    /* number of used edges      */
+    FT_UInt       max_edges;    /* number of allocated edges */
     AF_Edge       edges;        /* edges array               */
 
     AF_Direction  major_dir;    /* either vertical or horizontal */

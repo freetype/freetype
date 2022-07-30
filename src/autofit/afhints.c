@@ -151,9 +151,9 @@
     }
     else if ( axis->num_segments >= axis->max_segments )
     {
-      FT_Int  old_max = axis->max_segments;
-      FT_Int  new_max = old_max;
-      FT_Int  big_max = (FT_Int)( FT_INT_MAX / sizeof ( *segment ) );
+      FT_UInt  old_max = axis->max_segments;
+      FT_UInt  new_max = old_max;
+      FT_UInt  big_max = FT_INT_MAX / sizeof ( *segment );
 
 
       if ( old_max >= big_max )
@@ -216,9 +216,9 @@
     }
     else if ( axis->num_edges >= axis->max_edges )
     {
-      FT_Int  old_max = axis->max_edges;
-      FT_Int  new_max = old_max;
-      FT_Int  big_max = (FT_Int)( FT_INT_MAX / sizeof ( *edge ) );
+      FT_UInt  old_max = axis->max_edges;
+      FT_UInt  new_max = old_max;
+      FT_UInt  big_max = FT_INT_MAX / sizeof ( *edge );
 
 
       if ( old_max >= big_max )
@@ -597,7 +597,7 @@
   FT_Error
   af_glyph_hints_get_num_segments( AF_GlyphHints  hints,
                                    FT_Int         dimension,
-                                   FT_Int*        num_segments )
+                                   FT_UInt*       num_segments )
   {
     AF_Dimension  dim;
     AF_AxisHints  axis;
@@ -623,7 +623,7 @@
   FT_Error
   af_glyph_hints_get_segment_offset( AF_GlyphHints  hints,
                                      FT_Int         dimension,
-                                     FT_Int         idx,
+                                     FT_UInt        idx,
                                      FT_Pos        *offset,
                                      FT_Bool       *is_blue,
                                      FT_Pos        *blue_offset )
@@ -640,7 +640,7 @@
 
     axis = &hints->axis[dim];
 
-    if ( idx < 0 || idx >= axis->num_segments )
+    if ( idx >= axis->num_segments )
       return FT_THROW( Invalid_Argument );
 
     seg      = &axis->segments[idx];
