@@ -21,8 +21,6 @@
 
 #include "aftypes.h"
 
-#define xxAF_SORT_SEGMENTS
-
 FT_BEGIN_HEADER
 
   /*
@@ -313,9 +311,6 @@ FT_BEGIN_HEADER
     FT_Int        num_segments; /* number of used segments      */
     FT_Int        max_segments; /* number of allocated segments */
     AF_Segment    segments;     /* segments array               */
-#ifdef AF_SORT_SEGMENTS
-    FT_Int        mid_segments;
-#endif
 
     FT_Int        num_edges;    /* number of used edges      */
     FT_Int        max_edges;    /* number of allocated edges */
