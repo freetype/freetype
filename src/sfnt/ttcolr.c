@@ -1404,11 +1404,12 @@
         font_clip_box.xMin = FT_MulFix( FT_NEXT_SHORT( p1 ),
                                         face->root.size->metrics.x_scale );
         font_clip_box.yMin = FT_MulFix( FT_NEXT_SHORT( p1 ),
-                                        face->root.size->metrics.x_scale );
+                                        face->root.size->metrics.y_scale );
         font_clip_box.xMax = FT_MulFix( FT_NEXT_SHORT( p1 ),
                                         face->root.size->metrics.x_scale );
         font_clip_box.yMax = FT_MulFix( FT_NEXT_SHORT( p1 ),
-                                        face->root.size->metrics.x_scale );
+                                        face->root.size->metrics.y_scale );
+
 
         /* Make 4 corner points (xMin, yMin), (xMax, yMax) and transform */
         /* them.  If we we would only transform two corner points and    */
