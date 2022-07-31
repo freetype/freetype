@@ -9,14 +9,14 @@ variables:
   MESON_ARGS_WINDOWS: ${MESON_ARGS} --force-fallback-for=zlib
 
 .build windows common:
-  # See
-  # https://gitlab.freedesktop.org/gstreamer/gst-ci/container_registry/213
-  image: 'registry.freedesktop.org/gstreamer/gst-ci/amd64/windows:2021-09-09.0-master'
+  # TODO: should probably get its own image at some point instead of reusing the GStreamer one
+  # See https://gitlab.freedesktop.org/gstreamer/gstreamer/container_registry/18035 for latest
+  image: "registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2022-07-29.3-main"
   stage: 'build'
   tags:
     - 'docker'
     - 'windows'
-    - '1809'
+    - '2022'
     - 'gstreamer-windows'
 
 .build linux common:
@@ -81,19 +81,19 @@ variables:
 
 # Windows jobs.
 
-windows meson vs2017 amd64:
+windows meson vs2019 amd64:
   extends: '.build windows meson'
   variables:
     ARCH: 'amd64'
     MESON_WINDOWS_TESTS: '&& meson test -C build && meson test -C build --benchmark'
 
-windows meson vs2017 x86:
+windows meson vs2019 x86:
   extends: '.build windows meson'
   variables:
     ARCH: 'x86'
     MESON_WINDOWS_TESTS: '&& meson test -C build && meson test -C build --benchmark'
 
-windows meson vs2017 amd64 uwp:
+windows meson vs2019 amd64 uwp:
   extends: '.build windows meson'
   variables:
     ARCH: 'amd64'
