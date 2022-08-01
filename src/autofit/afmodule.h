@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
     FT_ModuleRec  root;
 
     FT_UInt       fallback_style;
-    FT_UInt       default_script;
+    AF_Script     default_script;
     FT_Bool       no_stem_darkening;
     FT_Int        darken_params[8];
 

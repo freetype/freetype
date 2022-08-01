@@ -168,8 +168,7 @@
        */
       if ( style_class->coverage == AF_COVERAGE_DEFAULT )
       {
-        if ( (FT_UInt)style_class->script ==
-             globals->module->default_script )
+        if ( style_class->script == globals->module->default_script )
           dflt = ss;
 
         for ( range = script_class->script_uni_ranges;
