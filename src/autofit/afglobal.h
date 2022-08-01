@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
   typedef struct  AF_FaceGlobalsRec_
   {
     FT_Face          face;
-    FT_Long          glyph_count;    /* same as face->num_glyphs */
+    FT_UInt          glyph_count;    /* unsigned face->num_glyphs */
     FT_UShort*       glyph_styles;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ

@@ -1043,7 +1043,7 @@
       AF_FaceGlobals  globals = metrics->root.globals;
       FT_UShort*      gstyles = globals->glyph_styles;
 
-      FT_Long  i;
+      FT_UInt  i;
 
 
       FT_TRACE5(( "no blue zones found:"
