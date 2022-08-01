@@ -132,9 +132,6 @@ FT_BEGIN_HEADER
    *   max_elems ::
    *     The maximum number of elements in table.
    *
-   *   num_elems ::
-   *     The current number of elements in table.
-   *
    *   elements ::
    *     A table of element addresses within the block.
    *
@@ -155,7 +152,6 @@ FT_BEGIN_HEADER
     FT_ULong           init;
 
     FT_Int             max_elems;
-    FT_Int             num_elems;
     FT_Byte**          elements;       /* addresses of table elements */
     FT_UInt*           lengths;        /* lengths of table elements   */
 
