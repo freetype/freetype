@@ -2177,7 +2177,7 @@
     FT_Byte*   sfnt_data = NULL;
     FT_Error   error;
     FT_ULong   flag_offset;
-    FT_Long    rlen;
+    FT_ULong   rlen;
     int        is_cff;
     FT_Long    face_index_in_resource = 0;
 
@@ -2192,11 +2192,11 @@
     if ( error )
       goto Exit;
 
-    if ( FT_READ_LONG( rlen ) )
+    if ( FT_READ_ULONG( rlen ) )
       goto Exit;
-    if ( rlen < 1 )
+    if ( !rlen )
       return FT_THROW( Cannot_Open_Resource );
-    if ( (FT_ULong)rlen > FT_MAC_RFORK_MAX_LEN )
+    if ( rlen > FT_MAC_RFORK_MAX_LEN )
       return FT_THROW( Invalid_Offset );
 
     error = open_face_PS_from_sfnt_stream( library,
@@ -2214,7 +2214,7 @@
 
     if ( FT_QALLOC( sfnt_data, rlen ) )
       return error;
-    error = FT_Stream_Read( stream, (FT_Byte *)sfnt_data, (FT_ULong)rlen );
+    error = FT_Stream_Read( stream, (FT_Byte *)sfnt_data, rlen );
     if ( error )
     {
       FT_FREE( sfnt_data );
@@ -2224,7 +2224,7 @@
     is_cff = rlen > 4 && !ft_memcmp( sfnt_data, "OTTO", 4 );
     error = open_face_from_buffer( library,
                                    sfnt_data,
-                                   (FT_ULong)rlen,
+                                   rlen,
                                    face_index_in_resource,
                                    is_cff ? "cff" : "truetype",
                                    aface );
