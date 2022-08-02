@@ -488,8 +488,8 @@
         FTC_Cache  cache = manager->caches[node->cache_index];
 
 
-        if ( (FT_UInt)node->cache_index >= manager->num_caches )
-          FT_TRACE0(( "FTC_Manager_Check: invalid node (cache index = %ld\n",
+        if ( node->cache_index >= manager->num_caches )
+          FT_TRACE0(( "FTC_Manager_Check: invalid node (cache index = %hu\n",
                       node->cache_index ));
         else
           weight += cache->clazz.node_weight( node, cache );
@@ -519,7 +519,7 @@
 
       if ( count != manager->num_nodes )
         FT_TRACE0(( "FTC_Manager_Check:"
-                    " invalid cache node count %d instead of %d\n",
+                    " invalid cache node count %u instead of %u\n",
                     manager->num_nodes, count ));
     }
   }
@@ -547,7 +547,7 @@
 #ifdef FT_DEBUG_ERROR
     FTC_Manager_Check( manager );
 
-    FT_TRACE0(( "compressing, weight = %ld, max = %ld, nodes = %d\n",
+    FT_TRACE0(( "compressing, weight = %ld, max = %ld, nodes = %u\n",
                 manager->cur_weight, manager->max_weight,
                 manager->num_nodes ));
 #endif
@@ -693,9 +693,9 @@
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager )
   {
-    if ( node                                             &&
-         manager                                          &&
-         (FT_UInt)node->cache_index < manager->num_caches )
+    if ( node                                    &&
+         manager                                 &&
+         node->cache_index < manager->num_caches )
       node->ref_count--;
   }
 

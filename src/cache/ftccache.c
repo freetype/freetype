@@ -307,7 +307,7 @@
 #if 0
     /* check, just in case of general corruption :-) */
     if ( manager->num_nodes == 0 )
-      FT_TRACE0(( "ftc_node_destroy: invalid cache node count (%d)\n",
+      FT_TRACE0(( "ftc_node_destroy: invalid cache node count (%u)\n",
                   manager->num_nodes ));
 #endif
   }

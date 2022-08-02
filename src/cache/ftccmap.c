@@ -295,7 +295,7 @@
       if ( error )
         goto Exit;
 
-      if ( (FT_UInt)cmap_index < (FT_UInt)face->num_charmaps )
+      if ( cmap_index < face->num_charmaps )
       {
         FT_CharMap  old, cmap  = NULL;
 
