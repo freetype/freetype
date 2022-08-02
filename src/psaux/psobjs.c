@@ -234,7 +234,7 @@
     FT_Memory  memory = table->memory;
 
 
-    if ( (FT_ULong)table->init == 0xDEADBEEFUL )
+    if ( table->init == 0xDEADBEEFUL )
     {
       FT_FREE( table->block );
       FT_FREE( table->elements );
