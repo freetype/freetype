@@ -383,6 +383,7 @@
     manager->library      = library;
     manager->memory       = memory;
     manager->max_weight   = max_bytes;
+    manager->cur_weight   = 0;
 
     manager->request_face = requester;
     manager->request_data = req_data;
