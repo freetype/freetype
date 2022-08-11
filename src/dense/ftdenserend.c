@@ -54,6 +54,7 @@ ft_dense_render( FT_Renderer      render,
                  FT_Render_Mode   mode,
                  const FT_Vector* origin )
 {
+ // printf("ft_dense_render\n");
   FT_Error    error   = FT_Err_Ok;
   FT_Outline* outline = &slot->outline;
   FT_Bitmap*  bitmap  = &slot->bitmap;

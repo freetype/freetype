@@ -52,7 +52,7 @@ dense_move_to( const FT_Vector* to, dense_worker* worker )
 static int
 dense_line_to( const FT_Vector* to, dense_worker* worker )
 {
-  // printf( "dense_line_to: %d, %d\n", to->x, to->y );
+  //printf( "dense_line_to: %d, %d\n", to->x, to->y );
   dense_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
   dense_move_to( to, worker );
   return 0;
@@ -76,6 +76,8 @@ swapold( unsigned char* a, unsigned char* b )
 void
 dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
 {
+  // printf("line from: %d, %d to %d, %d\n", worker->prev_x, worker->prev_y,
+  // to_x, to_y);
   TPos from_x = worker->prev_x;
   TPos from_y = worker->prev_y;
   if ( from_y == to_y )
@@ -238,6 +240,7 @@ dense_conic_to( const FT_Vector* control,
                 const FT_Vector* to,
                 dense_worker*    worker )
 {
+  //printf( "dense_conic_to: %d, %d\n", to->x, to->y );
   dense_render_quadratic( worker, control, to );
   return 0;
 }
@@ -259,9 +262,9 @@ dense_render_quadratic( dense_worker*    worker,
   The division by four is omitted to save time.
   */
 
-  FT_Vector aP0 = { worker->prev_x, worker->prev_y };
-  FT_Vector aP1 = { UPSCALE( control->x ), UPSCALE( control->y ) };
-  FT_Vector aP2 = { UPSCALE( to->x ), UPSCALE( to->y ) };
+  FT_Vector aP0 = { DOWNSCALE( worker->prev_x ), DOWNSCALE( worker->prev_y ) };
+  FT_Vector aP1 = { control->x, control->y };
+  FT_Vector aP2 = { to->x, to->y };
 
   float devx  = aP0.x - aP1.x - aP1.x + aP2.x;
   float devy  = aP0.y - aP1.y - aP1.y + aP2.y;
@@ -269,9 +272,7 @@ dense_render_quadratic( dense_worker*    worker,
 
   if ( devsq < 0.333f )
   {
-    dense_render_line( worker, aP2.x, aP2.y );
-    worker->prev_x = aP2.x;
-    worker->prev_y = aP2.y;
+    dense_line_to( &aP2, worker );
     return;
   }
 
@@ -285,24 +286,23 @@ dense_render_quadratic( dense_worker*    worker,
   expected to be 33% more in the limit".
   */
 
-  const float tol    = 3.0f;
-  int         n      = (int)floor( sqrt( sqrt( tol * devsq ) ) );
-  FT_Vector   p      = aP0;
-  float       nrecip = 1.0f / ( n + 1.0f );
-  float       t      = 0.0f;
+  const float tol = 3.0f;
+  int         n   = (int)floor( sqrt( sqrt( tol * devsq ) ) )/8;
+  //printf( "n is %d\n", n );
+  FT_Vector p      = aP0;
+  float     nrecip = 1.0f / ( n + 1.0f );
+  float     t      = 0.0f;
   for ( int i = 0; i < n; i++ )
   {
     t += nrecip;
     FT_Vector next = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
-    dense_render_line( worker, next.x, next.y );
-    worker->prev_x = next.x;
-    worker->prev_y = next.y;
+    dense_line_to(&next, worker );
     p              = next;
   }
 
-  dense_render_line( worker, aP2.x, aP2.y );
-  worker->prev_x = aP2.x;
-  worker->prev_y = aP2.y;
+  dense_line_to( &aP2, worker );
+  // worker->prev_x = aP2.x;
+  // worker->prev_y = aP2.y;
 }
 
 static int
@@ -375,7 +375,6 @@ dense_raster_new( FT_Memory memory, dense_PRaster* araster )
 static void
 dense_raster_done( FT_Raster raster )
 {
-
   FT_Memory memory = (FT_Memory)( (dense_PRaster)raster )->memory;
 
   FT_FREE( raster );
@@ -455,11 +454,10 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
 static int
 dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
-
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   const FT_Bitmap*  target_map = params->target;
 
-  //dense_worker* worker = malloc( sizeof( dense_worker ) );
+  // dense_worker* worker = malloc( sizeof( dense_worker ) );
   dense_worker worker[1];
 
   if ( !raster )
