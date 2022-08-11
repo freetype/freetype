@@ -13,7 +13,6 @@
 #include <math.h>
 #include "ftdenseerrs.h"
 
-/* @QUES: Please explain all these defines. Why is PIXEL_BITS 8??*/
 #define PIXEL_BITS 8
 
 #define ONE_PIXEL  ( 1 << PIXEL_BITS )
@@ -82,7 +81,6 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
   if ( from_y == to_y )
     return;
 
-  /* @QUES: What is this code that I commented out, supposed to do?*/
   // aP0.m_x -= worker->m_origin_x;
   // aP0.m_y -= worker->m_origin_y;
   // aP1.m_x -= worker->m_origin_x;
@@ -125,10 +123,6 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
   by recursive calls.
   */
 
-  /* @QUES: This code isn't present in font-rs. It was added later by graham
-  asher I have a very strong feeling that this isn't necessary. Since probably
-  the outline is already fitted in the bounding box. I tested this code a
-  little, removing it doesn't seem to make any difference*/
   FT_Vector intersect = { 0, 0 };
   int       recursive = 0;
   if ( from_x >= worker->m_w && to_x >= worker->m_w )
@@ -174,7 +168,6 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
     return;
   }
 
-  /* @QUES: I am still trying to understand this code */
   float  x       = from_x;
   int    y0      = (int)from_y;
   int    y_limit = (int)ceil( to_y );
@@ -366,8 +359,6 @@ dense_render_cubic( dense_worker* worker,
   worker->prev_y = aP3->y;
 }
 
-/* @QUES: This is the first method called on the module. I suspect
-this only initializes the memory for it*/
 static int
 dense_raster_new( FT_Memory memory, dense_PRaster* araster )
 {
@@ -381,7 +372,6 @@ dense_raster_new( FT_Memory memory, dense_PRaster* araster )
   return error;
 }
 
-/* @QUES: This is a simple method, only frees memory*/
 static void
 dense_raster_done( FT_Raster raster )
 {
@@ -401,7 +391,6 @@ dense_raster_reset( FT_Raster      raster,
   FT_UNUSED( pool_size );
 }
 
-/* @QUES: This methodisnt't called in normal ftlint execution*/
 static int
 dense_raster_set_mode( FT_Raster raster, unsigned long mode, void* args )
 {
@@ -423,9 +412,6 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
                          0  /* delta    */
 )
 
-/* @QUES: So, this calls FT_Outline_Decompose, that calls the move to,
-line to, conic to, cubic to interface methods. The worker structure stores
-the well, stuff in its m_a and finally renders it to the target->buffer*/
 static int
 dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
 {
@@ -466,8 +452,6 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
   return error;
 }
 
-/* @QUES: The main rasterizing method, params.->target->buffer gets the
-rendered pixels*/
 static int
 dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
@@ -498,7 +482,6 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 
   worker->m_origin_x = 0;
   worker->m_origin_y = 0;
-  /* @QUES: Why are my bitmaps upsied down 😭*/
   worker->m_w = target_map->pitch;
   worker->m_h = target_map->rows;
 
