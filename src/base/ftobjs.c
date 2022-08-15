@@ -631,8 +631,9 @@
 #ifdef FT_CONFIG_OPTION_SVG
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
     {
-      /* free memory in case SVG was there */
-      if ( slot->internal->flags & FT_GLYPH_OWN_GZIP_SVG )
+      /* Free memory in case SVG was there.                          */
+      /* `slot->internal` might be NULL in out-of-memory situations. */
+      if ( slot->internal && slot->internal->flags & FT_GLYPH_OWN_GZIP_SVG )
       {
         FT_SVG_Document  doc = (FT_SVG_Document)slot->other;
 

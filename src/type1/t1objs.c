@@ -146,7 +146,9 @@
   FT_LOCAL_DEF( void )
   T1_GlyphSlot_Done( FT_GlyphSlot  slot )
   {
-    slot->internal->glyph_hints = NULL;
+    /* `slot->internal` might be NULL in out-of-memory situations. */
+    if ( slot->internal )
+      slot->internal->glyph_hints = NULL;
   }
 
 
