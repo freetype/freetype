@@ -2217,20 +2217,6 @@
     {
       FT_TRACE2(( "FVAR " ));
 
-      /* both `fvar' and `gvar' must be present */
-      if ( FT_SET_ERROR( face->goto_table( face, TTAG_gvar,
-                                           stream, &table_len ) ) )
-      {
-        /* CFF2 is an alternate to gvar here */
-        if ( FT_SET_ERROR( face->goto_table( face, TTAG_CFF2,
-                                             stream, &table_len ) ) )
-        {
-          FT_TRACE1(( "\n" ));
-          FT_TRACE1(( "TT_Get_MM_Var: `gvar' or `CFF2' table is missing\n" ));
-          goto Exit;
-        }
-      }
-
       if ( FT_SET_ERROR( face->goto_table( face, TTAG_fvar,
                                            stream, &table_len ) ) )
       {
@@ -2673,8 +2659,16 @@
     FT_TRACE5(( "\n" ));
 
     if ( !face->is_cff2 && !blend->glyphoffsets )
-      if ( FT_SET_ERROR( ft_var_load_gvar( face ) ) )
+    {
+      /* While a missing 'gvar' table is acceptable, for example for */
+      /* fonts that only vary metrics information or 'COLR' v1       */
+      /* `PaintVar*` tables, an incorrect SFNT table offset or size  */
+      /* for 'gvar', or an inconsistent 'gvar' table is not.         */
+      error = ft_var_load_gvar( face );
+      if ( error != FT_Err_Table_Missing && error != FT_Err_Ok )
         goto Exit;
+      error = FT_Err_Ok;
+    }
 
     if ( !blend->coords )
     {
