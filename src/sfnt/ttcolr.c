@@ -1575,7 +1575,7 @@
     /* Iterator points at first `ColorStop` of `ColorLine`. */
     p = iterator->p;
 
-    color_stop->stop_offset = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+    color_stop->stop_offset = F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
     color_stop->color.palette_index = FT_NEXT_USHORT( p );
 
@@ -1600,7 +1600,7 @@
                                              item_deltas ) )
           return 0;
 
-        color_stop->stop_offset += (FT_Fixed)item_deltas[0] << 2;
+        color_stop->stop_offset += F2DOT14_TO_FIXED( item_deltas[0] );
         color_stop->color.alpha += item_deltas[1];
       }
 #else
