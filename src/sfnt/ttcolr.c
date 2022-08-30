@@ -481,7 +481,9 @@
       iterator->p = colr->layers + offset;
     }
 
-    if ( iterator->layer >= iterator->num_layers )
+    if ( iterator->layer >= iterator->num_layers                     ||
+         iterator->p < colr->layers                                  ||
+         iterator->p >= ( (FT_Byte*)colr->table + colr->table_size ) )
       return 0;
 
     *aglyph_index = FT_NEXT_USHORT( iterator->p );
