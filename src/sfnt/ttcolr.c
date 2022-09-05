@@ -604,9 +604,8 @@
       }
       else
       {
-        /* TODO: Direct lookup case not implemented or tested yet. */
-        FT_ASSERT( 0 );
-        return 0;
+        outer_index = 0;
+        inner_index = loop_var_index;
       }
 
       deltas[i] = mm->get_item_delta( FT_FACE( face ), &colr->var_store,
