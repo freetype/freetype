@@ -301,7 +301,7 @@
           if ( !( count % 10 ) )
             FT_TRACE4(( " " ));
 
-          FT_TRACE4(( " %ld", idx ));
+          FT_TRACE4(( " %d", idx ));
           count++;
 
           if ( !( count % 10 ) )
