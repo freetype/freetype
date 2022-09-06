@@ -2207,6 +2207,11 @@
       FT_FRAME_END
     };
 
+    /* `num_instances' holds the number of all named instances including  */
+    /* the default instance, which might be missing in the table of named */
+    /* instances (in 'fvar').  This value is validated in `sfobjs.c` and  */
+    /* may be reset to 0 if consistency checks fail.                      */
+    num_instances = (FT_UInt)face->root.style_flags >> 16;
 
     /* read the font data and set up the internal representation */
     /* if not already done                                       */
@@ -2231,6 +2236,17 @@
       if ( FT_STREAM_READ_FIELDS( fvar_fields, &fvar_head ) )
         goto Exit;
 
+      /* If `num_instances` is larger, synthetization of the default  */
+      /* instance is required.  If `num_instances` is smaller,        */
+      /* however, the value has been reset to 0 in `sfnt_init_face`   */
+      /* (in `sfobjs.c`); in this case we have underallocated `mmvar` */
+      /* structs.                                                     */
+      if ( num_instances < fvar_head.instanceCount )
+      {
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+
       usePsName = FT_BOOL( fvar_head.instanceSize ==
                            6 + 4 * fvar_head.axisCount );
 
@@ -2248,11 +2264,6 @@
     }
     else
       num_axes = face->blend->num_axis;
-
-    /* `num_instances' holds the number of all named instances, */
-    /* including the default instance which might be missing    */
-    /* in fvar's table of named instances                       */
-    num_instances = (FT_UInt)face->root.style_flags >> 16;
 
     /* prepare storage area for MM data; this cannot overflow   */
     /* 32-bit arithmetic because of the size limits used in the */
