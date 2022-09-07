@@ -448,6 +448,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
     }
   }
 
+  free(worker->m_a);
   return error;
 }
 
