@@ -477,6 +477,7 @@
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
+    /* Outline points are expressed as 1/64th of a pixel (26.6 fixed-point format) */
     x_shift = 64 * -slot->bitmap_left;
     y_shift = 64 * -slot->bitmap_top;
     if ( bitmap->pixel_mode == FT_PIXEL_MODE_LCD_V )
