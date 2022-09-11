@@ -65,13 +65,6 @@ swap( long int* a, long int* b )
   *b            = temp;
 }
 
-void
-swapold( unsigned char* a, unsigned char* b )
-{
-  unsigned char temp = *a;
-  *a                 = *b;
-  *b                 = temp;
-}
 
 void
 dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
@@ -437,17 +430,6 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
     dest++;
   }
 
-  for ( int col = 0; col < worker->m_w; col++ )
-  {
-    for ( int row = 0; row < worker->m_h / 2; row++ )
-    {
-      // printf("Swapping position: %d, %d with %d, %d with rows = %d, cols =
-      // %d",row,col, worker->m_h-row, col, worker->m_h, worker->m_w);
-      swapold( target->buffer + worker->m_w * row + col,
-               target->buffer + ( worker->m_h - row - 1 ) * worker->m_w + col );
-    }
-  }
-
   free(worker->m_a);
   return error;
 }
@@ -456,7 +438,7 @@ static int
 dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
   const FT_Outline* outline    = (const FT_Outline*)params->source;
-  const FT_Bitmap*  target_map = params->target;
+  FT_Bitmap*  target_map = params->target;
 
   // dense_worker* worker = malloc( sizeof( dense_worker ) );
   dense_worker worker[1];
@@ -495,6 +477,10 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   {
     return 0;
   }
+
+  // Invert the pitch to account for different +ve y-axis direction in dense array
+  // (maybe temporary solution)
+  target_map->pitch *= -1;
   return dense_render_glyph( worker, target_map );
 }
 
