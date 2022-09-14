@@ -876,9 +876,9 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  fx1, fy1, fx2, fy2;
     TCoord  ex1, ey1, ex2, ey2;
 
+
     ey1 = TRUNC( ras.y );
     ey2 = TRUNC( to_y );
-
 
     /* perform vertical clipping */
     if ( ( ey1 >= ras.max_ey && ey2 >= ras.max_ey ) ||

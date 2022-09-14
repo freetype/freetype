@@ -98,13 +98,18 @@ take a variable named `memory`. It can only be known if you follow the macros 3 
   if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
     goto Exit;
 
+    /* @QUES: What does this flag mean ?*/
+  slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+  
   /* @QUES: Where can I read more about why x and y shift are required */
   x_shift = 64 * -slot->bitmap_left;
   y_shift = 64 * -slot->bitmap_top;
 
-  /* @QUES: What does this flag mean ?*/
-  slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-  y_shift += 64 * (FT_Int)bitmap->rows;
+  if ( bitmap->pixel_mode == FT_PIXEL_MODE_LCD_V )
+     y_shift += 64 * (FT_Int)bitmap->rows / 3;
+   else
+     y_shift += 64 * (FT_Int)bitmap->rows;
+
 
   if ( origin )
   {

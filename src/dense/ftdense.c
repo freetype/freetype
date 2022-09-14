@@ -86,6 +86,8 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
   to_x   = TRUNC( (int)to_x );
   to_y   = TRUNC( (int)to_y );
 
+ // printf("line from: %d, %d to %d, %d\n", from_x, from_y, to_x, to_y);
+
   float dir;
   if ( from_y < to_y )
     dir = 1;
@@ -112,57 +114,6 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
     to_y = (float)worker->m_h;
   }
 
-  /**
-  Handle parts of the line outside the clip rectangle by
-  snapping them to the left or right edge, or, if they intersect the clip area,
-  by recursive calls.
-  */
-
-  FT_Vector intersect = { 0, 0 };
-  int       recursive = 0;
-  if ( from_x >= worker->m_w && to_x >= worker->m_w )
-  {
-    from_x = to_x = (float)worker->m_w;
-    dxdy          = 0;
-  }
-  else if ( from_x <= 0 && to_x <= 0 )
-  {
-    from_x = to_x = 0;
-    dxdy          = 0;
-  }
-  else if ( ( from_x < 0 ) != ( to_x < 0 ) )
-  {
-    intersect.x = 0;
-    intersect.y = to_y - to_x / dxdy;
-    recursive   = 1;
-  }
-  else if ( ( from_x > worker->m_w ) != ( to_x > worker->m_w ) )
-  {
-    intersect.x = worker->m_w;
-    intersect.y = from_y + ( worker->m_w - from_x ) / dxdy;
-    recursive   = 1;
-  }
-  if ( recursive )
-  {
-    from_x += worker->m_origin_x;
-    from_y += worker->m_origin_y;
-    to_x += worker->m_origin_x;
-    to_y += worker->m_origin_y;
-    intersect.x += worker->m_origin_x;
-    intersect.y += worker->m_origin_y;
-    if ( dir == 1 )
-    {
-      dense_render_line( worker, intersect.x, intersect.y );
-      dense_render_line( worker, to_x, to_y );
-    }
-    else
-    {
-      dense_render_line( worker, intersect.x, intersect.y );
-      dense_render_line( worker, from_x, from_y );
-    }
-    return;
-  }
-
   float  x       = from_x;
   int    y0      = (int)from_y;
   int    y_limit = (int)ceil( to_y );
@@ -170,6 +121,7 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
 
   for ( int y = y0; y < y_limit; y++ )
   {
+   // printf("y is %d\n", y);
     int   linestart = y * worker->m_w;
     float dy        = fmin( y + 1.0f, to_y ) - fmax( (float)y, from_y );
     float xnext     = x + dxdy * dy;
