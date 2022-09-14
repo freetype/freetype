@@ -67,13 +67,13 @@ swap( long int* a, long int* b )
 
 
 void
-dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
+dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 {
   // printf("line from: %d, %d to %d, %d\n", worker->prev_x, worker->prev_y,
   // to_x, to_y);
-  TPos from_x = worker->prev_x;
-  TPos from_y = worker->prev_y;
-  if ( from_y == to_y )
+  float from_x = worker->prev_x;
+  float from_y = worker->prev_y;
+  if ( from_y == toy )
     return;
 
   // aP0.m_x -= worker->m_origin_x;
@@ -81,12 +81,18 @@ dense_render_line( dense_worker* worker, TPos to_x, TPos to_y )
   // aP1.m_x -= worker->m_origin_x;
   // aP1.m_y -= worker->m_origin_y;
 
-  from_x = TRUNC( (int)from_x );
-  from_y = TRUNC( (int)from_y );
-  to_x   = TRUNC( (int)to_x );
-  to_y   = TRUNC( (int)to_y );
+  // from_x = TRUNC( (int)from_x );
+  // from_y = TRUNC( (int)from_y );
+  // to_x   = TRUNC( (int)to_x );
+  // to_y   = TRUNC( (int)to_y );
 
- // printf("line from: %d, %d to %d, %d\n", from_x, from_y, to_x, to_y);
+  from_x /= 256.0;
+  from_y /= 256.0;
+  float to_x = tox / 256.0;
+  float to_y = toy / 256.0;
+
+
+  //printf("line from: %f, %f to %f, %f\n", from_x, from_y, to_x, to_y);
 
   float dir;
   if ( from_y < to_y )
