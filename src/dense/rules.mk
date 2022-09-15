@@ -22,8 +22,9 @@ DENSE_DIR := $(SRC_DIR)/dense
 #
 DENSE_COMPILE := $(CC) $(ANSIFLAGS)                               \
                         $I$(subst /,$(COMPILER_SEP),$(DENSE_DIR)) \
-                        $(INCLUDE_FLAGS)                           \
-                        $(FT_CFLAGS)
+                        $(INCLUDE_FLAGS)                          \
+                        $(FT_CFLAGS)                              \
+                        "-msse4.1"
 
 
 # DENSE driver sources (i.e., C files)
