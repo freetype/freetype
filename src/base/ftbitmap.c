@@ -542,15 +542,10 @@
     case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Int    pad, old_target_pitch, target_pitch;
-        FT_ULong  old_size;
+        FT_Int  pad, target_pitch;
 
 
-        old_target_pitch = target->pitch;
-        if ( old_target_pitch < 0 )
-          old_target_pitch = -old_target_pitch;
-
-        old_size = target->rows * (FT_UInt)old_target_pitch;
+        FT_Bitmap_Done( library, target );
 
         target->pixel_mode = FT_PIXEL_MODE_GRAY;
         target->rows       = source->rows;
@@ -566,12 +561,7 @@
 
         target_pitch = (FT_Int)source->width + pad;
 
-        if ( target_pitch > 0                                               &&
-             (FT_ULong)target->rows > FT_ULONG_MAX / (FT_ULong)target_pitch )
-          return FT_THROW( Invalid_Argument );
-
-        if ( FT_QREALLOC( target->buffer,
-                          old_size, target->rows * (FT_UInt)target_pitch ) )
+        if ( FT_QALLOC_MULT( target->buffer, target->rows, target_pitch ) )
           return error;
 
         target->pitch = target->pitch < 0 ? -target_pitch : target_pitch;
