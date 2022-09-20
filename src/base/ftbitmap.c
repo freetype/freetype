@@ -542,7 +542,7 @@
     case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Int  pad, target_pitch;
+        FT_Int  width = (FT_Int)source->width;
 
 
         FT_Bitmap_Done( library, target );
@@ -551,20 +551,20 @@
         target->rows       = source->rows;
         target->width      = source->width;
 
-        pad = 0;
-        if ( alignment > 0 )
+        if ( alignment )
         {
-          pad = (FT_Int)source->width % alignment;
-          if ( pad != 0 )
-            pad = alignment - pad;
+          FT_Int  rem = width % alignment;
+
+
+          if ( rem )
+            width = alignment < 0 ? width - rem - alignment
+                                  : width - rem + alignment;
         }
 
-        target_pitch = (FT_Int)source->width + pad;
-
-        if ( FT_QALLOC_MULT( target->buffer, target->rows, target_pitch ) )
+        if ( FT_QALLOC_MULT( target->buffer, target->rows, width ) )
           return error;
 
-        target->pitch = target->pitch < 0 ? -target_pitch : target_pitch;
+        target->pitch = alignment < 0 ? -width : width;
       }
       break;
 
