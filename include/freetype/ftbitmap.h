@@ -47,14 +47,6 @@ FT_BEGIN_HEADER
    * @description:
    *   This section contains functions for handling @FT_Bitmap objects,
    *   automatically adjusting the target's bitmap buffer size as needed.
-   *
-   *   Note that none of the functions changes the bitmap's 'flow' (as
-   *   indicated by the sign of the `pitch` field in @FT_Bitmap).
-   *
-   *   To set the flow, assign an appropriate positive or negative value to
-   *   the `pitch` field of the target @FT_Bitmap object after calling
-   *   @FT_Bitmap_Init but before calling any of the other functions
-   *   described here.
    */
 
 
@@ -105,8 +97,14 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   `source->buffer` and `target->buffer` must neither be equal nor
-   *   overlap.
+   *   This function reallocates the memory in the target bitmap, which has
+   *   to be valid, either initialized by @FT_Bitmap_Init or reused multiple
+   *   times. `source->buffer` and `target->buffer` must neither be equal
+   *   nor overlap.  Use @FT_Bitmap_Done to finally remove the bitmap object.
+   *
+   *   The source and target bitmaps can have different flows if their
+   *   pitches are set to opposite signs before calling this function.
+   *   Otherwise, the flow is preserved.
    */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Copy( FT_Library        library,
