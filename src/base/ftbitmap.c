@@ -66,9 +66,7 @@
   {
     FT_Memory  memory;
     FT_Error   error  = FT_Err_Ok;
-
-    FT_Int    pitch;
-    FT_ULong  size;
+    FT_Int     pitch;
 
     FT_Int  source_pitch_sign, target_pitch_sign;
 
@@ -85,49 +83,28 @@
     source_pitch_sign = source->pitch < 0 ? -1 : 1;
     target_pitch_sign = target->pitch < 0 ? -1 : 1;
 
-    if ( !source->buffer )
-    {
-      *target = *source;
-      if ( source_pitch_sign != target_pitch_sign )
-        target->pitch = -target->pitch;
-
-      return FT_Err_Ok;
-    }
-
     memory = library->memory;
-    pitch  = source->pitch;
+    FT_FREE( target->buffer );
 
+    *target = *source;
+
+    if ( source_pitch_sign != target_pitch_sign )
+      target->pitch = -target->pitch;
+
+    if ( !source->buffer )
+      return FT_Err_Ok;
+
+    pitch  = source->pitch;
     if ( pitch < 0 )
       pitch = -pitch;
-    size = (FT_ULong)pitch * source->rows;
 
-    if ( target->buffer )
-    {
-      FT_Int    target_pitch = target->pitch;
-      FT_ULong  target_size;
-
-
-      if ( target_pitch < 0 )
-        target_pitch = -target_pitch;
-      target_size = (FT_ULong)target_pitch * target->rows;
-
-      if ( target_size != size )
-        FT_MEM_QREALLOC( target->buffer, target_size, size );
-    }
-    else
-      FT_MEM_QALLOC( target->buffer, size );
+    FT_MEM_QALLOC_MULT( target->buffer, target->rows, pitch );
 
     if ( !error )
     {
-      unsigned char *p;
-
-
-      p = target->buffer;
-      *target = *source;
-      target->buffer = p;
-
       if ( source_pitch_sign == target_pitch_sign )
-        FT_MEM_COPY( target->buffer, source->buffer, size );
+        FT_MEM_COPY( target->buffer, source->buffer,
+                     (FT_Long)source->rows * pitch );
       else
       {
         /* take care of bitmap flow */
