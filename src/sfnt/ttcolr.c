@@ -554,6 +554,10 @@
     if ( !child_table_pointer )
       return 0;
 
+    if ( *p < colr->paints_start_v1                            ||
+         *p > (FT_Byte*)colr->table + colr->table_size - 1 - 3 )
+      return 0;
+
     paint_offset = FT_NEXT_UOFF3( *p );
     if ( !paint_offset )
       return 0;
@@ -650,8 +654,10 @@
     if ( !p || !colr || !colr->table )
       return 0;
 
-    if ( p < colr->paints_start_v1                         ||
-         p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+    /* The last byte of the 'COLR' table is at 'size-1'; subtract 1 of    */
+    /* that to account for the expected format byte we are going to read. */
+    if ( p < colr->paints_start_v1                        ||
+         p > (FT_Byte*)colr->table + colr->table_size - 2 )
       return 0;
 
     apaint->format = (FT_PaintFormat)FT_NEXT_BYTE( p );
@@ -1577,10 +1583,12 @@
     if ( iterator->current_color_stop >= iterator->num_color_stops )
       return 0;
 
+    /* Subtract 3 times 2 because we need to succeed in reading */
+    /* three 2-byte short values.                               */
     if ( iterator->p +
-           ( ( iterator->num_color_stops - iterator->current_color_stop ) *
-             COLOR_STOP_SIZE ) >
-         ( (FT_Byte *)colr->table + colr->table_size ) )
+           ( iterator->num_color_stops - iterator->current_color_stop ) *
+           COLOR_STOP_SIZE >
+         (FT_Byte*)colr->table + colr->table_size - 1 - 2 - 2 - 2 )
       return 0;
 
     /* Iterator points at first `ColorStop` of `ColorLine`. */
