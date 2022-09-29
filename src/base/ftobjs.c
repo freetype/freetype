@@ -2854,8 +2854,8 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Attach_Stream( FT_Face        face,
-                    FT_Open_Args*  parameters )
+  FT_Attach_Stream( FT_Face              face,
+                    const FT_Open_Args*  parameters )
   {
     FT_Stream  stream;
     FT_Error   error;

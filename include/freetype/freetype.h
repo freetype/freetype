@@ -2593,8 +2593,8 @@ FT_BEGIN_HEADER
    *   stream attachments.
    */
   FT_EXPORT( FT_Error )
-  FT_Attach_Stream( FT_Face        face,
-                    FT_Open_Args*  parameters );
+  FT_Attach_Stream( FT_Face              face,
+                    const FT_Open_Args*  parameters );
 
 
   /**************************************************************************
