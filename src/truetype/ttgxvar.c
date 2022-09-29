@@ -966,7 +966,8 @@
     /* in the OpenType specification.                  */
 
     varData  = &itemStore->varData[outerIndex];
-    deltaSet = &varData->deltaSet[varData->regionIdxCount * innerIndex];
+    deltaSet = FT_OFFSET( varData->deltaSet,
+                          varData->regionIdxCount * innerIndex );
 
     if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
       return 0;
@@ -1353,7 +1354,7 @@
       return;
 
     value     = blend->mvar_table->values;
-    limit     = value + blend->mvar_table->valueCount;
+    limit     = FT_OFFSET( value, blend->mvar_table->valueCount );
     itemStore = &blend->mvar_table->itemStore;
 
     for ( ; value < limit; value++ )
@@ -1386,7 +1387,7 @@
     FT_TRACE2(( "loaded\n" ));
 
     value = blend->mvar_table->values;
-    limit = value + blend->mvar_table->valueCount;
+    limit = FT_OFFSET( value, blend->mvar_table->valueCount );
 
     /* save original values of the data MVAR is going to modify */
     for ( ; value < limit; value++ )
@@ -1451,7 +1452,7 @@
       return;
 
     value = blend->mvar_table->values;
-    limit = value + blend->mvar_table->valueCount;
+    limit = FT_OFFSET( value, blend->mvar_table->valueCount );
 
     for ( ; value < limit; value++ )
     {
