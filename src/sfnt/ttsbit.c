@@ -385,11 +385,9 @@
 
         /* set the scale values (in 16.16 units) so advances */
         /* from the hmtx and vmtx table are scaled correctly */
-        metrics->x_scale = FT_MulDiv( metrics->x_ppem,
-                                      64 * 0x10000,
+        metrics->x_scale = FT_DivFix( metrics->x_ppem * 64,
                                       face->header.Units_Per_EM );
-        metrics->y_scale = FT_MulDiv( metrics->y_ppem,
-                                      64 * 0x10000,
+        metrics->y_scale = FT_DivFix( metrics->y_ppem * 64,
                                       face->header.Units_Per_EM );
 
         return FT_Err_Ok;
