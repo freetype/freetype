@@ -693,8 +693,10 @@
         CF2_Fixed  midpoint =
                      cf2_hintmap_map(
                        hintmap->initialHintMap,
-                       ADD_INT32( secondHintEdge->csCoord,
-                                  firstHintEdge->csCoord ) / 2 );
+                       ADD_INT32(
+                         firstHintEdge->csCoord,
+                         SUB_INT32 ( secondHintEdge->csCoord,
+                                     firstHintEdge->csCoord ) / 2 ) );
         CF2_Fixed  halfWidth =
                      FT_MulFix( SUB_INT32( secondHintEdge->csCoord,
                                            firstHintEdge->csCoord ) / 2,
