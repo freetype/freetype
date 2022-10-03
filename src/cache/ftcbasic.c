@@ -120,8 +120,7 @@
     }
 #endif
 
-    if ( !error )
-      result = (FT_UInt)face->num_glyphs;
+    result = (FT_UInt)face->num_glyphs;
 
     return result;
   }
