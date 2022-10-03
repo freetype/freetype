@@ -178,7 +178,6 @@
     /* temporarily.  If we find no PostScript charmap, then just use    */
     /* the default and hope it is the right one.                        */
     oldcharmap = t1_face->charmap;
-    charmap    = NULL;
 
     for ( n = 0; n < t1_face->num_charmaps; n++ )
     {
@@ -186,9 +185,7 @@
       /* check against PostScript pseudo platform */
       if ( charmap->platform_id == 7 )
       {
-        error = FT_Set_Charmap( t1_face, charmap );
-        if ( error )
-          goto Exit;
+        t1_face->charmap = charmap;
         break;
       }
     }
@@ -209,10 +206,7 @@
       kp++;
     }
 
-    if ( oldcharmap )
-      error = FT_Set_Charmap( t1_face, oldcharmap );
-    if ( error )
-      goto Exit;
+    t1_face->charmap = oldcharmap;
 
     /* now, sort the kern pairs according to their glyph indices */
     ft_qsort( fi->KernPairs, fi->NumKernPair, sizeof ( AFM_KernPairRec ),
