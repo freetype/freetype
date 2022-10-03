@@ -49,8 +49,7 @@
       af_cjk_metrics_check_digits( metrics, face );
     }
 
-    FT_Set_Charmap( face, oldmap );
-
+    face->charmap = oldmap;
     return FT_Err_Ok;
   }
 

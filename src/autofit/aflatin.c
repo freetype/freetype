@@ -1157,7 +1157,7 @@
     }
 
   Exit:
-    FT_Set_Charmap( face, oldmap );
+    face->charmap = oldmap;
     return error;
   }
 

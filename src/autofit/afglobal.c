@@ -317,7 +317,7 @@
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
-    FT_Set_Charmap( face, old_charmap );
+    face->charmap = old_charmap;
     return error;
   }
 
