@@ -41,13 +41,13 @@ extern "C"
 #endif
 
   typedef signed long TPos;
-  typedef signed long FT26D6;
-  typedef signed long FT20D12;
+  typedef signed long long FT26D6;
+  typedef signed long long FT20D12;
 
   typedef struct
   {
     /** The array used to store signed area differences. */
-    float* m_a;
+    FT20D12* m_a;
     /** The number of elements in m_a. */
     int m_a_size;
     /** The width of the current raster in pixels. */

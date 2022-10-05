@@ -146,20 +146,20 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
     to_y = worker->m_h<<6;
   }
 
-  float  x       = from_x/64.0;
+  int  x       = from_x;
   int    y0      = from_y>>6;
   int    y_limit = (to_y + 0x3f)>>6;
-  float* m_a     = worker->m_a;
+  FT20D12* m_a     = worker->m_a;
 
   for ( int y = y0; y < y_limit; y++ )
   {
    // printf("y is %d\n", y);
     int   linestart = y * worker->m_w;
-    float dy        = (min( (y + 1)<<6, to_y ) - max( y<<6, from_y ))/64.0;
-    float xnext     = x + dy * deltax/deltay;
-    float d         = dy * dir;
+    FT26D6 dy        = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+    FT26D6 xnext     = x + dy * deltax/deltay;
+    FT26D6 d         = dy * dir;
 
-    float x0, x1;
+    FT26D6 x0, x1;
     if ( x < xnext )
     {
       x0 = x;
@@ -176,35 +176,59 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
     floating-point inaccuracy That would cause an out-of-bounds array access at
     index -1.
     */
-    float x0floor = x0 <= 0.0f ? 0.0f : (float)floor( x0 );
+    // float x0floor = x0 <= 0.0f ? 0.0f : (float)floor( x0 );
 
-    int   x0i    = (int)x0floor;
-    float x1ceil = (float)ceil( x1 );
-    int   x1i    = (int)x1ceil;
+    int   x0i    = x0>>6;
+    FT26D6 x0floor = x0i<<6;
+
+
+    // float x1ceil = (float)ceil( x1 );
+    int   x1i    = (x1+0x3f)>>6;
+    FT26D6 x1ceil =  x1i <<6;
+
     if ( x1i <= x0i + 1 )
     {
-      float xmf = 0.5f * ( x + xnext ) - x0floor;
-      m_a[linestart + x0i] += d - d * xmf;
+      //printf("Hit condition 1\n");
+      FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
+      m_a[linestart + x0i] += d * ((1<<6) - xmf);
       m_a[linestart + ( x0i + 1 )] += d * xmf;
     }
     else
     {
-      float s   = 1.0f / ( x1 - x0 );
-      float x0f = x0 - x0floor;
-      float a0  = 0.5f * s * ( 1.0f - x0f ) * ( 1.0f - x0f );
-      float x1f = x1 - x1ceil + 1.0f;
-      float am  = 0.5f * s * x1f * x1f;
+      //printf("Hit condition 2\n");
+      // float s   = 1.0f / ( x1 - x0 );
+      // float x0f = x0 - x0floor;
+      // float a0  = 0.5f * s * ( 1.0f - x0f ) * ( 1.0f - x0f );
+      // float x1f = x1 - x1ceil + 1.0f;
+      // float am  = 0.5f * s * x1f * x1f;
+
+      FT26D6 oneOverS = x1 - x0;
+      FT26D6 x0f = x0 - x0floor;
+
+
+      FT26D6 oneMinusX0f = (1<<6) - x0f;
+			FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
+			FT26D6 x1f = x1 - x1ceil + 1<<6;
+			FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
+
+
       m_a[linestart + x0i] += d * a0;
+
       if ( x1i == x0i + 2 )
-        m_a[linestart + ( x0i + 1 )] += d * ( 1.0f - a0 - am );
+        m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
       else
       {
-        float a1 = s * ( 1.5f - x0f );
+        //printf("Hit condition 3\n");
+        FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
         m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
-        for ( int xi = x0i + 2; xi < x1i - 1; xi++ )
-          m_a[linestart + xi] += d * s;
-        float a2 = a1 + ( x1i - x0i - 3 ) * s;
-        m_a[linestart + ( x1i - 1 )] += d * ( 1.0f - a2 - am );
+
+        FT26D6 dTimesS = (d << 12) / oneOverS;
+        
+        for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
+          m_a[linestart + xi] += dTimesS;
+
+        FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
+        m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
       }
       m_a[linestart + x1i] += d * am;
     }
@@ -394,7 +418,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
   FT_Error error = FT_Outline_Decompose( &( worker->outline ),
                                          &dense_decompose_funcs, worker );
   // Render into bitmap
-  const float* source = worker->m_a;
+  const FT20D12* source = worker->m_a;
 
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + worker->m_w * worker->m_h;
@@ -416,21 +440,40 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
   //   offset = _mm_shuffle_ps(x, x, _MM_SHUFFLE(3, 3, 3, 3));
   // }
 
-  float          value    = 0.0f;
+  FT20D12 valnew = 0;
+  //float          value    = 0.0f;
   while ( dest < dest_end )
   {
-    value += *source++;
-    if ( value > 0.0f )
-    {
-      int n = (int)( fabs( value ) * 255.0f + 0.5f );
-      if ( n > 255 )
-        n = 255;
-      *dest = (unsigned char)n;
-    }
-    else
+    valnew += *source++;
+
+   // printf("%d\n", *source);
+
+    if(valnew > 0){
+      int nnew = valnew >>2;
+
+      if(nnew>255)nnew=255;
+      *dest = (unsigned char)nnew;
+    }else{
       *dest = 0;
+    }
     dest++;
   }
+
+  // float          value    = 0.0f;
+  // while ( dest < dest_end )
+  // {
+  //   value += *source++;
+  //   if ( value > 0.0f )
+  //   {
+  //     int n = (int)( fabs( value ) * 255.0f + 0.5f );
+  //     if ( n > 255 )
+  //       n = 255;
+  //     *dest = (unsigned char)n;
+  //   }
+  //   else
+  //     *dest = 0;
+  //   dest++;
+  // }
 
   free(worker->m_a);
   return error;
@@ -470,10 +513,10 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 
   int size = worker->m_w * worker->m_h + 4;
 
-  worker->m_a      = malloc( sizeof( float ) * size );
+  worker->m_a      = malloc( sizeof( FT20D12 ) * size );
   worker->m_a_size = size;
 
-  memset( worker->m_a, 0, ( sizeof( float ) * size ) );
+  memset( worker->m_a, 0, ( sizeof( FT20D12 ) * size ) );
   /* exit if nothing to do */
   if ( worker->m_w <= worker->m_origin_x || worker->m_h <= worker->m_origin_y )
   {
