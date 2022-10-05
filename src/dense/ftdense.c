@@ -188,14 +188,12 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 
     if ( x1i <= x0i + 1 )
     {
-      //printf("Hit condition 1\n");
       FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
       m_a[linestart + x0i] += d * ((1<<6) - xmf);
       m_a[linestart + ( x0i + 1 )] += d * xmf;
     }
     else
     {
-      //printf("Hit condition 2\n");
       // float s   = 1.0f / ( x1 - x0 );
       // float x0f = x0 - x0floor;
       // float a0  = 0.5f * s * ( 1.0f - x0f ) * ( 1.0f - x0f );
@@ -208,8 +206,11 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 
       FT26D6 oneMinusX0f = (1<<6) - x0f;
 			FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
-			FT26D6 x1f = x1 - x1ceil + 1<<6;
+			FT26D6 x1f = x1 - x1ceil + (1<<6);
 			FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
+
+       // printf("x0 is %lld, x1 is %lld\n",x0,x1 );
+
 
 
       m_a[linestart + x0i] += d * a0;
@@ -218,7 +219,6 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
         m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
       else
       {
-        //printf("Hit condition 3\n");
         FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
         m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
 
@@ -449,7 +449,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
    // printf("%d\n", *source);
 
     if(valnew > 0){
-      int nnew = valnew >>2;
+      int nnew = valnew >>4;
 
       if(nnew>255)nnew=255;
       *dest = (unsigned char)nnew;
