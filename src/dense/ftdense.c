@@ -58,6 +58,19 @@ dense_line_to( const FT_Vector* to, dense_worker* worker )
   dense_move_to( to, worker );
   return 0;
 }
+
+FT26D6 max(FT26D6 x, FT26D6 y){
+  if(x > y)
+    return x;
+  return y;
+}
+
+FT26D6 min(FT26D6 x, FT26D6 y){
+  if(x < y)
+    return x;
+  return y;
+}
+
 void
 swap( long int* a, long int* b )
 {
@@ -72,33 +85,39 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 {
   // printf("line from: %d, %d to %d, %d\n", worker->prev_x, worker->prev_y,
   // to_x, to_y);
-  float from_x = worker->prev_x;
-  float from_y = worker->prev_y;
-  if ( from_y == toy )
+
+
+  FT26D6 fx = worker->prev_x>>2;
+  FT26D6 fy = worker->prev_y>>2;
+
+
+  // float from_x = fx;
+  // float from_y = fy;
+    
+  FT26D6 from_x = fx;
+  FT26D6 from_y = fy;
+
+
+  // from_x /= 64.0;
+  // from_y /= 64.0;
+
+  FT26D6 tx = tox>>2;
+  FT26D6 ty = toy>>2;
+
+  if ( fy == ty )
     return;
 
-  // aP0.m_x -= worker->m_origin_x;
-  // aP0.m_y -= worker->m_origin_y;
-  // aP1.m_x -= worker->m_origin_x;
-  // aP1.m_y -= worker->m_origin_y;
+  //  float to_x = tx / 64.0;
+  //  float to_y = ty / 64.0;
+  FT26D6 to_x = tx;
+  FT26D6 to_y = ty;
 
-  // from_x = TRUNC( (int)from_x );
-  // from_y = TRUNC( (int)from_y );
-  // to_x   = TRUNC( (int)to_x );
-  // to_y   = TRUNC( (int)to_y );
-
-  from_x /= 256.0;
-  from_y /= 256.0;
-  float to_x = tox / 256.0;
-  float to_y = toy / 256.0;
 
 
   //printf("line from: %f, %f to %f, %f\n", from_x, from_y, to_x, to_y);
 
-  float dir;
-  if ( from_y < to_y )
-    dir = 1;
-  else
+  int dir = 1;
+  if ( from_y >= to_y )
   {
     dir = -1;
     swap( &from_x, &to_x );
@@ -106,32 +125,38 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
   }
 
   // Clip to the height.
-  if ( from_y >= worker->m_h || to_y <= 0 )
+  if ( from_y >= worker->m_h<<6 || to_y <= 0 )
     return;
 
-  float dxdy = ( to_x - from_x ) / (float)( to_y - from_y );
+  //float dxdy = ( to_x - from_x ) / (float)( to_y - from_y );
+  FT26D6 deltax,deltay;
+  deltax = to_x - from_x;
+  deltay = to_y - from_y;
+
   if ( from_y < 0 )
   {
-    from_x -= from_y * dxdy;
+    from_x -= from_y * deltax/deltay;
     from_y = 0;
   }
-  if ( to_y > worker->m_h )
+
+  // TODO: test, imp line
+  if ( to_y > worker->m_h<<6 )
   {
-    to_x -= ( to_y - worker->m_h ) * dxdy;
-    to_y = (float)worker->m_h;
+    to_x -= (( to_y - worker->m_h<<6 ) * deltax/deltay);
+    to_y = worker->m_h<<6;
   }
 
-  float  x       = from_x;
-  int    y0      = (int)from_y;
-  int    y_limit = (int)ceil( to_y );
+  float  x       = from_x/64.0;
+  int    y0      = from_y>>6;
+  int    y_limit = (to_y + 0x3f)>>6;
   float* m_a     = worker->m_a;
 
   for ( int y = y0; y < y_limit; y++ )
   {
    // printf("y is %d\n", y);
     int   linestart = y * worker->m_w;
-    float dy        = fmin( y + 1.0f, to_y ) - fmax( (float)y, from_y );
-    float xnext     = x + dxdy * dy;
+    float dy        = (min( (y + 1)<<6, to_y ) - max( y<<6, from_y ))/64.0;
+    float xnext     = x + dy * deltax/deltay;
     float d         = dy * dir;
 
     float x0, x1;
@@ -374,38 +399,38 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + worker->m_w * worker->m_h;
 
-  __m128 offset = _mm_setzero_ps();
-  __m128i mask = _mm_set1_epi32(0x0c080400);
-  __m128 sign_mask = _mm_set1_ps(-0.f);
-  for (int i = 0; i < worker->m_h*worker->m_w; i += 4) {
-    __m128 x = _mm_load_ps(&source[i]);
-    x = _mm_add_ps(x, _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(x), 4)));
-    x = _mm_add_ps(x, _mm_shuffle_ps(_mm_setzero_ps(), x, 0x40));
-    x = _mm_add_ps(x, offset);
-    __m128 y = _mm_andnot_ps(sign_mask, x);  // fabs(x)
-    y = _mm_min_ps(y, _mm_set1_ps(1.0f));
-    y = _mm_mul_ps(y, _mm_set1_ps(255.0f));
-    __m128i z = _mm_cvtps_epi32(y);
-    z = _mm_shuffle_epi8(z, mask);
-    _mm_store_ss((float *)&dest[i], (__m128)z);
-    offset = _mm_shuffle_ps(x, x, _MM_SHUFFLE(3, 3, 3, 3));
-  }
-
-  // float          value    = 0.0f;
-  // while ( dest < dest_end )
-  // {
-  //   value += *source++;
-  //   if ( value > 0.0f )
-  //   {
-  //     int n = (int)( fabs( value ) * 255.0f + 0.5f );
-  //     if ( n > 255 )
-  //       n = 255;
-  //     *dest = (unsigned char)n;
-  //   }
-  //   else
-  //     *dest = 0;
-  //   dest++;
+  // __m128 offset = _mm_setzero_ps();
+  // __m128i mask = _mm_set1_epi32(0x0c080400);
+  // __m128 sign_mask = _mm_set1_ps(-0.f);
+  // for (int i = 0; i < worker->m_h*worker->m_w; i += 4) {
+  //   __m128 x = _mm_load_ps(&source[i]);
+  //   x = _mm_add_ps(x, _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(x), 4)));
+  //   x = _mm_add_ps(x, _mm_shuffle_ps(_mm_setzero_ps(), x, 0x40));
+  //   x = _mm_add_ps(x, offset);
+  //   __m128 y = _mm_andnot_ps(sign_mask, x);  // fabs(x)
+  //   y = _mm_min_ps(y, _mm_set1_ps(1.0f));
+  //   y = _mm_mul_ps(y, _mm_set1_ps(255.0f));
+  //   __m128i z = _mm_cvtps_epi32(y);
+  //   z = _mm_shuffle_epi8(z, mask);
+  //   _mm_store_ss((float *)&dest[i], (__m128)z);
+  //   offset = _mm_shuffle_ps(x, x, _MM_SHUFFLE(3, 3, 3, 3));
   // }
+
+  float          value    = 0.0f;
+  while ( dest < dest_end )
+  {
+    value += *source++;
+    if ( value > 0.0f )
+    {
+      int n = (int)( fabs( value ) * 255.0f + 0.5f );
+      if ( n > 255 )
+        n = 255;
+      *dest = (unsigned char)n;
+    }
+    else
+      *dest = 0;
+    dest++;
+  }
 
   free(worker->m_a);
   return error;

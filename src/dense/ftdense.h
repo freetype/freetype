@@ -40,7 +40,9 @@ extern "C"
 {
 #endif
 
-  typedef long TPos;
+  typedef signed long TPos;
+  typedef signed long FT26D6;
+  typedef signed long FT20D12;
 
   typedef struct
   {
