@@ -253,28 +253,6 @@ if test "${found_visibility_flag}" = "no"; then
                   AC_MSG_RESULT(no)])
 fi
 
-orig_CFLAGS="${CFLAGS}"
-AX_GCC_FUNC_ATTRIBUTE([deprecated])
-CFLAGS="${orig_CFLAGS}"
-CFLAG_error_deprecated=""
-if test "${ax_cv_have_func_attribute_deprecated}" = "yes"; then
-  AC_MSG_CHECKING([for -Werror=deprecated-declarations compiler flag])
-  orig_CFLAGS="${CFLAGS}"
-  CFLAGS="${CFLAGS} -Werror=deprecated-declarations"
-  AC_COMPILE_IFELSE([
-    AC_LANG_PROGRAM([],[
-      int x __attribute__((deprecated));
-      x = 0;
-    ])
-  ],[ # compilation passed, as unexpected
-    AC_MSG_RESULT(no)
-  ],[ # compilation failed, as expected
-    AC_MSG_RESULT(yes)
-    CFLAG_error_deprecated="-Werror=deprecated-declarations"
-  ])
-fi
-
-
 # All library tests below try `pkg-config' first.  If that fails, a function
 # from the library is tested in the traditional autoconf way (zlib, bzip2),
 # or a config script is called (libpng).
@@ -626,6 +604,52 @@ set ${save_config_args}
 
 # Whether to use Mac OS resource-based fonts.
 
+# to prevent the dependency with the deprecated APIs on Mac OS X,
+# check the compiler flag to detect the declared deprecation.
+#
+# test the flag "-Werror=deprecated-declarations" availability.
+# test 1: test whether the compiler accepts __attribute__((deprecated)).
+# test 2: test whether the compiler passes normal source if the flag is given.
+# test 3: test whether the compiler rejects the source using deprecated variable.
+
+CFLAG_error_deprecated=""
+
+# test 1
+AC_MSG_CHECKING([${CC} accepts __attribute__((deprecated))])
+AC_COMPILE_IFELSE([
+  AC_LANG_PROGRAM([],[int x __attribute__((deprecated)); x = 0;])
+],[
+  AC_MSG_RESULT(yes)
+  # test 2
+  AC_MSG_CHECKING([${CC} compiler flag -Werror=deprecated-declarations])
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="-Werror=deprecated-declarations"
+  AC_COMPILE_IFELSE([
+    AC_LANG_PROGRAM([],[int x; x = 0;])
+  ],[
+    AC_MSG_RESULT([supported])
+    # test 3
+    AC_MSG_CHECKING([${CC} -Werror=deprecated-declarations works properly])
+    AC_COMPILE_IFELSE([
+      AC_LANG_PROGRAM([],[int x __attribute__((deprecated)); x = 0;])
+    ],[
+      AC_MSG_RESULT([no]) # compiler cannot refuse a problematic source.
+    ],[
+      AC_MSG_RESULT([yes]) # compiler refuses a problematic source.
+      CFLAG_error_deprecated="-Werror=deprecated-declarations"
+    ])
+  ],[ # test 2 failed: -Werror=deprecated-declarations is invalid flag.
+    AC_MSG_RESULT([unavailable])
+  ])
+],[ # test 1 failed: __attribute__((deprecate)) is not parsed properly.
+  AC_MSG_RESULT([no])
+])
+CFLAGS="${orig_CFLAGS}"
+if expr "${CC} ${CFLAGS} " : ".* -Wno-deprecated-declarations .*" > /dev/null; then
+  AC_MSG_WARN([-Wno-deprecated-declaraions is given, some warnings would be hidden.])
+  CFLAG_error_deprecated=""
+fi
+
 ftmac_c="" # src/base/ftmac.c should not be included in makefiles by default
 
 AC_ARG_WITH([old-mac-fonts],
@@ -637,6 +661,33 @@ if test x$with_old_mac_fonts = xyes; then
   ft2_extra_libs="-Wl,-framework,CoreServices -Wl,-framework,ApplicationServices"
   LDFLAGS="$LDFLAGS ${ft2_extra_libs}"
 
+  AC_LINK_IFELSE([
+    AC_LANG_PROGRAM([
+
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <CoreServices/CoreServices.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
+
+      ],
+      [
+
+        short res = 0;
+
+
+        UseResFile( res );
+
+      ])
+    ],[
+      AC_MSG_RESULT([available])
+    ],[
+      AC_MSG_RESULT([not found])
+    ])
+
+  AC_MSG_CHECKING([whether UseRes() is deprecated])
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
 
@@ -660,7 +711,7 @@ if test x$with_old_mac_fonts = xyes; then
         UseResFile( res );
 
       ])],
-    [AC_MSG_RESULT([ok])
+    [AC_MSG_RESULT([not deprecated])
      CFLAGS="${orig_CFLAGS}"
      ftmac_c='ftmac.c'
      AC_MSG_CHECKING([whether OS_INLINE macro is ANSI compatible])
@@ -725,7 +776,7 @@ if test x$with_old_mac_fonts = xyes; then
         CFLAGS="${orig_CFLAGS}"
         CFLAGS="${CFLAGS} -DHAVE_TYPE_RESOURCE_INDEX=0"
        ])],
-    [AC_MSG_RESULT([not found])
+    [AC_MSG_RESULT([deprecated, Carbon API would not be used])
      CFLAGS="${orig_CFLAGS}"
      ft2_extra_libs=""
      LDFLAGS="${orig_LDFLAGS}"
