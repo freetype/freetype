@@ -253,6 +253,28 @@ if test "${found_visibility_flag}" = "no"; then
                   AC_MSG_RESULT(no)])
 fi
 
+orig_CFLAGS="${CFLAGS}"
+AX_GCC_FUNC_ATTRIBUTE([deprecated])
+CFLAGS="${orig_CFLAGS}"
+CFLAG_error_deprecated=""
+if test "${ax_cv_have_func_attribute_deprecated}" = "yes"; then
+  AC_MSG_CHECKING([for -Werror=deprecated-declarations compiler flag])
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} -Werror=deprecated-declarations"
+  AC_COMPILE_IFELSE([
+    AC_LANG_PROGRAM([],[
+      int x __attribute__((deprecated));
+      x = 0;
+    ])
+  ],[ # compilation passed, as unexpected
+    AC_MSG_RESULT(no)
+  ],[ # compilation failed, as expected
+    AC_MSG_RESULT(yes)
+    CFLAG_error_deprecated="-Werror=deprecated-declarations"
+  ])
+fi
+
+
 # All library tests below try `pkg-config' first.  If that fails, a function
 # from the library is tested in the traditional autoconf way (zlib, bzip2),
 # or a config script is called (libpng).
@@ -613,7 +635,11 @@ if test x$with_old_mac_fonts = xyes; then
   orig_LDFLAGS="${LDFLAGS}"
   AC_MSG_CHECKING([CoreServices & ApplicationServices of Mac OS X])
   ft2_extra_libs="-Wl,-framework,CoreServices -Wl,-framework,ApplicationServices"
-  LDFLAGS="$LDFLAGS $ft2_extra_libs"
+  LDFLAGS="$LDFLAGS ${ft2_extra_libs}"
+
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
+
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
 
@@ -635,10 +661,11 @@ if test x$with_old_mac_fonts = xyes; then
 
       ])],
     [AC_MSG_RESULT([ok])
+     CFLAGS="${orig_CFLAGS}"
      ftmac_c='ftmac.c'
      AC_MSG_CHECKING([whether OS_INLINE macro is ANSI compatible])
-     orig_CFLAGS="$CFLAGS -DFT_MACINTOSH"
-     CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
+     orig_CFLAGS="${CFLAGS} -DFT_MACINTOSH"
+     CFLAGS="${CFLAGS} ${XX_CFLAGS} ${XX_ANSIFLAGS}"
      AC_COMPILE_IFELSE([
        AC_LANG_PROGRAM([
 
@@ -662,15 +689,15 @@ if test x$with_old_mac_fonts = xyes; then
 
          ])],
        [AC_MSG_RESULT([ok])
-        CFLAGS="$orig_CFLAGS"
-        CFLAGS="$CFLAGS -DHAVE_ANSI_OS_INLINE=1"
+        CFLAGS="${orig_CFLAGS}"
+        CFLAGS="${CFLAGS} -DHAVE_ANSI_OS_INLINE=1"
        ],
        [AC_MSG_RESULT([no, ANSI incompatible])
-        CFLAGS="$orig_CFLAGS"
+        CFLAGS="${orig_CFLAGS}"
        ])
      AC_MSG_CHECKING([type ResourceIndex])
-     orig_CFLAGS="$CFLAGS"
-     CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
+     orig_CFLAGS="${CFLAGS}"
+     CFLAGS="${CFLAGS} ${XX_CFLAGS} ${XX_ANSIFLAGS}"
      AC_COMPILE_IFELSE([
        AC_LANG_PROGRAM([
 
@@ -691,22 +718,23 @@ if test x$with_old_mac_fonts = xyes; then
 
          ])],
        [AC_MSG_RESULT([ok])
-        CFLAGS="$orig_CFLAGS"
-        CFLAGS="$CFLAGS -DHAVE_TYPE_RESOURCE_INDEX=1"
+        CFLAGS="${orig_CFLAGS}"
+        CFLAGS="${CFLAGS} -DHAVE_TYPE_RESOURCE_INDEX=1"
        ],
        [AC_MSG_RESULT([no])
-        CFLAGS="$orig_CFLAGS"
-        CFLAGS="$CFLAGS -DHAVE_TYPE_RESOURCE_INDEX=0"
+        CFLAGS="${orig_CFLAGS}"
+        CFLAGS="${CFLAGS} -DHAVE_TYPE_RESOURCE_INDEX=0"
        ])],
     [AC_MSG_RESULT([not found])
+     CFLAGS="${orig_CFLAGS}"
      ft2_extra_libs=""
      LDFLAGS="${orig_LDFLAGS}"
-     CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
+     CFLAGS="${CFLAGS} -DDARWIN_NO_CARBON"])
 else
-  case x$host_os in
+  case "x${host_os}" in
   xdarwin*)
     dnl AC_MSG_WARN([host system is MacOS but configured to build without Carbon])
-    CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
+    CFLAGS="${CFLAGS} -DDARWIN_NO_CARBON"
     ;;
   *)
     ;;
@@ -719,9 +747,11 @@ fi
 AC_ARG_WITH([fsspec],
   AS_HELP_STRING([--with-fsspec],
                  [use obsolete FSSpec API of MacOS, if available (default=yes)]))
-if test x$with_fsspec = xno; then
-  CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
+if test "x${with_fsspec}" = "xno"; then
+  CFLAGS="${CFLAGS} -DHAVE_FSSPEC=0"
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsspec}" != "x"; then
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([FSSpec-based FileManager])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
@@ -750,9 +780,11 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
 
       ])],
     [AC_MSG_RESULT([ok])
-     CFLAGS="$CFLAGS -DHAVE_FSSPEC=1"],
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_FSSPEC=1"],
     [AC_MSG_RESULT([not found])
-     CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"])
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_FSSPEC=0"])
 fi
 
 
@@ -761,14 +793,16 @@ fi
 AC_ARG_WITH([fsref],
   AS_HELP_STRING([--with-fsref],
                  [use Carbon FSRef API of MacOS, if available (default=yes)]))
-if test x$with_fsref = xno; then
+if test "x${with_fsref}" = "xno"; then
   AC_MSG_WARN([
 *** WARNING
     FreeType2 built without FSRef API cannot load
     data-fork fonts on MacOS, except of XXX.dfont.
     ])
-  CFLAGS="$CFLAGS -DHAVE_FSREF=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
+  CFLAGS="${CFLAGS} -DHAVE_FSREF=0"
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsref}" != "x"; then
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([FSRef-based FileManager])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
@@ -817,9 +851,11 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
 #endif
       ])],
     [AC_MSG_RESULT([ok])
-     CFLAGS="$CFLAGS -DHAVE_FSREF=1"],
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_FSREF=1"],
     [AC_MSG_RESULT([not found])
-     CFLAGS="$CFLAGS -DHAVE_FSREF=0"])
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_FSREF=0"])
 fi
 
 
@@ -829,9 +865,11 @@ fi
 AC_ARG_WITH([quickdraw-toolbox],
   AS_HELP_STRING([--with-quickdraw-toolbox],
                  [use MacOS QuickDraw in ToolBox, if available (default=yes)]))
-if test x$with_quickdraw_toolbox = xno; then
+if test "x${with_quickdraw_toolbox}" = "xno"; then
   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_toolbox}" != "x"; then
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([QuickDraw FontManager functions in ToolBox])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
@@ -859,9 +897,11 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
 
       ])],
     [AC_MSG_RESULT([ok])
-     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=1"],
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_TOOLBOX=1"],
     [AC_MSG_RESULT([not found])
-     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"])
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_TOOLBOX=0"])
 fi
 
 
@@ -871,9 +911,11 @@ fi
 AC_ARG_WITH([quickdraw-carbon],
   AS_HELP_STRING([--with-quickdraw-carbon],
                  [use MacOS QuickDraw in Carbon, if available (default=yes)]))
-if test x$with_quickdraw_carbon = xno; then
-  CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_carbon != x; then
+if test "x${with_quickdraw_carbon}" = "xno"; then
+  CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_CARBON=0"
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_carbon}" != "x"; then
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([QuickDraw FontManager functions in Carbon])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
@@ -911,9 +953,11 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_carbon != x; then
 
       ])],
     [AC_MSG_RESULT([ok])
-     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=1"],
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_CARBON=1"],
     [AC_MSG_RESULT([not found])
-     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"])
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_CARBON=0"])
 fi
 
 
@@ -922,9 +966,11 @@ fi
 AC_ARG_WITH([ats],
   AS_HELP_STRING([--with-ats],
                  [use AppleTypeService, if available (default=yes)]))
-if test x$with_ats = xno; then
-  CFLAGS="$CFLAGS -DHAVE_ATS=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_ats != x; then
+if test "x${with_ats}" = "xno"; then
+  CFLAGS="${CFLAGS} -DHAVE_ATS=0"
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_ats}" != "x"; then
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([AppleTypeService functions])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
@@ -950,19 +996,21 @@ elif test x$with_old_mac_fonts = xyes -a x$with_ats != x; then
 
       ])],
     [AC_MSG_RESULT([ok])
-     CFLAGS="$CFLAGS -DHAVE_ATS=1"],
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_ATS=1"],
     [AC_MSG_RESULT([not found])
-     CFLAGS="$CFLAGS -DHAVE_ATS=0"])
+     CFLAGS="${orig_CFLAGS}"
+     CFLAGS="${CFLAGS} -DHAVE_ATS=0"])
 fi
 
-case "$CFLAGS" in
+case "${CFLAGS}" in
   *HAVE_FSSPEC* | *HAVE_FSREF* | *HAVE_QUICKDRAW* | *HAVE_ATS* )
     AC_MSG_WARN([
 *** WARNING
     FSSpec/FSRef/QuickDraw/ATS options are explicitly given,
     thus it is recommended to replace src/base/ftmac.c by builds/mac/ftmac.c.
     ])
-    CFLAGS="$CFLAGS "'-I$(TOP_DIR)/builds/mac/'
+    CFLAGS="${CFLAGS} "'-I$(TOP_DIR)/builds/mac/'
     ;;
   *)
     ;;
