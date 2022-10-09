@@ -610,7 +610,8 @@ set ${save_config_args}
 # test the flag "-Werror=deprecated-declarations" availability.
 # test 1: test whether the compiler accepts __attribute__((deprecated)).
 # test 2: test whether the compiler passes normal source if the flag is given.
-# test 3: test whether the compiler rejects the source using deprecated variable.
+# test 3: test whether the compiler passes normal source if -Werror is given.
+# test 4: test whether the compiler rejects the source using deprecated variable.
 
 CFLAG_error_deprecated=""
 
@@ -620,31 +621,62 @@ AC_COMPILE_IFELSE([
   AC_LANG_PROGRAM([],[int x __attribute__((deprecated)); x = 0;])
 ],[
   AC_MSG_RESULT(yes)
-  # test 2
+  ac_cc_attr_deprecated="yes"
+],[
+  AC_MSG_RESULT(no)
+  ac_cc_attr_deprecated="no"
+])
+
+# test 2
+if test "x${ac_cc_attr_deprecated}" = "xyes"; then
   AC_MSG_CHECKING([${CC} compiler flag -Werror=deprecated-declarations])
   orig_CFLAGS="${CFLAGS}"
-  CFLAGS="-Werror=deprecated-declarations"
+  CFLAGS="${CFLAGS} -Werror=deprecated-declarations"
   AC_COMPILE_IFELSE([
     AC_LANG_PROGRAM([],[int x; x = 0;])
-  ],[
+  ],[ # test 2 success: -Werror=deprecated-declarations is available.
     AC_MSG_RESULT([supported])
-    # test 3
-    AC_MSG_CHECKING([${CC} -Werror=deprecated-declarations works properly])
-    AC_COMPILE_IFELSE([
-      AC_LANG_PROGRAM([],[int x __attribute__((deprecated)); x = 0;])
-    ],[
-      AC_MSG_RESULT([no]) # compiler cannot refuse a problematic source.
-    ],[
-      AC_MSG_RESULT([yes]) # compiler refuses a problematic source.
-      CFLAG_error_deprecated="-Werror=deprecated-declarations"
-    ])
+    CFLAG_error_deprecated="-Werror=deprecated-declarations"
   ],[ # test 2 failed: -Werror=deprecated-declarations is invalid flag.
     AC_MSG_RESULT([unavailable])
+    CFLAG_error_deprecated=""
   ])
-],[ # test 1 failed: __attribute__((deprecate)) is not parsed properly.
-  AC_MSG_RESULT([no])
-])
-CFLAGS="${orig_CFLAGS}"
+  CFLAGS="${orig_CFLAGS}"
+fi
+
+# test 3
+if test "x${ac_cc_attr_deprecated}" = "xyes" -a "x${CFLAG_error_deprecated}" = "x"; then
+  AC_MSG_CHECKING([${CC} compiler flag -Werror])
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} -Werror"
+  AC_COMPILE_IFELSE([
+    AC_LANG_PROGRAM([],[int x; x = 0;])
+  ],[ # test 3 success: -Werror is available.
+    AC_MSG_RESULT([supported])
+    CFLAG_error_deprecated="-Werror"
+  ],[ # test 2 failed: -Werror=deprecated-declarations is invalid flag.
+    AC_MSG_RESULT([unavailable])
+    CFLAG_error_deprecated=""
+  ])
+  CFLAGS="${orig_CFLAGS}"
+fi
+
+# test 4
+if test "x${ac_cc_attr_deprecated}" = "xyes" -a "x${CFLAG_error_deprecated}" != "x"; then
+  AC_MSG_CHECKING([${CC} ${CFLAG_error_deprecated} works properly])
+  orig_CFLAGS="${CFLAGS}"
+  CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
+  AC_COMPILE_IFELSE([
+    AC_LANG_PROGRAM([],[int x __attribute__((deprecated)); x = 0;])
+  ],[
+    AC_MSG_RESULT([no]) # ${CFLAG_error_deprecated} cannot refuse a problematic source.
+    CFLAG_error_deprecated=""
+  ],[
+    AC_MSG_RESULT([yes]) # compiler refuses a problematic source.
+  ])
+  CFLAGS="${orig_CFLAGS}"
+fi
+
 if expr "${CC} ${CFLAGS} " : ".* -Wno-deprecated-declarations .*" > /dev/null; then
   AC_MSG_WARN([-Wno-deprecated-declaraions is given, some warnings would be hidden.])
   CFLAG_error_deprecated=""
