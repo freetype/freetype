@@ -797,10 +797,11 @@ fi
 
 AC_ARG_WITH([fsspec],
   AS_HELP_STRING([--with-fsspec],
-                 [use obsolete FSSpec API of MacOS, if available (default=yes)]))
+                 [use obsolete FSSpec API of MacOS, if available (default=no)]),
+  [with_fsspec="${withval}"],[with_fsspec="no"])
 if test "x${with_fsspec}" = "xno"; then
   CFLAGS="${CFLAGS} -DHAVE_FSSPEC=0"
-elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsspec}" != "x"; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsspec}" != "xno"; then
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([FSSpec-based FileManager])
@@ -843,7 +844,8 @@ fi
 
 AC_ARG_WITH([fsref],
   AS_HELP_STRING([--with-fsref],
-                 [use Carbon FSRef API of MacOS, if available (default=yes)]))
+                 [use Carbon FSRef API of MacOS, if available (default=no)]),
+  [with_fsref="${withval}"],[with_fsref="no"])
 if test "x${with_fsref}" = "xno"; then
   AC_MSG_WARN([
 *** WARNING
@@ -851,7 +853,7 @@ if test "x${with_fsref}" = "xno"; then
     data-fork fonts on MacOS, except of XXX.dfont.
     ])
   CFLAGS="${CFLAGS} -DHAVE_FSREF=0"
-elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsref}" != "x"; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsref}" != "xno"; then
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([FSRef-based FileManager])
@@ -915,10 +917,11 @@ fi
 
 AC_ARG_WITH([quickdraw-toolbox],
   AS_HELP_STRING([--with-quickdraw-toolbox],
-                 [use MacOS QuickDraw in ToolBox, if available (default=yes)]))
+                 [use MacOS QuickDraw in ToolBox, if available (default=no)]),
+  [with_quickdraw_toolbox="${withval}"],[with_quickdraw_toolbox="no"])
 if test "x${with_quickdraw_toolbox}" = "xno"; then
   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"
-elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_toolbox}" != "x"; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_toolbox}" != "xno"; then
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([QuickDraw FontManager functions in ToolBox])
@@ -961,10 +964,11 @@ fi
 
 AC_ARG_WITH([quickdraw-carbon],
   AS_HELP_STRING([--with-quickdraw-carbon],
-                 [use MacOS QuickDraw in Carbon, if available (default=yes)]))
+                 [use MacOS QuickDraw in Carbon, if available (default=no)]),
+  [with_quickdraw_carbon="${withval}"],[with_quickdraw_carbon="no"])
 if test "x${with_quickdraw_carbon}" = "xno"; then
   CFLAGS="${CFLAGS} -DHAVE_QUICKDRAW_CARBON=0"
-elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_carbon}" != "x"; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_quickdraw_carbon}" != "xno"; then
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([QuickDraw FontManager functions in Carbon])
@@ -1016,10 +1020,11 @@ fi
 
 AC_ARG_WITH([ats],
   AS_HELP_STRING([--with-ats],
-                 [use AppleTypeService, if available (default=yes)]))
+                 [use AppleTypeService, if available (default=no)]),
+  [with_ats="${withval}"],[with_ats="no"])
 if test "x${with_ats}" = "xno"; then
   CFLAGS="${CFLAGS} -DHAVE_ATS=0"
-elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_ats}" != "x"; then
+elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_ats}" != "xno"; then
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} ${CFLAG_error_deprecated}"
   AC_MSG_CHECKING([AppleTypeService functions])
