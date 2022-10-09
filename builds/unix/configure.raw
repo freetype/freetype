@@ -911,7 +911,14 @@ elif test "x${with_old_mac_fonts}" = "xyes" -a "x${with_fsref}" != "xno"; then
         UInt8*               path;
         SInt16               desiredRefNum;
         SInt16*              iterator;
-        SInt16*              actualRefNum;
+        void*                actualRefNum = NULL;
+        /*
+         * FSGetForkCBInfo() 4th parameter actualRefNum
+         * should be typed as SInt16* until 10.4, and
+         * should be typed as FSIORefNum* since 10.5,
+         * but FSIORefNum was undefined before 10.5.
+         * ftmac.c always passes NULL for this parameter.
+         */
         HFSUniStr255*        outForkName;
         FSVolumeRefNum       volume;
         FSCatalogInfoBitmap  whichInfo;
