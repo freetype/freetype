@@ -83,36 +83,22 @@ swap( long int* a, long int* b )
 void
 dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 {
-  // printf("line from: %d, %d to %d, %d\n", worker->prev_x, worker->prev_y,
-  // to_x, to_y);
-
 
   FT26D6 fx = worker->prev_x>>2;
   FT26D6 fy = worker->prev_y>>2;
-
-
-  // float from_x = fx;
-  // float from_y = fy;
     
   FT26D6 from_x = fx;
   FT26D6 from_y = fy;
 
-
-  // from_x /= 64.0;
-  // from_y /= 64.0;
-
   FT26D6 tx = tox>>2;
   FT26D6 ty = toy>>2;
 
-  if ( fy == ty )
-    return;
-
-  //  float to_x = tx / 64.0;
-  //  float to_y = ty / 64.0;
   FT26D6 to_x = tx;
   FT26D6 to_y = ty;
 
-
+  // from_x/y and to_x/y are coordinates in 26.6 format
+  if ( from_y == to_y )
+    return;
 
   //printf("line from: %f, %f to %f, %f\n", from_x, from_y, to_x, to_y);
 
@@ -128,7 +114,7 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
   if ( from_y >= worker->m_h<<6 || to_y <= 0 )
     return;
 
-  //float dxdy = ( to_x - from_x ) / (float)( to_y - from_y );
+
   FT26D6 deltax,deltay;
   deltax = to_x - from_x;
   deltay = to_y - from_y;
@@ -139,26 +125,38 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
     from_y = 0;
   }
 
-  // TODO: test, imp line
+  // This condition is important apparently
   if ( to_y > worker->m_h<<6 )
   {
     to_x -= (( to_y - worker->m_h<<6 ) * deltax/deltay);
     to_y = worker->m_h<<6;
   }
 
-  int  x       = from_x;
+
+  FT26D6 x       = from_x;
+
+  // y-coordinate of first pixel of line
   int    y0      = from_y>>6;
+
+  // y-coordinate of last pixel of line
   int    y_limit = (to_y + 0x3f)>>6;
-  FT20D12* m_a     = worker->m_a;
+  FT20D12* m_a   = worker->m_a;
 
   for ( int y = y0; y < y_limit; y++ )
   {
-   // printf("y is %d\n", y);
     int   linestart = y * worker->m_w;
+
+    // dy is the height of the line present in the current scanline
     FT26D6 dy        = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+
+    //  x coordinate where the line leaves the current scanline
     FT26D6 xnext     = x + dy * deltax/deltay;
+
+    // height with sign
     FT26D6 d         = dy * dir;
 
+    // x0 is the x coordinate of the start of line in current scanline
+    // x1 is the x coordinate of the end of line in current scanline
     FT26D6 x0, x1;
     if ( x < xnext )
     {
@@ -171,48 +169,43 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
       x1 = x;
     }
 
-    /*
-    It's possible for x0 to be negative on the last scanline because of
-    floating-point inaccuracy That would cause an out-of-bounds array access at
-    index -1.
-    */
-    // float x0floor = x0 <= 0.0f ? 0.0f : (float)floor( x0 );
-
+    // x coordinate of the leftmost intersected pixel in the scanline
     int   x0i    = x0>>6;
     FT26D6 x0floor = x0i<<6;
 
 
     // float x1ceil = (float)ceil( x1 );
+    // x coordinate of the rightmost intersected pixel in the scanline
     int   x1i    = (x1+0x3f)>>6;
     FT26D6 x1ceil =  x1i <<6;
 
     if ( x1i <= x0i + 1 )
     {
+      // average of x coordinates of trapezium with origin at left of pixel
       FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
+
+      // average of x coordinates of trapezium with origin at right of pixel
       m_a[linestart + x0i] += d * ((1<<6) - xmf);
       m_a[linestart + ( x0i + 1 )] += d * xmf;
     }
     else
     {
-      // float s   = 1.0f / ( x1 - x0 );
-      // float x0f = x0 - x0floor;
-      // float a0  = 0.5f * s * ( 1.0f - x0f ) * ( 1.0f - x0f );
-      // float x1f = x1 - x1ceil + 1.0f;
-      // float am  = 0.5f * s * x1f * x1f;
 
+      // total horizontal length of line in current scanline, might be replaced by deltax
       FT26D6 oneOverS = x1 - x0;
       FT26D6 x0f = x0 - x0floor;
 
-
+      // 64 - x0f is the horizontal length of line in first pixel
       FT26D6 oneMinusX0f = (1<<6) - x0f;
+
+      // Stores area of triangle in first pixel divided by d
 			FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
+
+      // x1f is the horizontal length in the last pixel
 			FT26D6 x1f = x1 - x1ceil + (1<<6);
 			FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
 
-       // printf("x0 is %lld, x1 is %lld\n",x0,x1 );
-
-
-
+      // d * a0 is area of triangle in first pixel
       m_a[linestart + x0i] += d * a0;
 
       if ( x1i == x0i + 2 )
@@ -224,12 +217,15 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
 
         FT26D6 dTimesS = (d << 12) / oneOverS;
         
-        for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
+        for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ ){
+          // Increase area for successive pixels by dy/dx
           m_a[linestart + xi] += dTimesS;
+        }
 
         FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
         m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
       }
+      // Area in last pixel of scanline
       m_a[linestart + x1i] += d * am;
     }
     x = xnext;
@@ -458,22 +454,6 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
     }
     dest++;
   }
-
-  // float          value    = 0.0f;
-  // while ( dest < dest_end )
-  // {
-  //   value += *source++;
-  //   if ( value > 0.0f )
-  //   {
-  //     int n = (int)( fabs( value ) * 255.0f + 0.5f );
-  //     if ( n > 255 )
-  //       n = 255;
-  //     *dest = (unsigned char)n;
-  //   }
-  //   else
-  //     *dest = 0;
-  //   dest++;
-  // }
 
   free(worker->m_a);
   return error;
