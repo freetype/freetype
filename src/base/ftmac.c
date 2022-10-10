@@ -67,6 +67,7 @@
 
 #include <freetype/freetype.h>
 #include <freetype/tttags.h>
+#include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include "ftbase.h"
 

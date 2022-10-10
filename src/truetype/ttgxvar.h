@@ -20,6 +20,7 @@
 #define TTGXVAR_H_
 
 
+#include <freetype/internal/ftmmtypes.h>
 #include "ttobjs.h"
 
 
