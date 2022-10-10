@@ -1031,12 +1031,10 @@
         cffface->style_flags = flags;
       }
 
-#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
       /* CID-keyed CFF or CFF2 fonts don't have glyph names -- the SFNT */
       /* loader has unset this flag because of the 3.0 `post' table.    */
       if ( dict->cid_registry == 0xFFFFU && !cff2 )
         cffface->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
-#endif
 
       if ( dict->cid_registry != 0xFFFFU && pure_cff )
         cffface->face_flags |= FT_FACE_FLAG_CID_KEYED;

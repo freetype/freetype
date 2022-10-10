@@ -11,7 +11,13 @@ CHANGES BETWEEN 2.12.1 and 2.12.2
   provides an excelent alternative.  This is the last FreeType version
   with TT_INTERPRETER_VERSION_38 and TT_INTERPRETER_VERSION_40 treated
   differently.
+
+  I. MISCELLANEOUS
+
+  - The  only  referenced  but never  documented  configuration  macro
+    `FT_CONFIG_OPTION_NO_GLYPH_NAMES` has been removed.
   
+
 ====================================================================== 
 
 CHANGES BETWEEN 2.12.0 and 2.12.1

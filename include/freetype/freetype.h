@@ -4174,12 +4174,14 @@ FT_BEGIN_HEADER
    *   The glyph index.  0~means 'undefined character code'.
    *
    * @note:
-   *   The acceptable glyph name might come from
-   *   [Adobe Glyph List](https://github.com/adobe-type-tools/agl-aglfn).
-   *   See @FT_Get_Glyph_Name for the resiprocal function.
+   *   Acceptable glyph names might come from the [Adobe Glyph
+   *   List](https://github.com/adobe-type-tools/agl-aglfn).  See
+   *   @FT_Get_Glyph_Name for the inverse functionality.
    *
-   *   This function always returns~0 if the config macro
-   *   `FT_CONFIG_OPTION_NO_GLYPH_NAMES` is not defined in `ftoption.h`.
+   *   This function has limited capabilities if the config macro
+   *   `FT_CONFIG_OPTION_POSTSCRIPT_NAMES` is not defined in `ftoption.h`:
+   *   It then works only for fonts that actually embed glyph names (which
+   *   many recent OpenType fonts do not).
    */
   FT_EXPORT( FT_UInt )
   FT_Get_Name_Index( FT_Face           face,
@@ -4223,8 +4225,10 @@ FT_BEGIN_HEADER
    *   Be aware that FreeType reorders glyph indices internally so that glyph
    *   index~0 always corresponds to the 'missing glyph' (called '.notdef').
    *
-   *   This function always returns an error if the config macro
-   *   `FT_CONFIG_OPTION_NO_GLYPH_NAMES` is not defined in `ftoption.h`.
+   *   This function has limited capabilities if the config macro
+   *   `FT_CONFIG_OPTION_POSTSCRIPT_NAMES` is not defined in `ftoption.h`:
+   *   It then works only for fonts that actually embed glyph names (which
+   *   many recent OpenType fonts do not).
    */
   FT_EXPORT( FT_Error )
   FT_Get_Glyph_Name( FT_Face     face,
