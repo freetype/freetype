@@ -4694,7 +4694,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This section contains various functions used to perform computations
-   *   on 16.16 fixed-float numbers or 2d vectors.
+   *   on 16.16 fixed-point numbers or 2D vectors.  FreeType does not use
+   *   floating-point data types.
    *
    *   **Attention**: Most arithmetic functions take `FT_Long` as arguments.
    *   For historical reasons, FreeType was designed under the assumption

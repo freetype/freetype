@@ -45,7 +45,10 @@ FT_BEGIN_HEADER
    * @description:
    *   This section contains the basic data types defined by FreeType~2,
    *   ranging from simple scalar types to bitmap descriptors.  More
-   *   font-specific structures are defined in a different section.
+   *   font-specific structures are defined in a different section.  Note
+   *   that FreeType does not use floating-point data types.  Fractional
+   *   values are represented by fixed-point integers, with lower bits
+   *   storing the fractional part.
    *
    * @order:
    *   FT_Byte
