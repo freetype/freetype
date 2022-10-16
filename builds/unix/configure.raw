@@ -406,16 +406,12 @@ if test x"$with_png" = xyes -o x"$with_png" = xauto; then
       have_libpng="yes (LIBPNG_CFLAGS and LIBPNG_LIBS)"
     else
       # fall back to config script
-      AC_MSG_CHECKING([for libpng-config])
-      if which libpng-config > /dev/null 2>&1; then
+      AC_CHECK_PROG(have_libpng, [libpng-config], [yes (libpng-config)], [no])
+      if test "$have_libpng" != no; then
         LIBPNG_CFLAGS=`libpng-config --cflags`
         LIBPNG_LIBS=`libpng-config --ldflags`
         libpng_libspriv=`libpng-config --static --ldflags`
         libpng_libsstaticconf="$libpng_libspriv"
-        have_libpng="yes (libpng-config)"
-        AC_MSG_RESULT([yes])
-      else
-        AC_MSG_RESULT([no])
       fi
     fi
   fi
