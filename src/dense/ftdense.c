@@ -11,7 +11,7 @@
 #include "ftdense.h"
 
 #include <math.h>
-#include <tmmintrin.h>
+#include <immintrin.h>
 #include "ftdenseerrs.h"
 
 #define PIXEL_BITS 8
@@ -419,41 +419,66 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + worker->m_w * worker->m_h;
 
-  // __m128 offset = _mm_setzero_ps();
-  // __m128i mask = _mm_set1_epi32(0x0c080400);
-  // __m128 sign_mask = _mm_set1_ps(-0.f);
-  // for (int i = 0; i < worker->m_h*worker->m_w; i += 4) {
-  //   __m128 x = _mm_load_ps(&source[i]);
-  //   x = _mm_add_ps(x, _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(x), 4)));
-  //   x = _mm_add_ps(x, _mm_shuffle_ps(_mm_setzero_ps(), x, 0x40));
-  //   x = _mm_add_ps(x, offset);
-  //   __m128 y = _mm_andnot_ps(sign_mask, x);  // fabs(x)
-  //   y = _mm_min_ps(y, _mm_set1_ps(1.0f));
-  //   y = _mm_mul_ps(y, _mm_set1_ps(255.0f));
-  //   __m128i z = _mm_cvtps_epi32(y);
-  //   z = _mm_shuffle_epi8(z, mask);
-  //   _mm_store_ss((float *)&dest[i], (__m128)z);
-  //   offset = _mm_shuffle_ps(x, x, _MM_SHUFFLE(3, 3, 3, 3));
-  // }
+   __m128i offset = _mm_setzero_si128();
+  __m128i mask   = _mm_set1_epi32( 0x0c080400 );
 
-  FT20D12 valnew = 0;
-  //float          value    = 0.0f;
-  while ( dest < dest_end )
+  for (int i = 0; i < worker->m_h*worker->m_w; i += 4)
   {
-    valnew += *source++;
+    // load 4 floats from source
 
-   // printf("%d\n", *source);
+    __m128i x = _mm_load_si128( (__m128i*)&source[i] );
 
-    if(valnew > 0){
-      int nnew = valnew >>4;
+    // bkc
+    x = _mm_add_epi32( x, _mm_slli_si128( x, 4 ) );
 
-      if(nnew>255)nnew=255;
-      *dest = (unsigned char)nnew;
-    }else{
-      *dest = 0;
-    }
-    dest++;
+    // more bkc
+    x = _mm_add_epi32(
+        x, _mm_castps_si128( _mm_shuffle_ps( _mm_setzero_ps(),
+                                             _mm_castsi128_ps( x ), 0x40 ) ) );
+
+    // add the prefsum of previous 4 floats to all current floats
+    x = _mm_add_epi32( x, offset );
+
+    // take absolute value
+    __m128i y = _mm_abs_epi32( x );  // fabs(x)
+
+    // cap max value to 1
+    y = _mm_min_epi32( y, _mm_set1_epi32( 4080 ) );
+
+    // reduce to 255
+    y = _mm_srli_epi32( y, 4 );
+
+    // black magic
+    y = _mm_shuffle_epi8( y, mask );
+
+    // for some reason, storing float in an unsigned char array works fine lol
+    _mm_store_ss( (float*)&dest[i], (__m128)y );
+
+    // store the current prefix sum in offset
+    offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
+                                               _mm_castsi128_ps( x ),
+                                               _MM_SHUFFLE( 3, 3, 3, 3 ) ) );
   }
+  
+
+    // FT20D12 valnew = 0;
+    // //float          value    = 0.0f;
+    // while ( dest < dest_end )
+    // {
+    //   valnew += *source++;
+
+    //  // printf("%d\n", *source);
+
+    //   if(valnew > 0){
+    //     int nnew = valnew >>4;
+
+    //     if(nnew>255)nnew=255;
+    //     *dest = (unsigned char)nnew;
+    //   }else{
+    //     *dest = 0;
+    //   }
+    //   dest++;
+    // }
 
   free(worker->m_a);
   return error;
