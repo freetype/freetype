@@ -68,9 +68,14 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot );
 
-  /* Slant an outline glyph to the right by about 12 degrees. */
+  /* Slant an outline glyph to the right by about 12 degrees.              */
   FT_EXPORT( void )
   FT_GlyphSlot_Oblique( FT_GlyphSlot  slot );
+
+  /* Slant an outline glyph by a given sine of an angle.                   */
+  FT_EXPORT( void )
+  FT_GlyphSlot_Slant( FT_GlyphSlot  slot,
+                      FT_Fixed      slant );
 
   /* */
 
