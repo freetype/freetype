@@ -516,13 +516,16 @@
 
 
   static FT_Bool
-  read_color_line( FT_Byte*       color_line_p,
+  read_color_line( Colr*          colr,
+                   FT_Byte*       color_line_p,
                    FT_ColorLine*  colorline,
                    FT_Bool        read_variable )
   {
     FT_Byte*        p = color_line_p;
     FT_PaintExtend  paint_extend;
 
+
+    ENSURE_READ_BYTES( 3 );
 
     paint_extend = (FT_PaintExtend)FT_NEXT_BYTE( p );
     if ( paint_extend > FT_COLR_PAINT_EXTEND_REFLECT )
@@ -748,7 +751,8 @@
            ( (FT_PaintFormat_Internal)apaint->format ==
              FT_COLR_PAINTFORMAT_INTERNAL_VAR_LINEAR_GRADIENT ) ) )
     {
-      if ( !read_color_line( child_table_p,
+      if ( !read_color_line( colr,
+                             child_table_p,
                              &apaint->u.linear_gradient.colorline,
                              do_read_var ) )
         return 0;
@@ -798,7 +802,8 @@
       FT_Pos  tmp;
 
 
-      if ( !read_color_line( child_table_p,
+      if ( !read_color_line( colr,
+                             child_table_p,
                              &apaint->u.radial_gradient.colorline,
                              do_read_var ) )
         return 0;
@@ -856,7 +861,8 @@
                 ( (FT_PaintFormat_Internal)apaint->format ==
                   FT_COLR_PAINTFORMAT_INTERNAL_VAR_SWEEP_GRADIENT ) ) )
     {
-      if ( !read_color_line( child_table_p,
+      if ( !read_color_line( colr,
+                             child_table_p,
                              &apaint->u.sweep_gradient.colorline,
                              do_read_var) )
         return 0;
@@ -1559,13 +1565,6 @@
     p = iterator->p;
 
     /*
-     * First ensure that p is within COLRv1.
-     */
-    if ( p < colr->layers_v1                               ||
-         p >= ( (FT_Byte*)colr->table + colr->table_size ) )
-      return 0;
-
-    /*
      * Do a cursor sanity check of the iterator.  Counting backwards from
      * where it stands, we need to end up at a position after the beginning
      * of the `LayerV1List` table and not after the end of the
@@ -1579,6 +1578,14 @@
     if ( p_first_layer >= (FT_Byte*)(
            colr->layers_v1 + LAYER_V1_LIST_NUM_LAYERS_SIZE +
            colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE ) )
+      return 0;
+
+    /*
+     * Before reading, ensure that `p` is within 'COLR' v1 and we can read a
+     * 4-byte ULONG.
+     */
+    if ( p < colr->layers_v1                                  ||
+         p > ( (FT_Byte*)colr->table + colr->table_size - 4 ) )
       return 0;
 
     paint_offset =
