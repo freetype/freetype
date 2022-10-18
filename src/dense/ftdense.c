@@ -22,6 +22,12 @@
 #define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
 #define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
 
+// TODO: Fix types
+#define FT_UDIVPREP( c, b )                                \
+  FT26D6  b ## _r = c ? (FT26D6)0xFFFFFFFF / ( b ) : 0
+#define FT_UDIV( a, b )                                           \
+  (FT26D6)( ( (FT26D6)( a ) * (FT26D6)( b ## _r ) ) >> 32 )
+
 typedef struct dense_TRaster_
 {
   void* memory;
@@ -119,6 +125,11 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
   deltax = to_x - from_x;
   deltay = to_y - from_y;
 
+    FT_UDIVPREP(from_x != to_x, deltax);
+
+    FT_UDIVPREP(from_y != to_y, deltay);
+
+
   if ( from_y < 0 )
   {
     from_x -= from_y * deltax/deltay;
@@ -187,6 +198,7 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
   int    y_limit = (to_y + 0x3f)>>6;
   FT20D12* m_a   = worker->m_a;
 
+
   for ( int y = y0; y < y_limit; y++ )
   {
     int   linestart = y * worker->m_w;
@@ -195,7 +207,8 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
     FT26D6 dy        = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
 
     //  x coordinate where the line leaves the current scanline
-    FT26D6 xnext     = x + dy * deltax/deltay;
+    FT26D6 xnext     = x + FT_UDIV((dy*deltax), deltay);
+
 
     // height with sign
     FT26D6 d         = dy * dir;
@@ -235,44 +248,49 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
     }
     else
     {
-
       // total horizontal length of line in current scanline, might be replaced by deltax
       FT26D6 oneOverS = x1 - x0;
+
+      FT_UDIVPREP(x1 != x0, oneOverS);
+
       FT26D6 x0f = x0 - x0floor;
 
       // 64 - x0f is the horizontal length of line in first pixel
       FT26D6 oneMinusX0f = (1<<6) - x0f;
 
       // Stores area of triangle in first pixel divided by d
-			FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
+			FT26D6 a0 = FT_UDIV(((oneMinusX0f * oneMinusX0f) >> 1), oneOverS);
 
       // x1f is the horizontal length in the last pixel
 			FT26D6 x1f = x1 - x1ceil + (1<<6);
-			FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
+			FT26D6 am =  FT_UDIV(((x1f * x1f) >> 1) , oneOverS);
 
       // d * a0 is area of triangle in first pixel
       m_a[linestart + x0i] += d * a0;
-
       if ( x1i == x0i + 2 )
         m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
       else
       {
-        FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
+
+        FT26D6 a1 =  FT_UDIV((((1<<6) + (1<<5) - x0f) << 6) , oneOverS);
+
         m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
 
-        FT26D6 dTimesS = (d << 12) / oneOverS;
-        
+        FT26D6 dTimesS =  FT_UDIV((d << 12) , oneOverS);
+
         for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ ){
           // Increase area for successive pixels by dy/dx
           m_a[linestart + xi] += dTimesS;
         }
 
-        FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
+
+        FT26D6 a2 = a1 +  FT_UDIV((( x1i - x0i - 3 )<<12),oneOverS);
         m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
       }
       // Area in last pixel of scanline
       m_a[linestart + x1i] += d * am;
     }
+    
     x = xnext;
   }
   }
