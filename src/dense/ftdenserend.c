@@ -75,6 +75,15 @@ take a variable named `memory`. It can only be known if you follow the macros 3 
     goto Exit;
   }
 
+      /* check mode */
+    if ( mode != FT_RENDER_MODE_NORMAL &&
+         mode != FT_RENDER_MODE_LIGHT  &&
+         mode != FT_RENDER_MODE_LCD    &&
+         mode != FT_RENDER_MODE_LCD_V  )
+    {
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
 
   /* deallocate the previously allocated bitmap */
   if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
