@@ -133,6 +133,51 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
   }
 
 
+  if(deltax == 0){
+      FT26D6 x       = from_x;
+      int   x0i    = x>>6;
+      FT26D6 x0floor = x0i<<6;
+
+      // y-coordinate of first pixel of line
+      int    y0      = from_y>>6;
+
+      // y-coordinate of last pixel of line
+      int    y_limit = (to_y + 0x3f)>>6;
+      FT20D12* m_a   = worker->m_a;
+
+
+
+    for ( int y = y0; y < y_limit; y++ )
+    {
+      int linestart = y * worker->m_w;
+
+     FT26D6 dy   = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+
+      m_a[linestart + x0i] += dir*dy*(64 - x + x0floor);
+      m_a[linestart + ( x0i + 1 )] += dir*dy*(x-x0floor);
+
+    }
+
+    // int y = y0;
+
+    // int linestart = y * worker->m_w;
+
+    //  FT26D6 dy1   = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+    //  m_a[linestart + x0i] += dir*dy1*(64 - x + x0floor);
+    //   m_a[linestart + ( x0i + 1 )] += dir*dy1*(x-x0floor);
+
+    // y = y_limit -1;
+
+    //  linestart = y * worker->m_w;
+
+    //  FT26D6 dy2   = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+    //  m_a[linestart + x0i] += dir*dy2*(64 - x + x0floor);
+    //   m_a[linestart + ( x0i + 1 )] += dir*dy2*(x-x0floor);
+
+
+
+  }else{
+
   FT26D6 x       = from_x;
 
   // y-coordinate of first pixel of line
@@ -229,6 +274,7 @@ dense_render_line( dense_worker* worker, TPos tox, TPos toy )
       m_a[linestart + x1i] += d * am;
     }
     x = xnext;
+  }
   }
 }
 
