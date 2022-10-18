@@ -959,7 +959,7 @@
 
     /* OpenType 1.8.4+: No variation data for this item
      *  as indices have special value 0xFFFF. */
-    if (outerIndex == 0xFFFF && innerIndex == 0xFFFF)
+    if ( outerIndex == 0xFFFF && innerIndex == 0xFFFF )
       return 0;
 
     /* See pseudo code from `Font Variations Overview' */
@@ -2208,7 +2208,7 @@
       FT_FRAME_END
     };
 
-    /* `num_instances' holds the number of all named instances including  */
+    /* `num_instances` holds the number of all named instances including  */
     /* the default instance, which might be missing in the table of named */
     /* instances (in 'fvar').  This value is validated in `sfobjs.c` and  */
     /* may be reset to 0 if consistency checks fail.                      */
