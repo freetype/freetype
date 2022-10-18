@@ -397,9 +397,9 @@
       {
         FT_Stream       stream = face->root.stream;
         FT_UInt         offset;
-        FT_UShort       upem, ppem, resolution;
+        FT_UShort       ppem, resolution;
         TT_HoriHeader  *hori;
-        FT_Pos          ppem_; /* to reduce casts */
+        FT_Fixed        scale;
 
         FT_Error  error;
         FT_Byte*  p;
@@ -422,32 +422,23 @@
 
         FT_FRAME_EXIT();
 
-        upem = face->header.Units_Per_EM;
-        hori = &face->horizontal;
-
         metrics->x_ppem = ppem;
         metrics->y_ppem = ppem;
 
-        ppem_ = (FT_Pos)ppem;
+        scale = FT_DivFix( ppem * 64, face->header.Units_Per_EM );
+        hori  = &face->horizontal;
 
-        metrics->ascender =
-          FT_MulDiv( hori->Ascender, ppem_ * 64, upem );
-        metrics->descender =
-          FT_MulDiv( hori->Descender, ppem_ * 64, upem );
-        metrics->height =
-          FT_MulDiv( hori->Ascender - hori->Descender + hori->Line_Gap,
-                     ppem_ * 64, upem );
-        metrics->max_advance =
-          FT_MulDiv( hori->advance_Width_Max, ppem_ * 64, upem );
+        metrics->ascender    = FT_MulFix( hori->Ascender, scale );
+        metrics->descender   = FT_MulFix( hori->Descender, scale );
+        metrics->height      =
+          FT_MulFix( hori->Ascender - hori->Descender + hori->Line_Gap,
+                     scale );
+        metrics->max_advance = FT_MulFix( hori->advance_Width_Max, scale );
 
         /* set the scale values (in 16.16 units) so advances */
         /* from the hmtx and vmtx table are scaled correctly */
-        metrics->x_scale = FT_MulDiv( metrics->x_ppem,
-                                      64 * 0x10000,
-                                      face->header.Units_Per_EM );
-        metrics->y_scale = FT_MulDiv( metrics->y_ppem,
-                                      64 * 0x10000,
-                                      face->header.Units_Per_EM );
+        metrics->x_scale = scale;
+        metrics->y_scale = scale;
 
         return error;
       }
