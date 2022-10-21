@@ -2871,21 +2871,22 @@
     /* check for OT-SVG */
     if ( ( load_flags & FT_LOAD_COLOR ) && ( (TT_Face)glyph->face )->svg )
     {
-      SFNT_Service  sfnt;
-
-      FT_Short   leftBearing;
-      FT_Short   topBearing;
-      FT_UShort  advanceX;
-      FT_UShort  advanceY;
+      TT_Face       face = (TT_Face)glyph->face;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
       FT_TRACE3(( "Trying to load SVG glyph\n" ));
-      sfnt = (SFNT_Service)( (TT_Face)glyph->face )->sfnt;
 
       error = sfnt->load_svg_doc( glyph, glyph_index );
       if ( !error )
       {
-        TT_Face  face = (TT_Face)glyph->face;
+        FT_Fixed  x_scale = size->root.metrics.x_scale;
+        FT_Fixed  y_scale = size->root.metrics.y_scale;
+
+        FT_Short   leftBearing;
+        FT_Short   topBearing;
+        FT_UShort  advanceX;
+        FT_UShort  advanceY;
 
 
         FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
@@ -2906,15 +2907,8 @@
         glyph->linearHoriAdvance = advanceX;
         glyph->linearVertAdvance = advanceY;
 
-        advanceX = (FT_UShort)FT_MulDiv( advanceX,
-                                         glyph->face->size->metrics.x_ppem,
-                                         glyph->face->units_per_EM );
-        advanceY = (FT_UShort)FT_MulDiv( advanceY,
-                                         glyph->face->size->metrics.y_ppem,
-                                         glyph->face->units_per_EM );
-
-        glyph->metrics.horiAdvance = advanceX << 6;
-        glyph->metrics.vertAdvance = advanceY << 6;
+        glyph->metrics.horiAdvance = FT_MulFix( advanceX, x_scale );
+        glyph->metrics.vertAdvance = FT_MulFix( advanceY, y_scale );
 
         return error;
       }
