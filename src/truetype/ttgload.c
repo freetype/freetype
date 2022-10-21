@@ -2127,12 +2127,11 @@
   compute_glyph_metrics( TT_Loader  loader,
                          FT_UInt    glyph_index )
   {
-    TT_Face    face   = loader->face;
-
+    TT_Face       face  = loader->face;
+    TT_Size       size  = loader->size;
+    TT_GlyphSlot  glyph = loader->glyph;
     FT_BBox       bbox;
     FT_Fixed      y_scale;
-    TT_GlyphSlot  glyph = loader->glyph;
-    TT_Size       size  = loader->size;
 
 
     y_scale = 0x10000L;
@@ -2270,16 +2269,12 @@
                    FT_UInt       glyph_index,
                    FT_Int32      load_flags )
   {
-    TT_Face             face;
-    SFNT_Service        sfnt;
-    FT_Stream           stream;
+    TT_Face             face = (TT_Face)glyph->face;
+    SFNT_Service        sfnt = (SFNT_Service)face->sfnt;
+    FT_Stream           stream = face->root.stream;
     FT_Error            error;
     TT_SBit_MetricsRec  sbit_metrics;
 
-
-    face   = (TT_Face)glyph->face;
-    sfnt   = (SFNT_Service)face->sfnt;
-    stream = face->root.stream;
 
     error = sfnt->load_sbit_image( face,
                                    size->strike_index,
@@ -2331,21 +2326,18 @@
                   FT_Int32      load_flags,
                   FT_Bool       glyf_table_only )
   {
-    TT_Face    face;
-    FT_Stream  stream;
+    TT_Face    face = (TT_Face)glyph->face;
+    FT_Stream  stream = face->root.stream;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     FT_Error   error;
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
 #if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
     defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( (TT_Face)glyph->face );
+    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( glyph->face );
 #endif
 #endif
 
-
-    face   = (TT_Face)glyph->face;
-    stream = face->root.stream;
 
     FT_ZERO( loader );
 
@@ -2714,6 +2706,7 @@
                  FT_UInt       glyph_index,
                  FT_Int32      load_flags )
   {
+    TT_Face       face = (TT_Face)glyph->face;
     FT_Error      error;
     TT_LoaderRec  loader;
 
@@ -2738,8 +2731,6 @@
         /* if we have a bitmap-only font, return an empty glyph            */
         if ( !FT_IS_SCALABLE( glyph->face ) )
         {
-          TT_Face  face = (TT_Face)glyph->face;
-
           FT_Short  left_bearing = 0;
           FT_Short  top_bearing  = 0;
 
@@ -2798,9 +2789,6 @@
         if ( FT_IS_SCALABLE( glyph->face ) ||
              FT_HAS_SBIX( glyph->face )    )
         {
-          TT_Face  face = (TT_Face)glyph->face;
-
-
           /* for the bbox we need the header only */
           (void)tt_loader_init( &loader, size, glyph, load_flags, TRUE );
           (void)load_truetype_glyph( &loader, glyph_index, 0, TRUE );
@@ -2869,9 +2857,8 @@
 #ifdef FT_CONFIG_OPTION_SVG
 
     /* check for OT-SVG */
-    if ( ( load_flags & FT_LOAD_COLOR ) && ( (TT_Face)glyph->face )->svg )
+    if ( ( load_flags & FT_LOAD_COLOR ) && face->svg )
     {
-      TT_Face       face = (TT_Face)glyph->face;
       SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
