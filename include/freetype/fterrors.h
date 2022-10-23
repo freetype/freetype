@@ -29,7 +29,7 @@
    *
    * @description:
    *   The header file `fterrors.h` (which is automatically included by
-   *   `freetype.h` defines the handling of FreeType's enumeration
+   *   `freetype.h`) defines the handling of FreeType's enumeration
    *   constants.  It can also be used to generate error message strings
    *   with a small macro trick explained below.
    *

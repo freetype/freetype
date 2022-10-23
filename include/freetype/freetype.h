@@ -646,7 +646,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   Despite the name, this enumeration lists specific character
-   *   repertories (i.e., charsets), and not text encoding methods (e.g.,
+   *   repertoires (i.e., charsets), and not text encoding methods (e.g.,
    *   UTF-8, UTF-16, etc.).
    *
    *   Other encodings might be defined in the future.
@@ -779,7 +779,7 @@ FT_BEGIN_HEADER
    *   `encoding_id`.  If, for example, `encoding_id` is `TT_MAC_ID_ROMAN`
    *   and the language ID (minus~1) is `TT_MAC_LANGID_GREEK`, it is the
    *   Greek encoding, not Roman.  `TT_MAC_ID_ARABIC` with
-   *   `TT_MAC_LANGID_FARSI` means the Farsi variant the Arabic encoding.
+   *   `TT_MAC_LANGID_FARSI` means the Farsi variant of the Arabic encoding.
    */
   typedef enum  FT_Encoding_
   {
@@ -1167,9 +1167,9 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_KERNING ::
    *     The face contains kerning information.  If set, the kerning distance
    *     can be retrieved using the function @FT_Get_Kerning.  Otherwise the
-   *     function always return the vector (0,0).  Note that FreeType doesn't
-   *     handle kerning data from the SFNT 'GPOS' table (as present in many
-   *     OpenType fonts).
+   *     function always returns the vector (0,0).  Note that FreeType
+   *     doesn't handle kerning data from the SFNT 'GPOS' table (as present
+   *     in many OpenType fonts).
    *
    *   FT_FACE_FLAG_FAST_GLYPHS ::
    *     THIS FLAG IS DEPRECATED.  DO NOT USE OR TEST IT.
@@ -3077,7 +3077,7 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_NO_HINTING ::
    *     Disable hinting.  This generally generates 'blurrier' bitmap glyphs
-   *     when the glyph are rendered in any of the anti-aliased modes.  See
+   *     when the glyphs are rendered in any of the anti-aliased modes.  See
    *     also the note below.
    *
    *     This flag is implied by @FT_LOAD_NO_SCALE.
@@ -3434,7 +3434,7 @@ FT_BEGIN_HEADER
    *     are not interested in the value.
    *
    *   delta ::
-   *     A pointer a translation vector.  Set this to NULL if you are not
+   *     A pointer to a translation vector.  Set this to NULL if you are not
    *     interested in the value.
    *
    * @since:
@@ -3559,9 +3559,10 @@ FT_BEGIN_HEADER
    *
    *   2. The `sdf` rasterizer has limited support for handling intersecting
    *      contours and *cannot* handle self-intersecting contours whatsoever.
-   *      Self-intersection happens when a single connected contour intersect
-   *      itself at some point; having these in your font definitely pose a
-   *      problem to the rasterizer and cause artifacts, too.
+   *      Self-intersection happens when a single connected contour
+   *      intersects itself at some point; having these in your font
+   *      definitely poses a problem to the rasterizer and cause artifacts,
+   *      too.
    *
    *   3. Generating SDF for really small glyphs may result in undesirable
    *      output; the pixel grid (which stores distance information) becomes

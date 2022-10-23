@@ -475,7 +475,7 @@ FT_BEGIN_HEADER
    *   extensions to the 'COLR' table, see
    *   'https://github.com/googlefonts/colr-gradients-spec'.
    *
-   *   The enumeration values losely correspond with the format numbers of
+   *   The enumeration values loosely correspond with the format numbers of
    *   the specification: FreeType always returns a fully specified 'Paint'
    *   structure for the 'Transform', 'Translate', 'Scale', 'Rotate', and
    *   'Skew' table types even though the specification has different formats
@@ -916,8 +916,7 @@ FT_BEGIN_HEADER
    *   A structure representing a `PaintRadialGradient` value of the 'COLR'
    *   v1 extensions, see
    *   'https://github.com/googlefonts/colr-gradients-spec'.  The glyph
-   *   layer filled with this paint is drawn filled filled with a radial
-   *   gradient.
+   *   layer filled with this paint is drawn filled with a radial gradient.
    *
    * @fields:
    *   colorline ::
@@ -1202,7 +1201,7 @@ FT_BEGIN_HEADER
    *
    *   center_x ::
    *     The x~coordinate of the pivot point of the rotation in font
-   *     units) represented as a 16.16 fixed-point value.
+   *     units represented as a 16.16 fixed-point value.
    *
    *   center_y ::
    *     The y~coordinate of the pivot point of the rotation in font
@@ -1283,9 +1282,8 @@ FT_BEGIN_HEADER
    *   FT_PaintComposite
    *
    * @description:
-   *   A structure representing a 'COLR'v1 `PaintComposite` paint table.
-   *   Used for compositing two paints in a 'COLR' v1 directed acycling
-   *   graph.
+   *   A structure representing a 'COLR' v1 `PaintComposite` paint table.
+   *   Used for compositing two paints in a 'COLR' v1 directed acyclic graph.
    *
    * @fields:
    *   source_paint ::
