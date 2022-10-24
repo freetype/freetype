@@ -424,8 +424,8 @@ FT_BEGIN_HEADER
 
     /* only version 5 and higher: */
 
-    FT_UShort  usLowerOpticalPointSize;       /* in twips (1/20th points) */
-    FT_UShort  usUpperOpticalPointSize;       /* in twips (1/20th points) */
+    FT_UShort  usLowerOpticalPointSize;       /* in twips (1/20 points) */
+    FT_UShort  usUpperOpticalPointSize;       /* in twips (1/20 points) */
 
   } TT_OS2;
 

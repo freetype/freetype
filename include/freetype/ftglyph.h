@@ -413,7 +413,7 @@ FT_BEGIN_HEADER
    *
    *   delta ::
    *     A pointer to a 2d vector to apply.  Coordinates are expressed in
-   *     1/64th of a pixel.
+   *     1/64 of a pixel.
    *
    * @return:
    *   FreeType error code (if not 0, the glyph format is not scalable).
@@ -500,7 +500,7 @@ FT_BEGIN_HEADER
    * @output:
    *   acbox ::
    *     The glyph coordinate bounding box.  Coordinates are expressed in
-   *     1/64th of pixels if it is grid-fitted.
+   *     1/64 of pixels if it is grid-fitted.
    *
    * @note:
    *   Coordinates are relative to the glyph origin, using the y~upwards

@@ -1293,7 +1293,7 @@
             /* Calculate the number of necessary bisections.  Each      */
             /* bisection causes a four-fold reduction of the deviation, */
             /* hence we bisect the Bezier curve until the deviation     */
-            /* becomes less than 1/8th of a pixel.  For more details    */
+            /* becomes less than 1/8 of a pixel.  For more details      */
             /* check file `ftgrays.c`.                                  */
             num_splits = 1;
             while ( dx > ONE_PIXEL / 8 )

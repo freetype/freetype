@@ -294,7 +294,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   On input, all points within the outline are in font coordinates. On
-   *   output, they are in 1/64th of pixels.
+   *   output, they are in 1/64 of pixels.
    *
    *   The scaling transformation is taken from the 'globals' object which
    *   must correspond to the same font as the glyph.
@@ -607,7 +607,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   On input, all points within the outline are in font coordinates. On
-   *   output, they are in 1/64th of pixels.
+   *   output, they are in 1/64 of pixels.
    *
    *   The scaling transformation is taken from the 'globals' object which
    *   must correspond to the same font than the glyph.
