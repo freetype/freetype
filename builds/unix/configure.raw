@@ -50,7 +50,7 @@ if test ${cross_compiling} = yes; then
 
   AC_MSG_CHECKING([for suffix of native executables])
   rm -f a.* b.* a_out.exe conftest.*
-  echo > conftest.c "int main() { return 0;}"
+  echo > conftest.c "int main(void) { return 0;}"
   ${CC_BUILD} conftest.c || AC_MSG_ERROR([native C compiler is not working])
   rm -f conftest.c
   if test -x a.out -o -x b.out -o -x conftest; then

@@ -121,7 +121,7 @@ AC_DEFUN([AC_CHECK_FT2],
 #include <stdlib.h>
 
 int
-main()
+main(void)
 {
   FT_Library library;
   FT_Error  error;
