@@ -929,15 +929,12 @@
       table = blend->hvar_table;
     }
 
-    if ( store_offset )
-    {
-      error = tt_var_load_item_variation_store(
-                face,
-                table_offset + store_offset,
-                &table->itemStore );
-      if ( error )
-        goto Exit;
-    }
+    error = tt_var_load_item_variation_store(
+              face,
+              table_offset + store_offset,
+              &table->itemStore );
+    if ( error )
+      goto Exit;
 
     if ( widthMap_offset )
     {
