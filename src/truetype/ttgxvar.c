@@ -4500,9 +4500,12 @@
 
       if ( blend->avar_table )
       {
-        for ( i = 0; i < num_axes; i++ )
-          FT_FREE( blend->avar_table->avar_segment[i].correspondence );
-        FT_FREE( blend->avar_table->avar_segment );
+        if ( blend->avar_table->avar_segment )
+        {
+          for ( i = 0; i < num_axes; i++ )
+            FT_FREE( blend->avar_table->avar_segment[i].correspondence );
+          FT_FREE( blend->avar_table->avar_segment );
+        }
 
         tt_var_done_item_variation_store( face,
                                           &blend->avar_table->itemStore );
