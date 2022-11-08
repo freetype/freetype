@@ -1,8 +1,28 @@
 CHANGES BETWEEN 2.12.1 and 2.12.2
 
-  I. IMPORTANT BUG FIXES
+  I. IMPORTANT CHANGES
 
-  II. MISCELLANEOUS
+  - The demo program `ftinspect` has  been completely updated and much
+    enhanced.  It now  combines the functionality of  almost all other
+    graphical FreeType  demo programs into a  single application based
+    on the Qt framework.  This was Charlie Jiang's GSoC 2022 project.
+
+
+  III. MISCELLANEOUS
+
+  - For  OpenType  Variable Fonts,  `avar`  table  format 2.0  is  now
+    supported.  The code was contributed by Behdad Esfahbod.
+
+    Note that this is an extension supported on recent Apple platforms
+    and by HarfBuzz, but not yet in the OpenType standard!  See
+
+      https://github.com/harfbuzz/boring-expansion-spec/blob/main/avar2.md
+
+    for the specification.
+
+  - A new API  `FT_GlyphSlot_Slant` to slant a glyph by  a given angle
+    has been added.   Note that this function is  part of `ftsynth.h`,
+    which is still considered to be in alpha stage.
 
   - TrueType interpreter version 38  (also known as 'Infinality') that
     was first introduced about 10 years  ago in FreeType 2.4.11 is now
