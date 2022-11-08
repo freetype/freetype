@@ -282,7 +282,7 @@
                           FT_ULong*  found_offset,
                           FT_ULong*  found_size )
   {
-    FT_UInt   min, max, char_len;
+    FT_UInt   min, max, mid, char_len;
     FT_Bool   two = FT_BOOL( *flags & PFR_BITMAP_2BYTE_CHARCODE );
     FT_Byte*  buff;
 
@@ -349,14 +349,14 @@
 
     min = 0;
     max = count;
+    mid = min + ( max - min ) / 2;
 
     /* binary search */
     while ( min < max )
     {
-      FT_UInt  mid, code;
+      FT_UInt  code;
 
 
-      mid  = ( min + max ) >> 1;
       buff = base + mid * char_len;
 
       if ( two )
@@ -370,6 +370,11 @@
         min = mid + 1;
       else
         goto Found_It;
+
+      /* reasonable prediction in a continuous block */
+      mid += char_code - code;
+      if ( mid >= max || mid < min )
+        mid = min + ( max - min ) / 2;
     }
 
   Fail:
