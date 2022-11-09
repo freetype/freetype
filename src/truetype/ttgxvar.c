@@ -996,9 +996,15 @@
     /* See pseudo code from `Font Variations Overview' */
     /* in the OpenType specification.                  */
 
+    if ( outerIndex >= itemStore->dataCount )
+      return 0; /* Out of range. */
+
     varData  = &itemStore->varData[outerIndex];
     deltaSet = FT_OFFSET( varData->deltaSet,
                           varData->regionIdxCount * innerIndex );
+
+    if ( innerIndex >= varData->itemCount )
+      return 0; /* Out of range. */
 
     if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
       return 0;
@@ -1171,20 +1177,9 @@
     }
     else
     {
-      GX_ItemVarData  varData;
-
-
       /* no widthMap data */
       outerIndex = 0;
       innerIndex = gindex;
-
-      varData = &table->itemStore.varData[outerIndex];
-      if ( gindex >= varData->itemCount )
-      {
-        FT_TRACE2(( "gindex %d out of range\n", gindex ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
     }
 
     delta = tt_var_get_item_delta( face,
