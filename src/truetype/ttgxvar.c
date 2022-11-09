@@ -525,16 +525,6 @@
       goto Exit;
     }
 
-    /* new in OpenType 1.8.4: inner & outer index equal to 0xFFFF    */
-    /* has a special meaning (i.e., no variation data for this item) */
-    if ( itemStore->dataCount == 0xFFFFU )
-    {
-      FT_TRACE2(( "ft_var_load_item_variation_store:"
-                  " dataCount too large\n" ));
-      error = FT_THROW( Invalid_Table );
-      goto Exit;
-    }
-
     /* make temporary copy of item variation data offsets; */
     /* we will parse region list first, then come back     */
     if ( FT_QNEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
