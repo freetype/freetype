@@ -52,6 +52,8 @@ ft2_includes = include_directories('include')
 
 freetype_includedir = join_paths(get_option('includedir'), 'freetype2')
 
+ft2_defines = []
+
 # Generate a custom `ftmodule.h` version based on the content of
 # `modules.cfg`.
 
@@ -64,6 +66,7 @@ ftmodule_h = custom_target('ftmodule.h',
   install_dir: join_paths(freetype_includedir, 'freetype/config'),
 )
 ft2_sources = [ftmodule_h]
+ft2_defines += ['-DFT_CONFIG_MODULES_H=<ftmodule.h>']
 
 
 # FreeType 2 modules.
@@ -187,7 +190,7 @@ ft2_config_headers = files([
   'include/freetype/config/public-macros.h',
 ])
 
-ft2_defines = ['-DFT2_BUILD_LIBRARY=1']
+ft2_defines += ['-DFT2_BUILD_LIBRARY=1']
 
 
 # System support file.
