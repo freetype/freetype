@@ -42,6 +42,7 @@
 #include <ft2build.h>
 #include <freetype/internal/ftdebug.h>
 #include FT_CONFIG_CONFIG_H
+#include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/tttags.h>
@@ -364,10 +365,13 @@
 
     FT_Long   version;
     FT_Long   axisCount;
-    FT_ULong  table_offset;
     FT_ULong  table_len;
+
+#ifndef TT_CONFIG_OPTION_NO_BORING_EXPANSION
+    FT_ULong  table_offset;
     FT_ULong  store_offset;
     FT_ULong  axisMap_offset;
+#endif
 
 
     FT_TRACE2(( "AVAR " ));
@@ -380,7 +384,9 @@
       return;
     }
 
+#ifndef TT_CONFIG_OPTION_NO_BORING_EXPANSION
     table_offset = FT_STREAM_POS();
+#endif
 
     if ( FT_FRAME_ENTER( table_len ) )
       return;
@@ -388,7 +394,11 @@
     version   = FT_GET_LONG();
     axisCount = FT_GET_LONG();
 
-    if ( version != 0x00010000L && version != 0x00020000L )
+    if ( version != 0x00010000L
+#ifndef TT_CONFIG_OPTION_NO_BORING_EXPANSION
+         && version != 0x00020000L
+#endif
+       )
     {
       FT_TRACE2(( "bad table version\n" ));
       goto Exit;
@@ -445,6 +455,7 @@
       FT_TRACE5(( "\n" ));
     }
 
+#ifndef TT_CONFIG_OPTION_NO_BORING_EXPANSION
     if ( version < 0x00020000L )
       goto Exit;
 
@@ -472,6 +483,7 @@
       if ( error )
         goto Exit;
     }
+#endif
 
 
   Exit:
@@ -521,16 +533,6 @@
     if ( !itemStore->dataCount )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store: missing varData\n" ));
-      error = FT_THROW( Invalid_Table );
-      goto Exit;
-    }
-
-    /* new in OpenType 1.8.4: inner & outer index equal to 0xFFFF    */
-    /* has a special meaning (i.e., no variation data for this item) */
-    if ( itemStore->dataCount == 0xFFFFU )
-    {
-      FT_TRACE2(( "ft_var_load_item_variation_store:"
-                  " dataCount too large\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
@@ -929,15 +931,12 @@
       table = blend->hvar_table;
     }
 
-    if ( store_offset )
-    {
-      error = tt_var_load_item_variation_store(
-                face,
-                table_offset + store_offset,
-                &table->itemStore );
-      if ( error )
-        goto Exit;
-    }
+    error = tt_var_load_item_variation_store(
+              face,
+              table_offset + store_offset,
+              &table->itemStore );
+    if ( error )
+      goto Exit;
 
     if ( widthMap_offset )
     {
@@ -1009,9 +1008,15 @@
     /* See pseudo code from `Font Variations Overview' */
     /* in the OpenType specification.                  */
 
+    if ( outerIndex >= itemStore->dataCount )
+      return 0; /* Out of range. */
+
     varData  = &itemStore->varData[outerIndex];
     deltaSet = FT_OFFSET( varData->deltaSet,
                           varData->regionIdxCount * innerIndex );
+
+    if ( innerIndex >= varData->itemCount )
+      return 0; /* Out of range. */
 
     if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
       return 0;
@@ -1184,20 +1189,9 @@
     }
     else
     {
-      GX_ItemVarData  varData;
-
-
       /* no widthMap data */
       outerIndex = 0;
       innerIndex = gindex;
-
-      varData = &table->itemStore.varData[outerIndex];
-      if ( gindex >= varData->itemCount )
-      {
-        FT_TRACE2(( "gindex %d out of range\n", gindex ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
     }
 
     delta = tt_var_get_item_delta( face,
@@ -1214,7 +1208,7 @@
                   delta == 1 ? "" : "s",
                   vertical ? "VVAR" : "HVAR" ));
 
-      *avalue += delta;
+      *avalue = ADD_INT( *avalue, delta );
     }
 
   Exit:
@@ -4503,9 +4497,12 @@
 
       if ( blend->avar_table )
       {
-        for ( i = 0; i < num_axes; i++ )
-          FT_FREE( blend->avar_table->avar_segment[i].correspondence );
-        FT_FREE( blend->avar_table->avar_segment );
+        if ( blend->avar_table->avar_segment )
+        {
+          for ( i = 0; i < num_axes; i++ )
+            FT_FREE( blend->avar_table->avar_segment[i].correspondence );
+          FT_FREE( blend->avar_table->avar_segment );
+        }
 
         tt_var_done_item_variation_store( face,
                                           &blend->avar_table->itemStore );
