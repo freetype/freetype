@@ -216,7 +216,7 @@
     FT_Error  error;
 
     FT_Size           size          = face->size;
-    FT_Size_Internal  size_internal = size->internal;
+    FT_Size_Internal  size_internal = NULL;
     FT_GlyphSlot      slot          = face->glyph;
     FT_Slot_Internal  slot_internal = slot->internal;
     FT_GlyphLoader    gloader       = slot_internal->loader;
@@ -231,6 +231,8 @@
 
     if ( !size )
       return FT_THROW( Invalid_Size_Handle );
+
+    size_internal = size->internal;
 
     FT_ZERO( &scaler );
 
