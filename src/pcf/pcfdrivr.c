@@ -111,6 +111,7 @@ THE SOFTWARE.
     FT_UInt32  w = enc->lastCol - enc->firstCol + 1;
 
 
+    /* wrapped around "negative" values are also rejected */
     if ( i >= h || j >= w )
       return 0;
 
@@ -131,6 +132,7 @@ THE SOFTWARE.
     FT_UInt    result = 0;
 
 
+    /* adjust wrapped around "negative" values */
     if ( (FT_Int32)i < 0 )
       i = 0;
     if ( (FT_Int32)j < 0 )
