@@ -1,0 +1,3 @@
+/** The 'dense' renderer */
+
+/* END */
