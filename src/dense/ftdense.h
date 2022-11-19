@@ -20,8 +20,8 @@ extern "C"
 #endif
 
 
-  typedef signed long long FT26D6;            /* 26.6 fixed-point representation  */
-  typedef signed long long FT20D12;           /* 20.12 fixed-point representation  */
+  typedef signed long FT26D6;            /* 26.6 fixed-point representation  */
+  typedef signed int FT20D12;            /* 20.12 fixed-point representation  */
 
   typedef struct
   {
