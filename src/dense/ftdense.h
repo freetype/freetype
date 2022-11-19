@@ -19,6 +19,10 @@ extern "C"
 {
 #endif
 
+
+  typedef signed long long FT26D6;            /* 26.6 fixed-point representation  */
+  typedef signed long long FT20D12;           /* 20.12 fixed-point representation  */
+
   typedef struct
   {
     /** The array used to store signed area differences. */
