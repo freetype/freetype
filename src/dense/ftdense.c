@@ -41,6 +41,11 @@
 #define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 #define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
 
+// TODO: Fix types
+#define FT_UDIVPREP( c, b )                                \
+  FT26D6  b ## _r = c ? (FT26D6)0xFFFFFFFF / ( b ) : 0
+#define FT_UDIV( a, b )                                           \
+  (FT26D6)( ( (FT26D6)( a ) * (FT26D6)( b ## _r ) ) >> 32 )
 
 typedef struct dense_TRaster_
 {
@@ -114,6 +119,10 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
   deltax = to_x - from_x;
   deltay = to_y - from_y;
 
+    FT_UDIVPREP(from_x != to_x, deltax);
+
+    FT_UDIVPREP(from_y != to_y, deltay);
+
   if ( from_y < 0 )
   {
     from_x -= from_y * deltax/deltay;
@@ -164,7 +173,7 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
     {
       int   linestart = y * worker->m_w;
       FT26D6 dy        = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
-      FT26D6 xnext     = x + dy * deltax/deltay;
+      FT26D6 xnext     = x + FT_UDIV((dy*deltax), deltay);
       FT26D6 d         = dy * dir;
 
       FT26D6 x0, x1;
@@ -197,13 +206,16 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
       {
 
         FT26D6 oneOverS = x1 - x0;
+
+        FT_UDIVPREP(x1 != x0, oneOverS);
+
         FT26D6 x0f = x0 - x0floor;
 
 
         FT26D6 oneMinusX0f = (1<<6) - x0f;
-        FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
+        FT26D6 a0 = FT_UDIV(((oneMinusX0f * oneMinusX0f) >> 1), oneOverS);
         FT26D6 x1f = x1 - x1ceil + (1<<6);
-        FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
+        FT26D6 am =  FT_UDIV(((x1f * x1f) >> 1) , oneOverS);
 
         m_a[linestart + x0i] += d * a0;
 
@@ -211,15 +223,15 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
           m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
         else
         {
-          FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
+          FT26D6 a1 =  FT_UDIV((((1<<6) + (1<<5) - x0f) << 6) , oneOverS);
           m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
 
-          FT26D6 dTimesS = (d << 12) / oneOverS;
+          FT26D6 dTimesS =  FT_UDIV((d << 12) , oneOverS);
 
           for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
             m_a[linestart + xi] += dTimesS;
 
-          FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
+          FT26D6 a2 = a1 +  FT_UDIV((( x1i - x0i - 3 )<<12),oneOverS);
           m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
         }
         m_a[linestart + x1i] += d * am;
