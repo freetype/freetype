@@ -126,77 +126,106 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
     to_y = worker->m_h<<6;
   }
 
-  int    x       = from_x;
-  int    y0      = from_y>>6;
-  int    y_limit = (to_y + 0x3f)>>6;
 
-  FT20D12* m_a     = worker->m_a;
-
-  for ( int y = y0; y < y_limit; y++ )
-  {
-    int   linestart = y * worker->m_w;
-    FT26D6 dy        = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
-    FT26D6 xnext     = x + dy * deltax/deltay;
-    FT26D6 d         = dy * dir;
-
-    FT26D6 x0, x1;
-    if ( x < xnext )
-    {
-      x0 = x;
-      x1 = xnext;
-    }
-    else
-    {
-      x0 = xnext;
-      x1 = x;
-    }
-
-
-    int   x0i    = x0>>6;
+  if(deltax == 0){
+    FT26D6 x       = from_x;
+    int   x0i    = x>>6;
     FT26D6 x0floor = x0i<<6;
 
+    // y-coordinate of first pixel of line
+    int    y0      = from_y>>6;
 
-    int   x1i    = (x1+0x3f)>>6;
-    FT26D6 x1ceil =  x1i <<6;
+    // y-coordinate of last pixel of line
+    int    y_limit = (to_y + 0x3f)>>6;
+    FT20D12* m_a   = worker->m_a;
 
-    if ( x1i <= x0i + 1 )
+
+
+    for ( int y = y0; y < y_limit; y++ )
     {
-      FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
-      m_a[linestart + x0i] += d * ((1<<6) - xmf);
-      m_a[linestart + ( x0i + 1 )] += d * xmf;
+      int linestart = y * worker->m_w;
+
+     FT26D6 dy   = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+
+      m_a[linestart + x0i] += dir*dy*(64 - x + x0floor);
+      m_a[linestart + ( x0i + 1 )] += dir*dy*(x-x0floor);
+
     }
-    else
+  }
+  else
+  {
+    int    x       = from_x;
+    int    y0      = from_y>>6;
+    int    y_limit = (to_y + 0x3f)>>6;
+
+    FT20D12* m_a     = worker->m_a;
+
+    for ( int y = y0; y < y_limit; y++ )
     {
+      int   linestart = y * worker->m_w;
+      FT26D6 dy        = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
+      FT26D6 xnext     = x + dy * deltax/deltay;
+      FT26D6 d         = dy * dir;
 
-      FT26D6 oneOverS = x1 - x0;
-      FT26D6 x0f = x0 - x0floor;
-
-
-      FT26D6 oneMinusX0f = (1<<6) - x0f;
-      FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
-      FT26D6 x1f = x1 - x1ceil + (1<<6);
-      FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
-
-      m_a[linestart + x0i] += d * a0;
-
-      if ( x1i == x0i + 2 )
-        m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
+      FT26D6 x0, x1;
+      if ( x < xnext )
+      {
+        x0 = x;
+        x1 = xnext;
+      }
       else
       {
-        FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
-        m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
-
-        FT26D6 dTimesS = (d << 12) / oneOverS;
-
-        for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
-          m_a[linestart + xi] += dTimesS;
-
-        FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
-        m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
+        x0 = xnext;
+        x1 = x;
       }
-      m_a[linestart + x1i] += d * am;
+
+
+      int   x0i    = x0>>6;
+      FT26D6 x0floor = x0i<<6;
+
+
+      int   x1i    = (x1+0x3f)>>6;
+      FT26D6 x1ceil =  x1i <<6;
+
+      if ( x1i <= x0i + 1 )
+      {
+        FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
+        m_a[linestart + x0i] += d * ((1<<6) - xmf);
+        m_a[linestart + ( x0i + 1 )] += d * xmf;
+      }
+      else
+      {
+
+        FT26D6 oneOverS = x1 - x0;
+        FT26D6 x0f = x0 - x0floor;
+
+
+        FT26D6 oneMinusX0f = (1<<6) - x0f;
+        FT26D6 a0 = ((oneMinusX0f * oneMinusX0f) >> 1) / oneOverS;
+        FT26D6 x1f = x1 - x1ceil + (1<<6);
+        FT26D6 am = ((x1f * x1f) >> 1) / oneOverS;
+
+        m_a[linestart + x0i] += d * a0;
+
+        if ( x1i == x0i + 2 )
+          m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
+        else
+        {
+          FT26D6 a1 = (((1<<6) + (1<<5) - x0f) << 6) / oneOverS;
+          m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
+
+          FT26D6 dTimesS = (d << 12) / oneOverS;
+
+          for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
+            m_a[linestart + xi] += dTimesS;
+
+          FT26D6 a2 = a1 + (( x1i - x0i - 3 )<<12)/oneOverS;
+          m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
+        }
+        m_a[linestart + x1i] += d * am;
+      }
+      x = xnext;
     }
-    x = xnext;
   }
 }
 
