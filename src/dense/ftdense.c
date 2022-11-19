@@ -12,6 +12,22 @@
 #include "ftdense.h"
 #include "ftdenseerrs.h"
 
+#if defined( __SSE4_1__ )                          || \
+    defined( __x86_64__ )                        || \
+    defined( _M_AMD64 )                          || \
+    ( defined( _M_IX86_FP ) && _M_IX86_FP >= 2 )
+#  define FT_SSE4_1 1
+#else
+#  define FT_SSE4_1 0
+#endif
+
+
+#if FT_SSE4_1
+
+    #include <tmmintrin.h>
+
+#endif
+
 #define PIXEL_BITS 8
 
 #define ONE_PIXEL  ( 1 << PIXEL_BITS )
@@ -349,9 +365,30 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
                                          &dense_decompose_funcs, worker );
   // Render into bitmap
   const float* source = worker->m_a;
-
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + worker->m_w * worker->m_h;
+
+#if FT_SSE4_1
+
+  __m128 offset = _mm_setzero_ps();
+  __m128i mask = _mm_set1_epi32(0x0c080400);
+  __m128 sign_mask = _mm_set1_ps(-0.f);
+  for (int i = 0; i < worker->m_h*worker->m_w; i += 4) {
+    __m128 x = _mm_load_ps(&source[i]);
+    x = _mm_add_ps(x, _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(x), 4)));
+    x = _mm_add_ps(x, _mm_shuffle_ps(_mm_setzero_ps(), x, 0x40));
+    x = _mm_add_ps(x, offset);
+    __m128 y = _mm_andnot_ps(sign_mask, x);  // fabs(x)
+    y = _mm_min_ps(y, _mm_set1_ps(1.0f));
+    y = _mm_mul_ps(y, _mm_set1_ps(255.0f));
+    __m128i z = _mm_cvtps_epi32(y);
+    z = _mm_shuffle_epi8(z, mask);
+    _mm_store_ss((float *)&dest[i], (__m128)z);
+    offset = _mm_shuffle_ps(x, x, _MM_SHUFFLE(3, 3, 3, 3));
+  }
+
+#else /* FT_SSE4_1 */
+
   float          value    = 0.0f;
   while ( dest < dest_end )
   {
@@ -367,6 +404,8 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
       *dest = 0;
     dest++;
   }
+
+#endif /* FT_SSE4_1 */
 
   free(worker->m_a);
   return error;
