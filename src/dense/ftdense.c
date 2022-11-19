@@ -20,7 +20,7 @@
 #define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
 #define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
 
-#define FT_SWAP(a, b)   ( (a) ^= (b) ^=(a) ^= (b))
+#define FT_SWAP(a, b)   { (a) = (a) + (b); (b) = (a) - (b); (a) = (a) - (b);}
 #define FT_MIN( a, b )  ( (a) < (b) ? (a) : (b) )
 #define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 #define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
@@ -256,17 +256,17 @@ dense_render_cubic( dense_worker* worker,
   FT_Vector aP2 = { control_2->x, control_2->y };
   FT_Vector aP3 = { to->x, to->y };
 
-  float     devx   = aP0.x - aP1->x - aP1->x + aP2->x;
-  float     devy   = aP0.y - aP1->y - aP1->y + aP2->y;
+  float     devx   = aP0.x - aP1.x - aP1.x + aP2.x;
+  float     devy   = aP0.y - aP1.y - aP1.y + aP2.y;
   float     devsq0 = devx * devx + devy * devy;
-  devx             = aP1->x - aP2->x - aP2->x + aP3->x;
-  devy             = aP1->y - aP2->y - aP2->y + aP3->y;
+  devx             = aP1.x - aP2.x - aP2.x + aP3.x;
+  devy             = aP1.y - aP2.y - aP2.y + aP3.y;
   float devsq1     = devx * devx + devy * devy;
   float devsq      = fmax( devsq0, devsq1 );
 
   if ( devsq < 0.333f )
   {
-    dense_render_line( worker, aP3->x, aP3->y );
+    dense_render_line( worker, aP3.x, aP3.y );
     return;
   }
 
@@ -278,8 +278,8 @@ dense_render_cubic( dense_worker* worker,
   for ( int i = 0; i < n; i++ )
   {
     t += nrecip;
-    FT_Vector a    = Lerp( t, Lerp( t, aP0, *aP1 ), Lerp( t, *aP1, *aP2 ) );
-    FT_Vector b    = Lerp( t, Lerp( t, *aP1, *aP2 ), Lerp( t, *aP2, *aP3 ) );
+    FT_Vector a    = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
+    FT_Vector b    = Lerp( t, Lerp( t, aP1, aP2 ), Lerp( t, aP2, aP3 ) );
     FT_Vector next = Lerp( t, a, b );
     dense_render_line( worker, next.x, next.y );
     worker->prev_x = next.x;
