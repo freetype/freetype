@@ -28,7 +28,12 @@
 /* define USE_LEGACY to implement the legacy filter */
 #define  USE_LEGACY
 
+#if 1
+#define FT_SHIFTCLAMP( x )  (FT_Byte)( x >> 8 )
+#else
 #define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
+#endif
+
 
 
   /* add padding according to filter weights */
