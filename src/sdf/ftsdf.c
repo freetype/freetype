@@ -2109,7 +2109,8 @@
     FT_Error  error = FT_Err_Ok;
 
     FT_26D6_Vec  aA, bB;         /* A, B in the above comment             */
-    FT_26D6_Vec  nearest_point;  /* point on curve nearest to `point`     */
+    FT_26D6_Vec  nearest_point = { 0, 0 };
+                                 /* point on curve nearest to `point`     */
     FT_26D6_Vec  direction;      /* direction of curve at `nearest_point` */
 
     FT_26D6_Vec  p0, p1, p2;     /* control points of a conic curve       */
@@ -2405,7 +2406,8 @@
     FT_Error  error = FT_Err_Ok;
 
     FT_26D6_Vec  aA, bB, cC;     /* A, B, C in the above comment          */
-    FT_26D6_Vec  nearest_point;  /* point on curve nearest to `point`     */
+    FT_26D6_Vec  nearest_point = { 0, 0 };
+                                 /* point on curve nearest to `point`     */
     FT_26D6_Vec  direction;      /* direction of curve at `nearest_point` */
 
     FT_26D6_Vec  p0, p1, p2;     /* control points of a conic curve       */

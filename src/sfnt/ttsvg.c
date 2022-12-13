@@ -207,7 +207,7 @@
     FT_Error  error;
 
     Svg_doc  start_doc;
-    Svg_doc  mid_doc;
+    Svg_doc  mid_doc = { 0, 0, 0, 0 }; /* pacify compiler */
     Svg_doc  end_doc;
 
     FT_Bool  found = FALSE;
