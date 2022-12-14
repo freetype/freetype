@@ -163,9 +163,6 @@ fi
 AC_SUBST([FTSYS_SRC])
 
 
-AC_CHECK_FUNCS([memcpy memmove])
-
-
 # get compiler flags right
 #
 #   We try to make the compiler work for C99-strict source.  Even if the
