@@ -53,8 +53,10 @@ typedef unsigned long  ulg;
 #  endif
 #endif
 
+#ifndef Z_FREETYPE
 extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 /* (size given to avoid silly warnings with Visual C++) */
+#endif  /* !Z_FREETYPE */
 
 #define ERR_MSG(err) z_errmsg[Z_NEED_DICT-(err)]
 

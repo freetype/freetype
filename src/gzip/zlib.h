@@ -248,6 +248,7 @@ ZEXTERN int ZEXPORT deflateInit OF((z_streamp strm, int level));
    this will be done by deflate().
 */
 
+
 ZEXTERN int ZEXPORT deflate OF((z_streamp strm, int flush));
 /*
     deflate compresses as much data as possible, and stops when the input
@@ -1756,8 +1757,6 @@ ZEXTERN uLong ZEXPORT crc32 OF((uLong crc, const Bytef *buf, uInt len));
      if (crc != original_crc) error();
 */
 
-#ifndef Z_FREETYPE
-
 ZEXTERN uLong ZEXPORT crc32_z OF((uLong crc, const Bytef *buf,
                                   z_size_t len));
 /*
@@ -1780,6 +1779,8 @@ ZEXTERN uLong ZEXPORT crc32_combine_gen OF((z_off_t len2));
      Return the operator corresponding to length len2, to be used with
    crc32_combine_op().
 */
+
+#ifndef Z_FREETYPE
 
 ZEXTERN uLong ZEXPORT crc32_combine_op OF((uLong crc1, uLong crc2, uLong op));
 /*
@@ -1946,7 +1947,9 @@ ZEXTERN const z_crc_t FAR * ZEXPORT get_crc_table    OF((void));
 ZEXTERN int            ZEXPORT inflateUndermine OF((z_streamp, int));
 ZEXTERN int            ZEXPORT inflateValidate OF((z_streamp, int));
 ZEXTERN unsigned long  ZEXPORT inflateCodesUsed OF((z_streamp));
+#endif  /* !Z_FREETYPE */
 ZEXTERN int            ZEXPORT inflateResetKeep OF((z_streamp));
+#ifndef Z_FREETYPE
 ZEXTERN int            ZEXPORT deflateResetKeep OF((z_streamp));
 #if defined(_WIN32) && !defined(Z_SOLO)
 ZEXTERN gzFile         ZEXPORT gzopen_w OF((const wchar_t *path,

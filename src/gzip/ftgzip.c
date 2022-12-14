@@ -70,20 +70,14 @@
   /* so that configuration with `FT_CONFIG_OPTION_SYSTEM_ZLIB' might   */
   /* include the wrong `zconf.h' file, leading to errors.              */
 
-  /* `HAVE_HIDDEN` should be defined if                                 */
-  /*                                                                    */
-  /*   __attribute__((visibility("hidden")))                            */
-  /*                                                                    */
-  /* is supported by the compiler, which prevents internal symbols from */
-  /* being exported by the library.                                     */
 #if defined( __GNUC__ ) ||  defined( __clang__ )
-#define HAVE_HIDDEN  1
 #define ZEXPORT
 #define ZEXTERN      static
 #endif
 
-#define Z_SOLO      1
-#define Z_FREETYPE  1
+#define HAVE_MEMCPY  1
+#define Z_SOLO       1
+#define Z_FREETYPE   1
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++)   */
   /* We disable the warning `conversion from XXX to YYY,     */
@@ -156,28 +150,6 @@
 
     FT_MEM_FREE( address );
   }
-
-
-#if !defined( FT_CONFIG_OPTION_SYSTEM_ZLIB ) && !defined( USE_ZLIB_ZCALLOC )
-
-  voidpf ZLIB_INTERNAL
-  zcalloc ( voidpf    opaque,
-            unsigned  items,
-            unsigned  size )
-  {
-    return ft_gzip_alloc( opaque, items, size );
-  }
-
-
-  void ZLIB_INTERNAL
-  zcfree( voidpf  opaque,
-          voidpf  ptr )
-  {
-    ft_gzip_free( opaque, ptr );
-  }
-
-#endif /* !SYSTEM_ZLIB && !USE_ZLIB_ZCALLOC */
-
 
 /***************************************************************************/
 /***************************************************************************/
