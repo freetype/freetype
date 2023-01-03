@@ -337,8 +337,6 @@ FT_BEGIN_HEADER
 
     FT_UInt  interpreter_version;
 
-    FT_Bool  enable_variable_colrv1;
-
   } TT_DriverRec;
 
 

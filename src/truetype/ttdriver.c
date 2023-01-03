@@ -108,23 +108,6 @@
       return error;
     }
 
-    if ( !ft_strcmp( property_name, "TEMPORARY-enable-variable-colrv1" ) )
-    {
-      /* This flag is temporary and can't be set with environment variables. */
-      if ( !value_is_string )
-      {
-        FT_Bool*  bv = (FT_Bool*)value;
-
-        if ( *bv == TRUE || *bv == FALSE)
-          driver->enable_variable_colrv1 = *bv;
-        else
-          error = FT_ERR( Unimplemented_Feature );
-      } else
-        error = FT_ERR( Invalid_Argument );
-
-      return error;
-    }
-
     FT_TRACE2(( "tt_property_set: missing property `%s'\n",
                 property_name ));
     return FT_THROW( Missing_Property );

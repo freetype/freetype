@@ -38,13 +38,6 @@
 #include <freetype/internal/services/svmm.h>
 #endif
 
- /* the next two code lines are a temporary hack, to be removed together */
- /* with `VARIABLE_COLRV1_ENABLED` and related code as soon as variable  */
- /* 'COLR' support is complete and tested                                */
-#include "../truetype/ttobjs.h"
-#include "../truetype/ttdriver.h"
-
-
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 
 #include "ttcolr.h"
@@ -64,11 +57,6 @@
 /* COLRV0_HEADER_SIZE + 5 * Offset32 */
 #define COLRV1_HEADER_SIZE               34U
 
-
-#define VARIABLE_COLRV1_ENABLED                                            \
-          ( ((TT_Driver)FT_FACE_DRIVER( face ))->root.clazz ==             \
-              &tt_driver_class                                          && \
-            ((TT_Driver)FT_FACE_DRIVER( face ))->enable_variable_colrv1 )
 
 #define ENSURE_READ_BYTES( byte_size )                             \
   if ( p < colr->paints_start_v1                                || \
@@ -309,8 +297,7 @@
       colr->delta_set_idx_map.outerIndex = NULL;
       colr->delta_set_idx_map.innerIndex = NULL;
 
-      if ( face->variation_support & TT_FACE_FLAG_VAR_FVAR &&
-           VARIABLE_COLRV1_ENABLED                         )
+      if ( face->variation_support & TT_FACE_FLAG_VAR_FVAR )
       {
         FT_ULong  var_idx_map_offset, var_store_offset;
 
@@ -370,7 +357,6 @@
 
   InvalidTable:
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    if ( VARIABLE_COLRV1_ENABLED )
     {
       FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
@@ -404,7 +390,6 @@
     if ( colr )
     {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( VARIABLE_COLRV1_ENABLED )
       {
         FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
@@ -600,12 +585,6 @@
     FT_UInt  i = 0;
 
 
-    if ( !VARIABLE_COLRV1_ENABLED )
-    {
-      FT_ASSERT( 0 );
-      return 0;
-    }
-
     if ( var_index_base == 0xFFFFFFFF )
     {
       for ( i = 0; i < num_deltas; ++i )
@@ -710,8 +689,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       if ( (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID &&
-           VARIABLE_COLRV1_ENABLED                    )
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SOLID )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -772,7 +750,7 @@
       apaint->u.linear_gradient.p2.y = INT_TO_FIXED( FT_NEXT_SHORT( p ) );
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      if ( do_read_var )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG ( p );
@@ -830,7 +808,7 @@
       apaint->u.radial_gradient.r1 = tmp < 0 ? FT_INT_MAX : tmp;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      if ( do_read_var )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG ( p );
@@ -881,7 +859,7 @@
           F2DOT14_TO_FIXED( FT_NEXT_SHORT( p ) );
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( do_read_var && VARIABLE_COLRV1_ENABLED )
+      if ( do_read_var )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG ( p );
@@ -941,8 +919,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       if ( (FT_PaintFormat_Internal)apaint->format ==
-             FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSFORM &&
-           VARIABLE_COLRV1_ENABLED                      )
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSFORM )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -978,8 +955,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       if ( (FT_PaintFormat_Internal)apaint->format ==
-             FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE &&
-           VARIABLE_COLRV1_ENABLED                      )
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_TRANSLATE )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -1055,8 +1031,7 @@
              (FT_PaintFormat_Internal)apaint->format ==
                FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM        ||
              (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER ) &&
-           VARIABLE_COLRV1_ENABLED                                     )
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER ) )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -1151,8 +1126,7 @@
       if ( ( (FT_PaintFormat_Internal)apaint->format ==
                FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE        ||
              (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER ) &&
-           VARIABLE_COLRV1_ENABLED                              )
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER ) )
       {
         FT_UInt  num_deltas = 0;
 
@@ -1225,8 +1199,7 @@
       if ( ( (FT_PaintFormat_Internal)apaint->format ==
                FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW        ||
              (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER ) &&
-           VARIABLE_COLRV1_ENABLED                            )
+               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER ) )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -1471,7 +1444,7 @@
                                         face->root.size->metrics.y_scale );
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-        if ( VARIABLE_COLRV1_ENABLED && format == 2 )
+        if ( format == 2 )
         {
           FT_ULong         var_index_base = 0;
           /* varIndexBase offset for clipbox is 3 at most. */
@@ -1661,7 +1634,6 @@
       var_index_base = FT_NEXT_ULONG( p );
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( VARIABLE_COLRV1_ENABLED )
       {
         FT_Int  item_deltas[2];
 
