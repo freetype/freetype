@@ -3276,6 +3276,14 @@
       if ( h < 0 )
         h = -h;
 
+      if ( ( !w && req->width )                     ||
+           ( !h && ( req->height || !req->width ) ) )
+      {
+        FT_ERROR(( "FT_Request_Metrics: Divide by zero\n" ));
+        error = FT_ERR( Divide_By_Zero );
+        goto Exit;
+      }
+
       scaled_w = FT_REQUEST_WIDTH ( req );
       scaled_h = FT_REQUEST_HEIGHT( req );
 
