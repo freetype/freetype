@@ -115,8 +115,8 @@ FT_BEGIN_HEADER
   typedef FT_Vector FT_26D6_Vec;   /* with 26.6 fixed-point components  */
   typedef FT_Vector FT_16D16_Vec;  /* with 16.16 fixed-point components */
 
-  typedef FT_Fixed  FT_16D16;      /* 16.16 fixed-point representation  */
-  typedef FT_Fixed  FT_26D6;       /* 26.6 fixed-point representation   */
+  typedef FT_Int32  FT_16D16;      /* 16.16 fixed-point representation  */
+  typedef FT_Int32  FT_26D6;       /* 26.6 fixed-point representation   */
   typedef FT_Byte   FT_SDFFormat;  /* format to represent SDF data      */
 
   typedef FT_BBox   FT_CBox;       /* control box of a curve            */
