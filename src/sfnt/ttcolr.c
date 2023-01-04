@@ -56,6 +56,7 @@
 #define LAYER_V1_LIST_PAINT_OFFSET_SIZE   4U
 #define LAYER_V1_LIST_NUM_LAYERS_SIZE     4U
 #define COLOR_STOP_SIZE                   6U
+#define VAR_IDX_BASE_SIZE                 4U
 #define LAYER_SIZE                        4U
 /* https://docs.microsoft.com/en-us/typography/opentype/spec/colr#colr-header */
 /* 3 * uint16 + 2 * Offset32 */
@@ -1618,20 +1619,29 @@
 
     FT_Byte*  p;
     FT_ULong  var_index_base;
+    FT_Byte*  last_entry_p = NULL;
+    FT_UInt   entry_size   = COLOR_STOP_SIZE;
 
 
-    if ( !colr || !colr->table )
+    if ( !colr || !colr->table || !iterator )
       return 0;
 
     if ( iterator->current_color_stop >= iterator->num_color_stops )
       return 0;
 
-    /* Subtract 3 times 2 because we need to succeed in reading */
-    /* three 2-byte short values.                               */
-    if ( iterator->p +
-           ( iterator->num_color_stops - iterator->current_color_stop ) *
-           COLOR_STOP_SIZE >
-         (FT_Byte*)colr->table + colr->table_size - 1 - 2 - 2 - 2 )
+    if ( iterator->read_variable )
+      entry_size += VAR_IDX_BASE_SIZE;
+
+    /* Calculate the start pointer for the last to-be-read (Var)ColorStop */
+    /* and check whether we can read a full (Var)ColorStop at that        */
+    /* position by comparing it to the position that is the size of one   */
+    /* (Var)ColorStop before the end of the 'COLR' table.                 */
+    last_entry_p =
+      iterator->p + ( iterator->num_color_stops - 1 -
+                      iterator->current_color_stop ) * entry_size;
+    if ( iterator->p < colr->paints_start_v1          ||
+         last_entry_p > (FT_Byte*)colr->table +
+                        colr->table_size - entry_size )
       return 0;
 
     /* Iterator points at first `ColorStop` of `ColorLine`. */
