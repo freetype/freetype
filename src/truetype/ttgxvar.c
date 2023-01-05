@@ -502,13 +502,15 @@
     FT_Error   error;
     FT_UShort  format;
     FT_ULong   region_offset;
-    FT_UInt    i, j, k;
-    FT_UInt    wordDeltaCount;
-    FT_Bool    long_words;
 
-    GX_Blend        blend = face->blend;
-    GX_ItemVarData  varData;
+    FT_UInt    data_count;
+    FT_UShort  axis_count;
+    FT_UInt    region_count;
 
+    FT_UInt  i, j, k;
+    FT_Bool  long_words;
+
+    GX_Blend   blend           = face->blend;
     FT_ULong*  dataOffsetArray = NULL;
 
 
@@ -525,12 +527,12 @@
     }
 
     /* read top level fields */
-    if ( FT_READ_ULONG( region_offset )         ||
-         FT_READ_USHORT( itemStore->dataCount ) )
+    if ( FT_READ_ULONG( region_offset ) ||
+         FT_READ_USHORT( data_count )   )
       goto Exit;
 
     /* we need at least one entry in `itemStore->varData' */
-    if ( !itemStore->dataCount )
+    if ( !data_count )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store: missing varData\n" ));
       error = FT_THROW( Invalid_Table );
@@ -539,10 +541,10 @@
 
     /* make temporary copy of item variation data offsets; */
     /* we will parse region list first, then come back     */
-    if ( FT_QNEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
+    if ( FT_QNEW_ARRAY( dataOffsetArray, data_count ) )
       goto Exit;
 
-    for ( i = 0; i < itemStore->dataCount; i++ )
+    for ( i = 0; i < data_count; i++ )
     {
       if ( FT_READ_ULONG( dataOffsetArray[i] ) )
         goto Exit;
@@ -552,11 +554,11 @@
     if ( FT_STREAM_SEEK( offset + region_offset ) )
       goto Exit;
 
-    if ( FT_READ_USHORT( itemStore->axisCount )   ||
-         FT_READ_USHORT( itemStore->regionCount ) )
+    if ( FT_READ_USHORT( axis_count )   ||
+         FT_READ_USHORT( region_count ) )
       goto Exit;
 
-    if ( itemStore->axisCount != (FT_Long)blend->mmvar->num_axis )
+    if ( axis_count != (FT_Long)blend->mmvar->num_axis )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " number of axes in item variation store\n" ));
@@ -565,9 +567,10 @@
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
+    itemStore->axisCount = axis_count;
 
     /* new constraint in OpenType 1.8.4 */
-    if ( itemStore->regionCount >= 32768U )
+    if ( region_count >= 32768U )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " too many variation region tables\n" ));
@@ -575,16 +578,16 @@
       goto Exit;
     }
 
-    if ( FT_NEW_ARRAY( itemStore->varRegionList, itemStore->regionCount ) )
+    if ( FT_NEW_ARRAY( itemStore->varRegionList, region_count ) )
       goto Exit;
+    itemStore->regionCount = region_count;
 
     for ( i = 0; i < itemStore->regionCount; i++ )
     {
       GX_AxisCoords  axisCoords;
 
 
-      if ( FT_NEW_ARRAY( itemStore->varRegionList[i].axisList,
-                         itemStore->axisCount ) )
+      if ( FT_NEW_ARRAY( itemStore->varRegionList[i].axisList, axis_count ) )
         goto Exit;
 
       axisCoords = itemStore->varRegionList[i].axisList;
@@ -608,47 +611,53 @@
     /* end of region list parse */
 
     /* use dataOffsetArray now to parse varData items */
-    if ( FT_NEW_ARRAY( itemStore->varData, itemStore->dataCount ) )
+    if ( FT_NEW_ARRAY( itemStore->varData, data_count ) )
       goto Exit;
+    itemStore->dataCount = data_count;
 
-    for ( i = 0; i < itemStore->dataCount; i++ )
+    for ( i = 0; i < data_count; i++ )
     {
-      varData = &itemStore->varData[i];
+      GX_ItemVarData  varData = &itemStore->varData[i];
+
+      FT_UInt  item_count;
+      FT_UInt  word_delta_count;
+      FT_UInt  region_idx_count;
+
 
       if ( FT_STREAM_SEEK( offset + dataOffsetArray[i] ) )
         goto Exit;
 
-      if ( FT_READ_USHORT( varData->itemCount )      ||
-           FT_READ_USHORT( wordDeltaCount )          ||
-           FT_READ_USHORT( varData->regionIdxCount ) )
+      if ( FT_READ_USHORT( item_count )       ||
+           FT_READ_USHORT( word_delta_count ) ||
+           FT_READ_USHORT( region_idx_count ) )
         goto Exit;
 
-      long_words      = !!( wordDeltaCount & 0x8000 );
-      wordDeltaCount &= 0x7FFF;
+      long_words        = !!( word_delta_count & 0x8000 );
+      word_delta_count &= 0x7FFF;
 
       /* check some data consistency */
-      if ( wordDeltaCount > varData->regionIdxCount )
+      if ( word_delta_count > region_idx_count )
       {
         FT_TRACE2(( "bad short count %d or region count %d\n",
-                    wordDeltaCount,
-                    varData->regionIdxCount ));
+                    word_delta_count,
+                    region_idx_count ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
-      if ( varData->regionIdxCount > itemStore->regionCount )
+      if ( region_idx_count > itemStore->regionCount )
       {
         FT_TRACE2(( "inconsistent regionCount %d in varData[%d]\n",
-                    varData->regionIdxCount,
+                    region_idx_count,
                     i ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
       /* parse region indices */
-      if ( FT_NEW_ARRAY( varData->regionIndices,
-                         varData->regionIdxCount ) )
+      if ( FT_NEW_ARRAY( varData->regionIndices, region_idx_count ) )
         goto Exit;
+      varData->regionIdxCount = region_idx_count;
 
       for ( j = 0; j < varData->regionIdxCount; j++ )
       {
@@ -664,33 +673,33 @@
         }
       }
 
-      /* Parse delta set.                                                */
-      /*                                                                 */
-      /* On input, deltas are (wordDeltaCount + regionIdxCount) bytes    */
-      /* each if `long_words` isn't set, and twice as much otherwise.    */
-      /*                                                                 */
-      /* On output, deltas are expanded to `regionIdxCount` shorts each. */
-      if ( FT_NEW_ARRAY( varData->deltaSet,
-                         varData->regionIdxCount * varData->itemCount ) )
+      /* Parse delta set.                                                  */
+      /*                                                                   */
+      /* On input, deltas are (word_delta_count + region_idx_count) bytes  */
+      /* each if `long_words` isn't set, and twice as much otherwise.      */
+      /*                                                                   */
+      /* On output, deltas are expanded to `region_idx_count` shorts each. */
+      if ( FT_NEW_ARRAY( varData->deltaSet, item_count * region_idx_count ) )
         goto Exit;
+      varData->itemCount = item_count;
 
-      for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
+      for ( j = 0; j < item_count * region_idx_count; )
       {
         if ( long_words )
         {
-          for ( k = 0; k < wordDeltaCount; k++, j++ )
+          for ( k = 0; k < word_delta_count; k++, j++ )
             if ( FT_READ_LONG( varData->deltaSet[j] ) )
               goto Exit;
-          for ( ; k < varData->regionIdxCount; k++, j++ )
+          for ( ; k < region_idx_count; k++, j++ )
             if ( FT_READ_SHORT( varData->deltaSet[j] ) )
               goto Exit;
         }
         else
         {
-          for ( k = 0; k < wordDeltaCount; k++, j++ )
+          for ( k = 0; k < word_delta_count; k++, j++ )
             if ( FT_READ_SHORT( varData->deltaSet[j] ) )
               goto Exit;
-          for ( ; k < varData->regionIdxCount; k++, j++ )
+          for ( ; k < region_idx_count; k++, j++ )
             if ( FT_READ_CHAR( varData->deltaSet[j] ) )
               goto Exit;
         }
