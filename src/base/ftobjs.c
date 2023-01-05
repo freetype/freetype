@@ -3280,32 +3280,47 @@
       scaled_h = FT_REQUEST_HEIGHT( req );
 
       /* determine scales */
+      if ( req->height || !req->width )
+      {
+        if ( h == 0 )
+        {
+          FT_ERROR(( "FT_Request_Metrics: Divide by zero\n" ));
+          error = FT_ERR( Divide_By_Zero );
+          goto Exit;
+        }
+
+        metrics->y_scale = FT_DivFix( scaled_h, h );
+      }
+
       if ( req->width )
       {
+        if ( w == 0 )
+        {
+          FT_ERROR(( "FT_Request_Metrics: Divide by zero\n" ));
+          error = FT_ERR( Divide_By_Zero );
+          goto Exit;
+        }
+
         metrics->x_scale = FT_DivFix( scaled_w, w );
-
-        if ( req->height )
-        {
-          metrics->y_scale = FT_DivFix( scaled_h, h );
-
-          if ( req->type == FT_SIZE_REQUEST_TYPE_CELL )
-          {
-            if ( metrics->y_scale > metrics->x_scale )
-              metrics->y_scale = metrics->x_scale;
-            else
-              metrics->x_scale = metrics->y_scale;
-          }
-        }
-        else
-        {
-          metrics->y_scale = metrics->x_scale;
-          scaled_h = FT_MulDiv( scaled_w, h, w );
-        }
       }
       else
       {
-        metrics->x_scale = metrics->y_scale = FT_DivFix( scaled_h, h );
+        metrics->x_scale = metrics->y_scale;
         scaled_w = FT_MulDiv( scaled_h, w, h );
+      }
+
+      if ( !req->height )
+      {
+        metrics->y_scale = metrics->x_scale;
+        scaled_h = FT_MulDiv( scaled_w, h, w );
+      }
+
+      if ( req->type == FT_SIZE_REQUEST_TYPE_CELL )
+      {
+        if ( metrics->y_scale > metrics->x_scale )
+          metrics->y_scale = metrics->x_scale;
+        else
+          metrics->x_scale = metrics->y_scale;
       }
 
   Calculate_Ppem:
