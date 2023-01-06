@@ -193,7 +193,6 @@ FT_BEGIN_HEADER
     FT_Long*           cvt;       /* ! */
     FT_ULong           glyfCvtSize;
     FT_Long*           glyfCvt;   /* cvt working copy for glyph */
-    FT_Long*           origCvt;
 
     FT_UInt            glyphSize; /* ! glyph instructions buffer size */
     FT_Byte*           glyphIns;  /* ! glyph instructions buffer      */
@@ -224,7 +223,6 @@ FT_BEGIN_HEADER
     FT_Long*           storage;      /* ! storage area            */
     FT_UShort          glyfStoreSize;
     FT_Long*           glyfStorage;  /* storage working copy for glyph */
-    FT_Long*           origStorage;
 
     FT_F26Dot6         period;     /* values used for the */
     FT_F26Dot6         phase;      /* `SuperRounding'     */
