@@ -38,6 +38,7 @@
 static hb_blob_t *
 _hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 {
+  FT_UNUSED (face);
   FT_Face ft_face = (FT_Face) user_data;
   FT_Byte *buffer;
   FT_ULong  length = 0;
@@ -49,7 +50,7 @@ _hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
   if (error)
     return NULL;
 
-  buffer = (FT_Byte *) malloc (length);
+  buffer = (FT_Byte *) ft_smalloc (length);
   if (!buffer)
     return NULL;
 
@@ -62,7 +63,7 @@ _hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 
   return hb_blob_create ((const char *) buffer, length,
                          HB_MEMORY_MODE_WRITABLE,
-                         buffer, free);
+                         buffer, ft_sfree);
 }
 
 static hb_face_t *
