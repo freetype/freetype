@@ -1676,9 +1676,9 @@
 
 
     FT_FREE( stream->base );
-
     stream->size  = 0;
     stream->close = NULL;
+    FT_FREE( stream );
   }
 
 
@@ -1734,6 +1734,7 @@
     FT_Memory     memory = library->memory;
 
 
+    /* `memory_stream_close` also frees the stream object. */
     error = new_memory_stream( library,
                                base,
                                size,
@@ -1763,21 +1764,7 @@
       face_index &= 0x7FFF0000L; /* retain GX data */
 #endif
 
-    error = ft_open_face_internal( library, &args, face_index, aface, 0 );
-
-    if ( !error )
-      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
-    else
-#ifdef FT_MACINTOSH
-      FT_Stream_Free( stream, 0 );
-#else
-    {
-      FT_Stream_Close( stream );
-      FT_FREE( stream );
-    }
-#endif
-
-    return error;
+    return ft_open_face_internal( library, &args, face_index, aface, 0 );
   }
 
 
