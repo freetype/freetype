@@ -1672,7 +1672,7 @@
   static void
   memory_stream_close( FT_Stream  stream )
   {
-    FT_Memory  memory = stream->memory;
+    FT_Memory  memory = (FT_Memory)stream->descriptor.pointer;
 
 
     FT_FREE( stream->base );
@@ -1709,7 +1709,8 @@
 
     FT_Stream_OpenMemory( stream, base, size );
 
-    stream->close = close;
+    stream->descriptor.pointer = memory;
+    stream->close              = close;
 
     *astream = stream;
 
