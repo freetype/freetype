@@ -2544,7 +2544,7 @@
 
     /* test for valid `library' delayed to `FT_Stream_New' */
 
-    if ( ( !aface && face_index >= 0 ) || !args )
+    if ( !args )
       return FT_THROW( Invalid_Argument );
 
     external_stream = FT_BOOL( ( args->flags & FT_OPEN_STREAM ) &&
@@ -2554,6 +2554,14 @@
     error = FT_Stream_New( library, args, &stream );
     if ( error )
       goto Fail3;
+
+    /* Do this error check after `FT_Stream_New` to ensure that the */
+    /* 'close' callback is called.                                  */
+    if ( !aface && face_index >= 0 )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Fail3;
+    }
 
     memory = library->memory;
 
