@@ -61,7 +61,7 @@
 #define ENSURE_READ_BYTES( byte_size )                             \
   if ( p < colr->paints_start_v1                                || \
        p > (FT_Byte*)colr->table + colr->table_size - byte_size )  \
-    return 0;
+    return 0
 
 
   typedef enum  FT_PaintFormat_Internal_

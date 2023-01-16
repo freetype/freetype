@@ -90,7 +90,9 @@
 
 #if defined( __GNUC__ )
 #pragma GCC diagnostic push
+#ifndef __cplusplus
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #pragma GCC diagnostic ignored "-Wredundant-decls"
 #endif

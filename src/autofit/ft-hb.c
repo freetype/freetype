@@ -38,11 +38,12 @@
 static hb_blob_t *
 _hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 {
-  FT_UNUSED (face);
   FT_Face ft_face = (FT_Face) user_data;
   FT_Byte *buffer;
   FT_ULong  length = 0;
   FT_Error error;
+
+  FT_UNUSED (face);
 
   /* Note: FreeType like HarfBuzz uses the NONE tag for fetching the entire blob */
 

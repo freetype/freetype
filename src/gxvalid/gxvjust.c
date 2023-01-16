@@ -156,7 +156,6 @@
   {
     FT_Bytes  p         = table;
     FT_Bytes  wdc_end   = table + GXV_JUST_DATA( wdc_offset_max );
-    FT_UInt   i;
 
 
     GXV_NAME_ENTER( "just justDeltaClusters" );
@@ -164,7 +163,7 @@
     if ( limit <= wdc_end )
       FT_INVALID_OFFSET;
 
-    for ( i = 0; p <= wdc_end; i++ )
+    while ( p <= wdc_end )
     {
       gxv_just_wdc_entry_validate( p, limit, gxvalid );
       p += gxvalid->subtable_length;

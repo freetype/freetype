@@ -310,7 +310,8 @@
     if ( error != FT_Err_Ok )
       goto Exit;
 
-    doc_limit = svg->table_size - ( doc_list - (FT_Byte*)svg->table );
+    doc_limit = svg->table_size -
+                  (FT_ULong)( doc_list - (FT_Byte*)svg->table );
     if ( doc_offset > doc_limit              ||
          doc_length > doc_limit - doc_offset )
     {
