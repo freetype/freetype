@@ -1915,7 +1915,7 @@
                                    sfnt_ps,
                                    length,
                                    FT_MIN( face_index, 0 ),
-                                   is_sfnt_cid ? "cid" : "type1",
+                                   is_sfnt_cid ? "t1cid" : "type1",
                                    aface );
   Exit:
     {
