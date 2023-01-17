@@ -190,7 +190,7 @@
 #endif
 
     if ( table_size < COLRV0_HEADER_SIZE )
-      goto InvalidTable;
+      goto NoColr;
 
     if ( FT_FRAME_EXTRACT( table_size, table ) )
       goto NoColr;
