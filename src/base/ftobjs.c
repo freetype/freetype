@@ -1731,29 +1731,36 @@
   {
     FT_Open_Args  args;
     FT_Error      error;
-    FT_Stream     stream = NULL;
     FT_Memory     memory = library->memory;
 
+
+    args.flags = 0;
+
+    if ( driver_name )
+    {
+      args.driver = FT_Get_Module( library, driver_name );
+      if ( !args.driver )
+      {
+        FT_FREE( base );
+        return FT_THROW( Missing_Module );
+      }
+
+      args.flags = args.flags | FT_OPEN_DRIVER;
+    }
 
     /* `memory_stream_close` also frees the stream object. */
     error = new_memory_stream( library,
                                base,
                                size,
                                memory_stream_close,
-                               &stream );
+                               &args.stream );
     if ( error )
     {
       FT_FREE( base );
       return error;
     }
 
-    args.flags  = FT_OPEN_STREAM;
-    args.stream = stream;
-    if ( driver_name )
-    {
-      args.flags  = args.flags | FT_OPEN_DRIVER;
-      args.driver = FT_Get_Module( library, driver_name );
-    }
+    args.flags |= FT_OPEN_STREAM;
 
 #ifdef FT_MACINTOSH
     /* At this point, the face index has served its purpose;  */
