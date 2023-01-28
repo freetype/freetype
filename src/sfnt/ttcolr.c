@@ -1025,14 +1025,14 @@
       /* Base values set, now handle variations. */
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( ( (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE                ||
-             (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER         ||
-             (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM        ||
-             (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER ) )
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE                ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_CENTER         ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM        ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SCALE_UNIFORM_CENTER )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -1124,10 +1124,10 @@
       }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( ( (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE        ||
-             (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER ) )
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE        ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_ROTATE_CENTER )
       {
         FT_UInt  num_deltas = 0;
 
@@ -1197,10 +1197,10 @@
 
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( ( (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW        ||
-             (FT_PaintFormat_Internal)apaint->format ==
-               FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER ) )
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW        ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_VAR_SKEW_CENTER )
       {
         ENSURE_READ_BYTES( 4 );
         var_index_base = FT_NEXT_ULONG( p );
@@ -1452,7 +1452,7 @@
           FT_ItemVarDelta  item_deltas[4] = { 0, 0, 0, 0 };
 
 
-          /* Check whether we can extract a 32-bit VarIdxBase now. */
+          /* Check whether we can extract a 32-bit varIndexBase now. */
           if ( p1 > limit - 4 )
             return 0;
 
@@ -1559,8 +1559,8 @@
      * Before reading, ensure that `p` is within 'COLR' v1 and we can read a
      * 4-byte ULONG.
      */
-    if ( p < colr->layers_v1                                  ||
-         p > ( (FT_Byte*)colr->table + colr->table_size - 4 ) )
+    if ( p < colr->layers_v1                              ||
+         p > (FT_Byte*)colr->table + colr->table_size - 4 )
       return 0;
 
     paint_offset =

@@ -7,6 +7,8 @@ CHANGES BETWEEN 2.12.1 and 2.13
     graphical FreeType  demo programs into a  single application based
     on the Qt framework.  This was Charlie Jiang's GSoC 2022 project.
 
+  - The 'COLR' v1 API is now considered as stable.
+
 
   III. MISCELLANEOUS
 
@@ -18,7 +20,8 @@ CHANGES BETWEEN 2.12.1 and 2.13
 
       https://github.com/harfbuzz/boring-expansion-spec/blob/main/avar2.md
 
-    for the specification.
+    for the specification.  To deactivate it, define the configuration
+    macro 'TT_CONFIG_OPTION_NO_BORING_EXPANSION'.
 
   - A new API  `FT_GlyphSlot_Slant` to slant a glyph by  a given angle
     has been added.   Note that this function is  part of `ftsynth.h`,

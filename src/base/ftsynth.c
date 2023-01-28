@@ -46,6 +46,7 @@
   FT_EXPORT_DEF( void )
   FT_GlyphSlot_Oblique( FT_GlyphSlot  slot )
   {
+    /* Value '0x0366A' corresponds to a shear angle of about 12 degrees. */
     FT_GlyphSlot_Slant( slot, 0x0366A );
   }
 
