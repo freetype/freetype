@@ -2269,8 +2269,8 @@
                    FT_UInt       glyph_index,
                    FT_Int32      load_flags )
   {
-    TT_Face             face = (TT_Face)glyph->face;
-    SFNT_Service        sfnt = (SFNT_Service)face->sfnt;
+    TT_Face             face   = (TT_Face)glyph->face;
+    SFNT_Service        sfnt   = (SFNT_Service)face->sfnt;
     FT_Stream           stream = face->root.stream;
     FT_Error            error;
     TT_SBit_MetricsRec  sbit_metrics;
@@ -2326,7 +2326,7 @@
                   FT_Int32      load_flags,
                   FT_Bool       glyf_table_only )
   {
-    TT_Face    face = (TT_Face)glyph->face;
+    TT_Face    face   = (TT_Face)glyph->face;
     FT_Stream  stream = face->root.stream;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -2334,7 +2334,7 @@
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
 #if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
     defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( glyph->face );
+    TT_Driver  driver   = (TT_Driver)FT_FACE_DRIVER( glyph->face );
 #endif
 #endif
 

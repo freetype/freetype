@@ -519,8 +519,8 @@
     case FT_PIXEL_MODE_BGRA:
       {
         FT_Int  width = (FT_Int)source->width;
-        FT_Int  neg = ( target->pitch == 0 && source->pitch < 0 ) ||
-                        target->pitch  < 0;
+        FT_Int  neg   = ( target->pitch == 0 && source->pitch < 0 ) ||
+                          target->pitch  < 0;
 
 
         FT_Bitmap_Done( library, target );

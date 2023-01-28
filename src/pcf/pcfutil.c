@@ -57,8 +57,9 @@ in this Software without prior written authorization from The Open Group.
   }
 
 
-#if defined( __clang__ ) || ( defined( __GNUC__ )                &&  \
-    ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 8 ) ) )
+#if defined( __clang__ )                                            || \
+    ( defined( __GNUC__ )                                          &&  \
+      ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 8 ) ) )
 
 #define BSWAP16( x )  __builtin_bswap16( x )
 #define BSWAP32( x )  __builtin_bswap32( x )

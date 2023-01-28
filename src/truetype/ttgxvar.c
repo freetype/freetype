@@ -3994,11 +3994,11 @@
                               FT_Vector*   unrounded )
   {
     FT_Error   error;
-    TT_Face    face = loader->face;
-    FT_Stream  stream = face->root.stream;
-    FT_Memory  memory = stream->memory;
+    TT_Face    face        = loader->face;
+    FT_Stream  stream      = face->root.stream;
+    FT_Memory  memory      = stream->memory;
     FT_UInt    glyph_index = loader->glyph_index;
-    FT_UInt    n_points = (FT_UInt)outline->n_points + 4;
+    FT_UInt    n_points    = (FT_UInt)outline->n_points + 4;
 
     FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
     FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
