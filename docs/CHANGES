@@ -38,6 +38,19 @@ CHANGES BETWEEN 2.12.1 and 2.13
   - The  only  referenced  but never  documented  configuration  macro
     `FT_CONFIG_OPTION_NO_GLYPH_NAMES` has been removed.
 
+  - The `ftbench` demo  program got a new command line  option `-e` to
+    set a charmap index.
+
+  - Specifying  a point  size is  now optional  for the  demo programs
+    `ftgrid`, `ftmulti`,  `ftstring`, and  `ftview`.  If not  given, a
+    default size is used.
+
+  - For  `ftgrid`,  `ftstring`, and  `ftview`,  option  `-e` now  also
+    accepts a numeric value to set a charmap index.
+
+  - In  `ftstring`, it  is  now  possible to  set  the displayed  text
+    interactively by pressing the 'Enter' key.
+
 
 ======================================================================
 
