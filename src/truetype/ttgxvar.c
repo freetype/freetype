@@ -1004,16 +1004,16 @@
     GX_ItemVarData    varData;
     FT_ItemVarDelta*  deltaSet;
 
-    FT_UInt           master, j;
-    FT_Fixed*         scalars;
-    FT_ItemVarDelta   returnValue;
+    FT_UInt          master, j;
+    FT_Fixed*        scalars;
+    FT_ItemVarDelta  returnValue;
 
 
-    if ( !face->blend->normalizedcoords )
+    if ( !face->blend || !face->blend->normalizedcoords )
       return 0;
 
-    /* OpenType 1.8.4+: No variation data for this item
-     *  as indices have special value 0xFFFF. */
+    /* OpenType 1.8.4+: No variation data for this item */
+    /* as indices have special value 0xFFFF.            */
     if ( outerIndex == 0xFFFF && innerIndex == 0xFFFF )
       return 0;
 
