@@ -297,7 +297,8 @@
       t1_face->bbox.yMax = ( fi->FontBBox.yMax + 0xFFFF ) >> 16;
 
       /* ascender and descender are optional and could both be zero */
-      if ( fi->Ascender || fi->Descender )
+      /* check if values are meaningful before overriding defaults  */
+      if ( fi->Ascender > fi->Descender )
       {  
         /* no `U' suffix here to 0x8000! */
         t1_face->ascender  = (FT_Short)( ( fi->Ascender  + 0x8000 ) >> 16 );
