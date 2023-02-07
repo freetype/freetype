@@ -36,7 +36,7 @@
  */
 
 static hb_blob_t *
-_hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
+hb_ft_reference_table_ (hb_face_t *face, hb_tag_t tag, void *user_data)
 {
   FT_Face ft_face = (FT_Face) user_data;
   FT_Byte *buffer;
@@ -68,7 +68,7 @@ _hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 }
 
 static hb_face_t *
-_hb_ft_face_create (FT_Face           ft_face,
+hb_ft_face_create_ (FT_Face           ft_face,
                     hb_destroy_func_t destroy)
 {
   hb_face_t *face;
@@ -83,7 +83,7 @@ _hb_ft_face_create (FT_Face           ft_face,
     face = hb_face_create (blob, ft_face->face_index);
     hb_blob_destroy (blob);
   } else {
-    face = hb_face_create_for_tables (_hb_ft_reference_table, ft_face, destroy);
+    face = hb_face_create_for_tables (hb_ft_reference_table_, ft_face, destroy);
   }
 
   hb_face_set_index (face, ft_face->face_index);
@@ -93,13 +93,13 @@ _hb_ft_face_create (FT_Face           ft_face,
 }
 
 hb_font_t *
-_hb_ft_font_create (FT_Face           ft_face,
+hb_ft_font_create_ (FT_Face           ft_face,
                     hb_destroy_func_t destroy)
 {
   hb_font_t *font;
   hb_face_t *face;
 
-  face = _hb_ft_face_create (ft_face, destroy);
+  face = hb_ft_face_create_ (ft_face, destroy);
   font = hb_font_create (face);
   hb_face_destroy (face);
   return font;

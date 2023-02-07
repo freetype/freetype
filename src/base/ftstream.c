@@ -261,7 +261,7 @@
       }
 
 #ifdef FT_DEBUG_MEMORY
-      /* assume _ft_debug_file and _ft_debug_lineno are already set */
+      /* assume `ft_debug_file_` and `ft_debug_lineno_` are already set */
       stream->base = (unsigned char*)ft_mem_qalloc( memory,
                                                     (FT_Long)count,
                                                     &error );

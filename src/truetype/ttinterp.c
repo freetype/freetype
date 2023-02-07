@@ -6871,7 +6871,7 @@
 
 
   static void
-  _iup_worker_shift( IUP_Worker  worker,
+  iup_worker_shift_( IUP_Worker  worker,
                      FT_UInt     p1,
                      FT_UInt     p2,
                      FT_UInt     p )
@@ -6893,7 +6893,7 @@
 
 
   static void
-  _iup_worker_interpolate( IUP_Worker  worker,
+  iup_worker_interpolate_( IUP_Worker  worker,
                            FT_UInt     p1,
                            FT_UInt     p2,
                            FT_UInt     ref1,
@@ -7087,7 +7087,7 @@
         {
           if ( ( exc->pts.tags[point] & mask ) != 0 )
           {
-            _iup_worker_interpolate( &V,
+            iup_worker_interpolate_( &V,
                                      cur_touched + 1,
                                      point - 1,
                                      cur_touched,
@@ -7099,17 +7099,17 @@
         }
 
         if ( cur_touched == first_touched )
-          _iup_worker_shift( &V, first_point, end_point, cur_touched );
+          iup_worker_shift_( &V, first_point, end_point, cur_touched );
         else
         {
-          _iup_worker_interpolate( &V,
+          iup_worker_interpolate_( &V,
                                    (FT_UShort)( cur_touched + 1 ),
                                    end_point,
                                    cur_touched,
                                    first_touched );
 
           if ( first_touched > 0 )
-            _iup_worker_interpolate( &V,
+            iup_worker_interpolate_( &V,
                                      first_point,
                                      first_touched - 1,
                                      cur_touched,

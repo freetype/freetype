@@ -96,15 +96,15 @@ extern "C++"
 
 #ifdef FT_DEBUG_MEMORY
 
-  FT_BASE( const char* )  _ft_debug_file;
-  FT_BASE( long )         _ft_debug_lineno;
+  FT_BASE( const char* )  ft_debug_file_;
+  FT_BASE( long )         ft_debug_lineno_;
 
-#define FT_DEBUG_INNER( exp )  ( _ft_debug_file   = __FILE__, \
-                                 _ft_debug_lineno = __LINE__, \
+#define FT_DEBUG_INNER( exp )  ( ft_debug_file_   = __FILE__, \
+                                 ft_debug_lineno_ = __LINE__, \
                                  (exp) )
 
-#define FT_ASSIGNP_INNER( p, exp )  ( _ft_debug_file   = __FILE__, \
-                                      _ft_debug_lineno = __LINE__, \
+#define FT_ASSIGNP_INNER( p, exp )  ( ft_debug_file_   = __FILE__, \
+                                      ft_debug_lineno_ = __LINE__, \
                                       FT_ASSIGNP( p, exp ) )
 
 #else /* !FT_DEBUG_MEMORY */

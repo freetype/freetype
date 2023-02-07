@@ -23,7 +23,7 @@
 
 
   static FT_Error
-  _ft_face_scale_advances( FT_Face    face,
+  ft_face_scale_advances_( FT_Face    face,
                            FT_Fixed*  advances,
                            FT_UInt    count,
                            FT_Int32   flags )
@@ -96,7 +96,7 @@
 
       error = func( face, gindex, 1, flags, padvance );
       if ( !error )
-        return _ft_face_scale_advances( face, padvance, 1, flags );
+        return ft_face_scale_advances_( face, padvance, 1, flags );
 
       if ( FT_ERR_NEQ( error, Unimplemented_Feature ) )
         return error;
@@ -142,7 +142,7 @@
     {
       error = func( face, start, count, flags, padvances );
       if ( !error )
-        return _ft_face_scale_advances( face, padvances, count, flags );
+        return ft_face_scale_advances_( face, padvances, count, flags );
 
       if ( FT_ERR_NEQ( error, Unimplemented_Feature ) )
         return error;
