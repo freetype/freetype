@@ -1116,13 +1116,13 @@
       goto Exit;
     }
 
-    spread = FT_INT_16D16( worker->params.spread );
+    spread = (FT_16D16)FT_INT_16D16( worker->params.spread );
 
 #if USE_SQUARED_DISTANCES
-    sp_sq = FT_INT_16D16( worker->params.spread *
-                          worker->params.spread );
+    sp_sq = (FT_16D16)FT_INT_16D16( worker->params.spread *
+                                    worker->params.spread );
 #else
-    sp_sq = FT_INT_16D16( worker->params.spread );
+    sp_sq = (FT_16D16)FT_INT_16D16( worker->params.spread );
 #endif
 
     for ( j = 0; j < r; j++ )

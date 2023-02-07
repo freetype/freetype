@@ -3258,7 +3258,7 @@
     /* and also determine the signs properly.             */
     SDF_Signed_Distance*  dists = NULL;
 
-    const FT_16D16  fixed_spread = FT_INT_16D16( spread );
+    const FT_16D16  fixed_spread = (FT_16D16)FT_INT_16D16( spread );
 
 
     if ( !shape || !bitmap )
