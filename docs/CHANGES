@@ -51,6 +51,8 @@ CHANGES BETWEEN 2.12.1 and 2.13
   - In  `ftstring`, it  is  now  possible to  set  the displayed  text
     interactively by pressing the 'Enter' key.
 
+  - `ftmulti` can now handle up to 16 design axes.
+
 
 ======================================================================
 
