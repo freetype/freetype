@@ -737,19 +737,19 @@
 
         if ( subglyph->flags & WE_HAVE_A_SCALE )
           FT_TRACE7(( "      scaling: %f\n",
-                      subglyph->transform.xx / 65536.0 ));
+                      (double)subglyph->transform.xx / 65536 ));
         else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
           FT_TRACE7(( "      scaling: x=%f, y=%f\n",
-                      subglyph->transform.xx / 65536.0,
-                      subglyph->transform.yy / 65536.0 ));
+                      (double)subglyph->transform.xx / 65536,
+                      (double)subglyph->transform.yy / 65536 ));
         else if ( subglyph->flags & WE_HAVE_A_2X2 )
         {
           FT_TRACE7(( "      scaling: xx=%f, yx=%f\n",
-                      subglyph->transform.xx / 65536.0,
-                      subglyph->transform.yx / 65536.0 ));
+                      (double)subglyph->transform.xx / 65536,
+                      (double)subglyph->transform.yx / 65536 ));
           FT_TRACE7(( "               xy=%f, yy=%f\n",
-                      subglyph->transform.xy / 65536.0,
-                      subglyph->transform.yy / 65536.0 ));
+                      (double)subglyph->transform.xy / 65536,
+                      (double)subglyph->transform.yy / 65536 ));
         }
 
         subglyph++;

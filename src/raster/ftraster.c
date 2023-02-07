@@ -2219,8 +2219,8 @@
     /* represent multiples of 1/(1<<12) = 1/4096                    */
     FT_TRACE7(( "  y=%d x=[% .12f;% .12f]",
                 y,
-                x1 / (double)ras.precision,
-                x2 / (double)ras.precision ));
+                (double)x1 / (double)ras.precision,
+                (double)x2 / (double)ras.precision ));
 
     /* Drop-out control */
 
@@ -2294,8 +2294,8 @@
 
     FT_TRACE7(( "  y=%d x=[% .12f;% .12f]",
                 y,
-                x1 / (double)ras.precision,
-                x2 / (double)ras.precision ));
+                (double)x1 / (double)ras.precision,
+                (double)x2 / (double)ras.precision ));
 
     /* Drop-out control */
 
@@ -2477,8 +2477,8 @@
 
     FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
                 y,
-                x1 / (double)ras.precision,
-                x2 / (double)ras.precision ));
+                (double)x1 / (double)ras.precision,
+                (double)x2 / (double)ras.precision ));
 
     /* We should not need this procedure but the vertical sweep   */
     /* mishandles horizontal lines through pixel centers.  So we  */
@@ -2548,8 +2548,8 @@
 
     FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
                 y,
-                x1 / (double)ras.precision,
-                x2 / (double)ras.precision ));
+                (double)x1 / (double)ras.precision,
+                (double)x2 / (double)ras.precision ));
 
     /* During the horizontal sweep, we only take care of drop-outs */
 

@@ -471,10 +471,10 @@
 
                 point->fx,
                 point->fy,
-                point->ox / 64.0,
-                point->oy / 64.0,
-                point->x / 64.0,
-                point->y / 64.0,
+                (double)point->ox / 64,
+                (double)point->oy / 64,
+                (double)point->x / 64,
+                (double)point->y / 64,
 
                 af_print_idx( buf5, af_get_strong_edge_index( hints,
                                                               point->before,
@@ -692,13 +692,13 @@
       if ( dimension == AF_DIMENSION_HORZ )
         AF_DUMP(( "Table of %s edges (1px=%.2fu, 10u=%.2fpx):\n",
                   "vertical",
-                  65536.0 * 64.0 / hints->x_scale,
-                  10.0 * hints->x_scale / 65536.0 / 64.0 ));
+                  65536 * 64 / (double)hints->x_scale,
+                  10 * (double)hints->x_scale / 65536 / 64 ));
       else
         AF_DUMP(( "Table of %s edges (1px=%.2fu, 10u=%.2fpx):\n",
                   "horizontal",
-                  65536.0 * 64.0 / hints->y_scale,
-                  10.0 * hints->y_scale / 65536.0 / 64.0 ));
+                  65536 * 64 / (double)hints->y_scale,
+                  10 * (double)hints->y_scale / 65536 / 64 ));
 
       if ( axis->num_edges )
       {
@@ -714,14 +714,14 @@
         AF_DUMP(( "  %5d  %7.2f  %5s  %4s  %5s"
                   "    %c   %7.2f  %7.2f  %11s\n",
                   AF_INDEX_NUM( edge, edges ),
-                  (int)edge->opos / 64.0,
+                  (double)(int)edge->opos / 64,
                   af_dir_str( (AF_Direction)edge->dir ),
                   af_print_idx( buf1, AF_INDEX_NUM( edge->link, edges ) ),
                   af_print_idx( buf2, AF_INDEX_NUM( edge->serif, edges ) ),
 
                   edge->blue_edge ? 'y' : 'n',
-                  edge->opos / 64.0,
-                  edge->pos / 64.0,
+                  (double)edge->opos / 64,
+                  (double)edge->pos / 64,
                   af_edge_flags_to_string( edge->flags ) ));
       AF_DUMP(( "\n" ));
     }

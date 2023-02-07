@@ -758,12 +758,12 @@
       *upm = (FT_ULong)power_tens[-max_scaling];
 
       FT_TRACE4(( " [%f %f %f %f %f %f]\n",
-                  (double)matrix->xx / *upm / 65536,
-                  (double)matrix->xy / *upm / 65536,
-                  (double)matrix->yx / *upm / 65536,
-                  (double)matrix->yy / *upm / 65536,
-                  (double)offset->x  / *upm / 65536,
-                  (double)offset->y  / *upm / 65536 ));
+                  (double)matrix->xx / (double)*upm / 65536,
+                  (double)matrix->xy / (double)*upm / 65536,
+                  (double)matrix->yx / (double)*upm / 65536,
+                  (double)matrix->yy / (double)*upm / 65536,
+                  (double)offset->x  / (double)*upm / 65536,
+                  (double)offset->y  / (double)*upm / 65536 ));
 
       if ( !FT_Matrix_Check( matrix ) )
       {
