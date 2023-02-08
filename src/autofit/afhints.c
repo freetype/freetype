@@ -193,7 +193,7 @@
   /* Get new edge for given axis, direction, and position, */
   /* without initializing the edge itself.                 */
 
-  FT_LOCAL( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   af_axis_hints_new_edge( AF_AxisHints  axis,
                           FT_Int        fpos,
                           AF_Direction  dir,

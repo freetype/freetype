@@ -153,7 +153,7 @@
   }
 
 
-  FT_LOCAL( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   cid_size_request( FT_Size          size,
                     FT_Size_Request  req )
   {

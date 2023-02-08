@@ -158,7 +158,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   af_face_globals_free( AF_FaceGlobals  globals );
 
-  FT_LOCAL_DEF( FT_Bool )
+  FT_LOCAL( FT_Bool )
   af_face_globals_is_digit( AF_FaceGlobals  globals,
                             FT_UInt         gindex );
 

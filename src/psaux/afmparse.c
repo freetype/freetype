@@ -563,7 +563,7 @@
   }
 
 
-  FT_LOCAL( void )
+  FT_LOCAL_DEF( void )
   afm_parser_done( AFM_Parser  parser )
   {
     FT_Memory  memory = parser->memory;

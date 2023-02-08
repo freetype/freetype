@@ -1593,7 +1593,7 @@
     return error;
   }
 
-  FT_LOCAL( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   tt_face_load_sbit_image( TT_Face              face,
                            FT_ULong             strike_index,
                            FT_UInt              glyph_index,

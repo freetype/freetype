@@ -765,7 +765,7 @@
 
 
   /* destroy hints */
-  FT_LOCAL( void )
+  FT_LOCAL_DEF( void )
   ps_hints_done( PS_Hints  hints )
   {
     FT_Memory  memory = hints->memory;
@@ -779,7 +779,7 @@
   }
 
 
-  FT_LOCAL( void )
+  FT_LOCAL_DEF( void )
   ps_hints_init( PS_Hints   hints,
                  FT_Memory  memory )
   {
