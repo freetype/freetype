@@ -29,7 +29,20 @@
 
 #include <hb.h>
 
-hb_font_t * hb_ft_font_create_ (FT_Face           ft_face,
-                                hb_destroy_func_t destroy);
+#include <freetype/internal/compiler-macros.h>
+#include <freetype/freetype.h>
 
-#endif
+
+FT_BEGIN_HEADER
+
+FT_LOCAL(hb_font_t *)
+hb_ft_font_create_ (FT_Face           ft_face,
+                    hb_destroy_func_t destroy);
+
+
+FT_END_HEADER
+
+#endif /* FT_HB_H */
+
+
+/* END */

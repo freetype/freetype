@@ -92,7 +92,7 @@ hb_ft_face_create_ (FT_Face           ft_face,
   return face;
 }
 
-hb_font_t *
+FT_LOCAL_DEF(hb_font_t *)
 hb_ft_font_create_ (FT_Face           ft_face,
                     hb_destroy_func_t destroy)
 {
@@ -105,4 +105,11 @@ hb_ft_font_create_ (FT_Face           ft_face,
   return font;
 }
 
-#endif
+#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+
+/* ANSI C doesn't like empty source files */
+typedef int  _ft_hb_dummy;
+
+#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+
+/* END */

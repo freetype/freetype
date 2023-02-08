@@ -39,6 +39,7 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afblue.c   \
                  $(AUTOF_DIR)/afmodule.c \
                  $(AUTOF_DIR)/afranges.c \
                  $(AUTOF_DIR)/afshaper.c \
+                 $(AUTOF_DIR)/ft-hb.c
 
 # AUTOF driver headers
 #
