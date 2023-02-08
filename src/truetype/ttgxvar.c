@@ -2713,6 +2713,8 @@
           a->name = (char*)"OpticalSize";
         else if ( a->tag == TTAG_slnt )
           a->name = (char*)"Slant";
+        else if ( a->tag == TTAG_ital )
+          a->name = (char*)"Italic";
 
         next_name += 5;
         a++;
