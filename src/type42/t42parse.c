@@ -733,7 +733,7 @@
                               ttf_reserved ) )
               goto Fail;
           }
-          /* fall through */
+          FALL_THROUGH;
 
         case BEFORE_TABLE_DIR:
           /* the offset table is read; read the table directory */
@@ -785,7 +785,7 @@
                               ttf_reserved ) )
               goto Fail;
           }
-          /* fall through */
+          FALL_THROUGH;
 
         case OTHER_TABLES:
           /* all other tables are just copied */

@@ -407,7 +407,8 @@
     switch ( color_type )
     {
     default:
-      /* Shouldn't happen, but fall through. */
+      /* Shouldn't happen, but ... */
+      FALL_THROUGH;
 
     case PNG_COLOR_TYPE_RGB_ALPHA:
       png_set_read_user_transform_fn( png, premultiply_data );

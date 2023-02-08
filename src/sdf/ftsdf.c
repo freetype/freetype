@@ -871,7 +871,7 @@
       cbox.yMax = edge.control_b.y;
 
       is_set = 1;
-      /* fall through */
+      FALL_THROUGH;
 
     case SDF_EDGE_CONIC:
       if ( is_set )
@@ -899,7 +899,7 @@
 
         is_set = 1;
       }
-      /* fall through */
+      FALL_THROUGH;
 
     case SDF_EDGE_LINE:
       if ( is_set )

@@ -36,6 +36,19 @@ FT_BEGIN_HEADER
 #  endif
 #endif
 
+  /* Newer compilers warn for fall-through case statements. */
+#ifndef FALL_THROUGH
+#  if ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ > 201710L ) || \
+      ( defined( __cplusplus ) && __cplusplus > 201402L )
+#    define FALL_THROUGH  [[__fallthrough__]]
+#  elif ( defined( __GNUC__ ) && __GNUC__ >= 7 )          || \
+        ( defined( __clang__ ) && __clang_major__ >= 10 )
+#    define FALL_THROUGH  __attribute__(( __fallthrough__ ))
+#  else
+#    define FALL_THROUGH  ( (void)0 )
+#  endif
+#endif
+
   /*
    * When defining a macro that expands to a non-trivial C statement, use
    * FT_BEGIN_STMNT and FT_END_STMNT to enclose the macro's body.  This
