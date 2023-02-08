@@ -355,6 +355,10 @@
         mmvar->axis[i].tag = FT_MAKE_TAG( 'w', 'd', 't', 'h' );
       else if ( ft_strcmp( mmvar->axis[i].name, "OpticalSize" ) == 0 )
         mmvar->axis[i].tag = FT_MAKE_TAG( 'o', 'p', 's', 'z' );
+      else if ( ft_strcmp( mmvar->axis[i].name, "Slant" ) == 0 )
+        mmvar->axis[i].tag = FT_MAKE_TAG( 's', 'l', 'n', 't' );
+      else if ( ft_strcmp( mmvar->axis[i].name, "Italic" ) == 0 )
+        mmvar->axis[i].tag = FT_MAKE_TAG( 'i', 't', 'a', 'l' );
     }
 
     mm_weights_unmap( blend->default_weight_vector,
