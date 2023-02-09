@@ -1,4 +1,4 @@
-CHANGES BETWEEN 2.12.1 and 2.13
+CHANGES BETWEEN 2.12.1 and 2.13.0 (2023-Feb-09)
 
   I. IMPORTANT CHANGES
 
@@ -8,6 +8,8 @@ CHANGES BETWEEN 2.12.1 and 2.13
     on the Qt framework.  This was Charlie Jiang's GSoC 2022 project.
 
   - The 'COLR' v1 API is now considered as stable.
+
+      https://learn.microsoft.com/en-us/typography/opentype/spec/colr
 
 
   III. MISCELLANEOUS
@@ -76,7 +78,7 @@ CHANGES BETWEEN 2.12.1 and 2.13
 
 ======================================================================
 
-CHANGES BETWEEN 2.12.0 and 2.12.1
+CHANGES BETWEEN 2.12.0 and 2.12.1 (2022-May-01)
 
   I. IMPORTANT BUG FIXES
 
@@ -106,7 +108,7 @@ CHANGES BETWEEN 2.12.0 and 2.12.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.11.1 and 2.12.0
+CHANGES BETWEEN 2.11.1 and 2.12.0 (2022-Mar-30)
 
   I. IMPORTANT CHANGES
 
@@ -157,7 +159,7 @@ CHANGES BETWEEN 2.11.1 and 2.12.0
 
 ======================================================================
 
-CHANGES BETWEEN 2.11.0 and 2.11.1
+CHANGES BETWEEN 2.11.0 and 2.11.1 (2021-Dec-01)
 
   I. IMPORTANT CHANGES
 
@@ -189,7 +191,7 @@ CHANGES BETWEEN 2.11.0 and 2.11.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.10.4 and 2.11.0
+CHANGES BETWEEN 2.10.4 and 2.11.0 (2021-Jul-18)
 
   I. IMPORTANT CHANGES
 

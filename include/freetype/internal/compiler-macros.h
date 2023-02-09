@@ -271,7 +271,7 @@ FT_BEGIN_HEADER
    * To export a variable, use `FT_EXPORT_VAR`.
    */
 
-  /* See `freetype/config/compiler_macros.h` for the `FT_EXPORT` definition */
+  /* See `freetype/config/public-macros.h` for the `FT_EXPORT` definition */
 #define FT_EXPORT_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
   /*
