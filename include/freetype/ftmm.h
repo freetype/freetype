@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
    * @note:
    *   The fields `minimum`, `def`, and `maximum` are 16.16 fractional values
    *   for TrueType GX and OpenType variation fonts.  For Adobe MM fonts, the
-   *   values are integers.
+   *   values are whole numbers (i.e., the fractional part is zero).
    */
   typedef struct  FT_Var_Axis_
   {
@@ -399,8 +399,8 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   The design coordinates are 16.16 fractional values for TrueType GX and
-   *   OpenType variation fonts.  For Adobe MM fonts, the values are
-   *   integers.
+   *   OpenType variation fonts.  For Adobe MM fonts, the values are supposed
+   *   to be whole numbers (i.e., the fractional part is zero).
    *
    *   [Since 2.8.1] To reset all axes to the default values, call the
    *   function with `num_coords` set to zero and `coords` set to `NULL`.
@@ -446,8 +446,8 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   The design coordinates are 16.16 fractional values for TrueType GX and
-   *   OpenType variation fonts.  For Adobe MM fonts, the values are
-   *   integers.
+   *   OpenType variation fonts.  For Adobe MM fonts, the values are whole
+   *   numbers (i.e., the fractional part is zero).
    *
    * @since:
    *   2.7.1
