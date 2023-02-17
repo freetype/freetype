@@ -651,11 +651,8 @@ FT_BEGIN_HEADER
    *     Windows~98; only grayscale and B/W rasterizing is supported.
    *
    *   TT_INTERPRETER_VERSION_38 ::
-   *     Version~38 corresponds to MS rasterizer v.1.9; it is roughly
-   *     equivalent to the hinting provided by DirectWrite ClearType (as can
-   *     be found, for example, in the Internet Explorer~9 running on
-   *     Windows~7).  It is used in FreeType to select the 'Infinality'
-   *     subpixel hinting code.  The code may be removed in a future version.
+   *     Version~38 is the same Version~40. The original 'Infinality' code is
+   *     no longer available.
    *
    *   TT_INTERPRETER_VERSION_40 ::
    *     Version~40 corresponds to MS rasterizer v.2.1; it is roughly
@@ -760,7 +757,7 @@ FT_BEGIN_HEADER
    *
    */
 #define TT_INTERPRETER_VERSION_35  35
-#define TT_INTERPRETER_VERSION_38  38
+#define TT_INTERPRETER_VERSION_38  40
 #define TT_INTERPRETER_VERSION_40  40
 
 
