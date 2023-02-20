@@ -368,7 +368,7 @@
       if ( n_points <= 0 || n_contours <= 0 )
         goto Bad;
 
-      end0 = end = -1;
+      end0 = -1;
       for ( n = 0; n < n_contours; n++ )
       {
         end = outline->contours[n];
@@ -388,7 +388,7 @@
     }
 
   Bad:
-    return FT_THROW( Invalid_Argument );
+    return FT_THROW( Invalid_Outline );
   }
 
 
