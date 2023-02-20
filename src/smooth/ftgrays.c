@@ -1666,6 +1666,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
     int   n;         /* index of contour in outline     */
     int   first;     /* index of first point in contour */
+    int   last;      /* index of last point in contour  */
+
     char  tag;       /* current point's state           */
 
     int   shift;
@@ -1680,18 +1682,17 @@ typedef ptrdiff_t  FT_PtrDist;
 
     shift = func_interface->shift;
     delta = func_interface->delta;
-    first = 0;
 
+    last = -1;
     for ( n = 0; n < outline->n_contours; n++ )
     {
-      int  last;  /* index of last point in contour */
+      FT_TRACE5(( "FT_Outline_Decompose: Contour %d\n", n ));
 
-
-      FT_TRACE5(( "FT_Outline_Decompose: Outline %d\n", n ));
-
+      first = last + 1;
       last  = outline->contours[n];
-      if ( last < 0 )
+      if ( last < first )
         goto Invalid_Outline;
+
       limit = outline->points + last;
 
       v_start   = outline->points[first];
@@ -1874,11 +1875,9 @@ typedef ptrdiff_t  FT_PtrDist;
                   v_start.x / 64.0, v_start.y / 64.0 ));
       error = func_interface->line_to( &v_start, user );
 
-   Close:
+    Close:
       if ( error )
         goto Exit;
-
-      first = last + 1;
     }
 
     FT_TRACE5(( "FT_Outline_Decompose: Done\n", n ));

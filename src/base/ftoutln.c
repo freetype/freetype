@@ -58,7 +58,9 @@
     FT_Error    error;
 
     FT_Int   n;         /* index of contour in outline     */
-    FT_UInt  first;     /* index of first point in contour */
+    FT_Int   first;     /* index of first point in contour */
+    FT_Int   last;      /* index of last point in contour  */
+
     FT_Int   tag;       /* current point's state           */
 
     FT_Int   shift;
@@ -73,18 +75,17 @@
 
     shift = func_interface->shift;
     delta = func_interface->delta;
-    first = 0;
 
+    last = -1;
     for ( n = 0; n < outline->n_contours; n++ )
     {
-      FT_Int  last;  /* index of last point in contour */
+      FT_TRACE5(( "FT_Outline_Decompose: Contour %d\n", n ));
 
-
-      FT_TRACE5(( "FT_Outline_Decompose: Outline %d\n", n ));
-
-      last = outline->contours[n];
-      if ( last < 0 )
+      first = last + 1;
+      last  = outline->contours[n];
+      if ( last < first )
         goto Invalid_Outline;
+
       limit = outline->points + last;
 
       v_start   = outline->points[first];
@@ -282,8 +283,6 @@
     Close:
       if ( error )
         goto Exit;
-
-      first = (FT_UInt)last + 1;
     }
 
     FT_TRACE5(( "FT_Outline_Decompose: Done\n" ));
@@ -550,15 +549,13 @@
     if ( !outline )
       return;
 
-    first = 0;
-
+    last = -1;
     for ( n = 0; n < outline->n_contours; n++ )
     {
-      last  = outline->contours[n];
-
       /* keep the first contour point as is and swap points around it */
       /* to guarantee that the cubic arches stay valid after reverse  */
-      first++;
+      first = last + 2;
+      last  = outline->contours[n];
 
       /* reverse point table */
       {
@@ -595,8 +592,6 @@
           q--;
         }
       }
-
-      first = last + 1;
     }
 
     outline->flags ^= FT_OUTLINE_REVERSE_FILL;
@@ -945,7 +940,7 @@
 
     points = outline->points;
 
-    first = 0;
+    last = -1;
     for ( c = 0; c < outline->n_contours; c++ )
     {
       FT_Vector  in, out, anchor, shift;
@@ -953,8 +948,9 @@
       FT_Int     i, j, k;
 
 
-      l_in = 0;
-      last = outline->contours[c];
+      first = last + 1;
+      last  = outline->contours[c];
+      l_in  = 0;
 
       /* pacify compiler */
       in.x = in.y = anchor.x = anchor.y = 0;
@@ -1041,8 +1037,6 @@
         in   = out;
         l_in = l_out;
       }
-
-      first = last + 1;
     }
 
     return FT_Err_Ok;
@@ -1058,7 +1052,7 @@
     FT_Int      xshift, yshift;
     FT_Vector*  points;
     FT_Vector   v_prev, v_cur;
-    FT_Int      c, n, first;
+    FT_Int      c, n, first, last;
     FT_Pos      area = 0;
 
 
@@ -1090,11 +1084,11 @@
 
     points = outline->points;
 
-    first = 0;
+    last = -1;
     for ( c = 0; c < outline->n_contours; c++ )
     {
-      FT_Int  last = outline->contours[c];
-
+      first = last + 1;
+      last  = outline->contours[c];
 
       v_prev.x = points[last].x >> xshift;
       v_prev.y = points[last].y >> yshift;
@@ -1110,8 +1104,6 @@
 
         v_prev = v_cur;
       }
-
-      first = last + 1;
     }
 
     if ( area > 0 )
