@@ -496,23 +496,20 @@
           /* now compute min or max point indices and coordinates */
           points             = outline.points;
           best_point         = -1;
+          best_contour_first = -1;
+          best_contour_last  = -1;
           best_y             = 0;  /* make compiler happy */
-          best_contour_first = 0;  /* ditto */
-          best_contour_last  = 0;  /* ditto */
 
           {
             FT_Int  nn;
-            FT_Int  first = 0;
-            FT_Int  last  = -1;
+            FT_Int  pp, first, last;
 
 
-            for ( nn = 0; nn < outline.n_contours; first = last + 1, nn++ )
+            last = -1;
+            for ( nn = 0; nn < outline.n_contours; nn++ )
             {
-              FT_Int  old_best_point = best_point;
-              FT_Int  pp;
-
-
-              last = outline.contours[nn];
+              first = last + 1;
+              last  = outline.contours[nn];
 
               /* Avoid single-point contours since they are never      */
               /* rasterized.  In some fonts, they correspond to mark   */
@@ -551,7 +548,7 @@
                 }
               }
 
-              if ( best_point != old_best_point )
+              if ( best_point > best_contour_last )
               {
                 best_contour_first = first;
                 best_contour_last  = last;

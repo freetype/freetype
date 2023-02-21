@@ -417,16 +417,14 @@
 
         {
           FT_Int  nn;
-          FT_Int  first = 0;
-          FT_Int  last  = -1;
+          FT_Int  pp, first, last;
 
 
-          for ( nn = 0; nn < outline.n_contours; first = last + 1, nn++ )
+          last = -1;
+          for ( nn = 0; nn < outline.n_contours; nn++ )
           {
-            FT_Int  pp;
-
-
-            last = outline.contours[nn];
+            first = last + 1;
+            last  = outline.contours[nn];
 
             /* Avoid single-point contours since they are never rasterized. */
             /* In some fonts, they correspond to mark attachment points     */
