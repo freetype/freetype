@@ -379,7 +379,7 @@
         end0 = end;
       }
 
-      if ( end != n_points - 1 )
+      if ( end0 != n_points - 1 )
         goto Bad;
 
       /* XXX: check the tags array */
