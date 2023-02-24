@@ -219,13 +219,18 @@
     FT_FILE*  file;
 
 
-    if ( !count && offset > stream->size )
+    if ( offset > stream->size && !count )
       return 1;
 
     file = STREAM_FILE( stream );
 
     if ( stream->pos != offset )
       ft_fseek( file, (long)offset, SEEK_SET );
+
+    /* Avoid calling `fread` with `buffer=NULL` and `count=0`, */
+    /* which is undefined behaviour.                           */
+    if ( !count )
+      return 0;
 
     return (unsigned long)ft_fread( buffer, 1, count, file );
   }
