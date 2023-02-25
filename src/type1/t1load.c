@@ -320,9 +320,9 @@
                                   sizeof ( FT_UShort ) );
     axis_size       = mmaster.num_axis * sizeof ( FT_Var_Axis );
 
-    if ( FT_ALLOC( mmvar, mmvar_size +
-                          axis_flags_size +
-                          axis_size ) )
+    if ( FT_QALLOC( mmvar, mmvar_size +
+                           axis_flags_size +
+                           axis_size ) )
       goto Exit;
 
     mmvar->num_axis        = mmaster.num_axis;
@@ -333,8 +333,7 @@
     /* to make `FT_Get_Var_Axis_Flags' work: the function expects that the */
     /* values directly follow the data of `FT_MM_Var'                      */
     axis_flags = (FT_UShort*)( (char*)mmvar + mmvar_size );
-    for ( i = 0; i < mmaster.num_axis; i++ )
-      axis_flags[i] = 0;
+    FT_ARRAY_ZERO( axis_flags, mmaster.num_axis );
 
     mmvar->axis       = (FT_Var_Axis*)( (char*)axis_flags + axis_flags_size );
     mmvar->namedstyle = NULL;
