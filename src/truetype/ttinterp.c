@@ -8604,7 +8604,7 @@
 #else /* !TT_USE_BYTECODE_INTERPRETER */
 
   /* ANSI C doesn't like empty source files */
-  typedef int  _tt_interp_dummy;
+  typedef int  tt_interp_dummy_;
 
 #endif /* !TT_USE_BYTECODE_INTERPRETER */
 

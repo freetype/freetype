@@ -248,7 +248,7 @@
 #else /* !TT_CONFIG_OPTION_BDF */
 
   /* ANSI C doesn't like empty source files */
-  typedef int  _tt_bdf_dummy;
+  typedef int  tt_bdf_dummy_;
 
 #endif /* !TT_CONFIG_OPTION_BDF */
 

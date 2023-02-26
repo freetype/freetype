@@ -558,7 +558,7 @@
 #else /* !TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
   /* ANSI C doesn't like empty source files */
-  typedef int  _tt_post_dummy;
+  typedef int  tt_post_dummy_;
 
 #endif /* !TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 

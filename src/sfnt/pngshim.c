@@ -457,7 +457,7 @@
 #else /* !(TT_CONFIG_OPTION_EMBEDDED_BITMAPS && FT_CONFIG_OPTION_USE_PNG) */
 
   /* ANSI C doesn't like empty source files */
-  typedef int  _pngshim_dummy;
+  typedef int  pngshim_dummy_;
 
 #endif /* !(TT_CONFIG_OPTION_EMBEDDED_BITMAPS && FT_CONFIG_OPTION_USE_PNG) */
 
