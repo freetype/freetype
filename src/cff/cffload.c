@@ -1650,13 +1650,6 @@
       goto Exit;
     }
 
-    /* Zero out the code to gid/sid mappings. */
-    for ( j = 0; j < 256; j++ )
-    {
-      encoding->sids [j] = 0;
-      encoding->codes[j] = 0;
-    }
-
     /* Note: The encoding table in a CFF font is indexed by glyph index;  */
     /* the first encoded glyph index is 1.  Hence, we read the character  */
     /* code (`glyph_code') at index j and make the assignment:            */
@@ -1671,6 +1664,10 @@
 
     if ( offset > 1 )
     {
+      /* Zero out the code to gid/sid mappings. */
+      FT_ARRAY_ZERO( encoding->sids,  256 );
+      FT_ARRAY_ZERO( encoding->codes, 256 );
+
       encoding->offset = base_offset + offset;
 
       /* we need to parse the table to determine its size */
