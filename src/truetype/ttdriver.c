@@ -93,17 +93,27 @@
         interpreter_version = *iv;
       }
 
-      if ( interpreter_version == TT_INTERPRETER_VERSION_35
+      switch ( interpreter_version )
+      {
+      case TT_INTERPRETER_VERSION_35:
+        driver->interpreter_version = TT_INTERPRETER_VERSION_35;
+        break;
+
+      case TT_INTERPRETER_VERSION_38:
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-           || interpreter_version == TT_INTERPRETER_VERSION_38
+        driver->interpreter_version = TT_INTERPRETER_VERSION_38;
+      break;
 #endif
+
+      case TT_INTERPRETER_VERSION_40:
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-           || interpreter_version == TT_INTERPRETER_VERSION_40
+        driver->interpreter_version = TT_INTERPRETER_VERSION_40;
+      break;
 #endif
-         )
-        driver->interpreter_version = interpreter_version;
-      else
+
+      default:
         error = FT_ERR( Unimplemented_Feature );
+      }
 
       return error;
     }
