@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
 #  elif ( defined( __GNUC__ ) && __GNUC__ >= 7 )       || \
         ( defined( __clang__ )                      &&    \
           ( defined( __apple_build_version__ )            \
-              ? __apple_build_version__ >= 14000000       \
+              ? __apple_build_version__ >= 12000000       \
               : __clang_major__ >= 10 ) )
 #    define FALL_THROUGH  __attribute__(( __fallthrough__ ))
 #  else
