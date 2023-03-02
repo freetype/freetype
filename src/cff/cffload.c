@@ -2009,7 +2009,7 @@
     /*       Top and Font DICTs are not allowed to have blend operators. */
     error = cff_parser_init( &parser,
                              code,
-                             &subfont->font_dict,
+                             top,
                              font->library,
                              stackSize,
                              0,
