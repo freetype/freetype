@@ -69,8 +69,8 @@
     FT_Module         module;
 
 
-    module = FT_Get_Module( size->root.face->driver->root.library,
-                            "pshinter" );
+    module = FT_Get_Module( font->library, "pshinter" );
+
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
            : 0;
