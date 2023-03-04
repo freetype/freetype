@@ -182,8 +182,7 @@
       goto Exit;
 
     cff_make_private_dict( &font->top_font, &priv );
-    error = funcs->create( cffsize->face->memory, &priv,
-                             &internal->topfont );
+    error = funcs->create( memory, &priv, &internal->topfont );
     if ( error )
       goto Exit;
 
@@ -193,8 +192,7 @@
 
 
       cff_make_private_dict( sub, &priv );
-      error = funcs->create( cffsize->face->memory, &priv,
-                               &internal->subfonts[i - 1] );
+      error = funcs->create( memory, &priv, &internal->subfonts[i - 1] );
       if ( error )
         goto Exit;
     }
