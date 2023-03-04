@@ -63,10 +63,7 @@
 
     /* allocate the stack buffer */
     if ( FT_QNEW_ARRAY( parser->stack, stackSize ) )
-    {
-      FT_FREE( parser->stack );
       goto Exit;
-    }
 
     parser->stackSize = stackSize;
     parser->top       = parser->stack;    /* empty stack */
@@ -82,13 +79,16 @@
                        void*      data,
                        void*      user )
   {
-    CFF_T2_String  t2 = (CFF_T2_String)data;
-
-
     FT_UNUSED( user );
 
-    memory->free( memory, t2->start );
-    memory->free( memory, data );
+    if ( data )
+    {
+      CFF_T2_String  t2 = (CFF_T2_String)data;
+
+
+      FT_FREE( t2->start );
+      FT_FREE( data );
+    }
   }
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
@@ -1309,18 +1309,13 @@
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */
         /* (this is ugly, I know).                                     */
-
-        node = (FT_ListNode)memory->alloc( memory,
-                                           sizeof ( FT_ListNodeRec ) );
-        if ( !node )
-          goto Out_Of_Memory_Error;
+        if ( FT_NEW( node ) )
+          goto Exit;
 
         FT_List_Add( &parser->t2_strings, node );
 
-        t2 = (CFF_T2_String)memory->alloc( memory,
-                                           sizeof ( CFF_T2_StringRec ) );
-        if ( !t2 )
-          goto Out_Of_Memory_Error;
+        if ( FT_NEW( t2 ) )
+          goto Exit;
 
         node->data = t2;
 
@@ -1329,9 +1324,8 @@
 
         t2_size = 5 * ( decoder.top - decoder.stack );
 
-        q = (FT_Byte*)memory->alloc( memory, t2_size );
-        if ( !q )
-          goto Out_Of_Memory_Error;
+        if ( FT_QALLOC( q, t2_size ) )
+          goto Exit;
 
         t2->start = q;
         t2->limit = q + t2_size;
@@ -1597,12 +1591,6 @@
 
   Exit:
     return error;
-
-#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-  Out_Of_Memory_Error:
-    error = FT_THROW( Out_Of_Memory );
-    goto Exit;
-#endif
 
   Stack_Overflow:
     error = FT_THROW( Invalid_Argument );
