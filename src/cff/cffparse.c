@@ -1267,7 +1267,7 @@
         FT_Fixed*      stack;
         FT_ListNode    node;
         CFF_T2_String  t2;
-        FT_Fixed       t2_size;
+        FT_PtrDist     t2_size;
         FT_Byte*       q;
 
 
