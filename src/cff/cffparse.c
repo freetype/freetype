@@ -1363,8 +1363,8 @@
             }
             else if ( -1131 <= num && num <= -108 )
             {
-              *q++ = (FT_Byte)( ( ( 108 - num ) >> 8 ) + 251 );
-              *q++ = (FT_Byte)( ( 108 - num ) & 0xFF );
+              *q++ = (FT_Byte)( ( ( -num - 108 ) >> 8 ) + 251 );
+              *q++ = (FT_Byte)( ( -num - 108) & 0xFF );
             }
             else
             {
