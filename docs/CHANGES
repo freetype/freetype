@@ -75,6 +75,10 @@ CHANGES BETWEEN 2.12.1 and 2.13.0 (2023-Feb-09)
     af_debug_hints_
     ```
 
+  - The internal  zlib library was  updated to version  1.2.13.  Note,
+    however, that  FreeType is *not* affected  by CVE-2022-37434 since
+    it doesn't use the `inflateGetHeader` function.
+
 
 ======================================================================
 
