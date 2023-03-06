@@ -699,7 +699,7 @@
                                              item_deltas ) )
           return 0;
 
-        apaint->u.solid.color.alpha += item_deltas[0];
+        apaint->u.solid.color.alpha += (FT_F2Dot14)item_deltas[0];
       }
 #endif
 
@@ -1646,7 +1646,7 @@
           return 0;
 
         color_stop->stop_offset += F2DOT14_TO_FIXED( item_deltas[0] );
-        color_stop->color.alpha += item_deltas[1];
+        color_stop->color.alpha += (FT_F2Dot14)item_deltas[1];
       }
 #else
       FT_UNUSED( var_index_base );
