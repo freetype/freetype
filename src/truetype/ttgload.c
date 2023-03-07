@@ -864,19 +864,6 @@
       loader->exec->metrics.x_scale = loader->size->metrics->x_scale;
       loader->exec->metrics.y_scale = loader->size->metrics->y_scale;
     }
-#endif
-
-    /* round phantom points */
-    zone->cur[zone->n_points - 4].x =
-      FT_PIX_ROUND( zone->cur[zone->n_points - 4].x );
-    zone->cur[zone->n_points - 3].x =
-      FT_PIX_ROUND( zone->cur[zone->n_points - 3].x );
-    zone->cur[zone->n_points - 2].y =
-      FT_PIX_ROUND( zone->cur[zone->n_points - 2].y );
-    zone->cur[zone->n_points - 1].y =
-      FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
-
-#ifdef TT_USE_BYTECODE_INTERPRETER
 
     if ( n_ins > 0 )
     {
@@ -900,8 +887,17 @@
       current_outline.tags[0] |=
         ( loader->exec->GS.scan_type << 5 ) | FT_CURVE_TAG_HAS_SCANMODE;
     }
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
-#endif
+    /* round phantom points */
+    zone->cur[zone->n_points - 4].x =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 4].x );
+    zone->cur[zone->n_points - 3].x =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 3].x );
+    zone->cur[zone->n_points - 2].y =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 2].y );
+    zone->cur[zone->n_points - 1].y =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     /* Save possibly modified glyph phantom points unless in v40 backward  */
