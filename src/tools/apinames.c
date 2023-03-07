@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -41,9 +42,20 @@ typedef enum  OutputFormat_
 
 
 static void
-panic( const char*  message )
+panic( const char*  fmt,
+       ... )
 {
-  fprintf( stderr, "PANIC: %s\n", message );
+  va_list  ap;
+
+
+  fprintf( stderr, "PANIC: " );
+
+  va_start( ap, fmt );
+  vfprintf( stderr, fmt, ap );
+  va_end( ap );
+
+  fprintf( stderr, "\n" );
+
   exit(2);
 }
 
