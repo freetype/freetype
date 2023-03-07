@@ -453,6 +453,8 @@
       /* and thus allocate the bytecode array size by ourselves     */
       if ( n_ins )
       {
+        if ( exec->glyphSize )
+          FT_FREE( exec->glyphIns );
         if ( FT_QNEW_ARRAY( exec->glyphIns, n_ins ) )
           return error;
 
