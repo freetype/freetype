@@ -1375,6 +1375,8 @@
       FT_Memory       memory = exec->memory;
 
 
+      if ( exec->glyphSize )
+        FT_FREE( exec->glyphIns );
       if ( FT_QNEW_ARRAY( exec->glyphIns, n_ins )  ||
            FT_STREAM_READ( exec->glyphIns, n_ins ) )
         return error;
