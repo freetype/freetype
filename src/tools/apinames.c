@@ -227,8 +227,9 @@ names_dump( FILE*         out,
         panic( "could not shorten name '%s'", the_names[nn].name );
       fprintf( out, "symbol_vector = ( %s = PROCEDURE)\n", short_symbol );
 
+      /* Also emit a 64-bit symbol, as created by the `vms_auto64` tool. */
+      /* It has the string '64__' appended to its name.                  */
       strcat( the_names[nn].name , "64__" );
-
       if ( vms_shorten_symbol( the_names[nn].name, short_symbol, 1 ) == -1 )
         panic( "could not shorten name '%s'", the_names[nn].name );
       fprintf( out, "symbol_vector = ( %s = PROCEDURE)\n", short_symbol );
