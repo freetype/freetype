@@ -834,15 +834,14 @@
     TT_GlyphZone  zone = &loader->zone;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    FT_Long       n_ins;
+    TT_ExecContext  exec  = loader->exec;
+    FT_Long         n_ins = exec->glyphSize;
 #else
     FT_UNUSED( is_composite );
 #endif
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    n_ins = loader->glyph->control_len;
-
     /* save original point positions in `org' array */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
@@ -854,15 +853,15 @@
     /*      completely refer to the (already) hinted subglyphs.     */
     if ( is_composite )
     {
-      loader->exec->metrics.x_scale = 1 << 16;
-      loader->exec->metrics.y_scale = 1 << 16;
+      exec->metrics.x_scale = 1 << 16;
+      exec->metrics.y_scale = 1 << 16;
 
       FT_ARRAY_COPY( zone->orus, zone->cur, zone->n_points );
     }
     else
     {
-      loader->exec->metrics.x_scale = loader->size->metrics->x_scale;
-      loader->exec->metrics.y_scale = loader->size->metrics->y_scale;
+      exec->metrics.x_scale = loader->size->metrics->x_scale;
+      exec->metrics.y_scale = loader->size->metrics->y_scale;
     }
 #endif
 
@@ -886,19 +885,18 @@
       FT_Outline      current_outline = gloader->current.outline;
 
 
-      TT_Set_CodeRange( loader->exec, tt_coderange_glyph,
-                        loader->exec->glyphIns, n_ins );
+      TT_Set_CodeRange( exec, tt_coderange_glyph, exec->glyphIns, n_ins );
 
-      loader->exec->is_composite = is_composite;
-      loader->exec->pts          = *zone;
+      exec->is_composite = is_composite;
+      exec->pts          = *zone;
 
       error = TT_Run_Context( loader->exec );
-      if ( error && loader->exec->pedantic_hinting )
+      if ( error && exec->pedantic_hinting )
         return error;
 
       /* store drop-out mode in bits 5-7; set bit 2 also as a marker */
       current_outline.tags[0] |=
-        ( loader->exec->GS.scan_type << 5 ) | FT_CURVE_TAG_HAS_SCANMODE;
+        ( exec->GS.scan_type << 5 ) | FT_CURVE_TAG_HAS_SCANMODE;
     }
 
 #endif
@@ -908,7 +906,7 @@
     /* compatibility mode, where no movement on the x axis means no reason */
     /* to change bearings or advance widths.                               */
     if ( !( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-            loader->exec->backward_compatibility ) )
+            exec->backward_compatibility ) )
     {
 #endif
       loader->pp1 = zone->cur[zone->n_points - 4];
@@ -922,10 +920,10 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
     {
-      if ( loader->exec->sph_tweak_flags & SPH_TWEAK_DEEMBOLDEN )
+      if ( exec->sph_tweak_flags & SPH_TWEAK_DEEMBOLDEN )
         FT_Outline_EmboldenXY( &loader->gloader->current.outline, -24, 0 );
 
-      else if ( loader->exec->sph_tweak_flags & SPH_TWEAK_EMBOLDEN )
+      else if ( exec->sph_tweak_flags & SPH_TWEAK_EMBOLDEN )
         FT_Outline_EmboldenXY( &loader->gloader->current.outline, 24, 0 );
     }
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
