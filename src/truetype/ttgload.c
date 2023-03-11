@@ -422,10 +422,6 @@
     if ( error )
       goto Fail;
 
-    /* reading the bytecode instructions */
-    load->glyph->control_len  = 0;
-    load->glyph->control_data = NULL;
-
     if ( p + 2 > limit )
       goto Invalid_Outline;
 
@@ -449,21 +445,20 @@
         goto Fail;
       }
 
+      if ( exec->glyphSize )
+        FT_FREE( exec->glyphIns );
+      exec->glyphSize = 0;
+
       /* we don't trust `maxSizeOfInstructions' in the `maxp' table */
       /* and thus allocate the bytecode array size by ourselves     */
       if ( n_ins )
       {
-        if ( exec->glyphSize )
-          FT_FREE( exec->glyphIns );
         if ( FT_QNEW_ARRAY( exec->glyphIns, n_ins ) )
           return error;
 
         FT_MEM_COPY( exec->glyphIns, p, (FT_Long)n_ins );
 
         exec->glyphSize  = n_ins;
-
-        load->glyph->control_len  = n_ins;
-        load->glyph->control_data = exec->glyphIns;
       }
     }
 
@@ -1347,27 +1342,6 @@
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
-    /* TT_Load_Composite_Glyph only gives us the offset of instructions */
-    /* so we read them here                                             */
-    if ( FT_STREAM_SEEK( loader->ins_pos ) ||
-         FT_READ_USHORT( n_ins )           )
-      return error;
-
-    FT_TRACE5(( "  Instructions size = %hu\n", n_ins ));
-
-    if ( !n_ins )
-      return FT_Err_Ok;
-
-    /* don't trust `maxSizeOfInstructions'; */
-    /* only do a rough safety check         */
-    if ( n_ins > loader->byte_len )
-    {
-      FT_TRACE1(( "TT_Process_Composite_Glyph:"
-                  " too many instructions (%hu) for glyph with length %u\n",
-                  n_ins, loader->byte_len ));
-      return FT_THROW( Too_Many_Hints );
-    }
-
     {
       TT_ExecContext  exec = loader->exec;
       FT_Memory       memory = exec->memory;
@@ -1375,14 +1349,34 @@
 
       if ( exec->glyphSize )
         FT_FREE( exec->glyphIns );
+      exec->glyphSize = 0;
+
+      /* TT_Load_Composite_Glyph only gives us the offset of instructions */
+      /* so we read them here                                             */
+      if ( FT_STREAM_SEEK( loader->ins_pos ) ||
+           FT_READ_USHORT( n_ins )           )
+        return error;
+
+      FT_TRACE5(( "  Instructions size = %hu\n", n_ins ));
+
+      if ( !n_ins )
+        return FT_Err_Ok;
+
+      /* don't trust `maxSizeOfInstructions'; */
+      /* only do a rough safety check         */
+      if ( n_ins > loader->byte_len )
+      {
+        FT_TRACE1(( "TT_Process_Composite_Glyph:"
+                    " too many instructions (%hu) for glyph with length %u\n",
+                    n_ins, loader->byte_len ));
+        return FT_THROW( Too_Many_Hints );
+      }
+
       if ( FT_QNEW_ARRAY( exec->glyphIns, n_ins )  ||
            FT_STREAM_READ( exec->glyphIns, n_ins ) )
         return error;
 
       exec->glyphSize = n_ins;
-
-      loader->glyph->control_len  = n_ins;
-      loader->glyph->control_data = exec->glyphIns;
     }
 
 #endif
@@ -2940,6 +2934,9 @@
 
       if ( IS_HINTED( load_flags ) )
       {
+        glyph->control_data = loader.exec->glyphIns;
+        glyph->control_len  = loader.exec->glyphSize;
+
         if ( loader.exec->GS.scan_control )
         {
           /* convert scan conversion mode to FT_OUTLINE_XXX flags */
