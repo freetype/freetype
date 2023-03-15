@@ -362,16 +362,16 @@
     FT_Byte*        p          = load->cursor;
     FT_Byte*        limit      = load->limit;
     FT_GlyphLoader  gloader    = load->gloader;
+    FT_Outline*     outline    = &gloader->current.outline;
     FT_Int          n_contours = load->n_contours;
-    FT_Outline*     outline;
-    FT_UShort       n_ins;
     FT_Int          n_points;
+    FT_UShort       n_ins;
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
     FT_Vector       *vec, *vec_limit;
     FT_Pos          x, y;
-    FT_Short        *cont, *cont_limit, prev_cont;
+    FT_Short        *cont, *cont_limit, last;
     FT_Int          xy_size = 0;
 
 
@@ -380,40 +380,26 @@
     if ( error )
       goto Fail;
 
+    /* check space for contours array + instructions count */
+    if ( n_contours >= 0xFFF || p + 2 * n_contours + 2 > limit )
+      goto Invalid_Outline;
+
     /* reading the contours' endpoints & number of points */
-    cont       = gloader->current.outline.contours;
+    cont       = outline->contours;
     cont_limit = cont + n_contours;
 
-    /* check space for contours array + instructions count */
-    if ( n_contours >= 0xFFF || p + ( n_contours + 1 ) * 2 > limit )
-      goto Invalid_Outline;
-
-    prev_cont = FT_NEXT_SHORT( p );
-
-    if ( n_contours > 0 )
-      cont[0] = prev_cont;
-
-    if ( prev_cont < 0 )
-      goto Invalid_Outline;
-
-    for ( cont++; cont < cont_limit; cont++ )
+    last = -1;
+    do
     {
-      cont[0] = FT_NEXT_SHORT( p );
-      if ( cont[0] <= prev_cont )
-      {
-        /* unordered contours: this is invalid */
-        goto Invalid_Outline;
-      }
-      prev_cont = cont[0];
-    }
+      *cont = FT_NEXT_SHORT( p );
 
-    n_points = 0;
-    if ( n_contours > 0 )
-    {
-      n_points = cont[-1] + 1;
-      if ( n_points < 0 )
+      if ( *cont <= last )
         goto Invalid_Outline;
-    }
+
+      last = *cont;
+    } while ( ++cont < cont_limit );
+
+    n_points = last + 1;
 
     FT_TRACE5(( "  # of points: %d\n", n_points ));
 
@@ -422,9 +408,7 @@
     if ( error )
       goto Fail;
 
-    if ( p + 2 > limit )
-      goto Invalid_Outline;
-
+    /* stace checked above */
     n_ins = FT_NEXT_USHORT( p );
 
     FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
@@ -465,8 +449,6 @@
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
     p += n_ins;
-
-    outline = &gloader->current.outline;
 
     /* reading the point tags */
     flag       = (FT_Byte*)outline->tags;
@@ -537,7 +519,7 @@
 
     /* reading the Y coordinates */
 
-    vec       = gloader->current.outline.points;
+    vec       = outline->points;
     vec_limit = vec + n_points;
     flag      = (FT_Byte*)outline->tags;
     y         = 0;
