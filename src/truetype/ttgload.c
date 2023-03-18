@@ -938,7 +938,7 @@
 
     if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
     {
-      if ( FT_NEW_ARRAY( unrounded, n_points ) )
+      if ( FT_QNEW_ARRAY( unrounded, n_points ) )
         goto Exit;
 
       /* Deltas apply to the unscaled data. */
@@ -1839,10 +1839,7 @@
         short        i, limit;
         FT_SubGlyph  subglyph;
 
-        FT_Outline  outline;
-        FT_Vector*  points    = NULL;
-        char*       tags      = NULL;
-        short*      contours  = NULL;
+        FT_Outline  outline = { 0, 0, NULL, NULL, NULL, 0 };
         FT_Vector*  unrounded = NULL;
 
 
@@ -1850,17 +1847,13 @@
 
         /* construct an outline structure for              */
         /* communication with `TT_Vary_Apply_Glyph_Deltas' */
-        outline.n_contours = outline.n_points = limit;
-
-        outline.points   = NULL;
-        outline.tags     = NULL;
-        outline.contours = NULL;
-
-        if ( FT_NEW_ARRAY( points, limit + 4 )    ||
-             FT_NEW_ARRAY( tags, limit + 4 )      ||
-             FT_NEW_ARRAY( contours, limit + 4 )  ||
-             FT_NEW_ARRAY( unrounded, limit + 4 ) )
+        if ( FT_QNEW_ARRAY( outline.points, limit + 4 ) ||
+             FT_QNEW_ARRAY( outline.tags, limit )       ||
+             FT_QNEW_ARRAY( outline.contours, limit )   ||
+             FT_QNEW_ARRAY( unrounded, limit + 4 )      )
           goto Exit1;
+
+        outline.n_contours = outline.n_points = limit;
 
         subglyph = gloader->current.subglyphs;
 
@@ -1869,20 +1862,16 @@
           /* applying deltas for anchor points doesn't make sense, */
           /* but we don't have to specially check this since       */
           /* unused delta values are zero anyways                  */
-          points[i].x = subglyph->arg1;
-          points[i].y = subglyph->arg2;
-          tags[i]     = 1;
-          contours[i] = i;
+          outline.points[i].x = subglyph->arg1;
+          outline.points[i].y = subglyph->arg2;
+          outline.tags[i]     = ON_CURVE_POINT;
+          outline.contours[i] = i;
         }
 
-        points[i++] = loader->pp1;
-        points[i++] = loader->pp2;
-        points[i++] = loader->pp3;
-        points[i  ] = loader->pp4;
-
-        outline.points   = points;
-        outline.tags     = tags;
-        outline.contours = contours;
+        outline.points[i++] = loader->pp1;
+        outline.points[i++] = loader->pp2;
+        outline.points[i++] = loader->pp3;
+        outline.points[i  ] = loader->pp4;
 
         /* this call provides additional offsets */
         /* for each component's translation      */
@@ -1897,8 +1886,8 @@
         {
           if ( subglyph->flags & ARGS_ARE_XY_VALUES )
           {
-            subglyph->arg1 = (FT_Int16)points[i].x;
-            subglyph->arg2 = (FT_Int16)points[i].y;
+            subglyph->arg1 = (FT_Int16)outline.points[i].x;
+            subglyph->arg2 = (FT_Int16)outline.points[i].y;
           }
         }
 
