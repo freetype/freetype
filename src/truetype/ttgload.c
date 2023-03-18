@@ -388,7 +388,7 @@
     cont_limit = cont + n_contours;
 
     last = -1;
-    do
+    for ( ; cont < cont_limit; cont++ )
     {
       *cont = FT_NEXT_SHORT( p );
 
@@ -396,7 +396,7 @@
         goto Invalid_Outline;
 
       last = *cont;
-    } while ( ++cont < cont_limit );
+    }
 
     n_points = last + 1;
 
