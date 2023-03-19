@@ -110,55 +110,14 @@
   }
 
 
-  /* Assuming `first >= last'. */
-
-  static FT_Error
-  cff_parser_within_limits( CFF_Parser  parser,
-                            FT_Byte*    first,
-                            FT_Byte*    last )
-  {
-#ifndef CFF_CONFIG_OPTION_OLD_ENGINE
-
-    /* Fast path for regular FreeType builds with the "new" engine; */
-    /*   `first >= parser->start' can be assumed.                   */
-
-    FT_UNUSED( first );
-
-    return last < parser->limit ? FT_Err_Ok : FT_THROW( Invalid_Argument );
-
-#else /* CFF_CONFIG_OPTION_OLD_ENGINE */
-
-    FT_ListNode  node;
-
-
-    if ( first >= parser->start &&
-         last  <  parser->limit )
-      return FT_Err_Ok;
-
-    node = parser->t2_strings.head;
-
-    while ( node )
-    {
-      CFF_T2_String  t2 = (CFF_T2_String)node->data;
-
-
-      if ( first >= t2->start &&
-           last  <  t2->limit )
-        return FT_Err_Ok;
-
-      node = node->next;
-    }
-
-    return FT_THROW( Invalid_Argument );
-
-#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
-  }
-
+  /* The parser limit checks in the next two functions are supposed */
+  /* to detect the immediate crossing of the stream boundary.  They */
+  /* shall not be triggered from the distant t2_strings buffers.    */
 
   /* read an integer */
   static FT_Long
-  cff_parse_integer( CFF_Parser  parser,
-                     FT_Byte*    start )
+  cff_parse_integer( FT_Byte*  start,
+                     FT_Byte*  limit )
   {
     FT_Byte*  p   = start;
     FT_Int    v   = *p++;
@@ -167,14 +126,14 @@
 
     if ( v == 28 )
     {
-      if ( cff_parser_within_limits( parser, p, p + 1 ) )
+      if ( p + 2 > limit && limit >= p )
         goto Bad;
 
       val = (FT_Short)( ( (FT_UShort)p[0] << 8 ) | p[1] );
     }
     else if ( v == 29 )
     {
-      if ( cff_parser_within_limits( parser, p, p + 3 ) )
+      if ( p + 4 > limit && limit >= p )
         goto Bad;
 
       val = (FT_Long)( ( (FT_ULong)p[0] << 24 ) |
@@ -188,14 +147,14 @@
     }
     else if ( v < 251 )
     {
-      if ( cff_parser_within_limits( parser, p, p ) )
+      if ( p + 1 > limit && limit >= p )
         goto Bad;
 
       val = ( v - 247 ) * 256 + p[0] + 108;
     }
     else
     {
-      if ( cff_parser_within_limits( parser, p, p ) )
+      if ( p + 1 > limit && limit >= p )
         goto Bad;
 
       val = -( v - 251 ) * 256 - p[0] - 108;
@@ -244,10 +203,10 @@
 
   /* read a real */
   static FT_Fixed
-  cff_parse_real( CFF_Parser  parser,
-                  FT_Byte*    start,
-                  FT_Long     power_ten,
-                  FT_Long*    scaling )
+  cff_parse_real( FT_Byte*  start,
+                  FT_Byte*  limit,
+                  FT_Long   power_ten,
+                  FT_Long*  scaling )
   {
     FT_Byte*  p = start;
     FT_Int    nib;
@@ -282,7 +241,7 @@
         p++;
 
         /* Make sure we don't read past the end. */
-        if ( cff_parser_within_limits( parser, p, p ) )
+        if ( p + 1 > limit && limit >= p )
           goto Bad;
       }
 
@@ -319,7 +278,7 @@
           p++;
 
           /* Make sure we don't read past the end. */
-          if ( cff_parser_within_limits( parser, p, p ) )
+          if ( p + 1 > limit && limit >= p )
             goto Bad;
         }
 
@@ -358,7 +317,7 @@
           p++;
 
           /* Make sure we don't read past the end. */
-          if ( cff_parser_within_limits( parser, p, p ) )
+          if ( p + 1 > limit && limit >= p )
             goto Bad;
         }
 
@@ -525,7 +484,7 @@
     if ( **d == 30 )
     {
       /* binary-coded decimal is truncated to integer */
-      return cff_parse_real( parser, *d, 0, NULL ) >> 16;
+      return cff_parse_real( *d, parser->limit, 0, NULL ) >> 16;
     }
 
     else if ( **d == 255 )
@@ -551,7 +510,7 @@
     }
 
     else
-      return cff_parse_integer( parser, *d );
+      return cff_parse_integer( *d, parser->limit );
   }
 
 
@@ -562,10 +521,10 @@
             FT_Long     scaling )
   {
     if ( **d == 30 )
-      return cff_parse_real( parser, *d, scaling, NULL );
+      return cff_parse_real( *d, parser->limit, scaling, NULL );
     else
     {
-      FT_Long  val = cff_parse_integer( parser, *d );
+      FT_Long  val = cff_parse_integer( *d, parser->limit );
 
 
       if ( scaling )
@@ -630,14 +589,14 @@
     FT_ASSERT( scaling );
 
     if ( **d == 30 )
-      return cff_parse_real( parser, *d, 0, scaling );
+      return cff_parse_real( *d, parser->limit, 0, scaling );
     else
     {
       FT_Long  number;
       FT_Int   integer_length;
 
 
-      number = cff_parse_integer( parser, d[0] );
+      number = cff_parse_integer( *d, parser->limit );
 
       if ( number > 0x7FFFL )
       {
