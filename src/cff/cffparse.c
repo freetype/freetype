@@ -73,26 +73,6 @@
   }
 
 
-#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-  static void
-  finalize_t2_strings( FT_Memory  memory,
-                       void*      data,
-                       void*      user )
-  {
-    FT_UNUSED( user );
-
-    if ( data )
-    {
-      CFF_T2_String  t2 = (CFF_T2_String)data;
-
-
-      FT_FREE( t2->start );
-      FT_FREE( data );
-    }
-  }
-#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
-
-
   FT_LOCAL_DEF( void )
   cff_parser_done( CFF_Parser  parser )
   {
@@ -102,10 +82,7 @@
     FT_FREE( parser->stack );
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-    FT_List_Finalize( &parser->t2_strings,
-                      finalize_t2_strings,
-                      memory,
-                      NULL );
+    FT_List_Finalize( &parser->t2_strings, NULL, memory, NULL );
 #endif
   }
 
@@ -1224,9 +1201,6 @@
         FT_ULong     charstring_len;
 
         FT_Fixed*      stack;
-        FT_ListNode    node;
-        CFF_T2_String  t2;
-        FT_PtrDist     t2_size;
         FT_Byte*       q;
 
 
@@ -1268,30 +1242,16 @@
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */
         /* (this is ugly, I know).                                     */
-        if ( FT_NEW( node ) )
+        /* The maximum required size is 5 bytes per stack element.     */
+        if ( FT_QALLOC( q, 2 * sizeof ( FT_ListNode ) +
+                           5 * ( decoder.top - decoder.stack ) ) )
           goto Exit;
 
-        FT_List_Add( &parser->t2_strings, node );
+        FT_List_Add( &parser->t2_strings, (FT_ListNode)q );
 
-        if ( FT_NEW( t2 ) )
-          goto Exit;
+        q += 2 * sizeof ( FT_ListNode );
 
-        node->data = t2;
-
-        /* `5' is the conservative upper bound of required bytes per stack */
-        /* element.                                                        */
-
-        t2_size = 5 * ( decoder.top - decoder.stack );
-
-        if ( FT_QALLOC( q, t2_size ) )
-          goto Exit;
-
-        t2->start = q;
-        t2->limit = q + t2_size;
-
-        stack = decoder.stack;
-
-        while ( stack < decoder.top )
+        for ( stack = decoder.stack; stack < decoder.top; stack++ )
         {
           FT_Long  num = *stack;
 
@@ -1332,8 +1292,6 @@
               *q++ = (FT_Byte)( num & 0xFF );
             }
           }
-
-          stack++;
         }
       }
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
