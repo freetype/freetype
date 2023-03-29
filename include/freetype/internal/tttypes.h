@@ -803,7 +803,7 @@ FT_BEGIN_HEADER
     FT_UShort   num_glyphs;
     FT_UShort   num_names;
     FT_UShort*  glyph_indices;
-    FT_Char**   glyph_names;
+    FT_Byte**   glyph_names;
 
   } TT_Post_20Rec, *TT_Post_20;
 

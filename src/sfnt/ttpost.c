@@ -167,8 +167,7 @@
     FT_UShort   num_names;
 
     FT_UShort*  glyph_indices = NULL;
-    FT_Char**   name_strings  = NULL;
-    FT_Byte*    strings       = NULL;
+    FT_Byte**   name_strings  = NULL;
 
 
     if ( FT_READ_USHORT( num_glyphs ) )
@@ -229,13 +228,17 @@
     {
       FT_UShort  n;
       FT_ULong   p;
+      FT_Byte*   strings;
 
 
       post_len -= (FT_ULong)num_glyphs * 2UL + 2;
 
-      if ( FT_QALLOC( strings, post_len + 1 )       ||
-           FT_STREAM_READ( strings, post_len )      ||
-           FT_QNEW_ARRAY( name_strings, num_names ) )
+      if ( FT_QALLOC( name_strings, num_names * sizeof ( FT_Byte* ) +
+                                    post_len + 1 ) )
+        goto Fail;
+
+      strings = (FT_Byte*)( name_strings + num_names );
+      if ( FT_STREAM_READ( strings, post_len ) )
         goto Fail;
 
       /* convert from Pascal- to C-strings and set pointers */
@@ -251,7 +254,7 @@
         }
 
         strings[p]      = 0;
-        name_strings[n] = (FT_Char*)strings + p + 1;
+        name_strings[n] = strings + p + 1;
         p              += len + 1;
       }
       strings[post_len] = 0;
@@ -259,22 +262,11 @@
       /* deal with missing or insufficient string data */
       if ( n < num_names )
       {
-        if ( post_len == 0 )
-        {
-          /* fake empty string */
-          if ( FT_QREALLOC( strings, 1, 2 ) )
-            goto Fail;
+        FT_TRACE4(( "load_format_20: %hu PostScript names are truncated\n",
+                    num_names - n ));
 
-          post_len          = 1;
-          strings[post_len] = 0;
-        }
-
-        FT_ERROR(( "load_format_20:"
-                   " all entries in post table are already parsed,"
-                   " using NULL names for gid %d - %d\n",
-                    n, num_names - 1 ));
         for ( ; n < num_names; n++ )
-          name_strings[n] = (FT_Char*)strings + post_len;
+          name_strings[n] = strings + post_len;
       }
     }
 
@@ -292,7 +284,6 @@
 
   Fail:
     FT_FREE( name_strings );
-    FT_FREE( strings );
     FT_FREE( glyph_indices );
 
   Exit:
@@ -427,9 +418,6 @@
 
         if ( table->num_names )
         {
-          table->glyph_names[0]--;
-          FT_FREE( table->glyph_names[0] );
-
           FT_FREE( table->glyph_names );
           table->num_names = 0;
         }
