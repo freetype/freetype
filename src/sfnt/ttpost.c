@@ -164,7 +164,7 @@
     FT_Error    error;
 
     FT_Int      num_glyphs;
-    FT_UShort   num_names;
+    FT_UShort   num_names = 0;
 
     FT_UShort*  glyph_indices = NULL;
     FT_Byte**   name_strings  = NULL;
@@ -186,9 +186,10 @@
       goto Exit;
     }
 
-    /* load the indices */
+    /* load the indices and note their maximum */
     {
-      FT_Int  n;
+      FT_Int     n;
+      FT_UShort  idx;
 
 
       if ( FT_QNEW_ARRAY( glyph_indices, num_glyphs ) ||
@@ -196,32 +197,18 @@
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
-        glyph_indices[n] = FT_GET_USHORT();
+      {
+        glyph_indices[n] = idx = FT_GET_USHORT();
+
+        if ( idx > num_names )
+          num_names = idx;
+      }
 
       FT_FRAME_EXIT();
     }
 
     /* compute number of names stored in table */
-    {
-      FT_Int  n;
-
-
-      num_names = 0;
-
-      for ( n = 0; n < num_glyphs; n++ )
-      {
-        FT_Int  idx;
-
-
-        idx = glyph_indices[n];
-        if ( idx >= 258 )
-        {
-          idx -= 257;
-          if ( idx > num_names )
-            num_names = (FT_UShort)idx;
-        }
-      }
-    }
+    num_names = num_names > 257 ? num_names - 257 : 0;
 
     /* now load the name strings */
     if ( num_names )
