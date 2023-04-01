@@ -163,7 +163,7 @@
     FT_Memory   memory = stream->memory;
     FT_Error    error;
 
-    FT_Int      num_glyphs;
+    FT_UShort   num_glyphs;
     FT_UShort   num_names = 0;
 
     FT_UShort*  glyph_indices = NULL;
@@ -179,8 +179,8 @@
     /* There already exist fonts which have more than 32768 glyph names */
     /* in this table, so the test for this threshold has been dropped.  */
 
-    if ( num_glyphs > face->max_profile.numGlyphs  ||
-         (FT_ULong)num_glyphs * 2UL > post_len - 2 )
+    if ( num_glyphs > face->max_profile.numGlyphs ||
+         (FT_ULong)num_glyphs * 2 > post_len      )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
@@ -188,12 +188,12 @@
 
     /* load the indices and note their maximum */
     {
-      FT_Int     n;
+      FT_UShort  n;
       FT_UShort  idx;
 
 
       if ( FT_QNEW_ARRAY( glyph_indices, num_glyphs ) ||
-           FT_FRAME_ENTER( num_glyphs * 2L )          )
+           FT_FRAME_ENTER( num_glyphs * 2 )           )
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
@@ -218,7 +218,7 @@
       FT_Byte*   strings;
 
 
-      post_len -= (FT_ULong)num_glyphs * 2UL + 2;
+      post_len -= (FT_ULong)num_glyphs * 2;
 
       if ( FT_QALLOC( name_strings, num_names * sizeof ( FT_Byte* ) +
                                     post_len + 1 ) )
@@ -262,8 +262,8 @@
       TT_Post_20  table = &face->postscript_names.names.format_20;
 
 
-      table->num_glyphs    = (FT_UShort)num_glyphs;
-      table->num_names     = (FT_UShort)num_names;
+      table->num_glyphs    = num_glyphs;
+      table->num_names     = num_names;
       table->glyph_indices = glyph_indices;
       table->glyph_names   = name_strings;
     }
@@ -286,39 +286,38 @@
     FT_Memory  memory = stream->memory;
     FT_Error   error;
 
-    FT_Int     num_glyphs;
+    FT_UShort  num_glyphs;
     FT_Char*   offset_table = NULL;
-
-    FT_UNUSED( post_len );
 
 
     if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
 
-    /* check the number of glyphs */
+    /* check the number of glyphs, including the theoretical limit */
     if ( num_glyphs > face->max_profile.numGlyphs ||
-         num_glyphs > 258                         ||
-         num_glyphs < 1                           )
+         num_glyphs > post_len                    ||
+         num_glyphs > 257 + 128                   )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    if ( FT_QNEW_ARRAY( offset_table, num_glyphs )  ||
-         FT_STREAM_READ( offset_table, num_glyphs ) )
-      goto Fail;
-
-    /* now check the offset table */
+    if ( num_glyphs )
     {
-      FT_Int  n;
+      FT_UShort  n;
 
 
+      if ( FT_QNEW_ARRAY( offset_table, num_glyphs )  ||
+           FT_STREAM_READ( offset_table, num_glyphs ) )
+        goto Fail;
+
+      /* now check the offset table for out-of-range values */
       for ( n = 0; n < num_glyphs; n++ )
       {
-        FT_Long  idx = (FT_Long)n + offset_table[n];
+        FT_Int  idx = n + offset_table[n];
 
 
-        if ( idx < 0 || idx > num_glyphs )
+        if ( idx < 0 || idx > 257 )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
@@ -331,7 +330,7 @@
       TT_Post_25  table = &face->postscript_names.names.format_25;
 
 
-      table->num_glyphs = (FT_UShort)num_glyphs;
+      table->num_glyphs = num_glyphs;
       table->offsets    = offset_table;
     }
 
@@ -370,9 +369,9 @@
 
     /* now read postscript table */
     if ( format == 0x00020000L && post_len >= 34 )
-      error = load_format_20( face, stream, post_len - 32 );
+      error = load_format_20( face, stream, post_len - 34 );
     else if ( format == 0x00025000L && post_len >= 34 )
-      error = load_format_25( face, stream, post_len - 32 );
+      error = load_format_25( face, stream, post_len - 34 );
     else
       error = FT_THROW( Invalid_File_Format );
 
