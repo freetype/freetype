@@ -779,13 +779,15 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   TT_Post_20Rec
+   *   TT_Post_NamesRec
    *
    * @description:
-   *   Postscript names sub-table, format 2.0.  Stores the PS name of each
-   *   glyph in the font face.
+   *   Postscript names table, either format 2.0 or 2.5.
    *
    * @fields:
+   *   loaded ::
+   *     A flag to indicate whether the PS names are loaded.
+   *
    *   num_glyphs ::
    *     The number of named glyphs in the table.
    *
@@ -798,68 +800,13 @@ FT_BEGIN_HEADER
    *   glyph_names ::
    *     The PS names not in Mac Encoding.
    */
-  typedef struct  TT_Post_20Rec_
+  typedef struct  TT_Post_NamesRec_
   {
+    FT_Bool     loaded;
     FT_UShort   num_glyphs;
     FT_UShort   num_names;
     FT_UShort*  glyph_indices;
     FT_Byte**   glyph_names;
-
-  } TT_Post_20Rec, *TT_Post_20;
-
-
-  /**************************************************************************
-   *
-   * @struct:
-   *   TT_Post_25Rec
-   *
-   * @description:
-   *   Postscript names sub-table, format 2.5.  Stores the PS name of each
-   *   glyph in the font face.
-   *
-   * @fields:
-   *   num_glyphs ::
-   *     The number of glyphs in the table.
-   *
-   *   offsets ::
-   *     An array of signed offsets in a normal Mac Postscript name encoding.
-   */
-  typedef struct  TT_Post_25_
-  {
-    FT_UShort  num_glyphs;
-    FT_Char*   offsets;
-
-  } TT_Post_25Rec, *TT_Post_25;
-
-
-  /**************************************************************************
-   *
-   * @struct:
-   *   TT_Post_NamesRec
-   *
-   * @description:
-   *   Postscript names table, either format 2.0 or 2.5.
-   *
-   * @fields:
-   *   loaded ::
-   *     A flag to indicate whether the PS names are loaded.
-   *
-   *   format_20 ::
-   *     The sub-table used for format 2.0.
-   *
-   *   format_25 ::
-   *     The sub-table used for format 2.5.
-   */
-  typedef struct  TT_Post_NamesRec_
-  {
-    FT_Bool  loaded;
-
-    union
-    {
-      TT_Post_20Rec  format_20;
-      TT_Post_25Rec  format_25;
-
-    } names;
 
   } TT_Post_NamesRec, *TT_Post_Names;
 

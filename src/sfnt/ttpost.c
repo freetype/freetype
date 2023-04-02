@@ -259,7 +259,7 @@
 
     /* all right, set table fields and exit successfully */
     {
-      TT_Post_20  table = &face->postscript_names.names.format_20;
+      TT_Post_Names  table = &face->postscript_names;
 
 
       table->num_glyphs    = num_glyphs;
@@ -286,8 +286,8 @@
     FT_Memory  memory = stream->memory;
     FT_Error   error;
 
-    FT_UShort  num_glyphs;
-    FT_Char*   offset_table = NULL;
+    FT_UShort   n, num_glyphs;
+    FT_UShort*  glyph_indices = NULL;
 
 
     if ( FT_READ_USHORT( num_glyphs ) )
@@ -302,42 +302,40 @@
       goto Exit;
     }
 
-    if ( num_glyphs )
+    /* load the indices and note their maximum */
+    if ( FT_QNEW_ARRAY( glyph_indices, num_glyphs ) ||
+         FT_FRAME_ENTER( num_glyphs )               )
+      goto Fail;
+
+    for ( n = 0; n < num_glyphs; n++ )
     {
-      FT_UShort  n;
+      FT_Int  idx = n + FT_GET_CHAR();
 
 
-      if ( FT_QNEW_ARRAY( offset_table, num_glyphs )  ||
-           FT_STREAM_READ( offset_table, num_glyphs ) )
-        goto Fail;
-
-      /* now check the offset table for out-of-range values */
-      for ( n = 0; n < num_glyphs; n++ )
+      if ( idx < 0 || idx > 257 )
       {
-        FT_Int  idx = n + offset_table[n];
-
-
-        if ( idx < 0 || idx > 257 )
-        {
-          error = FT_THROW( Invalid_File_Format );
-          goto Fail;
-        }
+        error = FT_THROW( Invalid_File_Format );
+        goto Fail;
       }
+
+      glyph_indices[n] = (FT_UShort)idx;
     }
+
+    FT_FRAME_EXIT();
 
     /* OK, set table fields and exit successfully */
     {
-      TT_Post_25  table = &face->postscript_names.names.format_25;
+      TT_Post_Names  table = &face->postscript_names;
 
 
-      table->num_glyphs = num_glyphs;
-      table->offsets    = offset_table;
+      table->num_glyphs    = num_glyphs;
+      table->glyph_indices = glyph_indices;
     }
 
     return FT_Err_Ok;
 
   Fail:
-    FT_FREE( offset_table );
+    FT_FREE( glyph_indices );
 
   Exit:
     return error;
@@ -396,25 +394,19 @@
 
       if ( format == 0x00020000L )
       {
-        TT_Post_20  table = &names->names.format_20;
+        FT_FREE( names->glyph_indices );
+        names->num_glyphs = 0;
 
-
-        FT_FREE( table->glyph_indices );
-        table->num_glyphs = 0;
-
-        if ( table->num_names )
+        if ( names->num_names )
         {
-          FT_FREE( table->glyph_names );
-          table->num_names = 0;
+          FT_FREE( names->glyph_names );
+          names->num_names = 0;
         }
       }
       else if ( format == 0x00025000L )
       {
-        TT_Post_25  table = &names->names.format_25;
-
-
-        FT_FREE( table->offsets );
-        table->num_glyphs = 0;
+        FT_FREE( names->glyph_indices );
+        names->num_glyphs = 0;
       }
     }
     names->loaded = 0;
@@ -486,9 +478,6 @@
     }
     else if ( format == 0x00020000L )
     {
-      TT_Post_20  table = &names->names.format_20;
-
-
       if ( !names->loaded )
       {
         error = load_post_names( face );
@@ -496,22 +485,19 @@
           goto End;
       }
 
-      if ( idx < (FT_UInt)table->num_glyphs )
+      if ( idx < (FT_UInt)names->num_glyphs )
       {
-        FT_UShort  name_index = table->glyph_indices[idx];
+        FT_UShort  name_index = names->glyph_indices[idx];
 
 
         if ( name_index < 258 )
           *PSname = MAC_NAME( name_index );
         else
-          *PSname = (FT_String*)table->glyph_names[name_index - 258];
+          *PSname = (FT_String*)names->glyph_names[name_index - 258];
       }
     }
     else if ( format == 0x00025000L )
     {
-      TT_Post_25  table = &names->names.format_25;
-
-
       if ( !names->loaded )
       {
         error = load_post_names( face );
@@ -519,8 +505,8 @@
           goto End;
       }
 
-      if ( idx < (FT_UInt)table->num_glyphs )    /* paranoid checking */
-        *PSname = MAC_NAME( (FT_Int)idx + table->offsets[idx] );
+      if ( idx < (FT_UInt)names->num_glyphs )    /* paranoid checking */
+        *PSname = MAC_NAME( names->glyph_indices[idx] );
     }
 
     /* nothing to do for format == 0x00030000L */
