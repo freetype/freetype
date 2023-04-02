@@ -195,7 +195,7 @@
 
     FT_FRAME_EXIT();
 
-    /* compute number of names stored in table */
+    /* compute number of names stored in the table */
     num_names = num_names > 257 ? num_names - 257 : 0;
 
     /* now load the name strings */
@@ -282,7 +282,7 @@
       goto Exit;
     }
 
-    /* load the indices and note their maximum */
+    /* load the indices and check their Mac range */
     if ( FT_QNEW_ARRAY( glyph_indices, num_glyphs ) ||
          FT_FRAME_ENTER( num_glyphs )               )
       goto Fail;
@@ -409,7 +409,6 @@
                        FT_String**  PSname )
   {
     FT_Error       error;
-    TT_Post_Names  names;
     FT_Fixed       format;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -429,8 +428,6 @@
       return FT_THROW( Unimplemented_Feature );
 #endif
 
-    names = &face->postscript_names;
-
     /* `.notdef' by default */
     *PSname = MAC_NAME( 0 );
 
@@ -444,6 +441,9 @@
     else if ( format == 0x00020000L ||
               format == 0x00025000L )
     {
+      TT_Post_Names  names = &face->postscript_names;
+
+
       if ( !names->loaded )
       {
         error = load_post_names( face );
@@ -466,6 +466,7 @@
     /* nothing to do for format == 0x00030000L */
 
   End:
+    /* post format errors ignored */
     return FT_Err_Ok;
   }
 
