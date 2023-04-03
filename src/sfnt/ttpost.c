@@ -299,10 +299,7 @@
 
 
       if ( idx < 0 || idx > 257 )
-      {
-        error = FT_THROW( Invalid_File_Format );
-        goto Fail;
-      }
+        idx = 0;
 
       glyph_indices[n] = (FT_UShort)idx;
     }
