@@ -169,6 +169,7 @@
 
     FT_UShort*  glyph_indices = NULL;
     FT_Byte**   name_strings  = NULL;
+    FT_Byte*    q;
 
 
     if ( (FT_ULong)num_glyphs * 2 > post_len )
@@ -182,9 +183,11 @@
          FT_FRAME_ENTER( num_glyphs * 2 )           )
       goto Fail;
 
+    q = (FT_Byte*)stream->cursor;
+
     for ( n = 0; n < num_glyphs; n++ )
     {
-      FT_UShort  idx = FT_GET_USHORT();
+      FT_UShort  idx = FT_NEXT_USHORT( q );
 
 
       if ( idx > num_names )
@@ -272,6 +275,7 @@
 
     FT_UShort   n;
     FT_UShort*  glyph_indices = NULL;
+    FT_Byte*    q;
 
 
     /* check the number of glyphs, including the theoretical limit */
@@ -287,9 +291,11 @@
          FT_FRAME_ENTER( num_glyphs )               )
       goto Fail;
 
+    q = (FT_Byte*)stream->cursor;
+
     for ( n = 0; n < num_glyphs; n++ )
     {
-      FT_Int  idx = n + FT_GET_CHAR();
+      FT_Int  idx = n + FT_NEXT_CHAR( q );
 
 
       if ( idx < 0 || idx > 257 )
