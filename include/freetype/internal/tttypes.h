@@ -1455,8 +1455,14 @@ FT_BEGIN_HEADER
     void*                 mm;
 
     /* a typeless pointer to the FT_Service_MetricsVariationsRec table */
-    /* used to handle the HVAR, VVAR, and MVAR OpenType tables         */
-    void*                 var;
+    /* used to handle the HVAR, VVAR, and MVAR OpenType tables by the  */
+    /* "truetype" driver                                               */
+    void*                 tt_var;
+
+    /* a typeless pointer to the FT_Service_MetricsVariationsRec table */
+    /* used to handle the HVAR, VVAR, and MVAR OpenType tables by this */
+    /* TT_Face's driver                                                */
+    void*                 face_var;
 #endif
 
     /* a typeless pointer to the PostScript Aux service */

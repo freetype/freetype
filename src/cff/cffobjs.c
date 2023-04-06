@@ -719,8 +719,10 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       {
-        FT_Service_MultiMasters       mm  = (FT_Service_MultiMasters)face->mm;
-        FT_Service_MetricsVariations  var = (FT_Service_MetricsVariations)face->var;
+        FT_Service_MultiMasters
+          mm = (FT_Service_MultiMasters)face->mm;
+        FT_Service_MetricsVariations
+          var = (FT_Service_MetricsVariations)face->face_var;
 
         FT_UInt  instance_index = (FT_UInt)face_index >> 16;
 

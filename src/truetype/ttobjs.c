@@ -1338,38 +1338,24 @@
   /**************************************************************************
    *
    * @Function:
-   *   tt_size_reset
+   *   tt_size_reset_height
    *
    * @Description:
-   *   Reset a TrueType size when resolutions and character dimensions
-   *   have been changed.
+   *   Recompute a TrueType size's ascender, descender, and height
+   *   when resolutions and character dimensions have been changed.
+   *   Used for variation fonts as an iterator function.
    *
    * @Input:
    *   size ::
    *     A handle to the target size object.
-   *
-   *   only_height ::
-   *     Only recompute ascender, descender, and height;
-   *     this flag is used for variation fonts where
-   *     `tt_size_reset' is used as an iterator function.
    */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_reset( TT_Size  size,
-                 FT_Bool  only_height )
+  tt_size_reset_height( TT_Size  size )
   {
-    TT_Face           face;
-    FT_Size_Metrics*  size_metrics;
-
-
-    face = (TT_Face)size->root.face;
-
-    /* nothing to do for CFF2 */
-    if ( face->is_cff2 )
-      return FT_Err_Ok;
+    TT_Face           face         = (TT_Face)size->root.face;
+    FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
 
     size->ttmetrics.valid = FALSE;
-
-    size_metrics = &size->hinted_metrics;
 
     /* copy the result from base layer */
     *size_metrics = size->root.metrics;
@@ -1397,12 +1383,34 @@
 
     size->ttmetrics.valid = TRUE;
 
-    if ( only_height )
-    {
-      /* we must not recompute the scaling values here since       */
-      /* `tt_size_reset' was already called (with only_height = 0) */
-      return FT_Err_Ok;
-    }
+    return FT_Err_Ok;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   tt_size_reset
+   *
+   * @Description:
+   *   Reset a TrueType size when resolutions and character dimensions
+   *   have been changed.
+   *
+   * @Input:
+   *   size ::
+   *     A handle to the target size object.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  tt_size_reset( TT_Size  size )
+  {
+    FT_Error          error;
+    TT_Face           face         = (TT_Face)size->root.face;
+    FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
+
+
+    error = tt_size_reset_height( size );
+    if ( error )
+      return error;
 
     if ( face->header.Flags & 8 )
     {

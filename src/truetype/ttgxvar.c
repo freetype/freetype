@@ -1462,15 +1462,14 @@
 
 
   static FT_Error
-  tt_size_reset_iterator( FT_ListNode  node,
+  ft_size_reset_iterator( FT_ListNode  node,
                           void*        user )
   {
-    TT_Size  size = (TT_Size)node->data;
+    FT_Size                       size = (FT_Size)node->data;
+    FT_Service_MetricsVariations  var  = (FT_Service_MetricsVariations)user;
 
-    FT_UNUSED( user );
 
-
-    tt_size_reset( size, 1 );
+    var->size_reset( size );
 
     return FT_Err_Ok;
   }
@@ -1543,6 +1542,9 @@
 
     /* adjust all derived values */
     {
+      FT_Service_MetricsVariations  var =
+        (FT_Service_MetricsVariations)face->face_var;
+
       FT_Face  root = &face->root;
 
       /*
@@ -1584,11 +1586,12 @@
                                   face->postscript.underlineThickness / 2;
       root->underline_thickness = face->postscript.underlineThickness;
 
-      /* iterate over all FT_Size objects and call `tt_size_reset' */
-      /* to propagate the metrics changes                          */
-      FT_List_Iterate( &root->sizes_list,
-                       tt_size_reset_iterator,
-                       NULL );
+      /* iterate over all FT_Size objects and call `var->size_reset' */
+      /* to propagate the metrics changes                            */
+      if ( var && var->size_reset )
+        FT_List_Iterate( &root->sizes_list,
+                         ft_size_reset_iterator,
+                         (void*)var );
     }
   }
 
