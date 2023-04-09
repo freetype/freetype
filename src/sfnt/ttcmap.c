@@ -794,9 +794,6 @@
     FT_UInt  charcode;
 
 
-    if ( cmap->cur_charcode >= 0xFFFFUL )
-      goto Fail;
-
     charcode = (FT_UInt)cmap->cur_charcode + 1;
 
     if ( charcode < cmap->cur_start )
@@ -882,7 +879,6 @@
         charcode = cmap->cur_start;
     }
 
-  Fail:
     cmap->cur_charcode = (FT_UInt32)0xFFFFFFFFUL;
     cmap->cur_gindex   = 0;
   }
@@ -1104,25 +1100,19 @@
     FT_UInt    num_segs2, start, end, offset;
     FT_Int     delta;
     FT_UInt    i, num_segs;
-    FT_UInt32  charcode = *pcharcode;
+    FT_UInt32  charcode = *pcharcode + next;
     FT_UInt    gindex   = 0;
     FT_Byte*   p;
     FT_Byte*   q;
 
 
     p = cmap->data + 6;
-    num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );
-
-    num_segs = num_segs2 >> 1;
+    num_segs = TT_PEEK_USHORT( p ) >> 1;
 
     if ( !num_segs )
       return 0;
 
-    if ( next )
-      charcode++;
-
-    if ( charcode > 0xFFFFU )
-      return 0;
+    num_segs2 = num_segs << 1;
 
     /* linear search */
     p = cmap->data + 14;               /* ends table   */
@@ -1238,31 +1228,24 @@
     FT_UInt   num_segs2, start, end, offset;
     FT_Int    delta;
     FT_UInt   max, min, mid, num_segs;
-    FT_UInt   charcode = (FT_UInt)*pcharcode;
+    FT_UInt   charcode = (FT_UInt)*pcharcode + next;
     FT_UInt   gindex   = 0;
     FT_Byte*  p;
 
 
     p = cmap->data + 6;
-    num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );
+    num_segs = TT_PEEK_USHORT( p ) >> 1;
 
-    if ( !num_segs2 )
+    if ( !num_segs )
       return 0;
 
-    num_segs = num_segs2 >> 1;
-
-    /* make compiler happy */
-    mid = num_segs;
-    end = 0xFFFFU;
-
-    if ( next )
-      charcode++;
+    num_segs2 = num_segs << 1;
 
     min = 0;
     max = num_segs;
 
     /* binary search */
-    while ( min < max )
+    do
     {
       mid    = ( min + max ) >> 1;
       p      = cmap->data + 14 + mid * 2;
@@ -1445,6 +1428,7 @@
         break;
       }
     }
+    while ( min < max );
 
     if ( next )
     {
@@ -1454,12 +1438,8 @@
       /* if `charcode' is not in any segment, then `mid' is */
       /* the segment nearest to `charcode'                  */
 
-      if ( charcode > end )
-      {
-        mid++;
-        if ( mid == num_segs )
-          return 0;
-      }
+      if ( charcode > end && ++mid == num_segs )
+        return 0;
 
       if ( tt_cmap4_set_range( cmap4, mid ) )
       {
@@ -1474,7 +1454,6 @@
           cmap4->cur_gindex = gindex;
         else
         {
-          cmap4->cur_charcode = charcode;
           tt_cmap4_next( cmap4 );
           gindex = cmap4->cur_gindex;
         }
@@ -2340,9 +2319,6 @@
     FT_UInt   gindex;
 
 
-    if ( cmap->cur_charcode >= 0xFFFFFFFFUL )
-      goto Fail;
-
     char_code = cmap->cur_charcode + 1;
 
     for ( n = cmap->cur_group; n < cmap->num_groups; n++ )
@@ -2400,7 +2376,7 @@
     FT_UInt    gindex     = 0;
     FT_Byte*   p          = cmap->data + 12;
     FT_UInt32  num_groups = TT_PEEK_ULONG( p );
-    FT_UInt32  char_code  = *pchar_code;
+    FT_UInt32  char_code  = *pchar_code + next;
     FT_UInt32  start, end, start_id;
     FT_UInt32  max, min, mid;
 
@@ -2408,23 +2384,11 @@
     if ( !num_groups )
       return 0;
 
-    /* make compiler happy */
-    mid = num_groups;
-    end = 0xFFFFFFFFUL;
-
-    if ( next )
-    {
-      if ( char_code >= 0xFFFFFFFFUL )
-        return 0;
-
-      char_code++;
-    }
-
     min = 0;
     max = num_groups;
 
     /* binary search */
-    while ( min < max )
+    do
     {
       mid = ( min + max ) >> 1;
       p   = cmap->data + 16 + 12 * mid;
@@ -2448,6 +2412,7 @@
         break;
       }
     }
+    while ( min < max );
 
     if ( next )
     {
@@ -2458,12 +2423,8 @@
       /* if `char_code' is not in any group, then `mid' is */
       /* the group nearest to `char_code'                  */
 
-      if ( char_code > end )
-      {
-        mid++;
-        if ( mid == num_groups )
-          return 0;
-      }
+      if ( char_code > end && ++mid == num_groups )
+        return 0;
 
       cmap12->valid        = 1;
       cmap12->cur_charcode = char_code;
@@ -2504,6 +2465,9 @@
     TT_CMap12  cmap12 = (TT_CMap12)cmap;
     FT_UInt    gindex;
 
+
+    if ( *pchar_code >= 0xFFFFFFFFUL )
+      return 0;
 
     /* no need to search */
     if ( cmap12->valid && cmap12->cur_charcode == *pchar_code )
@@ -2688,9 +2652,6 @@
     FT_UInt   gindex;
 
 
-    if ( cmap->cur_charcode >= 0xFFFFFFFFUL )
-      goto Fail;
-
     char_code = cmap->cur_charcode + 1;
 
     for ( n = cmap->cur_group; n < cmap->num_groups; n++ )
@@ -2718,7 +2679,6 @@
       }
     }
 
-  Fail:
     cmap->valid = 0;
   }
 
@@ -2731,7 +2691,7 @@
     FT_UInt    gindex     = 0;
     FT_Byte*   p          = cmap->data + 12;
     FT_UInt32  num_groups = TT_PEEK_ULONG( p );
-    FT_UInt32  char_code  = *pchar_code;
+    FT_UInt32  char_code  = *pchar_code + next;
     FT_UInt32  start, end;
     FT_UInt32  max, min, mid;
 
@@ -2739,23 +2699,11 @@
     if ( !num_groups )
       return 0;
 
-    /* make compiler happy */
-    mid = num_groups;
-    end = 0xFFFFFFFFUL;
-
-    if ( next )
-    {
-      if ( char_code >= 0xFFFFFFFFUL )
-        return 0;
-
-      char_code++;
-    }
-
     min = 0;
     max = num_groups;
 
     /* binary search */
-    while ( min < max )
+    do
     {
       mid = ( min + max ) >> 1;
       p   = cmap->data + 16 + 12 * mid;
@@ -2774,6 +2722,7 @@
         break;
       }
     }
+    while ( min < max );
 
     if ( next )
     {
@@ -2784,12 +2733,8 @@
       /* if `char_code' is not in any group, then `mid' is */
       /* the group nearest to `char_code'                  */
 
-      if ( char_code > end )
-      {
-        mid++;
-        if ( mid == num_groups )
-          return 0;
-      }
+      if ( char_code > end && ++mid == num_groups )
+        return 0;
 
       cmap13->valid        = 1;
       cmap13->cur_charcode = char_code;
@@ -2830,6 +2775,9 @@
     TT_CMap13  cmap13 = (TT_CMap13)cmap;
     FT_UInt    gindex;
 
+
+    if ( *pchar_code >= 0xFFFFFFFFUL )
+      return 0;
 
     /* no need to search */
     if ( cmap13->valid && cmap13->cur_charcode == *pchar_code )
