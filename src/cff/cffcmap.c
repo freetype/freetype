@@ -77,28 +77,16 @@
     FT_UInt32  char_code = *pchar_code;
 
 
-    *pchar_code = 0;
-
-    if ( char_code < 255 )
+    while ( char_code < 255 )
     {
-      FT_UInt  code = (FT_UInt)( char_code + 1 );
-
-
-      for (;;)
+      result = cmap->gids[++char_code];
+      if ( result )
       {
-        if ( code >= 256 )
-          break;
-
-        result = cmap->gids[code];
-        if ( result != 0 )
-        {
-          *pchar_code = code;
-          break;
-        }
-
-        code++;
+        *pchar_code = char_code;
+        break;
       }
     }
+
     return result;
   }
 
