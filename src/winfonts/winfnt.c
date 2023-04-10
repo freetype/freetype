@@ -656,7 +656,7 @@
   }
 
 
-  static FT_UInt32
+  static FT_UInt
   fnt_cmap_char_next( FNT_CMap    cmap,
                       FT_UInt32  *pchar_code )
   {

@@ -138,7 +138,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap0_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -491,7 +491,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap2_char_next( TT_CMap     cmap,
                       FT_UInt32  *pcharcode )
   {
@@ -1481,7 +1481,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap4_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -1640,7 +1640,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap6_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -1911,7 +1911,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap8_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -2109,7 +2109,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap10_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -2458,7 +2458,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap12_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -2768,7 +2768,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap13_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -3101,7 +3101,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap14_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -3671,7 +3671,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   tt_cmap_unicode_char_next( PS_Unicodes  unicodes,
                              FT_UInt32   *pchar_code )
   {

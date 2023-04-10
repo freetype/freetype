@@ -96,7 +96,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   pfr_cmap_char_next( PFR_CMap    cmap,
                       FT_UInt32  *pchar_code )
   {

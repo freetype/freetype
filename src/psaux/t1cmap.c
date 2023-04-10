@@ -95,7 +95,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   t1_cmap_std_char_next( T1_CMapStd   cmap,
                          FT_UInt32   *pchar_code )
   {
@@ -232,7 +232,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   t1_cmap_custom_char_next( T1_CMapCustom  cmap,
                             FT_UInt32     *pchar_code )
   {
@@ -341,7 +341,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 )
+  FT_CALLBACK_DEF( FT_UInt )
   t1_cmap_unicode_char_next( PS_Unicodes  unicodes,
                              FT_UInt32   *pchar_code )
   {
