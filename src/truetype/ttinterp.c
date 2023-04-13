@@ -7321,14 +7321,6 @@
    * GETINFO[]:    GET INFOrmation
    * Opcode range: 0x88
    * Stack:        uint32 --> uint32
-   *
-   * XXX: UNDOCUMENTED: Selector bits higher than 9 are currently (May
-   *      2015) not documented in the OpenType specification.
-   *
-   *      Selector bit 11 is incorrectly described as bit 8, while the
-   *      real meaning of bit 8 (vertical LCD subpixels) stays
-   *      undocumented.  The same mistake can be found in Greg Hitchcock's
-   *      whitepaper.
    */
   static void
   Ins_GETINFO( TT_ExecContext  exc,
@@ -7387,8 +7379,6 @@
      * VARIATION GLYPH
      * Selector Bit:  3
      * Return Bit(s): 10
-     *
-     * XXX: UNDOCUMENTED!
      */
     if ( (args[0] & 8 ) != 0 && exc->face->blend )
       K |= 1 << 10;
