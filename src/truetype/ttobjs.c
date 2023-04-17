@@ -1346,12 +1346,16 @@
    *   Used for variation fonts as an iterator function.
    *
    * @Input:
-   *   size ::
-   *     A handle to the target size object.
+   *   ft_size ::
+   *     A handle to the target TT_Size object. This function will be called
+   *     through a `FT_Size_Reset_Func` pointer which takes `FT_Size`. This
+   *     function must take `FT_Size` as a result. The passed `FT_Size` is
+   *     expected to point to a `TT_Size`.
    */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_reset_height( TT_Size  size )
+  tt_size_reset_height( FT_Size  ft_size )
   {
+    TT_Size           size         = (TT_Size)ft_size;
     TT_Face           face         = (TT_Face)size->root.face;
     FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
 
@@ -1408,7 +1412,7 @@
     FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
 
 
-    error = tt_size_reset_height( size );
+    error = tt_size_reset_height( (FT_Size)size );
     if ( error )
       return error;
 
