@@ -117,11 +117,44 @@
       off2      = cid_get_offset( &p, cid->gd_bytes );
       FT_FRAME_EXIT();
 
-      if ( fd_select >= cid->num_dicts ||
-           off2 > stream->size         ||
-           off1 > off2                 )
+  
+      if ( fd_select >= cid->num_dicts )
       {
-        FT_TRACE0(( "cid_load_glyph: invalid glyph stream offsets\n" ));
+        /*
+         * fd_select == 0xFF is often used to indicate that the CID
+         * has no charstring to be rendered, similar to GID = 0xFFFF
+         * in TrueType fonts.
+         */
+        if ( (cid->fd_bytes == 1 && fd_select == 0xFFU   ) ||
+             (cid->fd_bytes == 2 && fd_select == 0xFFFFU ) )
+        {
+          FT_TRACE1(( "cid_load_glyph: fail for glyph_index=%d, "
+                      "FD number %d is the max integer fitting into %d byte%s\n",
+                      glyph_index, fd_select, cid->fd_bytes,
+                      cid->fd_bytes == 1 ? "" : "s" ));
+        }
+        else
+        {
+          FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                      "FD number %d > number of dicts %d\n",
+                      glyph_index, fd_select, cid->num_dicts ));
+        }
+        error = FT_THROW( Invalid_Offset );
+        goto Exit;
+      }
+      else if ( off2 > stream->size )
+      {
+        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                    "end of the glyph data is beyond the data stream\n",
+                    glyph_index ));
+        error = FT_THROW( Invalid_Offset );
+        goto Exit;
+      }
+      else if ( off1 > off2 )
+      {
+        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                    "the end position of glyph data is set before the start position\n",
+                    glyph_index ));
         error = FT_THROW( Invalid_Offset );
         goto Exit;
       }
@@ -161,7 +194,9 @@
       cs_offset = decoder->lenIV >= 0 ? (FT_UInt)decoder->lenIV : 0;
       if ( cs_offset > glyph_length )
       {
-        FT_TRACE0(( "cid_load_glyph: invalid glyph stream offsets\n" ));
+        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                    "offset to the charstring is beyond glyph length\n",
+                    glyph_index ));
         error = FT_THROW( Invalid_Offset );
         goto Exit;
       }
