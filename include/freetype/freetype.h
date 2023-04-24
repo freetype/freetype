@@ -102,61 +102,25 @@ FT_BEGIN_HEADER
    */
 
 
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*                                                                       */
-  /*                        B A S I C   T Y P E S                          */
-  /*                                                                       */
-  /*************************************************************************/
-  /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @section:
-   *   base_interface
+   *   font_testing_macros
    *
    * @title:
-   *   Base Interface
+   *   Font Testing Macros
    *
    * @abstract:
-   *   The FreeType~2 base font interface.
+   *   Macros to test various properties of fonts.
    *
    * @description:
-   *   This section describes the most important public high-level API
-   *   functions of FreeType~2.
+   *   Macros to test the most important font properties.
+   *
+   *   It is recommended to use these high-level macros instead of directly
+   *   testing the corresponding flags, which are scattered over various
+   *   structures.
    *
    * @order:
-   *   FT_Library
-   *   FT_Face
-   *   FT_Size
-   *   FT_GlyphSlot
-   *   FT_CharMap
-   *   FT_Encoding
-   *   FT_ENC_TAG
-   *
-   *   FT_FaceRec
-   *
-   *   FT_FACE_FLAG_SCALABLE
-   *   FT_FACE_FLAG_FIXED_SIZES
-   *   FT_FACE_FLAG_FIXED_WIDTH
-   *   FT_FACE_FLAG_HORIZONTAL
-   *   FT_FACE_FLAG_VERTICAL
-   *   FT_FACE_FLAG_COLOR
-   *   FT_FACE_FLAG_SFNT
-   *   FT_FACE_FLAG_CID_KEYED
-   *   FT_FACE_FLAG_TRICKY
-   *   FT_FACE_FLAG_KERNING
-   *   FT_FACE_FLAG_MULTIPLE_MASTERS
-   *   FT_FACE_FLAG_VARIATION
-   *   FT_FACE_FLAG_GLYPH_NAMES
-   *   FT_FACE_FLAG_EXTERNAL_STREAM
-   *   FT_FACE_FLAG_HINTER
-   *   FT_FACE_FLAG_SVG
-   *   FT_FACE_FLAG_SBIX
-   *   FT_FACE_FLAG_SBIX_OVERLAY
-   *
    *   FT_HAS_HORIZONTAL
    *   FT_HAS_VERTICAL
    *   FT_HAS_KERNING
@@ -176,20 +140,58 @@ FT_BEGIN_HEADER
    *   FT_IS_NAMED_INSTANCE
    *   FT_IS_VARIATION
    *
-   *   FT_STYLE_FLAG_BOLD
-   *   FT_STYLE_FLAG_ITALIC
+   */
+
+
+  /**************************************************************************
    *
-   *   FT_SizeRec
-   *   FT_Size_Metrics
+   * @section:
+   *   library_setup
    *
-   *   FT_GlyphSlotRec
-   *   FT_Glyph_Metrics
-   *   FT_SubGlyph
+   * @title:
+   *   Library Setup
    *
-   *   FT_Bitmap_Size
+   * @abstract:
+   *   Functions to start and end the usage of the FreeType library.
    *
+   * @description:
+   *   Functions to start and end the usage of the FreeType library.
+   *
+   *   Note that @FT_Library_Version and @FREETYPE_XXX are of limited use
+   *   because even a new release of FreeType with only documentation
+   *   changes increases the version number.
+   *
+   * @order:
+   *   FT_Library
    *   FT_Init_FreeType
    *   FT_Done_FreeType
+   *
+   *   FT_Library_Version
+   *   FREETYPE_XXX
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   face_creation
+   *
+   * @title:
+   *   Face Creation
+   *
+   * @abstract:
+   *   Functions to manage fonts.
+   *
+   * @description:
+   *   The functions and structures collected in this section operate on
+   *   fonts globally.
+   *
+   * @order:
+   *   FT_Face
+   *   FT_FaceRec
+   *   FT_FACE_FLAG_XXX
+   *   FT_STYLE_FLAG_XXX
    *
    *   FT_New_Face
    *   FT_Done_Face
@@ -198,9 +200,35 @@ FT_BEGIN_HEADER
    *   FT_Face_Properties
    *   FT_Open_Face
    *   FT_Open_Args
+   *   FT_OPEN_XXX
    *   FT_Parameter
    *   FT_Attach_File
    *   FT_Attach_Stream
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   sizing_and_scaling
+   *
+   * @title:
+   *   Sizing and Scaling
+   *
+   * @abstract:
+   *   Functions to manage font sizes.
+   *
+   * @description:
+   *   The functions and structures collected in this section are related to
+   *   selecting and manipulating the size of a font globally.
+   *
+   * @order:
+   *   FT_Size
+   *   FT_SizeRec
+   *   FT_Size_Metrics
+   *
+   *   FT_Bitmap_Size
    *
    *   FT_Set_Char_Size
    *   FT_Set_Pixel_Sizes
@@ -209,44 +237,37 @@ FT_BEGIN_HEADER
    *   FT_Size_Request_Type
    *   FT_Size_RequestRec
    *   FT_Size_Request
+   *
    *   FT_Set_Transform
    *   FT_Get_Transform
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   glyph_retrieval
+   *
+   * @title:
+   *   Glyph Retrieval
+   *
+   * @abstract:
+   *   Functions to manage glyphs.
+   *
+   * @description:
+   *   The functions and structures collected in this section operate on
+   *   single glyphs, of which @FT_Load_Glyph is most important.
+   *
+   * @order:
+   *   FT_GlyphSlot
+   *   FT_GlyphSlotRec
+   *   FT_Glyph_Metrics
+   *
    *   FT_Load_Glyph
-   *   FT_Get_Char_Index
-   *   FT_Get_First_Char
-   *   FT_Get_Next_Char
-   *   FT_Load_Char
-   *
-   *   FT_OPEN_MEMORY
-   *   FT_OPEN_STREAM
-   *   FT_OPEN_PATHNAME
-   *   FT_OPEN_DRIVER
-   *   FT_OPEN_PARAMS
-   *
-   *   FT_LOAD_DEFAULT
-   *   FT_LOAD_RENDER
-   *   FT_LOAD_MONOCHROME
-   *   FT_LOAD_LINEAR_DESIGN
-   *   FT_LOAD_NO_SCALE
-   *   FT_LOAD_NO_HINTING
-   *   FT_LOAD_NO_BITMAP
-   *   FT_LOAD_SBITS_ONLY
-   *   FT_LOAD_NO_AUTOHINT
-   *   FT_LOAD_COLOR
-   *
-   *   FT_LOAD_VERTICAL_LAYOUT
-   *   FT_LOAD_IGNORE_TRANSFORM
-   *   FT_LOAD_FORCE_AUTOHINT
-   *   FT_LOAD_NO_RECURSE
-   *   FT_LOAD_PEDANTIC
-   *
-   *   FT_LOAD_TARGET_NORMAL
-   *   FT_LOAD_TARGET_LIGHT
-   *   FT_LOAD_TARGET_MONO
-   *   FT_LOAD_TARGET_LCD
-   *   FT_LOAD_TARGET_LCD_V
-   *
+   *   FT_LOAD_XXX
    *   FT_LOAD_TARGET_MODE
+   *   FT_LOAD_TARGET_XXX
    *
    *   FT_Render_Glyph
    *   FT_Render_Mode
@@ -254,33 +275,120 @@ FT_BEGIN_HEADER
    *   FT_Kerning_Mode
    *   FT_Get_Track_Kerning
    *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   character_mapping
+   *
+   * @title:
+   *   Character Mapping
+   *
+   * @abstract:
+   *   Functions to manage character-to-glyph maps.
+   *
+   * @description:
+   *   This section holds functions and structures that are related to
+   *   mapping character input codes to glyph indices.
+   *
+   *   Note that for many scripts the simplistic approach used by FreeType
+   *   of mapping a single character to a single glyph is not valid or
+   *   possible!  In general, a higher-level library like HarfBuzz or ICU
+   *   should be used for handling text strings.
+   *
+   * @order:
+   *   FT_CharMap
    *   FT_CharMapRec
+   *   FT_Encoding
+   *   FT_ENC_TAG
+   *
    *   FT_Select_Charmap
    *   FT_Set_Charmap
    *   FT_Get_Charmap_Index
    *
+   *   FT_Get_Char_Index
+   *   FT_Get_First_Char
+   *   FT_Get_Next_Char
+   *   FT_Load_Char
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   information_retrieval
+   *
+   * @title:
+   *   Information Retrieval
+   *
+   * @abstract:
+   *   Functions to retrieve font and glyph information.
+   *
+   * @description:
+   *   Functions to retrieve font and glyph information.  Only some very
+   *   basic data is covered; see also the chapter on the format-specific
+   *   API for more.
+   *
+   *
+   * @order:
    *   FT_Get_Name_Index
    *   FT_Get_Glyph_Name
    *   FT_Get_Postscript_Name
    *   FT_Get_FSType_Flags
+   *   FT_FSTYPE_XXX
    *   FT_Get_SubGlyph_Info
+   *   FT_SUBGLYPH_FLAG_XXX
    *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   other_api_data
+   *
+   * @title:
+   *   Other API Data
+   *
+   * @abstract:
+   *   Other structures, enumerations, and macros.
+   *
+   * @description:
+   *   Other structures, enumerations, and macros.  Deprecated functions are
+   *   also listed here.
+   *
+   * @order:
    *   FT_Face_Internal
    *   FT_Size_Internal
    *   FT_Slot_Internal
    *
-   *   FT_FACE_FLAG_XXX
-   *   FT_STYLE_FLAG_XXX
-   *   FT_OPEN_XXX
-   *   FT_LOAD_XXX
-   *   FT_LOAD_TARGET_XXX
-   *   FT_SUBGLYPH_FLAG_XXX
-   *   FT_FSTYPE_XXX
+   *   FT_SubGlyph
    *
    *   FT_HAS_FAST_GLYPHS
+   *   FT_Face_CheckTrueTypePatents
+   *   FT_Face_SetUnpatentedHinting
    *
    */
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /*                        B A S I C   T Y P E S                          */
+  /*                                                                       */
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
 
   /**************************************************************************
    *
@@ -351,6 +459,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   sizing_and_scaling
+   *
+   */
+
+  /**************************************************************************
+   *
    * @struct:
    *   FT_Bitmap_Size
    *
@@ -408,6 +523,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
   /*************************************************************************/
+
+  /**************************************************************************
+   *
+   * @section:
+   *   library_setup
+   *
+   */
 
   /**************************************************************************
    *
@@ -483,7 +605,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @section:
-   *   base_interface
+   *   face_creation
    *
    */
 
@@ -521,6 +643,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   sizing_and_scaling
+   *
+   */
+
+  /**************************************************************************
+   *
    * @type:
    *   FT_Size
    *
@@ -553,6 +682,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
+
+  /**************************************************************************
+   *
    * @type:
    *   FT_GlyphSlot
    *
@@ -569,6 +705,13 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_GlyphSlotRec_*  FT_GlyphSlot;
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   character_mapping
+   *
+   */
 
   /**************************************************************************
    *
@@ -879,6 +1022,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   other_api_data
+   *
+   */
+
+  /**************************************************************************
+   *
    * @type:
    *   FT_Face_Internal
    *
@@ -891,6 +1041,13 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_Face_InternalRec_*  FT_Face_Internal;
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   face_creation
+   *
+   */
 
   /**************************************************************************
    *
@@ -1272,6 +1429,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   font_testing_macros
+   *
+   */
+
+  /**************************************************************************
+   *
    * @macro:
    *   FT_HAS_HORIZONTAL
    *
@@ -1381,6 +1545,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   other_api_data
+   *
+   */
+
+  /**************************************************************************
+   *
    * @macro:
    *   FT_HAS_FAST_GLYPHS
    *
@@ -1390,6 +1561,13 @@ FT_BEGIN_HEADER
    */
 #define FT_HAS_FAST_GLYPHS( face )  0
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   font_testing_macros
+   *
+   */
 
   /**************************************************************************
    *
@@ -1628,6 +1806,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   face_creation
+   *
+   */
+
+  /**************************************************************************
+   *
    * @enum:
    *   FT_STYLE_FLAG_XXX
    *
@@ -1654,6 +1839,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   other_api_data
+   *
+   */
+
+  /**************************************************************************
+   *
    * @type:
    *   FT_Size_Internal
    *
@@ -1663,6 +1855,13 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_Size_InternalRec_*  FT_Size_Internal;
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   sizing_and_scaling
+   *
+   */
 
   /**************************************************************************
    *
@@ -1817,6 +2016,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   other_api_data
+   *
+   */
+
+  /**************************************************************************
+   *
    * @struct:
    *   FT_SubGlyph
    *
@@ -1845,6 +2051,13 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_Slot_InternalRec_*  FT_Slot_Internal;
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
 
   /**************************************************************************
    *
@@ -2092,6 +2305,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   library_setup
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Init_FreeType
    *
@@ -2146,6 +2366,13 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Done_FreeType( FT_Library  library );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   face_creation
+   *
+   */
 
   /**************************************************************************
    *
@@ -2650,6 +2877,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   sizing_and_scaling
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Select_Size
    *
@@ -2942,6 +3176,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Load_Glyph
    *
@@ -2990,6 +3231,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   character_mapping
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Load_Char
    *
@@ -3030,6 +3278,13 @@ FT_BEGIN_HEADER
                 FT_ULong  char_code,
                 FT_Int32  load_flags );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
 
   /**************************************************************************
    *
@@ -3372,6 +3627,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   sizing_and_scaling
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Set_Transform
    *
@@ -3444,6 +3706,13 @@ FT_BEGIN_HEADER
                     FT_Matrix*  matrix,
                     FT_Vector*  delta );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   glyph_retrieval
+   *
+   */
 
   /**************************************************************************
    *
@@ -3841,6 +4110,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   character_mapping
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Select_Charmap
    *
@@ -4057,6 +4333,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @section:
+   *   face_creation
+   *
+   */
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Face_Properties
    *
@@ -4152,6 +4435,13 @@ FT_BEGIN_HEADER
                       FT_UInt        num_properties,
                       FT_Parameter*  properties );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   information_retrieval
+   *
+   */
 
   /**************************************************************************
    *
@@ -4899,31 +5189,9 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @section:
-   *   version
-   *
-   * @title:
-   *   FreeType Version
-   *
-   * @abstract:
-   *   Functions and macros related to FreeType versions.
-   *
-   * @description:
-   *   Note that those functions and macros are of limited use because even a
-   *   new release of FreeType with only documentation changes increases the
-   *   version number.
-   *
-   * @order:
-   *   FT_Library_Version
-   *
-   *   FREETYPE_MAJOR
-   *   FREETYPE_MINOR
-   *   FREETYPE_PATCH
-   *
-   *   FT_Face_CheckTrueTypePatents
-   *   FT_Face_SetUnpatentedHinting
+   *   library_setup
    *
    */
-
 
   /**************************************************************************
    *
@@ -4990,6 +5258,13 @@ FT_BEGIN_HEADER
                       FT_Int      *aminor,
                       FT_Int      *apatch );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   other_api_data
+   *
+   */
 
   /**************************************************************************
    *
