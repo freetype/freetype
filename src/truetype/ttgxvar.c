@@ -45,6 +45,7 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
+#include <freetype/internal/services/svmetric.h>
 #include <freetype/tttags.h>
 #include <freetype/ttnameid.h>
 #include <freetype/ftmm.h>
