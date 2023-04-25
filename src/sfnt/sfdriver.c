@@ -523,15 +523,14 @@
           FT_TRACE0(( "get_win_string:"
                       " Character 0x%X invalid in PS name string\n",
                       ((unsigned)p[0])*256 + (unsigned)p[1] ));
-        break;
+        continue;
       }
     }
-    if ( !len )
-      *r = '\0';
+    *r = '\0';
 
     FT_FRAME_EXIT();
 
-    if ( !len )
+    if ( r != result )
       return result;
 
   get_win_string_error:
@@ -580,15 +579,14 @@
           FT_TRACE0(( "get_apple_string:"
                       " Character `%c' (0x%X) invalid in PS name string\n",
                       *p, *p ));
-        break;
+        continue;
       }
     }
-    if ( !len )
-      *r = '\0';
+    *r = '\0';
 
     FT_FRAME_EXIT();
 
-    if ( !len )
+    if ( r != result )
       return result;
 
   get_apple_string_error:
