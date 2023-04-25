@@ -817,9 +817,9 @@
 
       if ( !found )
       {
-        /* as a last resort we try the family name; note that this is */
-        /* not in the Adobe TechNote, but GX fonts (which predate the */
-        /* TechNote) benefit from this behaviour                      */
+        /* according to the 'name' documentation in the OpenType   */
+        /* specification the font family name is to be used if the */
+        /* typographic family name is missing, so let's do that    */
         found = sfnt_get_name_id( face,
                                   TT_NAME_ID_FONT_FAMILY,
                                   &win,
@@ -851,6 +851,10 @@
       {
         FT_TRACE0(( "sfnt_get_var_ps_name:"
                     " No valid PS name prefix for font instances found\n" ));
+        /* XXX It probably makes sense to never let this fail */
+        /*     since an arbitrary prefix should work, too.    */
+        /*     On the other hand, it is very unlikely that    */
+        /*     we ever reach this code at all.                */
         return NULL;
       }
 

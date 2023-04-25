@@ -1002,7 +1002,7 @@ FT_BEGIN_HEADER
    *     Note that the bounding box might be off by (at least) one pixel for
    *     hinted fonts.  See @FT_Size_Metrics for further discussion.
    *
-   *     Note that the bounding box does not vary in OpenType variable fonts
+   *     Note that the bounding box does not vary in OpenType variation fonts
    *     and should only be used in relation to the default instance.
    *
    *   units_per_EM ::
@@ -1090,9 +1090,9 @@ FT_BEGIN_HEADER
 
     FT_Generic        generic;
 
-    /*# The following member variables (down to `underline_thickness`) */
-    /*# are only relevant to scalable outlines; cf. @FT_Bitmap_Size    */
-    /*# for bitmap fonts.                                              */
+    /* The following member variables (down to `underline_thickness`) */
+    /* are only relevant to scalable outlines; cf. @FT_Bitmap_Size    */
+    /* for bitmap fonts.                                              */
     FT_BBox           bbox;
 
     FT_UShort         units_per_EM;
@@ -1110,7 +1110,7 @@ FT_BEGIN_HEADER
     FT_Size           size;
     FT_CharMap        charmap;
 
-    /*@private begin */
+    /* private fields, internal to FreeType */
 
     FT_Driver         driver;
     FT_Memory         memory;
@@ -1122,8 +1122,6 @@ FT_BEGIN_HEADER
     void*             extensions; /* unused                         */
 
     FT_Face_Internal  internal;
-
-    /*@private end */
 
   } FT_FaceRec;
 
