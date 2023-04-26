@@ -2965,7 +2965,8 @@
    *     An array of `num_coords', each between [-1,1].
    *
    * @Return:
-   *   FreeType error code.  0 means success.
+   *   FreeType error code.  0 means success, -1 means success and unchanged
+   *   axis values.
    */
   FT_LOCAL_DEF( FT_Error )
   TT_Set_MM_Blend( TT_Face    face,
@@ -3012,7 +3013,8 @@
    *     An array of `num_coords', each between [-1,1].
    *
    * @Return:
-   *   FreeType error code.  0 means success.
+   *   FreeType error code.  0 means success, -1 means success and unchanged
+   *   axis values.
    */
   FT_LOCAL_DEF( FT_Error )
   TT_Get_MM_Blend( TT_Face    face,

@@ -1233,8 +1233,8 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_VARIATION ::
    *     [Since 2.9] Set if the current face (or named instance) has been
    *     altered with @FT_Set_MM_Design_Coordinates,
-   *     @FT_Set_Var_Design_Coordinates, or @FT_Set_Var_Blend_Coordinates.
-   *     This flag is unset by a call to @FT_Set_Named_Instance.
+   *     @FT_Set_Var_Design_Coordinates, @FT_Set_Var_Blend_Coordinates, or
+   *     @FT_Set_MM_WeightVector to select a non-default instance.
    *
    *   FT_FACE_FLAG_SVG ::
    *     [Since 2.12] The face has an 'SVG~' OpenType table.
@@ -1449,8 +1449,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A macro that returns true whenever a face object has been altered by
-   *   @FT_Set_MM_Design_Coordinates, @FT_Set_Var_Design_Coordinates, or
-   *   @FT_Set_Var_Blend_Coordinates.
+   *   @FT_Set_MM_Design_Coordinates, @FT_Set_Var_Design_Coordinates,
+   *   @FT_Set_Var_Blend_Coordinates, or @FT_Set_MM_WeightVector.
    *
    * @since:
    *   2.9
@@ -4264,9 +4264,10 @@ FT_BEGIN_HEADER
    *
    *   [Since 2.9] Special PostScript names for named instances are only
    *   returned if the named instance is set with @FT_Set_Named_Instance (and
-   *   the font has corresponding entries in its 'fvar' table).  If
-   *   @FT_IS_VARIATION returns true, the algorithmically derived PostScript
-   *   name is provided, not looking up special entries for named instances.
+   *   the font has corresponding entries in its 'fvar' table or is the
+   *   default named instance).  If @FT_IS_VARIATION returns true, the
+   *   algorithmically derived PostScript name is provided, not looking up
+   *   special entries for named instances.
    */
   FT_EXPORT( const char* )
   FT_Get_Postscript_Name( FT_Face  face );

@@ -1200,12 +1200,16 @@ FT_BEGIN_HEADER
    *   mm ::
    *     A pointer to the Multiple Masters service.
    *
-   *   var ::
-   *     A pointer to the Metrics Variations service.
+   *   tt_var ::
+   *     A pointer to the Metrics Variations service for the "truetype"
+   *     driver.
    *
-   *   hdmx ::
-   *     The face's horizontal device metrics ('hdmx' table).  This table is
-   *     optional in TrueType/OpenType fonts.
+   *   face_var ::
+   *     A pointer to the Metrics Variations service for this `TT_Face`'s
+   *     driver.
+   *
+   *   psaux ::
+   *     A pointer to the PostScript Auxiliary service.
    *
    *   gasp ::
    *     The grid-fitting and scaling properties table ('gasp').  This table
@@ -1357,14 +1361,6 @@ FT_BEGIN_HEADER
    *     A mapping between the strike indices exposed by the API and the
    *     indices used in the font's sbit table.
    *
-   *   cpal ::
-   *     A pointer to data related to the 'CPAL' table.  `NULL` if the table
-   *     is not available.
-   *
-   *   colr ::
-   *     A pointer to data related to the 'COLR' table.  `NULL` if the table
-   *     is not available.
-   *
    *   kern_table ::
    *     A pointer to the 'kern' table.
    *
@@ -1405,6 +1401,18 @@ FT_BEGIN_HEADER
    *
    *   ebdt_size ::
    *     The size of the sbit data table.
+   *
+   *   cpal ::
+   *     A pointer to data related to the 'CPAL' table.  `NULL` if the table
+   *     is not available.
+   *
+   *   colr ::
+   *     A pointer to data related to the 'COLR' table.  `NULL` if the table
+   *     is not available.
+   *
+   *   svg ::
+   *     A pointer to data related to the 'SVG' table.  `NULL` if the table
+   *     is not available.
    */
   typedef struct  TT_FaceRec_
   {
@@ -1462,7 +1470,7 @@ FT_BEGIN_HEADER
     /* a typeless pointer to the FT_Service_MetricsVariationsRec table */
     /* used to handle the HVAR, VVAR, and MVAR OpenType tables by this */
     /* TT_Face's driver                                                */
-    void*                 face_var;
+    void*                 face_var;             /* since 2.13.1 */
 #endif
 
     /* a typeless pointer to the PostScript Aux service */
