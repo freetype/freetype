@@ -2038,7 +2038,7 @@
             max = seg2->max_coord;
 
           /* compute maximum coordinate difference of the two segments */
-          /* (this is, how much they overlap)                          */
+          /* (that is, how much they overlap)                          */
           len = max - min;
           if ( len >= len_threshold )
           {

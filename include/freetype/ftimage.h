@@ -862,7 +862,7 @@ FT_BEGIN_HEADER
    *   @FT_SpanFunc that takes the y~coordinate of the span as a parameter.
    *
    *   The anti-aliased rasterizer produces coverage values from 0 to 255,
-   *   this is, from completely transparent to completely opaque.
+   *   that is, from completely transparent to completely opaque.
    */
   typedef struct  FT_Span_
   {

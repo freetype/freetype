@@ -2371,7 +2371,7 @@
      *     ```
      *
      * (6) Our task is to find a value of `t` such that the above equation
-     *     `Q(t)` becomes zero, this is, the point-to-curve vector makes
+     *     `Q(t)` becomes zero, that is, the point-to-curve vector makes
      *     90~degrees with the curve.  We solve this with the Newton-Raphson
      *     method.
      *
@@ -2684,7 +2684,7 @@
      *     ```
      *
      * (6) Our task is to find a value of `t` such that the above equation
-     *     `Q(t)` becomes zero, this is, the point-to-curve vector makes
+     *     `Q(t)` becomes zero, that is, the point-to-curve vector makes
      *     90~degree with curve.  We solve this with the Newton-Raphson
      *     method.
      *

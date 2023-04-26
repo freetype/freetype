@@ -206,7 +206,7 @@
    *     The number of bytes to read from the stream.
    *
    * @Return:
-   *   The number of bytes actually read.  If `count' is zero (this is,
+   *   The number of bytes actually read.  If `count' is zero (that is,
    *   the function is used for seeking), a non-zero return value
    *   indicates an error.
    */

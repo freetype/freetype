@@ -57,7 +57,7 @@ Notes
   (`*') in the table below.
 
   FreeType can  be configured to  support Mac  files (on older  Mac OS
-  versions, a `file' is stored as a data and a resource fork, this is,
+  versions, a `file' is stored as a data and a resource fork, that is,
   within two  separate data chunks).  If  a file can't be  opened as a
   font, FreeType then checks whether it  is a resource fork, trying to
   extract  the contained  font data  from  either a  `POST' or  `sfnt'

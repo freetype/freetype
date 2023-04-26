@@ -7837,7 +7837,7 @@
         /* a variable number of arguments             */
 
         /* it is the job of the application to `activate' GX handling, */
-        /* this is, calling any of the GX API functions on the current */
+        /* that is, calling any of the GX API functions on the current */
         /* font to select a variation instance                         */
         if ( exc->face->blend )
           exc->new_top = exc->args + exc->face->blend->num_axis;
@@ -8397,7 +8397,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         case 0x91:
           /* it is the job of the application to `activate' GX handling, */
-          /* this is, calling any of the GX API functions on the current */
+          /* that is, calling any of the GX API functions on the current */
           /* font to select a variation instance                         */
           if ( exc->face->blend )
             Ins_GETVARIATION( exc, args );

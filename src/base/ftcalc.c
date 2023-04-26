@@ -1061,7 +1061,7 @@
     /*                                                           */
     /* This approach has the advantage that the angle between    */
     /* `in' and `out' is not checked.  In case one of the two    */
-    /* vectors is `dominant', this is, much larger than the      */
+    /* vectors is `dominant', that is, much larger than the      */
     /* other vector, we thus always have a flat corner.          */
     /*                                                           */
     /*                hypotenuse                                 */

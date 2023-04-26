@@ -134,7 +134,7 @@ FT_BEGIN_HEADER
    *   each being rounded to the nearest pixel edge, taking care of overshoot
    *   suppression at small sizes, stem darkening, and scaling.
    *
-   *   Hstems (this is, hint values defined in the font to help align
+   *   Hstems (that is, hint values defined in the font to help align
    *   horizontal features) that fall within a blue zone are said to be
    *   'captured' and are aligned to that zone.  Uncaptured stems are moved
    *   in one of four ways, top edge up or down, bottom edge up or down.
@@ -446,7 +446,7 @@ FT_BEGIN_HEADER
    *   at smaller sizes.
    *
    *   For the auto-hinter, stem-darkening is experimental currently and thus
-   *   switched off by default (this is, `no-stem-darkening` is set to TRUE
+   *   switched off by default (that is, `no-stem-darkening` is set to TRUE
    *   by default).  Total consistency with the CFF driver is not achieved
    *   right now because the emboldening method differs and glyphs must be
    *   scaled down on the Y-axis to keep outline points inside their

@@ -622,7 +622,7 @@
 
       dict->has_font_matrix = TRUE;
 
-      /* We expect a well-formed font matrix, this is, the matrix elements */
+      /* We expect a well-formed font matrix, that is, the matrix elements */
       /* `xx' and `yy' are of approximately the same magnitude.  To avoid  */
       /* loss of precision, we use the magnitude of the largest matrix     */
       /* element to scale all other elements.  The scaling factor is then  */

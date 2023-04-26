@@ -918,7 +918,7 @@ FT_BEGIN_HEADER
    *     If we have the third named instance of face~4, say, `face_index` is
    *     set to 0x00030004.
    *
-   *     Bit 31 is always zero (this is, `face_index` is always a positive
+   *     Bit 31 is always zero (that is, `face_index` is always a positive
    *     value).
    *
    *     [Since 2.9] Changing the design coordinates with
@@ -936,7 +936,7 @@ FT_BEGIN_HEADER
    *
    *     [Since 2.6.1] Bits 16-30 hold the number of named instances
    *     available for the current face if we have a GX or OpenType variation
-   *     (sub)font.  Bit 31 is always zero (this is, `style_flags` is always
+   *     (sub)font.  Bit 31 is always zero (that is, `style_flags` is always
    *     a positive value).  Note that a variation font has always at least
    *     one named instance, namely the default instance.
    *
@@ -1205,13 +1205,13 @@ FT_BEGIN_HEADER
    *     successfully; in all other cases you get an
    *     `FT_Err_Invalid_Argument` error.
    *
-   *     Note that CID-keyed fonts that are in an SFNT wrapper (this is, all
+   *     Note that CID-keyed fonts that are in an SFNT wrapper (that is, all
    *     OpenType/CFF fonts) don't have this flag set since the glyphs are
    *     accessed in the normal way (using contiguous indices); the
    *     'CID-ness' isn't visible to the application.
    *
    *   FT_FACE_FLAG_TRICKY ::
-   *     The face is 'tricky', this is, it always needs the font format's
+   *     The face is 'tricky', that is, it always needs the font format's
    *     native hinting engine to get a reasonable result.  A typical example
    *     is the old Chinese font `mingli.ttf` (but not `mingliu.ttc`) that
    *     uses TrueType bytecode instructions to move and scale all of its
@@ -2449,7 +2449,7 @@ FT_BEGIN_HEADER
    *   Each new face object created with this function also owns a default
    *   @FT_Size object, accessible as `face->size`.
    *
-   *   One @FT_Library instance can have multiple face objects, this is,
+   *   One @FT_Library instance can have multiple face objects, that is,
    *   @FT_Open_Face and its siblings can be called multiple times using the
    *   same `library` argument.
    *
@@ -2677,7 +2677,7 @@ FT_BEGIN_HEADER
    *   silently uses outlines if there is no bitmap for a given glyph index.
    *
    *   For GX and OpenType variation fonts, a bitmap strike makes sense only
-   *   if the default instance is active (this is, no glyph variation takes
+   *   if the default instance is active (that is, no glyph variation takes
    *   place); otherwise, FreeType simply ignores bitmap strikes.  The same
    *   is true for all named instances that are different from the default
    *   instance.
@@ -2974,7 +2974,7 @@ FT_BEGIN_HEADER
    *   glyph may be transformed.  See @FT_Set_Transform for the details.
    *
    *   For subsetted CID-keyed fonts, `FT_Err_Invalid_Argument` is returned
-   *   for invalid CID values (this is, for CID values that don't have a
+   *   for invalid CID values (that is, for CID values that don't have a
    *   corresponding glyph in the font).  See the discussion of the
    *   @FT_FACE_FLAG_CID_KEYED flag for more details.
    *

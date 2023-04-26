@@ -2424,7 +2424,7 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       is provided for x86 and ARM.  See FT_CONFIG_OPTION_INLINE_MULFIX
       and FT_CONFIG_OPTION_NO_ASSEMBLER (in ftoption.h) for more.
 
-    - The handling of `tricky' fonts  (this is, fonts which don't work
+    - The handling of `tricky' fonts  (that is, fonts which don't work
       with the  autohinter, needing the font  format's hinting engine)
       has been generalized and changed slightly:
 
@@ -2881,7 +2881,7 @@ CHANGES BETWEEN 2.2 and 2.1.10
 
   II. IMPORTANT CHANGES
 
-    - Version 2.2 no longer exposes its internals, this is, the header
+    - Version 2.2 no longer exposes its internals, that is, the header
       files  located in  the `include/freetype/internal'  directory of
       the source package are not  copied anymore by the `make install'
       command.  Consequently, a number of rogue clients which directly
