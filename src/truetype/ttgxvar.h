@@ -375,6 +375,10 @@ FT_BEGIN_HEADER
                          FT_UInt  instance_index );
 
   FT_LOCAL( FT_Error )
+  TT_Get_Default_Named_Instance( TT_Face   face,
+                                 FT_UInt  *instance_index );
+
+  FT_LOCAL( FT_Error )
   tt_face_vary_cvt( TT_Face    face,
                     FT_Stream  stream );
 

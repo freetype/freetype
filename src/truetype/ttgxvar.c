@@ -2630,8 +2630,10 @@
         FT_UInt  strid = ~0U;
 
 
-        /* the default instance is missing in array the   */
-        /* of named instances; try to synthesize an entry */
+        /* The default instance is missing in array the    */
+        /* of named instances; try to synthesize an entry. */
+        /* If this fails, `default_named_instance` remains */
+        /* at value zero, which doesn't do any harm.       */
         found = sfnt->get_name_id( face,
                                    TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY,
                                    &dummy1,
@@ -2658,6 +2660,9 @@
           {
             FT_TRACE5(( "TT_Get_MM_Var:"
                         " Adding default instance to named instances\n" ));
+
+            /* named instance indices start with value 1 */
+            face->var_default_named_instance = num_instances;
 
             ns = &mmvar->namedstyle[fvar_head.instanceCount];
 
@@ -3380,6 +3385,45 @@
     face->root.face_index  = ( instance_index << 16 )             |
                              ( face->root.face_index & 0xFFFFL );
     face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+  Exit:
+    return error;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Get_Default_Named_Instance
+   *
+   * @Description:
+   *   Get the default named instance.
+   *
+   * @Input:
+   *   face ::
+   *     A handle to the source face.
+   *
+   * @Output:
+   *   instance_index ::
+   *     The default named instance index.
+   *
+   * @Return:
+   *   FreeType error code.  0~means success.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Get_Default_Named_Instance( TT_Face   face,
+                                 FT_UInt  *instance_index )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !face->blend )
+    {
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
+        goto Exit;
+    }
+
+    *instance_index = face->var_default_named_instance;
 
   Exit:
     return error;

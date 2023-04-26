@@ -1,3 +1,13 @@
+CHANGES BETWEEN 2.13.0 and 2.13.1 (2023-XXX-XX)
+
+  I. MISCELLANEOUS
+
+  - New function  `FT_Get_Default_Named_Instance` to get the  index of
+    the default named instance of an OpenType Variation Font.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.12.1 and 2.13.0 (2023-Feb-09)
 
   I. IMPORTANT CHANGES
@@ -12,7 +22,7 @@ CHANGES BETWEEN 2.12.1 and 2.13.0 (2023-Feb-09)
       https://learn.microsoft.com/en-us/typography/opentype/spec/colr
 
 
-  III. MISCELLANEOUS
+  II. MISCELLANEOUS
 
   - For  OpenType  Variable Fonts,  `avar`  table  format 2.0  is  now
     supported.  The code was contributed by Behdad Esfahbod.

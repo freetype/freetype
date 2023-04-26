@@ -565,4 +565,32 @@
   }
 
 
+  /* documentation is in ftmm.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Default_Named_Instance( FT_Face   face,
+                                 FT_UInt  *instance_index )
+  {
+    FT_Error  error;
+
+    FT_Service_MultiMasters  service_mm = NULL;
+
+
+    /* check of `face' delayed to `ft_face_get_mm_service' */
+
+    error = ft_face_get_mm_service( face, &service_mm );
+    if ( !error )
+    {
+      /* no error if `get_default_named_instance` is not available */
+      if ( service_mm->get_default_named_instance )
+        error = service_mm->get_default_named_instance( face,
+                                                        instance_index );
+      else
+        error = FT_Err_Ok;
+    }
+
+    return error;
+  }
+
+
 /* END */

@@ -698,6 +698,9 @@
           instance_offset += instance_size;
         }
 
+        /* named instance indices start with value 1 */
+        face->var_default_named_instance = i + 1;
+
         if ( i == num_instances )
         {
           /* no default instance in named instance table; */

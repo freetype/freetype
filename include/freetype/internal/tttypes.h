@@ -1315,6 +1315,9 @@ FT_BEGIN_HEADER
    *   var_postscript_prefix_len ::
    *     The length of the `var_postscript_prefix` string.
    *
+   *   var_default_named_instance ::
+   *     The index of the default named instance.
+   *
    *   horz_metrics_size ::
    *     The size of the 'hmtx' table.
    *
@@ -1552,6 +1555,7 @@ FT_BEGIN_HEADER
     const char*           var_postscript_prefix;     /* since 2.7.2 */
     FT_UInt               var_postscript_prefix_len; /* since 2.7.2 */
 
+    FT_UInt               var_default_named_instance;  /* since 2.13.1 */
 #endif
 
     /* since version 2.2 */

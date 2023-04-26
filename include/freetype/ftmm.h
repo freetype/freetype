@@ -753,6 +753,45 @@ FT_BEGIN_HEADER
   FT_Set_Named_Instance( FT_Face  face,
                          FT_UInt  instance_index );
 
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Get_Default_Named_Instance
+   *
+   * @description:
+   *   Retrieve the index of the default named instance, to be used with
+   *   @FT_Set_Named_Instance.
+   *
+   *   The default instance of a variation font is that instance for which
+   *   the nth axis coordinate is equal to `axis[n].def` (as specified in the
+   *   @FT_MM_Var structure), with~n covering all axes.
+   *
+   *   FreeType synthesizes a named instance for the default instance if the
+   *   font does not contain such an entry.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the source face.
+   *
+   * @output:
+   *   instance_index ::
+   *     The index of the default named instance.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   For Adobe MM fonts (which don't have named instances) this function
+   *   always returns zero for `instance_index`.
+   *
+   * @since:
+   *   2.13.1
+   */
+  FT_EXPORT( FT_Error )
+  FT_Get_Default_Named_Instance( FT_Face   face,
+                                 FT_UInt  *instance_index );
+
   /* */
 
 

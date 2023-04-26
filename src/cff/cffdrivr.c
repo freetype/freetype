@@ -943,6 +943,17 @@
 
 
   static FT_Error
+  cff_get_default_named_instance( CFF_Face  face,
+                                  FT_UInt  *instance_index )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->get_default_named_instance( FT_FACE( face ), instance_index );
+  }
+
+
+  static FT_Error
   cff_load_item_variation_store( CFF_Face         face,
                                  FT_ULong         offset,
                                  GX_ItemVarStore  itemStore )
@@ -1009,36 +1020,39 @@
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     cff_service_multi_masters,
 
-    (FT_Get_MM_Func)        NULL,               /* get_mm                    */
-    (FT_Set_MM_Design_Func) NULL,               /* set_mm_design             */
-    (FT_Set_MM_Blend_Func)  cff_set_mm_blend,   /* set_mm_blend              */
-    (FT_Get_MM_Blend_Func)  cff_get_mm_blend,   /* get_mm_blend              */
-    (FT_Get_MM_Var_Func)    cff_get_mm_var,     /* get_mm_var                */
-    (FT_Set_Var_Design_Func)cff_set_var_design, /* set_var_design            */
-    (FT_Get_Var_Design_Func)cff_get_var_design, /* get_var_design            */
-    (FT_Set_Instance_Func)  cff_set_instance,   /* set_instance              */
+    (FT_Get_MM_Func)        NULL,               /* get_mm                     */
+    (FT_Set_MM_Design_Func) NULL,               /* set_mm_design              */
+    (FT_Set_MM_Blend_Func)  cff_set_mm_blend,   /* set_mm_blend               */
+    (FT_Get_MM_Blend_Func)  cff_get_mm_blend,   /* get_mm_blend               */
+    (FT_Get_MM_Var_Func)    cff_get_mm_var,     /* get_mm_var                 */
+    (FT_Set_Var_Design_Func)cff_set_var_design, /* set_var_design             */
+    (FT_Get_Var_Design_Func)cff_get_var_design, /* get_var_design             */
+    (FT_Set_Instance_Func)  cff_set_instance,   /* set_instance               */
+    (FT_Get_Default_Named_Instance_Func)
+                            cff_get_default_named_instance,
+                                                /* get_default_named_instance */
     (FT_Set_MM_WeightVector_Func)
                             cff_set_mm_weightvector,
-                                                /* set_mm_weightvector       */
+                                                /* set_mm_weightvector        */
     (FT_Get_MM_WeightVector_Func)
                             cff_get_mm_weightvector,
-                                                /* get_mm_weightvector       */
+                                                /* get_mm_weightvector        */
     (FT_Var_Load_Delta_Set_Idx_Map_Func)
                             cff_load_delta_set_index_mapping,
-                                                /* load_delta_set_idx_map    */
+                                                /* load_delta_set_idx_map     */
     (FT_Var_Load_Item_Var_Store_Func)
                             cff_load_item_variation_store,
-                                                /* load_item_variation_store */
+                                                /* load_item_variation_store  */
     (FT_Var_Get_Item_Delta_Func)
-                            cff_get_item_delta, /* get_item_delta            */
+                            cff_get_item_delta, /* get_item_delta             */
     (FT_Var_Done_Item_Var_Store_Func)
                             cff_done_item_variation_store,
-                                                /* done_item_variation_store */
+                                                /* done_item_variation_store  */
     (FT_Var_Done_Delta_Set_Idx_Map_Func)
                             cff_done_delta_set_index_map,
-                                                /* done_delta_set_index_map  */
-    (FT_Get_Var_Blend_Func) cff_get_var_blend,  /* get_var_blend             */
-    (FT_Done_Blend_Func)    cff_done_blend      /* done_blend                */
+                                                /* done_delta_set_index_map   */
+    (FT_Get_Var_Blend_Func) cff_get_var_blend,  /* get_var_blend              */
+    (FT_Done_Blend_Func)    cff_done_blend      /* done_blend                 */
   )
 
 
