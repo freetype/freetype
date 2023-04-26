@@ -2544,7 +2544,7 @@
           goto Exit;
       }
 
-      FT_TRACE5(( "%d instance%s\n",
+      FT_TRACE5(( "%d named instance%s\n",
                   fvar_head.instanceCount,
                   fvar_head.instanceCount == 1 ? "" : "s" ));
 
@@ -2602,7 +2602,7 @@
 
           (void)FT_STREAM_SEEK( pos );
 
-          FT_TRACE5(( "  instance %d (%s%s%s, %s%s%s)\n",
+          FT_TRACE5(( "  named instance %d (%s%s%s, %s%s%s)\n",
                       i,
                       strname ? "name: `" : "",
                       strname ? strname : "unnamed",
@@ -2845,26 +2845,29 @@
         }
       }
 
-      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+      if ( !have_diff )
       {
-        FT_UInt  instance_index = (FT_UInt)face->root.face_index >> 16;
+        if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+        {
+          FT_UInt  instance_index = (FT_UInt)face->root.face_index >> 16;
 
 
-        c = blend->normalizedcoords + i;
-        n = blend->normalized_stylecoords            +
-            ( instance_index - 1 ) * mmvar->num_axis +
-            i;
+          c = blend->normalizedcoords + i;
+          n = blend->normalized_stylecoords            +
+              ( instance_index - 1 ) * mmvar->num_axis +
+              i;
 
-        for ( j = i; j < mmvar->num_axis; j++, n++, c++ )
-          if ( *c != *n )
-            have_diff = 1;
-      }
-      else
-      {
-        c = blend->normalizedcoords + i;
-        for ( j = i; j < mmvar->num_axis; j++, c++ )
-          if ( *c != 0 )
-            have_diff = 1;
+          for ( j = i; j < mmvar->num_axis; j++, n++, c++ )
+            if ( *c != *n )
+              have_diff = 1;
+        }
+        else
+        {
+          c = blend->normalizedcoords + i;
+          for ( j = i; j < mmvar->num_axis; j++, c++ )
+            if ( *c != 0 )
+              have_diff = 1;
+        }
       }
 
       /* return value -1 indicates `no change' */

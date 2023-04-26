@@ -1612,7 +1612,7 @@
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    if (mm)
+    if ( mm )
       mm->done_blend( FT_FACE( face ) );
   }
 
