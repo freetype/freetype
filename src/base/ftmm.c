@@ -185,6 +185,14 @@
       error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_design )
         error = service->set_mm_design( face, num_coords, coords );
+
+      if ( !error )
+      {
+        if ( num_coords )
+          face->face_flags |= FT_FACE_FLAG_VARIATION;
+        else
+          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+      }
     }
 
     /* enforce recomputation of auto-hinting data */
@@ -220,6 +228,14 @@
       error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_weightvector )
         error = service->set_mm_weightvector( face, len, weightvector );
+
+      if ( !error )
+      {
+        if ( len )
+          face->face_flags |= FT_FACE_FLAG_VARIATION;
+        else
+          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+      }
     }
 
     /* enforce recomputation of auto-hinting data */
@@ -282,6 +298,14 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_var_design )
         error = service_mm->set_var_design( face, num_coords, coords );
+
+      if ( !error || error == -1 )
+      {
+        if ( num_coords )
+          face->face_flags |= FT_FACE_FLAG_VARIATION;
+        else
+          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+      }
 
       /* internal error code -1 means `no change'; we can exit immediately */
       if ( error == -1 )
@@ -359,6 +383,14 @@
       if ( service_mm->set_mm_blend )
         error = service_mm->set_mm_blend( face, num_coords, coords );
 
+      if ( !error || error == -1 )
+      {
+        if ( num_coords )
+          face->face_flags |= FT_FACE_FLAG_VARIATION;
+        else
+          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+      }
+
       /* internal error code -1 means `no change'; we can exit immediately */
       if ( error == -1 )
         return FT_Err_Ok;
@@ -409,6 +441,14 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_mm_blend )
         error = service_mm->set_mm_blend( face, num_coords, coords );
+
+      if ( !error || error == -1 )
+      {
+        if ( num_coords )
+          face->face_flags |= FT_FACE_FLAG_VARIATION;
+        else
+          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+      }
 
       /* internal error code -1 means `no change'; we can exit immediately */
       if ( error == -1 )

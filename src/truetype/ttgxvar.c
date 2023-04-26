@@ -2985,11 +2985,6 @@
     if ( error )
       return error;
 
-    if ( num_coords )
-      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
-    else
-      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
-
     return FT_Err_Ok;
   }
 
@@ -3208,11 +3203,6 @@
     if ( error )
       goto Exit;
 
-    if ( num_coords )
-      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
-    else
-      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
-
   Exit:
     FT_FREE( normalized );
     return error;
@@ -3382,9 +3372,8 @@
     else
       error = TT_Set_Var_Design( face, 0, NULL );
 
-    face->root.face_index  = ( instance_index << 16 )             |
-                             ( face->root.face_index & 0xFFFFL );
-    face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+    face->root.face_index = ( instance_index << 16 )             |
+                            ( face->root.face_index & 0xFFFFL );
 
   Exit:
     return error;

@@ -602,10 +602,12 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   Adobe Multiple Master fonts limit the number of designs, and thus the
-   *   length of the weight vector to~16.
+   *   length of the weight vector to 16~elements.
    *
-   *   If `len` is zero and `weightvector` is `NULL`, the weight vector array
-   *   is reset to the default values.
+   *   If `len` is larger than zero, this function sets the
+   *   @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field (i.e.,
+   *   @FT_IS_VARIATION will return true).  If `len` is zero, this bit flag
+   *   is unset and the weight vector array is reset to the default values.
    *
    *   The Adobe documentation also states that the values in the
    *   WeightVector array must total 1.0 +/-~0.001.  In practice this does

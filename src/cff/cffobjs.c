@@ -719,24 +719,15 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       {
-        FT_Service_MultiMasters
-          mm = (FT_Service_MultiMasters)face->mm;
-        FT_Service_MetricsVariations
-          var = (FT_Service_MetricsVariations)face->face_var;
-
         FT_UInt  instance_index = (FT_UInt)face_index >> 16;
 
 
         if ( FT_HAS_MULTIPLE_MASTERS( cffface ) &&
-             mm                                 &&
              instance_index > 0                 )
         {
-          error = mm->set_named_instance( cffface, instance_index );
+          error = FT_Set_Named_Instance( cffface, instance_index );
           if ( error )
             goto Exit;
-
-          if ( var )
-            var->metrics_adjust( cffface );
         }
       }
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

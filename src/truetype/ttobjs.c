@@ -777,7 +777,6 @@
     }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-
     {
       FT_UInt  instance_index = (FT_UInt)face_index >> 16;
 
@@ -785,14 +784,11 @@
       if ( FT_HAS_MULTIPLE_MASTERS( ttface ) &&
            instance_index > 0                )
       {
-        error = TT_Set_Named_Instance( face, instance_index );
+        error = FT_Set_Named_Instance( ttface, instance_index );
         if ( error )
           goto Exit;
-
-        tt_apply_mvar( face );
       }
     }
-
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
     /* initialize standard glyph loading routines */
