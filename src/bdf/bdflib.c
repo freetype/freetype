@@ -378,7 +378,7 @@
     *alen = 0;
 
     if ( list == NULL || list->used == 0 )
-      return 0;
+      return NULL;
 
     dp = list->field[0];
     for ( i = j = 0; i < list->used; i++ )
@@ -887,18 +887,18 @@
   }
 
 
-  FT_LOCAL_DEF( bdf_property_t* )
-  bdf_get_property( char*        name,
+  static bdf_property_t*
+  bdf_get_property( const char*  name,
                     bdf_font_t*  font )
   {
     size_t*  propid;
 
 
     if ( name == NULL || *name == 0 )
-      return 0;
+      return NULL;
 
     if ( ( propid = ft_hash_str_lookup( name, &(font->proptbl) ) ) == NULL )
-      return 0;
+      return NULL;
 
     if ( *propid >= num_bdf_properties_ )
       return font->user_props + ( *propid - num_bdf_properties_ );
@@ -944,7 +944,7 @@
 
   static FT_Error
   bdf_add_comment_( bdf_font_t*    font,
-                    char*          comment,
+                    const char*    comment,
                     unsigned long  len )
   {
     char*      cp;
@@ -1053,27 +1053,24 @@
     bdf_property_t*  p;
 
 
-    *name = sp = ep = line;
+    sp = ep = line;
 
     while ( *ep && *ep != ' ' && *ep != '\t' )
       ep++;
 
-    hold = -1;
-    if ( *ep )
-    {
-      hold = *ep;
-      *ep  = 0;
-    }
+    hold = *ep;
+    *ep  = '\0';
 
     p = bdf_get_property( sp, font );
 
-    /* Restore the character that was saved before any return can happen. */
-    if ( hold != -1 )
-      *ep = (char)hold;
-
     /* If the property exists and is not an atom, just return here. */
     if ( p && p->format != BDF_ATOM )
+    {
+      *ep = (char)hold;  /* Undo NUL-termination. */
       return 0;
+    }
+
+    *name = sp;
 
     /* The property is an atom.  Trim all leading and trailing whitespace */
     /* and double quotes for the atom value.                              */
@@ -1081,25 +1078,26 @@
     ep = line + linelen;
 
     /* Trim the leading whitespace if it exists. */
-    if ( *sp )
-      *sp++ = 0;
-    while ( *sp                           &&
-            ( *sp == ' ' || *sp == '\t' ) )
-      sp++;
+    if ( sp < ep )
+      do
+         sp++;
+      while ( *sp == ' ' || *sp == '\t' );
 
     /* Trim the leading double quote if it exists. */
     if ( *sp == '"' )
       sp++;
+
     *value = sp;
 
     /* Trim the trailing whitespace if it exists. */
-    while ( ep > sp                                       &&
-            ( *( ep - 1 ) == ' ' || *( ep - 1 ) == '\t' ) )
-      *--ep = 0;
+    if ( sp < ep )
+      do
+        *ep-- = '\0';
+      while ( *ep == ' ' || *ep  == '\t' );
 
     /* Trim the trailing double quote if it exists. */
-    if ( ep > sp && *( ep - 1 ) == '"' )
-      *--ep = 0;
+    if ( *ep  == '"' )
+      *ep = '\0';
 
     return 1;
   }
