@@ -442,14 +442,7 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    FT_Error  error;
-
-
-    error = t1_set_mm_blend( face, num_coords, coords );
-    if ( error )
-      return error;
-
-    return FT_Err_Ok;
+    return t1_set_mm_blend( face, num_coords, coords );
   }
 
 

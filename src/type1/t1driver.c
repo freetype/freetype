@@ -136,6 +136,9 @@
                             T1_Set_MM_WeightVector, /* set_mm_weightvector        */
     (FT_Get_MM_WeightVector_Func)
                             T1_Get_MM_WeightVector, /* get_mm_weightvector        */
+
+    (FT_Construct_PS_Name_Func)
+                            NULL,                   /* construct_ps_name          */
     (FT_Var_Load_Delta_Set_Idx_Map_Func)
                             NULL,                   /* load_delta_set_idx_map     */
     (FT_Var_Load_Item_Var_Store_Func)

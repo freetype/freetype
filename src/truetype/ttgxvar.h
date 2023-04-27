@@ -378,6 +378,9 @@ FT_BEGIN_HEADER
   TT_Get_Default_Named_Instance( TT_Face   face,
                                  FT_UInt  *instance_index );
 
+  FT_LOCAL( void )
+  tt_construct_ps_name( TT_Face  face );
+
   FT_LOCAL( FT_Error )
   tt_face_vary_cvt( TT_Face    face,
                     FT_Stream  stream );
@@ -400,7 +403,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   tt_apply_mvar( TT_Face  face );
-
 
   FT_LOCAL( FT_Error )
   tt_var_load_item_variation_store( TT_Face          face,

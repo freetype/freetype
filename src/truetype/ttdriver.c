@@ -533,6 +533,9 @@
                             NULL,                  /* set_mm_weightvector        */
     (FT_Get_MM_WeightVector_Func)
                             NULL,                  /* get_mm_weightvector        */
+
+    (FT_Construct_PS_Name_Func)
+                            tt_construct_ps_name,  /* construct_ps_name          */
     (FT_Var_Load_Delta_Set_Idx_Map_Func)
                             tt_var_load_delta_set_index_mapping,
                                                    /* load_delta_set_idx_map     */

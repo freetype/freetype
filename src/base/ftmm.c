@@ -301,10 +301,26 @@
 
       if ( !error || error == -1 )
       {
+        FT_Bool  is_variation_old = FT_IS_VARIATION( face );
+
+
         if ( num_coords )
           face->face_flags |= FT_FACE_FLAG_VARIATION;
         else
           face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+        if ( service_mm->construct_ps_name )
+        {
+          if ( error == -1 )
+          {
+            /* The PS name of a named instance and a non-named instance */
+            /* usually differs, even if the axis values are identical.  */
+            if ( is_variation_old != FT_IS_VARIATION( face ) )
+              service_mm->construct_ps_name( face );
+          }
+          else
+            service_mm->construct_ps_name( face );
+        }
       }
 
       /* internal error code -1 means `no change'; we can exit immediately */
@@ -385,10 +401,26 @@
 
       if ( !error || error == -1 )
       {
+        FT_Bool  is_variation_old = FT_IS_VARIATION( face );
+
+
         if ( num_coords )
           face->face_flags |= FT_FACE_FLAG_VARIATION;
         else
           face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+        if ( service_mm->construct_ps_name )
+        {
+          if ( error == -1 )
+          {
+            /* The PS name of a named instance and a non-named instance */
+            /* usually differs, even if the axis values are identical.  */
+            if ( is_variation_old != FT_IS_VARIATION( face ) )
+              service_mm->construct_ps_name( face );
+          }
+          else
+            service_mm->construct_ps_name( face );
+        }
       }
 
       /* internal error code -1 means `no change'; we can exit immediately */
@@ -444,10 +476,26 @@
 
       if ( !error || error == -1 )
       {
+        FT_Bool  is_variation_old = FT_IS_VARIATION( face );
+
+
         if ( num_coords )
           face->face_flags |= FT_FACE_FLAG_VARIATION;
         else
           face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+        if ( service_mm->construct_ps_name )
+        {
+          if ( error == -1 )
+          {
+            /* The PS name of a named instance and a non-named instance */
+            /* usually differs, even if the axis values are identical.  */
+            if ( is_variation_old != FT_IS_VARIATION( face ) )
+              service_mm->construct_ps_name( face );
+          }
+          else
+            service_mm->construct_ps_name( face );
+        }
       }
 
       /* internal error code -1 means `no change'; we can exit immediately */
@@ -577,6 +625,33 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_named_instance )
         error = service_mm->set_named_instance( face, instance_index );
+
+      if ( !error || error == -1 )
+      {
+        FT_Bool  is_variation_old = FT_IS_VARIATION( face );
+
+
+        face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+        face->face_index  = ( instance_index << 16 )        |
+                            ( face->face_index & 0xFFFFL );
+
+        if ( service_mm->construct_ps_name )
+        {
+          if ( error == -1 )
+          {
+            /* The PS name of a named instance and a non-named instance */
+            /* usually differs, even if the axis values are identical.  */
+            if ( is_variation_old != FT_IS_VARIATION( face ) )
+              service_mm->construct_ps_name( face );
+          }
+          else
+            service_mm->construct_ps_name( face );
+        }
+      }
+
+      /* internal error code -1 means `no change'; we can exit immediately */
+      if ( error == -1 )
+        return FT_Err_Ok;
     }
 
     if ( !error )
@@ -592,13 +667,6 @@
     {
       face->autohint.finalizer( face->autohint.data );
       face->autohint.data = NULL;
-    }
-
-    if ( !error )
-    {
-      face->face_index  = ( instance_index << 16 )        |
-                          ( face->face_index & 0xFFFFL );
-      face->face_flags &= ~FT_FACE_FLAG_VARIATION;
     }
 
     return error;

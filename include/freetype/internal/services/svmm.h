@@ -102,6 +102,9 @@ FT_BEGIN_HEADER
                                   FT_UInt*   len,
                                   FT_Fixed*  weight_vector );
 
+  typedef void
+  (*FT_Construct_PS_Name_Func)( FT_Face  face );
+
   typedef FT_Error
   (*FT_Var_Load_Delta_Set_Idx_Map_Func)( FT_Face            face,
                                          FT_ULong           offset,
@@ -144,6 +147,7 @@ FT_BEGIN_HEADER
     FT_Get_MM_WeightVector_Func           get_mm_weightvector;
 
     /* for internal use; only needed for code sharing between modules */
+    FT_Construct_PS_Name_Func             construct_ps_name;
     FT_Var_Load_Delta_Set_Idx_Map_Func    load_delta_set_idx_map;
     FT_Var_Load_Item_Var_Store_Func       load_item_var_store;
     FT_Var_Get_Item_Delta_Func            get_item_delta;
@@ -166,6 +170,8 @@ FT_BEGIN_HEADER
                                            get_default_named_instance_, \
                                            set_mm_weightvector_,        \
                                            get_mm_weightvector_,        \
+                                                                        \
+                                           construct_ps_name_,          \
                                            load_delta_set_idx_map_,     \
                                            load_item_var_store_,        \
                                            get_item_delta_,             \
@@ -186,6 +192,8 @@ FT_BEGIN_HEADER
     get_default_named_instance_,                                        \
     set_mm_weightvector_,                                               \
     get_mm_weightvector_,                                               \
+                                                                        \
+    construct_ps_name_,                                                 \
     load_delta_set_idx_map_,                                            \
     load_item_var_store_,                                               \
     get_item_delta_,                                                    \

@@ -896,6 +896,16 @@
   }
 
 
+  static void
+  cff_construct_ps_name( CFF_Face  face )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    mm->construct_ps_name( FT_FACE( face ) );
+  }
+
+
   static FT_Error
   cff_get_mm_var( CFF_Face     face,
                   FT_MM_Var*  *master )
@@ -1039,6 +1049,10 @@
     (FT_Get_MM_WeightVector_Func)
                             cff_get_mm_weightvector,
                                                 /* get_mm_weightvector        */
+
+    (FT_Construct_PS_Name_Func)
+                            cff_construct_ps_name,
+                                                /* construct_ps_name          */
     (FT_Var_Load_Delta_Set_Idx_Map_Func)
                             cff_load_delta_set_index_mapping,
                                                 /* load_delta_set_idx_map     */
