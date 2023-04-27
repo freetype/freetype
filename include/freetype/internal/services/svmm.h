@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
                             FT_MM_Var*  *mm_var );
 
   typedef void
-  (*FT_Done_Blend_Func)( FT_Face );
+  (*FT_Done_Blend_Func)( FT_Face  face );
 
   typedef FT_Error
   (*FT_Set_MM_WeightVector_Func)( FT_Face    face,
@@ -164,8 +164,8 @@ FT_BEGIN_HEADER
                                            get_var_design_,             \
                                            set_named_instance_,         \
                                            get_default_named_instance_, \
-                                           set_weightvector_,           \
-                                           get_weightvector_,           \
+                                           set_mm_weightvector_,        \
+                                           get_mm_weightvector_,        \
                                            load_delta_set_idx_map_,     \
                                            load_item_var_store_,        \
                                            get_item_delta_,             \
@@ -184,8 +184,8 @@ FT_BEGIN_HEADER
     get_var_design_,                                                    \
     set_named_instance_,                                                \
     get_default_named_instance_,                                        \
-    set_weightvector_,                                                  \
-    get_weightvector_,                                                  \
+    set_mm_weightvector_,                                               \
+    get_mm_weightvector_,                                               \
     load_delta_set_idx_map_,                                            \
     load_item_var_store_,                                               \
     get_item_delta_,                                                    \
