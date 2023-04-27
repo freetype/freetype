@@ -1318,6 +1318,9 @@ FT_BEGIN_HEADER
    *   var_default_named_instance ::
    *     The index of the default named instance.
    *
+   *   non_var_style_name ::
+   *     The non-variation style name, used as a backup.
+   *
    *   horz_metrics_size ::
    *     The size of the 'hmtx' table.
    *
@@ -1556,6 +1559,8 @@ FT_BEGIN_HEADER
     FT_UInt               var_postscript_prefix_len; /* since 2.7.2 */
 
     FT_UInt               var_default_named_instance;  /* since 2.13.1 */
+
+    const char*           non_var_style_name;  /* since 2.13.1 */
 #endif
 
     /* since version 2.2 */

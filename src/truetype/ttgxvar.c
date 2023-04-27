@@ -3306,6 +3306,8 @@
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
 
+    FT_Memory  memory = face->root.memory;
+
     FT_UInt  num_instances;
 
 
@@ -3329,8 +3331,7 @@
 
     if ( instance_index > 0 )
     {
-      FT_Memory     memory = face->root.memory;
-      SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
       FT_Var_Named_Style*  named_style;
       FT_String*           style_name;
@@ -3354,7 +3355,13 @@
                                  named_style->coords );
     }
     else
+    {
+      /* restore non-VF style name */
+      FT_FREE( face->root.style_name );
+      if ( FT_STRDUP( face->root.style_name, face->non_var_style_name ) )
+        goto Exit;
       error = TT_Set_Var_Design( face, 0, NULL );
+    }
 
   Exit:
     return error;
