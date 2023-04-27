@@ -524,7 +524,8 @@
     (FT_Get_MM_Var_Func)    TT_Get_MM_Var,         /* get_mm_var                 */
     (FT_Set_Var_Design_Func)TT_Set_Var_Design,     /* set_var_design             */
     (FT_Get_Var_Design_Func)TT_Get_Var_Design,     /* get_var_design             */
-    (FT_Set_Instance_Func)  TT_Set_Named_Instance, /* set_instance               */
+    (FT_Set_Named_Instance_Func)
+                            TT_Set_Named_Instance, /* set_named_instance         */
     (FT_Get_Default_Named_Instance_Func)
                             TT_Get_Default_Named_Instance,
                                                    /* get_default_named_instance */

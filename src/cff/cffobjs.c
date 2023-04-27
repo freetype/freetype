@@ -731,7 +731,7 @@
              mm                                 &&
              instance_index > 0                 )
         {
-          error = mm->set_instance( cffface, instance_index );
+          error = mm->set_named_instance( cffface, instance_index );
           if ( error )
             goto Exit;
 

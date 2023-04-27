@@ -128,7 +128,8 @@
     (FT_Get_MM_Var_Func)    T1_Get_MM_Var,          /* get_mm_var                 */
     (FT_Set_Var_Design_Func)T1_Set_Var_Design,      /* set_var_design             */
     (FT_Get_Var_Design_Func)T1_Get_Var_Design,      /* get_var_design             */
-    (FT_Set_Instance_Func)  T1_Reset_MM_Blend,      /* set_instance               */
+    (FT_Set_Named_Instance_Func)
+                            T1_Reset_MM_Blend,      /* set_named_instance         */
     (FT_Get_Default_Named_Instance_Func)
                             NULL,                   /* get_default_named_instance */
     (FT_Set_MM_WeightVector_Func)

@@ -932,13 +932,13 @@
 
 
   static FT_Error
-  cff_set_instance( CFF_Face  face,
-                    FT_UInt   instance_index )
+  cff_set_named_instance( CFF_Face  face,
+                          FT_UInt   instance_index )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    return mm->set_instance( FT_FACE( face ), instance_index );
+    return mm->set_named_instance( FT_FACE( face ), instance_index );
   }
 
 
@@ -1027,7 +1027,9 @@
     (FT_Get_MM_Var_Func)    cff_get_mm_var,     /* get_mm_var                 */
     (FT_Set_Var_Design_Func)cff_set_var_design, /* set_var_design             */
     (FT_Get_Var_Design_Func)cff_get_var_design, /* get_var_design             */
-    (FT_Set_Instance_Func)  cff_set_instance,   /* set_instance               */
+    (FT_Set_Named_Instance_Func)
+                            cff_set_named_instance,
+                                                /* set_named_instance         */
     (FT_Get_Default_Named_Instance_Func)
                             cff_get_default_named_instance,
                                                 /* get_default_named_instance */

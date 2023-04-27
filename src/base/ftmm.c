@@ -535,8 +535,8 @@
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service_mm->set_instance )
-        error = service_mm->set_instance( face, instance_index );
+      if ( service_mm->set_named_instance )
+        error = service_mm->set_named_instance( face, instance_index );
     }
 
     if ( !error )
