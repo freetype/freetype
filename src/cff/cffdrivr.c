@@ -634,7 +634,7 @@
         return service->get_ps_font_name( FT_FACE( face ) );
     }
 
-    return (const char*)cff->font_name;
+    return cff ? (const char*)cff->font_name : NULL;
   }
 
 
