@@ -129,14 +129,14 @@
              (cid->fd_bytes == 2 && fd_select == 0xFFFFU ) )
         {
           FT_TRACE1(( "cid_load_glyph: fail for glyph_index=%d, "
-                      "FD number %d is the max integer fitting into %d byte%s\n",
+                      "FD number %ld is the max integer fitting into %d byte%s\n",
                       glyph_index, fd_select, cid->fd_bytes,
                       cid->fd_bytes == 1 ? "" : "s" ));
         }
         else
         {
           FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
-                      "FD number %d > number of dicts %d\n",
+                      "FD number %ld > number of dicts %d\n",
                       glyph_index, fd_select, cid->num_dicts ));
         }
         error = FT_THROW( Invalid_Offset );
