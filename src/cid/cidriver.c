@@ -150,11 +150,23 @@
                                 FT_UInt  *cid )
   {
     FT_Error  error = FT_Err_Ok;
-    FT_UNUSED( face );
 
 
-    if ( cid )
-      *cid = glyph_index; /* identity mapping */
+    /*
+     * Currently, FreeType does not support an incrementally-
+     * defined CID-keyed font that stores the glyph description
+     * data in /GlyphDirectory array or dictionary.
+     * Thus the font loaded by the incremental loading feature
+     * is not handled in here.
+     */
+    error = cid_compute_fd_and_offsets( face, glyph_index,
+                                        NULL, NULL, NULL );
+
+
+    if ( error )
+      *cid = 0;
+    else
+      *cid = glyph_index;
 
     return error;
   }

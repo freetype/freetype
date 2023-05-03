@@ -40,6 +40,108 @@
 #define FT_COMPONENT  cidgload
 
 
+  /*
+   * A helper function to compute FD number (fd_select),
+   * the offset to the head of the glyph data (off1),
+   * and the offset to the and of the glyph data (off2).
+   *
+   * The number how many times cid_get_offset() is invoked
+   * can be controlled by the number how many non-NULL
+   * arguments are given.  If fd_select is non-NULL but
+   * off1 and off2 are NULL, cid_get_offset() is invoked
+   * only for fd_select, off1/off2 are not validated.
+   *
+   */
+  FT_LOCAL_DEF( FT_Error )
+  cid_compute_fd_and_offsets( CID_Face    face,
+                              FT_UInt     glyph_index,
+                              FT_ULong*   fd_select_p,
+                              FT_ULong*   off1_p,
+                              FT_ULong*   off2_p )
+  {
+    FT_Error      error  =  FT_Err_Ok;
+    CID_FaceInfo  cid    = &face->cid;
+    FT_Stream     stream =  face->cid_stream;
+    FT_UInt       entry_len = cid->fd_bytes + cid->gd_bytes;
+    FT_Byte*      p;
+    FT_Bool       need_frame_exit = 0;
+    FT_ULong      fd_select, off1, off2;
+
+
+    /* For ordinary fonts read the CID font dictionary index */
+    /* and charstring offset from the CIDMap.                */
+
+    if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
+                         glyph_index * entry_len )               ||
+         FT_FRAME_ENTER( 2 * entry_len )                         )
+      goto Exit;
+
+    need_frame_exit = 1;
+
+    p = (FT_Byte*)stream->cursor;
+    fd_select = cid_get_offset( &p, cid->fd_bytes );
+    off1      = cid_get_offset( &p, cid->gd_bytes );
+
+    p += cid->fd_bytes;
+    off2      = cid_get_offset( &p, cid->gd_bytes );
+
+    if (fd_select_p)
+      *fd_select_p = fd_select;
+
+    if (off1_p)
+      *off1_p = off1;
+
+    if (off2_p)
+      *off2_p = off2;
+  
+    if ( fd_select >= cid->num_dicts )
+    {
+      /*
+       * fd_select == 0xFF is often used to indicate that the CID
+       * has no charstring to be rendered, similar to GID = 0xFFFF
+       * in TrueType fonts.
+       */
+      if ( (cid->fd_bytes == 1 && fd_select == 0xFFU   ) ||
+           (cid->fd_bytes == 2 && fd_select == 0xFFFFU ) )
+      {
+        FT_TRACE1(( "cid_load_glyph: fail for glyph_index=%d, "
+                    "FD number %ld is the max integer fitting into %d byte%s\n",
+                    glyph_index, fd_select, cid->fd_bytes,
+                    cid->fd_bytes == 1 ? "" : "s" ));
+      }
+      else
+      {
+        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                    "FD number %ld > number of dicts %d\n",
+                    glyph_index, fd_select, cid->num_dicts ));
+      }
+      error = FT_THROW( Invalid_Offset );
+      goto Exit;
+    }
+    else if ( off2 > stream->size )
+    {
+      FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                  "end of the glyph data is beyond the data stream\n",
+                  glyph_index ));
+      error = FT_THROW( Invalid_Offset );
+      goto Exit;
+    }
+    else if ( off1 > off2 )
+    {
+      FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
+                  "the end position of glyph data is set before the start position\n",
+                  glyph_index ));
+      error = FT_THROW( Invalid_Offset );
+    }
+
+    Exit:
+      if ( need_frame_exit )
+        FT_FRAME_EXIT();
+
+    return error; 
+  }
+
+
   FT_CALLBACK_DEF( FT_Error )
   cid_load_glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
@@ -97,67 +199,14 @@
     else
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
-
-    /* For ordinary fonts read the CID font dictionary index */
-    /* and charstring offset from the CIDMap.                */
     {
-      FT_UInt   entry_len = cid->fd_bytes + cid->gd_bytes;
       FT_ULong  off1, off2;
 
 
-      if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
-                           glyph_index * entry_len )               ||
-           FT_FRAME_ENTER( 2 * entry_len )                         )
+      error = cid_compute_fd_and_offsets( face, glyph_index,
+                                          &fd_select, &off1, &off2 );
+      if ( error )
         goto Exit;
-
-      p         = (FT_Byte*)stream->cursor;
-      fd_select = cid_get_offset( &p, cid->fd_bytes );
-      off1      = cid_get_offset( &p, cid->gd_bytes );
-      p        += cid->fd_bytes;
-      off2      = cid_get_offset( &p, cid->gd_bytes );
-      FT_FRAME_EXIT();
-
-  
-      if ( fd_select >= cid->num_dicts )
-      {
-        /*
-         * fd_select == 0xFF is often used to indicate that the CID
-         * has no charstring to be rendered, similar to GID = 0xFFFF
-         * in TrueType fonts.
-         */
-        if ( (cid->fd_bytes == 1 && fd_select == 0xFFU   ) ||
-             (cid->fd_bytes == 2 && fd_select == 0xFFFFU ) )
-        {
-          FT_TRACE1(( "cid_load_glyph: fail for glyph_index=%d, "
-                      "FD number %ld is the max integer fitting into %d byte%s\n",
-                      glyph_index, fd_select, cid->fd_bytes,
-                      cid->fd_bytes == 1 ? "" : "s" ));
-        }
-        else
-        {
-          FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
-                      "FD number %ld > number of dicts %d\n",
-                      glyph_index, fd_select, cid->num_dicts ));
-        }
-        error = FT_THROW( Invalid_Offset );
-        goto Exit;
-      }
-      else if ( off2 > stream->size )
-      {
-        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
-                    "end of the glyph data is beyond the data stream\n",
-                    glyph_index ));
-        error = FT_THROW( Invalid_Offset );
-        goto Exit;
-      }
-      else if ( off1 > off2 )
-      {
-        FT_TRACE0(( "cid_load_glyph: fail for glyph_index=%d, "
-                    "the end position of glyph data is set before the start position\n",
-                    glyph_index ));
-        error = FT_THROW( Invalid_Offset );
-        goto Exit;
-      }
 
       glyph_length = off2 - off1;
 
