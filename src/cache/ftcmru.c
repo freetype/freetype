@@ -330,22 +330,22 @@
                                FT_Pointer               key )
   {
     FTC_MruNode  first = list->nodes;
-    FTC_MruNode  node, next;
+    FTC_MruNode  prev, node;
 
 
     if ( !first || !selection )
       return;
 
-    next = first;
+    prev = first->prev;
     do
     {
-      node = next;
-      next = node->next;
+      node = prev;
+      prev = node->prev;
 
       if ( selection( node, key ) )
         FTC_MruList_Remove( list, node );
 
-    } while ( next != first );
+    } while ( node != first );
   }
 
 
