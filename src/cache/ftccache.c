@@ -239,7 +239,7 @@
       if ( node == node0 )
         break;
 
-      pnode = &(*pnode)->link;
+      pnode = &node->link;
     }
 
     *pnode      = node0->link;
