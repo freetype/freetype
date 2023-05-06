@@ -79,41 +79,57 @@
    *
    */
 
-  static void*
-  get_sfnt_table( TT_Face      face,
+  FT_CALLBACK_DEF( FT_Error )
+  sfnt_load_table( FT_Face    face,    /* TT_Face */
+                   FT_ULong   tag,
+                   FT_Long    offset,
+                   FT_Byte*   buffer,
+                   FT_ULong*  length )
+  {
+    TT_Face  ttface = (TT_Face)face;
+
+
+    return tt_face_load_any( ttface, tag, offset, buffer, length );
+  }
+
+
+  FT_CALLBACK_DEF( void* )
+  get_sfnt_table( FT_Face      face,  /* TT_Face */
                   FT_Sfnt_Tag  tag )
   {
+    TT_Face  ttface = (TT_Face)face;
+
     void*  table;
 
 
     switch ( tag )
     {
     case FT_SFNT_HEAD:
-      table = &face->header;
+      table = &ttface->header;
       break;
 
     case FT_SFNT_HHEA:
-      table = &face->horizontal;
+      table = &ttface->horizontal;
       break;
 
     case FT_SFNT_VHEA:
-      table = face->vertical_info ? &face->vertical : NULL;
+      table = ttface->vertical_info ? &ttface->vertical : NULL;
       break;
 
     case FT_SFNT_OS2:
-      table = ( face->os2.version == 0xFFFFU ) ? NULL : &face->os2;
+      table = ( ttface->os2.version == 0xFFFFU ) ? NULL : &ttface->os2;
       break;
 
     case FT_SFNT_POST:
-      table = &face->postscript;
+      table = &ttface->postscript;
       break;
 
     case FT_SFNT_MAXP:
-      table = &face->max_profile;
+      table = &ttface->max_profile;
       break;
 
     case FT_SFNT_PCLT:
-      table = face->pclt.Version ? &face->pclt : NULL;
+      table = ttface->pclt.Version ? &ttface->pclt : NULL;
       break;
 
     default:
@@ -124,26 +140,29 @@
   }
 
 
-  static FT_Error
-  sfnt_table_info( TT_Face    face,
+  FT_CALLBACK_DEF( FT_Error )
+  sfnt_table_info( FT_Face    face,    /* TT_Face */
                    FT_UInt    idx,
                    FT_ULong  *tag,
                    FT_ULong  *offset,
                    FT_ULong  *length )
   {
+    TT_Face  ttface = (TT_Face)face;
+
+
     if ( !offset || !length )
       return FT_THROW( Invalid_Argument );
 
     if ( !tag )
-      *length = face->num_tables;
+      *length = ttface->num_tables;
     else
     {
-      if ( idx >= face->num_tables )
+      if ( idx >= ttface->num_tables )
         return FT_THROW( Table_Missing );
 
-      *tag    = face->dir_tables[idx].Tag;
-      *offset = face->dir_tables[idx].Offset;
-      *length = face->dir_tables[idx].Length;
+      *tag    = ttface->dir_tables[idx].Tag;
+      *offset = ttface->dir_tables[idx].Offset;
+      *length = ttface->dir_tables[idx].Length;
     }
 
     return FT_Err_Ok;
@@ -153,7 +172,7 @@
   FT_DEFINE_SERVICE_SFNT_TABLEREC(
     sfnt_service_sfnt_table,
 
-    (FT_SFNT_TableLoadFunc)tt_face_load_any,     /* load_table */
+    (FT_SFNT_TableLoadFunc)sfnt_load_table,      /* load_table */
     (FT_SFNT_TableGetFunc) get_sfnt_table,       /* get_table  */
     (FT_SFNT_TableInfoFunc)sfnt_table_info       /* table_info */
   )
@@ -166,7 +185,7 @@
    *
    */
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   sfnt_get_glyph_name( FT_Face     face,
                        FT_UInt     glyph_index,
                        FT_Pointer  buffer,
@@ -184,7 +203,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF( FT_UInt )
   sfnt_get_name_index( FT_Face           face,
                        const FT_String*  glyph_name )
   {
@@ -600,7 +619,7 @@
   }
 
 
-  static FT_Bool
+  FT_CALLBACK_DEF( FT_Bool )
   sfnt_get_name_id( TT_Face    face,
                     FT_UShort  id,
                     FT_Int    *win,
@@ -1043,47 +1062,49 @@
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
-  static const char*
-  sfnt_get_ps_name( TT_Face  face )
+  FT_CALLBACK_DEF( const char* )
+  sfnt_get_ps_name( FT_Face  face )    /* TT_Face */
   {
+    TT_Face  ttface = (TT_Face)face;
+
     FT_Int       found, win, apple;
     const char*  result = NULL;
 
 
-    if ( face->postscript_name )
-      return face->postscript_name;
+    if ( ttface->postscript_name )
+      return ttface->postscript_name;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    if ( face->blend                                 &&
-         ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
-           FT_IS_VARIATION( FT_FACE( face ) )      ) )
+    if ( ttface->blend                    &&
+         ( FT_IS_NAMED_INSTANCE( face ) ||
+           FT_IS_VARIATION( face )      ) )
     {
-      face->postscript_name = sfnt_get_var_ps_name( face );
-      return face->postscript_name;
+      ttface->postscript_name = sfnt_get_var_ps_name( ttface );
+      return ttface->postscript_name;
     }
 #endif
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    found = sfnt_get_name_id( face, TT_NAME_ID_PS_NAME, &win, &apple );
+    found = sfnt_get_name_id( ttface, TT_NAME_ID_PS_NAME, &win, &apple );
     if ( !found )
       return NULL;
 
     /* prefer Windows entries over Apple */
     if ( win != -1 )
-      result = get_win_string( face->root.memory,
-                               face->name_table.stream,
-                               face->name_table.names + win,
+      result = get_win_string( FT_FACE_MEMORY( face ),
+                               ttface->name_table.stream,
+                               ttface->name_table.names + win,
                                sfnt_is_postscript,
                                1 );
     if ( !result && apple != -1 )
-      result = get_apple_string( face->root.memory,
-                                 face->name_table.stream,
-                                 face->name_table.names + apple,
+      result = get_apple_string( FT_FACE_MEMORY( face ),
+                                 ttface->name_table.stream,
+                                 ttface->name_table.names + apple,
                                  sfnt_is_postscript,
                                  1 );
 
-    face->postscript_name = result;
+    ttface->postscript_name = result;
 
     return result;
   }
@@ -1109,7 +1130,7 @@
 #ifdef TT_CONFIG_OPTION_BDF
 
   static FT_Error
-  sfnt_get_charset_id( TT_Face       face,
+  sfnt_get_charset_id( FT_Face       face,
                        const char*  *acharset_encoding,
                        const char*  *acharset_registry )
   {
