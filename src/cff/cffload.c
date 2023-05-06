@@ -1589,16 +1589,17 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
   FT_LOCAL_DEF( FT_Error )
-  cff_get_var_blend( CFF_Face     face,
+  cff_get_var_blend( FT_Face      face,             /* CFF_Face */
                      FT_UInt     *num_coords,
                      FT_Fixed*   *coords,
                      FT_Fixed*   *normalizedcoords,
                      FT_MM_Var*  *mm_var )
   {
-    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+    CFF_Face                 cffface = (CFF_Face)face;
+    FT_Service_MultiMasters  mm      = (FT_Service_MultiMasters)cffface->mm;
 
 
-    return mm->get_var_blend( FT_FACE( face ),
+    return mm->get_var_blend( face,
                               num_coords,
                               coords,
                               normalizedcoords,
@@ -1607,13 +1608,14 @@
 
 
   FT_LOCAL_DEF( void )
-  cff_done_blend( CFF_Face  face )
+  cff_done_blend( FT_Face  face )    /* CFF_Face */
   {
-    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+    CFF_Face                 cffface = (CFF_Face)face;
+    FT_Service_MultiMasters  mm      = (FT_Service_MultiMasters)cffface->mm;
 
 
     if ( mm )
-      mm->done_blend( FT_FACE( face ) );
+      mm->done_blend( face );
   }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

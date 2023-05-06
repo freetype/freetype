@@ -1150,7 +1150,7 @@
     }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    cff_done_blend( face );
+    cff_done_blend( cffface );
     face->blend = NULL;
 #endif
   }
