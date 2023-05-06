@@ -57,7 +57,7 @@
   /* the name, as in `A.swash' or `e.final'; in this case, the           */
   /* VARIANT_BIT is set in the return value.                             */
   /*                                                                     */
-  static FT_UInt32
+  FT_CALLBACK_DEF( FT_UInt32 )
   ps_unicode_value( const char*  glyph_name )
   {
     /* If the name begins with `uni', then the glyph name may be a */
@@ -309,7 +309,7 @@
 
 
   /* Build a table that maps Unicode values to glyph indices. */
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   ps_unicodes_init( FT_Memory             memory,
                     PS_Unicodes           table,
                     FT_UInt               num_glyphs,
@@ -408,7 +408,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF( FT_UInt )
   ps_unicodes_char_index( PS_Unicodes  table,
                           FT_UInt32    unicode )
   {
@@ -453,7 +453,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF( FT_UInt )
   ps_unicodes_char_next( PS_Unicodes  table,
                          FT_UInt32   *unicode )
   {
@@ -518,7 +518,7 @@
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
 
-  static const char*
+  FT_CALLBACK_DEF( const char* )
   ps_get_macintosh_name( FT_UInt  name_index )
   {
     if ( name_index >= FT_NUM_MAC_NAMES )
@@ -528,7 +528,7 @@
   }
 
 
-  static const char*
+  FT_CALLBACK_DEF( const char* )
   ps_get_standard_strings( FT_UInt  sid )
   {
     if ( sid >= FT_NUM_SID_NAMES )
