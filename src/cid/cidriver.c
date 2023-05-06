@@ -153,16 +153,13 @@
 
 
     /*
-     * Currently, FreeType does not support an incrementally-
-     * defined CID-keyed font that stores the glyph description
-     * data in /GlyphDirectory array or dictionary.
-     * Thus the font loaded by the incremental loading feature
-     * is not handled in here.
+     * Currently, FreeType does not support incrementally-defined, CID-keyed
+     * fonts that store the glyph description data in a `/GlyphDirectory`
+     * array or dictionary.  Fonts loaded by the incremental loading feature
+     * are thus not handled here.
      */
     error = cid_compute_fd_and_offsets( face, glyph_index,
                                         NULL, NULL, NULL );
-
-
     if ( error )
       *cid = 0;
     else
