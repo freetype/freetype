@@ -48,10 +48,11 @@
    *
    */
 
-  static const char*
-  cid_get_postscript_name( CID_Face  face )
+  FT_CALLBACK_DEF( const char* )
+  cid_get_postscript_name( FT_Face  face )    /* CID_Face */
   {
-    const char*  result = face->cid.cid_font_name;
+    CID_Face     cidface = (CID_Face)face;
+    const char*  result  = cidface->cid.cid_font_name;
 
 
     if ( result && result[0] == '/' )
@@ -72,23 +73,25 @@
    *
    */
 
-  static FT_Error
-  cid_ps_get_font_info( FT_Face          face,
+  FT_CALLBACK_DEF( FT_Error )
+  cid_ps_get_font_info( FT_Face          face,        /* CID_Face */
                         PS_FontInfoRec*  afont_info )
   {
-    *afont_info = ((CID_Face)face)->cid.font_info;
+    *afont_info = ( (CID_Face)face )->cid.font_info;
 
     return FT_Err_Ok;
   }
 
-  static FT_Error
-  cid_ps_get_font_extra( FT_Face          face,
-                        PS_FontExtraRec*  afont_extra )
+
+  FT_CALLBACK_DEF( FT_Error )
+  cid_ps_get_font_extra( FT_Face           face,         /* CID_Face */
+                         PS_FontExtraRec*  afont_extra )
   {
-    *afont_extra = ((CID_Face)face)->font_extra;
+    *afont_extra = ( (CID_Face)face )->font_extra;
 
     return FT_Err_Ok;
   }
+
 
   static const FT_Service_PsInfoRec  cid_service_ps_info =
   {
@@ -107,13 +110,14 @@
    * CID INFO SERVICE
    *
    */
-  static FT_Error
-  cid_get_ros( CID_Face      face,
+  FT_CALLBACK_DEF( FT_Error )
+  cid_get_ros( FT_Face       face,        /* CID_Face */
                const char*  *registry,
                const char*  *ordering,
                FT_Int       *supplement )
   {
-    CID_FaceInfo  cid = &face->cid;
+    CID_Face      cidface = (CID_Face)face;
+    CID_FaceInfo  cid     = &cidface->cid;
 
 
     if ( registry )
@@ -129,8 +133,8 @@
   }
 
 
-  static FT_Error
-  cid_get_is_cid( CID_Face  face,
+  FT_CALLBACK_DEF( FT_Error )
+  cid_get_is_cid( FT_Face   face,    /* CID_Face */
                   FT_Bool  *is_cid )
   {
     FT_Error  error = FT_Err_Ok;
@@ -144,12 +148,13 @@
   }
 
 
-  static FT_Error
-  cid_get_cid_from_glyph_index( CID_Face  face,
+  FT_CALLBACK_DEF( FT_Error )
+  cid_get_cid_from_glyph_index( FT_Face   face,        /* CID_Face */
                                 FT_UInt   glyph_index,
                                 FT_UInt  *cid )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error   = FT_Err_Ok;
+    CID_Face  cidface = (CID_Face)face;
 
 
     /*
@@ -158,7 +163,7 @@
      * array or dictionary.  Fonts loaded by the incremental loading feature
      * are thus not handled here.
      */
-    error = cid_compute_fd_and_offsets( face, glyph_index,
+    error = cid_compute_fd_and_offsets( cidface, glyph_index,
                                         NULL, NULL, NULL );
     if ( error )
       *cid = 0;
@@ -216,7 +221,6 @@
 
     return ft_service_list_lookup( cid_services, cid_interface );
   }
-
 
 
   FT_CALLBACK_TABLE_DEF
