@@ -73,7 +73,8 @@
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-#define IS_INCREMENTAL  FT_BOOL( face->root.internal->incremental_interface )
+#define IS_INCREMENTAL  \
+          FT_BOOL( FT_FACE( face )->internal->incremental_interface )
 #else
 #define IS_INCREMENTAL  0
 #endif
@@ -760,14 +761,16 @@
 
 
   static void
-  parse_blend_axis_types( T1_Face    face,
-                          T1_Loader  loader )
+  parse_blend_axis_types( FT_Face  face,     /* T1_Face */
+                          void*    loader_ )
   {
+    T1_Face      t1face = (T1_Face)face;
+    T1_Loader    loader = (T1_Loader)loader_;
     T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
     FT_Int       n, num_axis;
-    FT_Error     error = FT_Err_Ok;
+    FT_Error     error  = FT_Err_Ok;
     PS_Blend     blend;
-    FT_Memory    memory;
+    FT_Memory    memory = FT_FACE_MEMORY( face );
 
 
     /* take an array of objects */
@@ -787,14 +790,13 @@
     }
 
     /* allocate blend if necessary */
-    error = t1_allocate_blend( face, 0, (FT_UInt)num_axis );
+    error = t1_allocate_blend( t1face, 0, (FT_UInt)num_axis );
     if ( error )
       goto Exit;
 
     FT_TRACE4(( " [" ));
 
-    blend  = face->blend;
-    memory = face->root.memory;
+    blend = t1face->blend;
 
     /* each token is an immediate containing the name of the axis */
     for ( n = 0; n < num_axis; n++ )
@@ -842,14 +844,16 @@
 
 
   static void
-  parse_blend_design_positions( T1_Face    face,
-                                T1_Loader  loader )
+  parse_blend_design_positions( FT_Face  face,     /* T1_Face */
+                                void*    loader_ )
   {
+    T1_Face      t1face   = (T1_Face)face;
+    T1_Loader    loader   = (T1_Loader)loader_;
     T1_TokenRec  design_tokens[T1_MAX_MM_DESIGNS];
     FT_Int       num_designs;
     FT_Int       num_axis = 0; /* make compiler happy */
     T1_Parser    parser   = &loader->parser;
-    FT_Memory    memory   = face->root.memory;
+    FT_Memory    memory   = FT_FACE_MEMORY( face );
     FT_Error     error    = FT_Err_Ok;
     FT_Fixed*    design_pos[T1_MAX_MM_DESIGNS];
 
@@ -907,7 +911,7 @@
           }
 
           num_axis = n_axis;
-          error = t1_allocate_blend( face,
+          error = t1_allocate_blend( t1face,
                                      (FT_UInt)num_designs,
                                      (FT_UInt)num_axis );
           if ( error )
@@ -948,7 +952,7 @@
       loader->parser.root.limit  = old_limit;
 
       /* a valid BlendDesignPosition has been parsed */
-      blend = face->blend;
+      blend = t1face->blend;
       if ( blend->design_pos[0] )
         FT_FREE( blend->design_pos[0] );
 
@@ -966,9 +970,11 @@
 
 
   static void
-  parse_blend_design_map( T1_Face    face,
-                          T1_Loader  loader )
+  parse_blend_design_map( FT_Face  face,     /* T1_Face */
+                          void*    loader_ )
   {
+    T1_Face      t1face = (T1_Face)face;
+    T1_Loader    loader = (T1_Loader)loader_;
     FT_Error     error  = FT_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend;
@@ -976,7 +982,7 @@
     FT_Int       n, num_axis;
     FT_Byte*     old_cursor;
     FT_Byte*     old_limit;
-    FT_Memory    memory = face->root.memory;
+    FT_Memory    memory = FT_FACE_MEMORY( face );
 
 
     T1_ToTokenArray( parser, axis_tokens,
@@ -997,10 +1003,10 @@
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
-    error = t1_allocate_blend( face, 0, (FT_UInt)num_axis );
+    error = t1_allocate_blend( t1face, 0, (FT_UInt)num_axis );
     if ( error )
       goto Exit;
-    blend = face->blend;
+    blend = t1face->blend;
 
     FT_TRACE4(( " [" ));
 
@@ -1075,15 +1081,17 @@
 
 
   static void
-  parse_weight_vector( T1_Face    face,
-                       T1_Loader  loader )
+  parse_weight_vector( FT_Face  face,     /* T1_Face */
+                       void*    loader_ )
   {
+    T1_Face      t1face = (T1_Face)face;
+    T1_Loader    loader = (T1_Loader)loader_;
     T1_TokenRec  design_tokens[T1_MAX_MM_DESIGNS];
     FT_Int       num_designs;
     FT_Error     error  = FT_Err_Ok;
-    FT_Memory    memory = face->root.memory;
+    FT_Memory    memory = FT_FACE_MEMORY( face );
     T1_Parser    parser = &loader->parser;
-    PS_Blend     blend  = face->blend;
+    PS_Blend     blend  = t1face->blend;
     T1_Token     token;
     FT_Int       n;
     FT_Byte*     old_cursor;
@@ -1108,10 +1116,10 @@
 
     if ( !blend || !blend->num_designs )
     {
-      error = t1_allocate_blend( face, (FT_UInt)num_designs, 0 );
+      error = t1_allocate_blend( t1face, (FT_UInt)num_designs, 0 );
       if ( error )
         goto Exit;
-      blend = face->blend;
+      blend = t1face->blend;
     }
     else if ( blend->num_designs != (FT_UInt)num_designs )
     {
@@ -1159,11 +1167,15 @@
   /* e.g., /BuildCharArray [0 0 0 0 0 0 0 0] def           */
   /* we're only interested in the number of array elements */
   static void
-  parse_buildchar( T1_Face    face,
-                   T1_Loader  loader )
+  parse_buildchar( FT_Face  face,     /* T1_Face */
+                   void*    loader_ )
   {
-    face->len_buildchar = (FT_UInt)T1_ToFixedArray( &loader->parser,
-                                                    0, NULL, 0 );
+    T1_Face    t1face = (T1_Face)face;
+    T1_Loader  loader = (T1_Loader)loader_;
+
+
+    t1face->len_buildchar = (FT_UInt)T1_ToFixedArray( &loader->parser,
+                                                      0, NULL, 0 );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     {
@@ -1171,7 +1183,7 @@
 
 
       FT_TRACE4(( " [" ));
-      for ( i = 0; i < face->len_buildchar; i++ )
+      for ( i = 0; i < t1face->len_buildchar; i++ )
         FT_TRACE4(( " 0" ));
 
       FT_TRACE4(( "]\n" ));
@@ -1321,9 +1333,10 @@
 
 
   static void
-  parse_private( T1_Face    face,
-                 T1_Loader  loader )
+  parse_private( FT_Face  face,
+                 void*    loader_ )
   {
+    T1_Loader  loader = (T1_Loader)loader_;
     FT_UNUSED( face );
 
     loader->keywords_encountered |= T1_PRIVATE;
@@ -1387,13 +1400,14 @@
   /* and `/CharStrings' dictionaries.                                */
 
   static void
-  t1_parse_font_matrix( T1_Face    face,
-                        T1_Loader  loader )
+  t1_parse_font_matrix( FT_Face  face,     /* T1_Face */
+                        void*    loader_ )
   {
+    T1_Face     t1face = (T1_Face)face;
+    T1_Loader   loader = (T1_Loader)loader_;
     T1_Parser   parser = &loader->parser;
-    FT_Matrix*  matrix = &face->type1.font_matrix;
-    FT_Vector*  offset = &face->type1.font_offset;
-    FT_Face     root   = (FT_Face)&face->root;
+    FT_Matrix*  matrix = &t1face->type1.font_matrix;
+    FT_Vector*  offset = &t1face->type1.font_offset;
     FT_Fixed    temp[6];
     FT_Fixed    temp_scale;
     FT_Int      result;
@@ -1429,7 +1443,7 @@
     if ( temp_scale != 0x10000L )
     {
       /* set units per EM based on FontMatrix values */
-      root->units_per_EM = (FT_UShort)FT_DivFix( 1000, temp_scale );
+      face->units_per_EM = (FT_UShort)FT_DivFix( 1000, temp_scale );
 
       temp[0] = FT_DivFix( temp[0], temp_scale );
       temp[1] = FT_DivFix( temp[1], temp_scale );
@@ -1457,14 +1471,16 @@
 
 
   static void
-  parse_encoding( T1_Face    face,
-                  T1_Loader  loader )
+  parse_encoding( FT_Face  face,     /* T1_Face */
+                  void*    loader_ )
   {
+    T1_Face    t1face = (T1_Face)face;
+    T1_Loader  loader = (T1_Loader)loader_;
     T1_Parser  parser = &loader->parser;
     FT_Byte*   cur;
     FT_Byte*   limit  = parser->root.limit;
 
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)t1face->psaux;
 
 
     T1_Skip_Spaces( parser );
@@ -1480,7 +1496,7 @@
     /* and we must load it now                               */
     if ( ft_isdigit( *cur ) || *cur == '[' )
     {
-      T1_Encoding  encode          = &face->type1.encoding;
+      T1_Encoding  encode          = &t1face->type1.encoding;
       FT_Int       count, array_size, n;
       PS_Table     char_table      = &loader->encoding_table;
       FT_Memory    memory          = parser->root.memory;
@@ -1662,7 +1678,7 @@
       FT_TRACE4(( "]\n" ));
 #endif
 
-      face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
+      t1face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
       parser->root.cursor       = cur;
     }
 
@@ -1673,21 +1689,21 @@
       if ( cur + 17 < limit                                            &&
            ft_strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
       {
-        face->type1.encoding_type = T1_ENCODING_TYPE_STANDARD;
+        t1face->type1.encoding_type = T1_ENCODING_TYPE_STANDARD;
         FT_TRACE4(( " StandardEncoding\n" ));
       }
 
       else if ( cur + 15 < limit                                          &&
                 ft_strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
       {
-        face->type1.encoding_type = T1_ENCODING_TYPE_EXPERT;
+        t1face->type1.encoding_type = T1_ENCODING_TYPE_EXPERT;
         FT_TRACE4(( " ExpertEncoding\n" ));
       }
 
       else if ( cur + 18 < limit                                             &&
                 ft_strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
       {
-        face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
+        t1face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
         FT_TRACE4(( " ISOLatin1Encoding\n" ));
       }
 
@@ -1701,9 +1717,11 @@
 
 
   static void
-  parse_subrs( T1_Face    face,
-               T1_Loader  loader )
+  parse_subrs( FT_Face  face,     /* T1_Face */
+               void*    loader_ )
   {
+    T1_Face    t1face = (T1_Face)face;
+    T1_Loader  loader = (T1_Loader)loader_;
     T1_Parser  parser = &loader->parser;
     PS_Table   table  = &loader->subrs;
     FT_Memory  memory = parser->root.memory;
@@ -1711,7 +1729,7 @@
     FT_Int     num_subrs;
     FT_UInt    count;
 
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)t1face->psaux;
 
 
     T1_Skip_Spaces( parser );
@@ -1843,7 +1861,7 @@
       /*                                                         */
       /* thanks to Tom Kacvinsky for pointing this out           */
       /*                                                         */
-      if ( face->type1.private_dict.lenIV >= 0 )
+      if ( t1face->type1.private_dict.lenIV >= 0 )
       {
         FT_Byte*  temp = NULL;
 
@@ -1851,7 +1869,7 @@
         /* some fonts define empty subr records -- this is not totally */
         /* compliant to the specification (which says they should at   */
         /* least contain a `return'), but we support them anyway       */
-        if ( size < (FT_ULong)face->type1.private_dict.lenIV )
+        if ( size < (FT_ULong)t1face->type1.private_dict.lenIV )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
@@ -1862,9 +1880,11 @@
           goto Fail;
         FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
-        size -= (FT_ULong)face->type1.private_dict.lenIV;
-        error = T1_Add_Table( table, (FT_Int)idx,
-                              temp + face->type1.private_dict.lenIV, size );
+        size -= (FT_ULong)t1face->type1.private_dict.lenIV;
+        error = T1_Add_Table( table,
+                              (FT_Int)idx,
+                              temp + t1face->type1.private_dict.lenIV,
+                              size );
         FT_FREE( temp );
       }
       else
@@ -1896,9 +1916,11 @@
 
 
   static void
-  parse_charstrings( T1_Face    face,
-                     T1_Loader  loader )
+  parse_charstrings( FT_Face  face,     /* T1_Face */
+                     void*    loader_ )
   {
+    T1_Face        t1face       = (T1_Face)face;
+    T1_Loader      loader       = (T1_Loader)loader_;
     T1_Parser      parser       = &loader->parser;
     PS_Table       code_table   = &loader->charstrings;
     PS_Table       name_table   = &loader->glyph_names;
@@ -1906,7 +1928,7 @@
     FT_Memory      memory       = parser->root.memory;
     FT_Error       error;
 
-    PSAux_Service  psaux        = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux        = (PSAux_Service)t1face->psaux;
 
     FT_Byte*       cur          = parser->root.cursor;
     FT_Byte*       limit        = parser->root.limit;
@@ -2055,13 +2077,13 @@
           notdef_found = 1;
         }
 
-        if ( face->type1.private_dict.lenIV >= 0 &&
+        if ( t1face->type1.private_dict.lenIV >= 0 &&
              n < num_glyphs + TABLE_EXTEND       )
         {
           FT_Byte*  temp = NULL;
 
 
-          if ( size <= (FT_ULong)face->type1.private_dict.lenIV )
+          if ( size <= (FT_ULong)t1face->type1.private_dict.lenIV )
           {
             error = FT_THROW( Invalid_File_Format );
             goto Fail;
@@ -2072,9 +2094,11 @@
             goto Fail;
           FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );
-          size -= (FT_ULong)face->type1.private_dict.lenIV;
-          error = T1_Add_Table( code_table, n,
-                                temp + face->type1.private_dict.lenIV, size );
+          size -= (FT_ULong)t1face->type1.private_dict.lenIV;
+          error = T1_Add_Table( code_table,
+                                n,
+                                temp + t1face->type1.private_dict.lenIV,
+                                size );
           FT_FREE( temp );
         }
         else
