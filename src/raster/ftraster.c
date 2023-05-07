@@ -3165,9 +3165,12 @@
 
 
   static int
-  ft_black_new( FT_Memory       memory,
-                black_PRaster  *araster )
+  ft_black_new( void*       memory_,    /* FT_Memory     */
+                FT_Raster  *araster_ )  /* black_PRaster */
   {
+    FT_Memory       memory = (FT_Memory)memory_;
+    black_PRaster  *araster = (black_PRaster*)araster_;
+
     FT_Error       error;
     black_PRaster  raster = NULL;
 
@@ -3182,9 +3185,10 @@
 
 
   static void
-  ft_black_done( black_PRaster  raster )
+  ft_black_done( FT_Raster  raster_ )   /* black_PRaster */
   {
-    FT_Memory  memory = (FT_Memory)raster->memory;
+    black_PRaster  raster = (black_PRaster)raster_;
+    FT_Memory      memory = (FT_Memory)raster->memory;
 
 
     FT_FREE( raster );

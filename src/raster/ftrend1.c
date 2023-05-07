@@ -27,8 +27,11 @@
 
   /* initialize renderer -- init its raster */
   static FT_Error
-  ft_raster1_init( FT_Renderer  render )
+  ft_raster1_init( FT_Module  module )   /* FT_Renderer */
   {
+    FT_Renderer  render = (FT_Renderer)module;
+
+
     render->clazz->raster_class->raster_reset( render->raster, NULL, 0 );
 
     return FT_Err_Ok;
