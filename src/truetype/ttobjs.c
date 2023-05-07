@@ -581,7 +581,7 @@
     FT_Bool   result = FALSE;
 
     TT_Face   face = (TT_Face)ttface;
-    FT_UInt   asize;
+    FT_ULong  asize;
     FT_ULong  i;
     FT_ULong  glyph_index = 0;
     FT_UInt   count       = 0;
@@ -589,7 +589,7 @@
 
     for( i = 0; i < face->num_locations; i++ )
     {
-      tt_face_get_location( face, i, &asize );
+      tt_face_get_location( ttface, i, &asize );
       if ( asize > 0 )
       {
         count += 1;
@@ -854,7 +854,7 @@
     face->cvt_program_size  = 0;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    tt_done_blend( face );
+    tt_done_blend( ttface );
     face->blend = NULL;
 #endif
   }

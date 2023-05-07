@@ -1612,8 +1612,14 @@
     else
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
+    {
+      FT_ULong  len;
 
-      offset = tt_face_get_location( face, glyph_index, &loader->byte_len );
+
+      offset = tt_face_get_location( FT_FACE( face ), glyph_index, &len );
+
+      loader->byte_len = (FT_UInt)len;
+    }
 
     if ( loader->byte_len > 0 )
     {
