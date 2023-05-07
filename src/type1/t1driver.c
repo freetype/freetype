@@ -56,28 +56,32 @@
    *
    */
 
-  static FT_Error
-  t1_get_glyph_name( T1_Face     face,
+  FT_CALLBACK_DEF( FT_Error )
+  t1_get_glyph_name( FT_Face     face,        /* T1_Face */
                      FT_UInt     glyph_index,
                      FT_Pointer  buffer,
                      FT_UInt     buffer_max )
   {
-    FT_STRCPYN( buffer, face->type1.glyph_names[glyph_index], buffer_max );
+    T1_Face  t1face = (T1_Face)face;
+
+
+    FT_STRCPYN( buffer, t1face->type1.glyph_names[glyph_index], buffer_max );
 
     return FT_Err_Ok;
   }
 
 
-  static FT_UInt
-  t1_get_name_index( T1_Face           face,
+  FT_CALLBACK_DEF( FT_UInt )
+  t1_get_name_index( FT_Face           face,        /* T1_Face */
                      const FT_String*  glyph_name )
   {
-    FT_Int  i;
+    T1_Face  t1face = (T1_Face)face;
+    FT_Int   i;
 
 
-    for ( i = 0; i < face->type1.num_glyphs; i++ )
+    for ( i = 0; i < t1face->type1.num_glyphs; i++ )
     {
-      FT_String*  gname = face->type1.glyph_names[i];
+      FT_String*  gname = t1face->type1.glyph_names[i];
 
 
       if ( !ft_strcmp( glyph_name, gname ) )
@@ -101,9 +105,12 @@
    */
 
   static const char*
-  t1_get_ps_name( T1_Face  face )
+  t1_get_ps_name( FT_Face  face )    /* T1_Face */
   {
-    return (const char*) face->type1.font_name;
+    T1_Face  t1face = (T1_Face)face;
+
+
+    return (const char*) t1face->type1.font_name;
   }
 
 

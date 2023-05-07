@@ -174,10 +174,11 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_Multi_Master( T1_Face           face,
+  T1_Get_Multi_Master( FT_Face           face,    /* T1_Face */
                        FT_Multi_Master*  master )
   {
-    PS_Blend  blend = face->blend;
+    T1_Face   t1face = (T1_Face)face;
+    PS_Blend  blend  = t1face->blend;
     FT_UInt   n;
     FT_Error  error;
 
@@ -285,16 +286,17 @@
    * arguments needed by the GX var distortable fonts.
    */
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_MM_Var( T1_Face      face,
+  T1_Get_MM_Var( FT_Face      face,    /* T1_Face */
                  FT_MM_Var*  *master )
   {
-    FT_Memory        memory = face->root.memory;
-    FT_MM_Var       *mmvar = NULL;
+    T1_Face          t1face = (T1_Face)face;
+    FT_Memory        memory = FT_FACE_MEMORY( face );
+    FT_MM_Var       *mmvar  = NULL;
     FT_Multi_Master  mmaster;
     FT_Error         error;
     FT_UInt          i;
     FT_Fixed         axiscoords[T1_MAX_MM_AXIS];
-    PS_Blend         blend = face->blend;
+    PS_Blend         blend  = t1face->blend;
     FT_UShort*       axis_flags;
 
     FT_Offset  mmvar_size;
@@ -438,20 +440,21 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Set_MM_Blend( T1_Face    face,
+  T1_Set_MM_Blend( FT_Face    face,       /* T1_Face */
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    return t1_set_mm_blend( face, num_coords, coords );
+    return t1_set_mm_blend( (T1_Face)face, num_coords, coords );
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_MM_Blend( T1_Face    face,
+  T1_Get_MM_Blend( FT_Face    face,       /* T1_Face */
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    PS_Blend  blend = face->blend;
+    T1_Face   t1face = (T1_Face)face;
+    PS_Blend  blend  = t1face->blend;
 
     FT_Fixed  axiscoords[4];
     FT_UInt   i, nc;
@@ -482,11 +485,12 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Set_MM_WeightVector( T1_Face    face,
+  T1_Set_MM_WeightVector( FT_Face    face,          /* T1_Face */
                           FT_UInt    len,
                           FT_Fixed*  weightvector )
   {
-    PS_Blend  blend = face->blend;
+    T1_Face   t1face = (T1_Face)face;
+    PS_Blend  blend  = t1face->blend;
     FT_UInt   i, n;
 
 
@@ -517,11 +521,12 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_MM_WeightVector( T1_Face    face,
+  T1_Get_MM_WeightVector( FT_Face    face,          /* T1_Face */
                           FT_UInt*   len,
                           FT_Fixed*  weightvector )
   {
-    PS_Blend  blend = face->blend;
+    T1_Face   t1face = (T1_Face)face;
+    PS_Blend  blend  = t1face->blend;
     FT_UInt   i;
 
 
@@ -546,12 +551,13 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Set_MM_Design( T1_Face   face,
+  T1_Set_MM_Design( FT_Face   face,       /* T1_Face */
                     FT_UInt   num_coords,
                     FT_Long*  coords )
   {
+    T1_Face   t1face = (T1_Face)face;
     FT_Error  error;
-    PS_Blend  blend = face->blend;
+    PS_Blend  blend  = t1face->blend;
     FT_UInt   n;
     FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
 
@@ -617,7 +623,7 @@
       final_blends[n] = the_blend;
     }
 
-    error = t1_set_mm_blend( face, blend->num_axis, final_blends );
+    error = t1_set_mm_blend( t1face, blend->num_axis, final_blends );
     if ( error )
       return error;
 
@@ -628,7 +634,7 @@
   /* MM fonts don't have named instances, so only the design is reset */
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Reset_MM_Blend( T1_Face  face,
+  T1_Reset_MM_Blend( FT_Face  face,
                      FT_UInt  instance_index )
   {
     FT_UNUSED( instance_index );
@@ -643,7 +649,7 @@
    * arguments needed by the GX var distortable fonts.
    */
   FT_LOCAL_DEF( FT_Error )
-  T1_Set_Var_Design( T1_Face    face,
+  T1_Set_Var_Design( FT_Face    face,       /* T1_Face */
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
@@ -662,11 +668,12 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Get_Var_Design( T1_Face    face,
+  T1_Get_Var_Design( FT_Face    face,       /* T1_Face */
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    PS_Blend  blend = face->blend;
+    T1_Face   t1face = (T1_Face)face;
+    PS_Blend  blend  = t1face->blend;
 
     FT_Fixed  axiscoords[4];
     FT_UInt   i, nc;
@@ -698,10 +705,11 @@
 
 
   FT_LOCAL_DEF( void )
-  T1_Done_Blend( T1_Face  face )
+  T1_Done_Blend( FT_Face  face )    /* T1_Face */
   {
-    FT_Memory  memory = face->root.memory;
-    PS_Blend   blend  = face->blend;
+    T1_Face    t1face = (T1_Face)face;
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+    PS_Blend   blend  = t1face->blend;
 
 
     if ( blend )
@@ -746,7 +754,7 @@
         dmap->num_points = 0;
       }
 
-      FT_FREE( face->blend );
+      FT_FREE( t1face->blend );
     }
   }
 
@@ -2548,7 +2556,7 @@
     {
       FT_ERROR(( "T1_Open_Face:"
                  " number-of-designs != 2 ^^ number-of-axes\n" ));
-      T1_Done_Blend( face );
+      T1_Done_Blend( FT_FACE( face ) );
     }
 
     if ( face->blend                                                     &&
@@ -2568,15 +2576,15 @@
     /* font as a normal PS font                                     */
     if ( face->blend                                             &&
          ( !face->blend->num_designs || !face->blend->num_axis ) )
-      T1_Done_Blend( face );
+      T1_Done_Blend( FT_FACE( face ) );
 
     /* the font may have no valid WeightVector */
     if ( face->blend && !face->blend->weight_vector )
-      T1_Done_Blend( face );
+      T1_Done_Blend( FT_FACE( face ) );
 
     /* the font may have no valid BlendDesignPositions */
     if ( face->blend && !face->blend->design_pos[0] )
-      T1_Done_Blend( face );
+      T1_Done_Blend( FT_FACE( face ) );
 
     /* the font may have no valid BlendDesignMap */
     if ( face->blend )
@@ -2587,7 +2595,7 @@
       for ( i = 0; i < face->blend->num_axis; i++ )
         if ( !face->blend->design_map[i].num_points )
         {
-          T1_Done_Blend( face );
+          T1_Done_Blend( FT_FACE( face ) );
           break;
         }
     }

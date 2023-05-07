@@ -226,7 +226,7 @@
       face->len_buildchar = 0;
     }
 
-    T1_Done_Blend( face );
+    T1_Done_Blend( t1face );
     face->blend = NULL;
 #endif
 
