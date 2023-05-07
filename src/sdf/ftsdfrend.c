@@ -197,10 +197,10 @@
 
 
   static FT_Module_Interface
-  ft_sdf_requester( FT_Renderer  render,
+  ft_sdf_requester( FT_Module    module,
                     const char*  module_interface )
   {
-    FT_UNUSED( render );
+    FT_UNUSED( module );
 
     return ft_service_list_lookup( sdf_services, module_interface );
   }
@@ -221,9 +221,9 @@
    */
 
   static FT_Error
-  ft_sdf_init( FT_Renderer  render )
+  ft_sdf_init( FT_Module  module )   /* SDF_Renderer */
   {
-    SDF_Renderer  sdf_render = SDF_RENDERER( render );
+    SDF_Renderer  sdf_render = SDF_RENDERER( module );
 
 
     sdf_render->spread    = DEFAULT_SPREAD;
@@ -236,9 +236,9 @@
 
 
   static void
-  ft_sdf_done( FT_Renderer  render )
+  ft_sdf_done( FT_Module  module )
   {
-    FT_UNUSED( render );
+    FT_UNUSED( module );
   }
 
 

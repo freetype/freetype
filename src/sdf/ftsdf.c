@@ -3762,9 +3762,13 @@
    */
 
   static FT_Error
-  sdf_raster_new( FT_Memory     memory,
-                  SDF_PRaster*  araster )
+  sdf_raster_new( void*       memory_,   /* FT_Memory    */
+                  FT_Raster*  araster_ ) /* SDF_PRaster* */
   {
+    FT_Memory     memory  = (FT_Memory)memory_;
+    SDF_PRaster*  araster = (SDF_PRaster*)araster_;
+
+
     FT_Error     error;
     SDF_PRaster  raster = NULL;
 
