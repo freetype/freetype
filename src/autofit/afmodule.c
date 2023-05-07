@@ -89,10 +89,8 @@
       error = af_face_globals_new( face, &globals, module );
       if ( !error )
       {
-        face->autohint.data =
-          (FT_Pointer)globals;
-        face->autohint.finalizer =
-          (FT_Generic_Finalizer)af_face_globals_free;
+        face->autohint.data      = (FT_Pointer)globals;
+        face->autohint.finalizer = af_face_globals_free;
       }
     }
 
@@ -430,12 +428,14 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  af_autofitter_load_glyph( AF_Module     module,
-                            FT_GlyphSlot  slot,
-                            FT_Size       size,
-                            FT_UInt       glyph_index,
-                            FT_Int32      load_flags )
+  af_autofitter_load_glyph( FT_AutoHinter  module_,
+                            FT_GlyphSlot   slot,
+                            FT_Size        size,
+                            FT_UInt        glyph_index,
+                            FT_Int32       load_flags )
   {
+    AF_Module  module = (AF_Module)module_;
+
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = module->root.library->memory;
 
