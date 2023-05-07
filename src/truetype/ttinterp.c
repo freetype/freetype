@@ -7670,8 +7670,10 @@
   /* documentation is in ttinterp.h */
 
   FT_EXPORT_DEF( FT_Error )
-  TT_RunIns( TT_ExecContext  exc )
+  TT_RunIns( void*  exec )
   {
+    TT_ExecContext  exc = (TT_ExecContext)exec;
+
     FT_ULong   ins_counter = 0;  /* executed instructions counter */
     FT_ULong   num_twilight_points;
     FT_UShort  i;

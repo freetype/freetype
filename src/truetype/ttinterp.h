@@ -528,7 +528,7 @@ FT_BEGIN_HEADER
    *   invoked by the TrueType debugger.
    */
   FT_EXPORT( FT_Error )
-  TT_RunIns( TT_ExecContext  exec );
+  TT_RunIns( void*  exec );
 
 
 FT_END_HEADER
