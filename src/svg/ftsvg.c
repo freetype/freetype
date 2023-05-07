@@ -40,26 +40,31 @@
 
   /* ft_svg_init */
   static FT_Error
-  ft_svg_init( SVG_Renderer  svg_module )
+  ft_svg_init( FT_Module  module )
   {
+    SVG_Renderer  render = (SVG_Renderer)module;
+
     FT_Error  error = FT_Err_Ok;
 
 
-    svg_module->loaded    = FALSE;
-    svg_module->hooks_set = FALSE;
+    render->loaded    = FALSE;
+    render->hooks_set = FALSE;
 
     return error;
   }
 
 
   static void
-  ft_svg_done( SVG_Renderer  svg_module )
+  ft_svg_done( FT_Module  module )
   {
-    if ( svg_module->loaded    == TRUE &&
-         svg_module->hooks_set == TRUE )
-      svg_module->hooks.free_svg( &svg_module->state );
+    SVG_Renderer  render = (SVG_Renderer)module;
 
-    svg_module->loaded = FALSE;
+
+    if ( render->loaded    == TRUE &&
+         render->hooks_set == TRUE )
+      render->hooks.free_svg( &render->state );
+
+    render->loaded = FALSE;
   }
 
 
@@ -203,7 +208,7 @@
   static FT_Error
   ft_svg_property_get( FT_Module    module,
                        const char*  property_name,
-                       const void*  value )
+                       void*        value )
   {
     FT_Error      error    = FT_Err_Ok;
     SVG_Renderer  renderer = (SVG_Renderer)module;
