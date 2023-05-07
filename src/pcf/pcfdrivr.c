@@ -702,7 +702,7 @@ THE SOFTWARE.
   FT_CALLBACK_DEF( FT_Error )
   pcf_property_get( FT_Module    module,         /* PCF_Driver */
                     const char*  property_name,
-                    const void*  value )
+                    void*        value )
   {
 #ifdef PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
 
