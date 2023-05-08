@@ -1200,8 +1200,8 @@
         FT_Byte*     charstring_base;
         FT_ULong     charstring_len;
 
-        FT_Fixed*      stack;
-        FT_Byte*       q;
+        FT_Fixed*  stack;
+        FT_Byte*   q = NULL;
 
 
         charstring_base = ++p;
@@ -1243,7 +1243,7 @@
         /* converting it back to charstring number representations     */
         /* (this is ugly, I know).                                     */
         /* The maximum required size is 5 bytes per stack element.     */
-        if ( FT_QALLOC( q, 2 * sizeof ( FT_ListNode ) +
+        if ( FT_QALLOC( q, (FT_Long)( 2 * sizeof ( FT_ListNode ) ) +
                            5 * ( decoder.top - decoder.stack ) ) )
           goto Exit;
 

@@ -773,7 +773,7 @@
   /* Extract standard_width from writing system/script specific */
   /* metrics class.                                             */
 
-  FT_LOCAL_DEF( void )
+  FT_CALLBACK_DEF( void )
   af_cjk_get_standard_widths( AF_StyleMetrics  metrics_,  /* AF_CJKMetrics */
                               FT_Pos*          stdHW,
                               FT_Pos*          stdVW )
