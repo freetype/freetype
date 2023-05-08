@@ -181,7 +181,7 @@
     if ( load_flags & FT_LOAD_NO_SCALE )
       size = NULL;
 
-    if ( cffsize )
+    if ( size )
     {
       /* these two objects must have the same parent */
       if ( size->face != slot->face )
