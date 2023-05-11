@@ -141,8 +141,14 @@
     FT_UNUSED( face );
 
 
+    /*
+     * XXX: If the ROS is Adobe-Identity-H or -V,
+     * the font has no reliable information about
+     * its glyph collection.  Should we not set
+     * *is_cid in such cases?
+     */
     if ( is_cid )
-      *is_cid = 1; /* cid driver is only used for CID keyed fonts */
+      *is_cid = 1;
 
     return error;
   }
