@@ -94,8 +94,8 @@
 
 
     idx = hash & cache->mask;
-    if ( idx < cache->p )
-      idx = hash & ( 2 * cache->mask + 1 );
+    if ( idx >= cache->p )
+      idx = hash & ( cache->mask >> 1 );
 
     return cache->buckets + idx;
   }
@@ -113,9 +113,9 @@
     for (;;)
     {
       FTC_Node  node, *pnode;
-      FT_UFast  p     = cache->p;
-      FT_UFast  mask  = cache->mask;
-      FT_UFast  count = mask + p + 1;    /* number of buckets */
+      FT_UFast  p    = cache->p;
+      FT_UFast  size = cache->mask + 1;  /* available size */
+      FT_UFast  half = size >> 1;
 
 
       /* do we need to expand the buckets array? */
@@ -127,20 +127,22 @@
         /* try to expand the buckets array _before_ splitting
          * the bucket lists
          */
-        if ( p >= mask )
+        if ( p == size )
         {
           FT_Memory  memory = cache->memory;
           FT_Error   error;
 
 
           /* if we can't expand the array, leave immediately */
-          if ( FT_RENEW_ARRAY( cache->buckets,
-                               ( mask + 1 ) * 2, ( mask + 1 ) * 4 ) )
+          if ( FT_QRENEW_ARRAY( cache->buckets, size, size * 2 ) )
             break;
+
+          cache->mask = 2 * size - 1;
+          half        = size;
         }
 
-        /* split a single bucket */
-        pnode = cache->buckets + p;
+        /* the bucket to split */
+        pnode = cache->buckets + p - half;
 
         for (;;)
         {
@@ -148,7 +150,7 @@
           if ( !node )
             break;
 
-          if ( node->hash & ( mask + 1 ) )
+          if ( node->hash & half )
           {
             *pnode     = node->link;
             node->link = new_list;
@@ -158,56 +160,50 @@
             pnode = &node->link;
         }
 
-        cache->buckets[p + mask + 1] = new_list;
+        cache->buckets[p] = new_list;
 
         cache->slack += FTC_HASH_MAX_LOAD;
+        cache->p      = p + 1;
 
-        if ( p >= mask )
-        {
-          cache->mask = 2 * mask + 1;
-          cache->p    = 0;
-        }
-        else
-          cache->p = p + 1;
+        FT_TRACE2(( "ftc_cache_resize: cache %u increased to %u hashes\n",
+                    cache->index, cache->p ));
       }
 
       /* do we need to shrink the buckets array? */
-      else if ( cache->slack > (FT_Long)count * FTC_HASH_SUB_LOAD )
+      else if ( cache->slack > (FT_Long)p * FTC_HASH_SUB_LOAD )
       {
-        FT_UFast   old_index = p + mask;
-        FTC_Node*  pold;
+        FTC_Node  old_list = cache->buckets[--p];
 
 
-        if ( old_index + 1 <= FTC_HASH_INITIAL_SIZE )
+        if ( p < FTC_HASH_INITIAL_SIZE )
           break;
 
-        if ( p == 0 )
+        if ( p == half )
         {
           FT_Memory  memory = cache->memory;
           FT_Error   error;
 
 
           /* if we can't shrink the array, leave immediately */
-          if ( FT_QRENEW_ARRAY( cache->buckets,
-                               ( mask + 1 ) * 2, mask + 1 ) )
+          if ( FT_QRENEW_ARRAY( cache->buckets, size, half ) )
             break;
 
-          cache->mask >>= 1;
-          p             = cache->mask;
+          cache->mask = half - 1;
         }
-        else
-          p--;
 
-        pnode = cache->buckets + p;
+        /* the bucket to merge */
+        pnode = cache->buckets + p - half;
+
         while ( *pnode )
           pnode = &(*pnode)->link;
 
-        pold   = cache->buckets + old_index;
-        *pnode = *pold;
-        *pold  = NULL;
+        *pnode = old_list;
 
         cache->slack -= FTC_HASH_MAX_LOAD;
         cache->p      = p;
+
+        FT_TRACE2(( "ftc_cache_resize: cache %u decreased to %u hashes\n",
+                    cache->index, cache->p ));
       }
 
       /* otherwise, the hash table is balanced */
@@ -336,11 +332,11 @@
     FT_Error   error;
 
 
-    cache->p     = 0;
+    cache->p     = FTC_HASH_INITIAL_SIZE;
     cache->mask  = FTC_HASH_INITIAL_SIZE - 1;
     cache->slack = FTC_HASH_INITIAL_SIZE * FTC_HASH_MAX_LOAD;
 
-    FT_MEM_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE * 2 );
+    FT_MEM_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE );
     return error;
   }
 
@@ -351,11 +347,9 @@
     if ( cache && cache->buckets )
     {
       FTC_Manager  manager = cache->manager;
+      FT_UFast     count   = cache->p;
       FT_UFast     i;
-      FT_UFast     count;
 
-
-      count = cache->p + cache->mask + 1;
 
       for ( i = 0; i < count; i++ )
       {
@@ -562,12 +556,12 @@
   FTC_Cache_RemoveFaceID( FTC_Cache   cache,
                           FTC_FaceID  face_id )
   {
-    FT_UFast     i, count;
     FTC_Manager  manager = cache->manager;
     FTC_Node     frees   = NULL;
+    FT_UFast     count   = cache->p;
+    FT_UFast     i;
 
 
-    count = cache->p + cache->mask + 1;
     for ( i = 0; i < count; i++ )
     {
       FTC_Node*  pnode = cache->buckets + i;
