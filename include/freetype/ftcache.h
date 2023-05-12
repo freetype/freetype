@@ -44,20 +44,20 @@ FT_BEGIN_HEADER
    *   images while limiting their maximum memory usage.
    *
    *   Note that all types and functions begin with the `FTC_` prefix rather
-   *   than the usual `FT_` prefix int the rest of FreeType.
+   *   than the usual `FT_` prefix in the rest of FreeType.
    *
    *   The cache is highly portable and, thus, doesn't know anything about
    *   the fonts installed on your system, or how to access them.  Therefore,
-   *   it requires the following:
+   *   it requires the following.
    *
-   *   * @FTC_FaceID, an arbitrary non-zero value, that uniquely identifies
+   *   * @FTC_FaceID, an arbitrary non-zero value that uniquely identifies
    *     available or installed font faces, has to be provided to the
    *     cache by the client.  Note that the cache only stores and compares
-   *     these values, and doesn't try to interpret them in any way but they
+   *     these values and doesn't try to interpret them in any way, but they
    *     have to be persistent on the client side.
    *
    *   * @FTC_Face_Requester, a method to convert an @FTC_FaceID into a new
-   *     @FT_Face object, when necessary, has to be provided to the cache by
+   *     @FT_Face object when necessary, has to be provided to the cache by
    *     the client.  The @FT_Face object is completely managed by the cache,
    *     including its termination through @FT_Done_Face.  To monitor
    *     termination of face objects, the finalizer callback in the `generic`
@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
    *     to store the @FTC_FaceID of the face.
    *
    *   Clients are free to map face IDs to anything useful.  The most simple
-   *   usage is, for example, to associate them to a {pathname,face_index}
+   *   usage is, for example, to associate them to a `{pathname,face_index}`
    *   pair that is then used by @FTC_Face_Requester to call @FT_New_Face.
    *   However, more complex schemes are also possible.
    *
@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
    *   **persistent**, which means that the contents they point to should not
    *   change at runtime, or that their value should not become invalid.
    *   If this is unavoidable (e.g., when a font is uninstalled at runtime),
-   *   you should call @FTC_Manager_RemoveFaceID as soon as possible, to let
+   *   you should call @FTC_Manager_RemoveFaceID as soon as possible to let
    *   the cache get rid of any references to the old @FTC_FaceID it may keep
    *   internally.  Failure to do so will lead to incorrect behaviour or even
    *   crashes in @FTC_Face_Requester.
@@ -83,7 +83,7 @@ FT_BEGIN_HEADER
    *   then look up @FT_Face and @FT_Size objects with
    *   @FTC_Manager_LookupFace and @FTC_Manager_LookupSize, respectively, and
    *   use them in any FreeType work stream.  You can also cache other
-   *   FreeType objects as follows:
+   *   FreeType objects as follows.
    *
    *   * If you want to use the charmap caching, call @FTC_CMapCache_New,
    *     then later use @FTC_CMapCache_Lookup to perform the equivalent of
@@ -93,12 +93,11 @@ FT_BEGIN_HEADER
    *     then later use @FTC_ImageCache_Lookup to retrieve the corresponding
    *     @FT_Glyph objects from the cache.
    *
-   *   * If you need lots of small bitmaps, it is much more memory efficient
+   *   * If you need lots of small bitmaps, it is much more memory-efficient
    *     to call @FTC_SBitCache_New followed by @FTC_SBitCache_Lookup.  This
    *     returns @FTC_SBitRec structures, which are used to store small
    *     bitmaps directly.  (A small bitmap is one whose metrics and
    *     dimensions all fit into 8-bit integers).
-   *
    *
    * @order:
    *   FTC_Manager
