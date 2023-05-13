@@ -319,13 +319,6 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  FTC_Cache_Init( FTC_Cache  cache )
-  {
-    return ftc_cache_init( cache );
-  }
-
-
-  FT_LOCAL_DEF( FT_Error )
   ftc_cache_init( FTC_Cache  cache )
   {
     FT_Memory  memory = cache->memory;
@@ -341,10 +334,20 @@
   }
 
 
-  static void
-  FTC_Cache_Clear( FTC_Cache  cache )
+  FT_LOCAL_DEF( FT_Error )
+  FTC_Cache_Init( FTC_Cache  cache )
   {
-    if ( cache && cache->buckets )
+    return ftc_cache_init( cache );
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ftc_cache_done( FTC_Cache  cache )
+  {
+    FT_Memory  memory = cache->memory;
+
+
+    if ( cache->buckets )
     {
       FTC_Manager  manager = cache->manager;
       FT_UFast     count   = cache->p;
@@ -370,30 +373,14 @@
           cache->clazz.node_free( node, cache );
           node = next;
         }
-        cache->buckets[i] = NULL;
       }
-      ftc_cache_resize( cache );
     }
-  }
 
+    FT_FREE( cache->buckets );
 
-  FT_LOCAL_DEF( void )
-  ftc_cache_done( FTC_Cache  cache )
-  {
-    if ( cache->memory )
-    {
-      FT_Memory  memory = cache->memory;
-
-
-      FTC_Cache_Clear( cache );
-
-      FT_FREE( cache->buckets );
-      cache->mask  = 0;
-      cache->p     = 0;
-      cache->slack = 0;
-
-      cache->memory = NULL;
-    }
+    cache->p     = 0;
+    cache->mask  = 0;
+    cache->slack = 0;
   }
 
 
