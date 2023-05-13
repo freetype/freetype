@@ -342,7 +342,7 @@
     FT_Bool     result;
 
 
-    if (list_changed)
+    if ( list_changed )
       *list_changed = FALSE;
     result = FT_BOOL( gnode->family == gquery->family       &&
                       gindex - gnode->gindex < snode->count );
