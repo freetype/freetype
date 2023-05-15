@@ -5,6 +5,9 @@ CHANGES BETWEEN 2.13.0 and 2.13.1 (2023-XXX-XX)
   - New function  `FT_Get_Default_Named_Instance` to get the  index of
     the default named instance of an OpenType Variation Font.
 
+  - A new load flag `FT_LOAD_NO_SVG` to make FreeType ignore glyphs in
+    an 'SVG ' table.
+
 
 ======================================================================
 

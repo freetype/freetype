@@ -3425,10 +3425,11 @@ FT_BEGIN_HEADER
    *
    *     [Since 2.12] If the glyph index maps to an entry in the face's
    *     'SVG~' table, load the associated SVG document from this table and
-   *     set the `format` field of @FT_GlyphSlotRec to @FT_GLYPH_FORMAT_SVG.
-   *     Note that FreeType itself can't render SVG documents; however, the
-   *     library provides hooks to seamlessly integrate an external renderer.
-   *     See sections @ot_svg_driver and @svg_fonts for more.
+   *     set the `format` field of @FT_GlyphSlotRec to @FT_GLYPH_FORMAT_SVG
+   *     ([since 2.13.1] provided @FT_LOAD_NO_SVG is not set).  Note that
+   *     FreeType itself can't render SVG documents; however, the library
+   *     provides hooks to seamlessly integrate an external renderer.  See
+   *     sections @ot_svg_driver and @svg_fonts for more.
    *
    *     [Since 2.10, experimental] If the glyph index maps to an entry in
    *     the face's 'COLR' table with a 'CPAL' palette table (as defined in
@@ -3441,6 +3442,9 @@ FT_BEGIN_HEADER
    *     @FT_Get_Color_Glyph_Layer and FreeType's color functions like
    *     @FT_Palette_Select instead of setting @FT_LOAD_COLOR for rendering
    *     so that the client application can handle blending by itself.
+   *
+   *   FT_LOAD_NO_SVG ::
+   *     [Since 2.13.1] Ignore SVG glyph data when loading.
    *
    *   FT_LOAD_COMPUTE_METRICS ::
    *     [Since 2.6.1] Compute glyph metrics from the glyph data, without the
@@ -3507,6 +3511,7 @@ FT_BEGIN_HEADER
 #define FT_LOAD_COLOR                        ( 1L << 20 )
 #define FT_LOAD_COMPUTE_METRICS              ( 1L << 21 )
 #define FT_LOAD_BITMAP_METRICS_ONLY          ( 1L << 22 )
+#define FT_LOAD_NO_SVG                       ( 1L << 24 )
 
   /* */
 

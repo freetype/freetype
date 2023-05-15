@@ -1019,7 +1019,8 @@
       /*      elegant.                                            */
 
       /* try to load SVG documents if available */
-      if ( FT_HAS_SVG( face ) )
+      if ( ( load_flags & FT_LOAD_NO_SVG ) == 0 &&
+           FT_HAS_SVG( face )                   )
       {
         error = driver->clazz->load_glyph( slot, face->size,
                                            glyph_index,
