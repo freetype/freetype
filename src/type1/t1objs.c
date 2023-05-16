@@ -289,7 +289,8 @@
    *
    * @Input:
    *   stream ::
-   *     input stream where to load font data.
+   *     Dummy argument for compatibility with the `FT_Face_InitFunc` API.
+   *     Ignored.  The stream should be passed through `face->root.stream`.
    *
    *   face_index ::
    *     The index of the font face in the resource.
