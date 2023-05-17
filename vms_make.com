@@ -99,7 +99,7 @@ $!
 $!
 $! Alpha & Itanium get a shareable image
 $!
-$ If f$getsyi("HW_MODEL") .gt. 1024
+$ If f$getsyi("HW_MODEL") .gt. 1024 .or. f$getsyi("HW_MODEL") .eq. 0
 $ Then
 $   write sys$output "Creating freetype2shr.exe"
 $   library/extract=* [.lib]freetype.olb
