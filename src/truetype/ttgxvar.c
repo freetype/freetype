@@ -509,7 +509,7 @@
     FT_UShort  axis_count;
     FT_UInt    region_count;
 
-    FT_UInt  i, j, k;
+    FT_UInt  i, j;
     FT_Bool  long_words;
 
     GX_Blend   blend           = ttface->blend;
@@ -624,6 +624,7 @@
       FT_UInt  item_count;
       FT_UInt  word_delta_count;
       FT_UInt  region_idx_count;
+      FT_UInt  per_region_size;
 
 
       if ( FT_STREAM_SEEK( offset + dataOffsetArray[i] ) )
@@ -660,6 +661,8 @@
       if ( FT_NEW_ARRAY( varData->regionIndices, region_idx_count ) )
         goto Exit;
       varData->regionIdxCount = region_idx_count;
+      varData->wordDeltaCount = word_delta_count;
+      varData->longWords      = long_words;
 
       for ( j = 0; j < varData->regionIdxCount; j++ )
       {
@@ -675,37 +678,22 @@
         }
       }
 
-      /* Parse delta set.                                                  */
-      /*                                                                   */
-      /* On input, deltas are (word_delta_count + region_idx_count) bytes  */
-      /* each if `long_words` isn't set, and twice as much otherwise.      */
-      /*                                                                   */
-      /* On output, deltas are expanded to `region_idx_count` shorts each. */
-      if ( FT_NEW_ARRAY( varData->deltaSet, item_count * region_idx_count ) )
-        goto Exit;
-      varData->itemCount = item_count;
+      per_region_size = word_delta_count + region_idx_count;
+      if ( long_words )
+        per_region_size *= 2;
 
-      for ( j = 0; j < item_count * region_idx_count; )
+      if ( FT_NEW_ARRAY( varData->deltaSet, per_region_size * item_count ) )
+        goto Exit;
+      if ( FT_Stream_Read( stream,
+                           varData->deltaSet,
+                           per_region_size * item_count ) )
       {
-        if ( long_words )
-        {
-          for ( k = 0; k < word_delta_count; k++, j++ )
-            if ( FT_READ_LONG( varData->deltaSet[j] ) )
-              goto Exit;
-          for ( ; k < region_idx_count; k++, j++ )
-            if ( FT_READ_SHORT( varData->deltaSet[j] ) )
-              goto Exit;
-        }
-        else
-        {
-          for ( k = 0; k < word_delta_count; k++, j++ )
-            if ( FT_READ_SHORT( varData->deltaSet[j] ) )
-              goto Exit;
-          for ( ; k < region_idx_count; k++, j++ )
-            if ( FT_READ_CHAR( varData->deltaSet[j] ) )
-              goto Exit;
-        }
+        FT_TRACE2(( "deltaSet read failed." ));
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
       }
+
+      varData->itemCount = item_count;
     }
 
   Exit:
@@ -1005,11 +993,16 @@
     FT_Error   error  = FT_Err_Ok;
 
     GX_ItemVarData    varData;
-    FT_ItemVarDelta*  deltaSet;
+    FT_ItemVarDelta*  deltaSet = NULL;
+    FT_ItemVarDelta   deltaSetStack[16];
+
+    FT_Fixed*  scalars = NULL;
+    FT_Fixed   scalarsStack[16];
 
     FT_UInt          master, j;
-    FT_Fixed*        scalars = NULL;
-    FT_ItemVarDelta  returnValue;
+    FT_ItemVarDelta  returnValue = 0;
+    FT_UInt          per_region_size;
+    FT_Byte*         bytes;
 
 
     if ( !ttface->blend || !ttface->blend->normalizedcoords )
@@ -1026,15 +1019,48 @@
     if ( outerIndex >= itemStore->dataCount )
       return 0; /* Out of range. */
 
-    varData  = &itemStore->varData[outerIndex];
-    deltaSet = FT_OFFSET( varData->deltaSet,
-                          varData->regionIdxCount * innerIndex );
+    varData = &itemStore->varData[outerIndex];
 
     if ( innerIndex >= varData->itemCount )
       return 0; /* Out of range. */
 
-    if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
-      return 0;
+    if ( varData->regionIdxCount < 16 )
+    {
+      deltaSet = deltaSetStack;
+      scalars  = scalarsStack;
+    }
+    else
+    {
+      if ( FT_QNEW_ARRAY( deltaSet, varData->regionIdxCount ) )
+        goto Exit;
+      if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
+        goto Exit;
+    }
+
+    /* Parse delta set.                                            */
+    /*                                                             */
+    /* Deltas are (word_delta_count + region_idx_count) bytes each */
+    /* if `longWords` isn't set, and twice as much otherwise.      */
+    per_region_size = varData->wordDeltaCount + varData->regionIdxCount;
+    if ( varData->longWords )
+      per_region_size *= 2;
+
+    bytes = varData->deltaSet + per_region_size * innerIndex;
+
+    if ( varData->longWords )
+    {
+      for ( master = 0; master < varData->wordDeltaCount; master++ )
+        deltaSet[master] = FT_NEXT_LONG( bytes );
+      for ( ; master < varData->regionIdxCount; master++ )
+        deltaSet[master] = FT_NEXT_SHORT( bytes );
+    }
+    else
+    {
+      for ( master = 0; master < varData->wordDeltaCount; master++ )
+        deltaSet[master] = FT_NEXT_SHORT( bytes );
+      for ( ; master < varData->regionIdxCount; master++ )
+        deltaSet[master] = FT_NEXT_CHAR( bytes );
+    }
 
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
@@ -1109,7 +1135,11 @@
      */
     returnValue = FT_MulAddFix( scalars, deltaSet, varData->regionIdxCount );
 
-    FT_FREE( scalars );
+  Exit:
+    if ( scalars != scalarsStack )
+      FT_FREE( scalars );
+    if ( deltaSet != deltaSetStack )
+      FT_FREE( deltaSet );
 
     return returnValue;
   }
