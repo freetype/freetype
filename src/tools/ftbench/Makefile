@@ -1,0 +1,40 @@
+# Variables
+FTBENCH_SRC = ftbench.c
+FTBENCH_BIN = bench.out
+FTBENCH_FLAGS = $(shell pkg-config --cflags freetype2) -lfreetype
+FONTS = $(wildcard fonts/*.ttf)
+BASELINES = $(addprefix baselines/, $(notdir $(FONTS)))
+BENCHMARKS = $(addprefix benchmarks/, $(notdir $(FONTS)))
+
+# Default target
+all: $(FTBENCH_BIN)
+
+# Build ftbench
+$(FTBENCH_BIN): $(FTBENCH_SRC)
+	gcc $(FTBENCH_FLAGS) $(FTBENCH_SRC) -o $(FTBENCH_BIN)
+
+# Create directories for baselines and benchmarks
+baselines/ benchmarks/:
+	mkdir -p $@
+
+# Create a baseline
+.PHONY: baseline
+baseline: $(FTBENCH_BIN) baselines/
+	$(foreach font, $(FONTS), \
+		./$(FTBENCH_BIN) $(font) > baselines/$(notdir $(font)).txt; \
+	)
+
+# Benchmark and compare to baseline
+.PHONY: benchmark
+benchmark: $(FTBENCH_BIN) benchmarks/
+	$(foreach font, $(FONTS), \
+		./$(FTBENCH_BIN) $(font) > benchmarks/$(notdir $(font)).txt; \
+	)
+	$(foreach font, $(FONTS), \
+		diff baselines/$(notdir $(font)).txt benchmarks/$(notdir $(font)).txt; \
+	)
+
+.PHONY: clean
+clean:
+	rm -f $(FTBENCH_BIN)
+	rm -rf baselines/ benchmarks/
