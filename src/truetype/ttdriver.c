@@ -154,8 +154,8 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     tt_service_properties,
 
-    (FT_Properties_SetFunc)tt_property_set,     /* set_property */
-    (FT_Properties_GetFunc)tt_property_get      /* get_property */
+    tt_property_set,  /* FT_Properties_SetFunc set_property */
+    tt_property_get   /* FT_Properties_GetFunc get_property */
   )
 
 
@@ -517,57 +517,47 @@
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     tt_service_gx_multi_masters,
 
-    (FT_Get_MM_Func)        NULL,                  /* get_mm                     */
-    (FT_Set_MM_Design_Func) NULL,                  /* set_mm_design              */
-    (FT_Set_MM_Blend_Func)  TT_Set_MM_Blend,       /* set_mm_blend               */
-    (FT_Get_MM_Blend_Func)  TT_Get_MM_Blend,       /* get_mm_blend               */
-    (FT_Get_MM_Var_Func)    TT_Get_MM_Var,         /* get_mm_var                 */
-    (FT_Set_Var_Design_Func)TT_Set_Var_Design,     /* set_var_design             */
-    (FT_Get_Var_Design_Func)TT_Get_Var_Design,     /* get_var_design             */
-    (FT_Set_Named_Instance_Func)
-                            TT_Set_Named_Instance, /* set_named_instance         */
-    (FT_Get_Default_Named_Instance_Func)
-                            TT_Get_Default_Named_Instance,
-                                                   /* get_default_named_instance */
-    (FT_Set_MM_WeightVector_Func)
-                            NULL,                  /* set_mm_weightvector        */
-    (FT_Get_MM_WeightVector_Func)
-                            NULL,                  /* get_mm_weightvector        */
+    NULL,                  /* FT_Get_MM_Func              get_mm                     */
+    NULL,                  /* FT_Set_MM_Design_Func       set_mm_design              */
+    TT_Set_MM_Blend,       /* FT_Set_MM_Blend_Func        set_mm_blend               */
+    TT_Get_MM_Blend,       /* FT_Get_MM_Blend_Func        get_mm_blend               */
+    TT_Get_MM_Var,         /* FT_Get_MM_Var_Func          get_mm_var                 */
+    TT_Set_Var_Design,     /* FT_Set_Var_Design_Func      set_var_design             */
+    TT_Get_Var_Design,     /* FT_Get_Var_Design_Func      get_var_design             */
+    TT_Set_Named_Instance, /* FT_Set_Named_Instance_Func  set_named_instance         */
+    TT_Get_Default_Named_Instance,
+                    /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
+    NULL,                  /* FT_Set_MM_WeightVector_Func set_mm_weightvector        */
+    NULL,                  /* FT_Get_MM_WeightVector_Func get_mm_weightvector        */
 
-    (FT_Construct_PS_Name_Func)
-                            tt_construct_ps_name,  /* construct_ps_name          */
-    (FT_Var_Load_Delta_Set_Idx_Map_Func)
-                            tt_var_load_delta_set_index_mapping,
-                                                   /* load_delta_set_idx_map     */
-    (FT_Var_Load_Item_Var_Store_Func)
-                            tt_var_load_item_variation_store,
-                                                   /* load_item_variation_store  */
-    (FT_Var_Get_Item_Delta_Func)
-                            tt_var_get_item_delta, /* get_item_delta             */
-    (FT_Var_Done_Item_Var_Store_Func)
-                            tt_var_done_item_variation_store,
-                                                   /* done_item_variation_store  */
-    (FT_Var_Done_Delta_Set_Idx_Map_Func)
-                            tt_var_done_delta_set_index_map,
-                                                   /* done_delta_set_index_map   */
-    (FT_Get_Var_Blend_Func) tt_get_var_blend,      /* get_var_blend              */
-    (FT_Done_Blend_Func)    tt_done_blend          /* done_blend                 */
+    tt_construct_ps_name,  /* FT_Construct_PS_Name_Func   construct_ps_name          */
+    tt_var_load_delta_set_index_mapping,
+                    /* FT_Var_Load_Delta_Set_Idx_Map_Func load_delta_set_idx_map     */
+    tt_var_load_item_variation_store,
+                    /* FT_Var_Load_Item_Var_Store_Func    load_item_variation_store  */
+    tt_var_get_item_delta, /* FT_Var_Get_Item_Delta_Func  get_item_delta             */
+    tt_var_done_item_variation_store,
+                    /* FT_Var_Done_Item_Var_Store_Func    done_item_variation_store  */
+    tt_var_done_delta_set_index_map,
+                    /* FT_Var_Done_Delta_Set_Idx_Map_Func done_delta_set_index_map   */
+    tt_get_var_blend,      /* FT_Get_Var_Blend_Func       get_var_blend              */
+    tt_done_blend          /* FT_Done_Blend_Func          done_blend                 */
   )
 
   FT_DEFINE_SERVICE_METRICSVARIATIONSREC(
     tt_service_metrics_variations,
 
-    (FT_HAdvance_Adjust_Func)tt_hadvance_adjust,     /* hadvance_adjust */
-    (FT_LSB_Adjust_Func)     NULL,                   /* lsb_adjust      */
-    (FT_RSB_Adjust_Func)     NULL,                   /* rsb_adjust      */
+    tt_hadvance_adjust,   /* FT_HAdvance_Adjust_Func hadvance_adjust */
+    NULL,                 /* FT_LSB_Adjust_Func      lsb_adjust      */
+    NULL,                 /* FT_RSB_Adjust_Func      rsb_adjust      */
 
-    (FT_VAdvance_Adjust_Func)tt_vadvance_adjust,     /* vadvance_adjust */
-    (FT_TSB_Adjust_Func)     NULL,                   /* tsb_adjust      */
-    (FT_BSB_Adjust_Func)     NULL,                   /* bsb_adjust      */
-    (FT_VOrg_Adjust_Func)    NULL,                   /* vorg_adjust     */
+    tt_vadvance_adjust,   /* FT_VAdvance_Adjust_Func vadvance_adjust */
+    NULL,                 /* FT_TSB_Adjust_Func      tsb_adjust      */
+    NULL,                 /* FT_BSB_Adjust_Func      bsb_adjust      */
+    NULL,                 /* FT_VOrg_Adjust_Func     vorg_adjust     */
 
-    (FT_Metrics_Adjust_Func) tt_apply_mvar,          /* metrics_adjust  */
-    (FT_Size_Reset_Func)     tt_size_reset_height    /* size_reset      */
+    tt_apply_mvar,        /* FT_Metrics_Adjust_Func  metrics_adjust  */
+    tt_size_reset_height  /* FT_Size_Reset_Func      size_reset      */
   )
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

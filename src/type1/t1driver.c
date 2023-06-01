@@ -94,8 +94,8 @@
 
   static const FT_Service_GlyphDictRec  t1_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)  t1_get_glyph_name,    /* get_name   */
-    (FT_GlyphDict_NameIndexFunc)t1_get_name_index     /* name_index */
+    t1_get_glyph_name,  /* FT_GlyphDict_GetNameFunc   get_name   */
+    t1_get_name_index   /* FT_GlyphDict_NameIndexFunc name_index */
   };
 
 
@@ -128,36 +128,28 @@
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
   static const FT_Service_MultiMastersRec  t1_service_multi_masters =
   {
-    (FT_Get_MM_Func)        T1_Get_Multi_Master,    /* get_mm                     */
-    (FT_Set_MM_Design_Func) T1_Set_MM_Design,       /* set_mm_design              */
-    (FT_Set_MM_Blend_Func)  T1_Set_MM_Blend,        /* set_mm_blend               */
-    (FT_Get_MM_Blend_Func)  T1_Get_MM_Blend,        /* get_mm_blend               */
-    (FT_Get_MM_Var_Func)    T1_Get_MM_Var,          /* get_mm_var                 */
-    (FT_Set_Var_Design_Func)T1_Set_Var_Design,      /* set_var_design             */
-    (FT_Get_Var_Design_Func)T1_Get_Var_Design,      /* get_var_design             */
-    (FT_Set_Named_Instance_Func)
-                            T1_Reset_MM_Blend,      /* set_named_instance         */
-    (FT_Get_Default_Named_Instance_Func)
-                            NULL,                   /* get_default_named_instance */
-    (FT_Set_MM_WeightVector_Func)
-                            T1_Set_MM_WeightVector, /* set_mm_weightvector        */
-    (FT_Get_MM_WeightVector_Func)
-                            T1_Get_MM_WeightVector, /* get_mm_weightvector        */
+    T1_Get_Multi_Master,    /* FT_Get_MM_Func             get_mm             */
+    T1_Set_MM_Design,       /* FT_Set_MM_Design_Func      set_mm_design      */
+    T1_Set_MM_Blend,        /* FT_Set_MM_Blend_Func       set_mm_blend       */
+    T1_Get_MM_Blend,        /* FT_Get_MM_Blend_Func       get_mm_blend       */
+    T1_Get_MM_Var,          /* FT_Get_MM_Var_Func         get_mm_var         */
+    T1_Set_Var_Design,      /* FT_Set_Var_Design_Func     set_var_design     */
+    T1_Get_Var_Design,      /* FT_Get_Var_Design_Func     get_var_design     */
+    T1_Reset_MM_Blend,      /* FT_Set_Named_Instance_Func set_named_instance */
+    NULL,   /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
+    T1_Set_MM_WeightVector,
+            /* FT_Set_MM_WeightVector_Func        set_mm_weightvector        */
+    T1_Get_MM_WeightVector,
+            /* FT_Get_MM_WeightVector_Func        get_mm_weightvector        */
 
-    (FT_Construct_PS_Name_Func)
-                            NULL,                   /* construct_ps_name          */
-    (FT_Var_Load_Delta_Set_Idx_Map_Func)
-                            NULL,                   /* load_delta_set_idx_map     */
-    (FT_Var_Load_Item_Var_Store_Func)
-                            NULL,                   /* load_item_variation_store  */
-    (FT_Var_Get_Item_Delta_Func)
-                            NULL,                   /* get_item_delta             */
-    (FT_Var_Done_Item_Var_Store_Func)
-                            NULL,                   /* done_item_variation_store  */
-    (FT_Var_Done_Delta_Set_Idx_Map_Func)
-                            NULL,                   /* done_delta_set_index_map   */
-    (FT_Get_Var_Blend_Func) NULL,                   /* get_var_blend              */
-    (FT_Done_Blend_Func)    T1_Done_Blend           /* done_blend                 */
+    NULL,   /* FT_Construct_PS_Name_Func          construct_ps_name          */
+    NULL,   /* FT_Var_Load_Delta_Set_Idx_Map_Func load_delta_set_idx_map     */
+    NULL,   /* FT_Var_Load_Item_Var_Store_Func    load_item_variation_store  */
+    NULL,   /* FT_Var_Get_Item_Delta_Func         get_item_delta             */
+    NULL,   /* FT_Var_Done_Item_Var_Store_Func    done_item_variation_store  */
+    NULL,   /* FT_Var_Done_Delta_Set_Idx_Map_Func done_delta_set_index_map   */
+    NULL,           /* FT_Get_Var_Blend_Func      get_var_blend              */
+    T1_Done_Blend   /* FT_Done_Blend_Func         done_blend                 */
   };
 #endif
 
@@ -645,11 +637,11 @@
 
   static const FT_Service_PsInfoRec  t1_service_ps_info =
   {
-    (PS_GetFontInfoFunc)   t1_ps_get_font_info,    /* ps_get_font_info    */
-    (PS_GetFontExtraFunc)  t1_ps_get_font_extra,   /* ps_get_font_extra   */
-    (PS_HasGlyphNamesFunc) t1_ps_has_glyph_names,  /* ps_has_glyph_names  */
-    (PS_GetFontPrivateFunc)t1_ps_get_font_private, /* ps_get_font_private */
-    (PS_GetFontValueFunc)  t1_ps_get_font_value,   /* ps_get_font_value   */
+    t1_ps_get_font_info,     /* PS_GetFontInfoFunc    ps_get_font_info    */
+    t1_ps_get_font_extra,    /* PS_GetFontExtraFunc   ps_get_font_extra   */
+    t1_ps_has_glyph_names,   /* PS_HasGlyphNamesFunc  ps_has_glyph_names  */
+    t1_ps_get_font_private,  /* PS_GetFontPrivateFunc ps_get_font_private */
+    t1_ps_get_font_value,    /* PS_GetFontValueFunc   ps_get_font_value   */
   };
 
 
@@ -669,9 +661,9 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     t1_service_properties,
 
-    (FT_Properties_SetFunc)ps_property_set,      /* set_property */
-    (FT_Properties_GetFunc)ps_property_get )     /* get_property */
-
+    ps_property_set,  /* FT_Properties_SetFunc set_property */
+    ps_property_get   /* FT_Properties_GetFunc get_property */
+  )
 
   /*
    * SERVICE LIST

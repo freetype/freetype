@@ -372,8 +372,9 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     af_service_properties,
 
-    (FT_Properties_SetFunc)af_property_set,        /* set_property */
-    (FT_Properties_GetFunc)af_property_get )       /* get_property */
+    af_property_set,  /* FT_Properties_SetFunc set_property */
+    af_property_get   /* FT_Properties_GetFunc get_property */
+  )
 
 
   FT_DEFINE_SERVICEDESCREC1(
@@ -499,10 +500,10 @@
   FT_DEFINE_AUTOHINTER_INTERFACE(
     af_autofitter_interface,
 
-    NULL,                                                    /* reset_face */
-    NULL,                                              /* get_global_hints */
-    NULL,                                             /* done_global_hints */
-    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph    /* load_glyph */
+    NULL,                     /* FT_AutoHinter_GlobalResetFunc reset_face        */
+    NULL,                     /* FT_AutoHinter_GlobalGetFunc   get_global_hints  */
+    NULL,                     /* FT_AutoHinter_GlobalDoneFunc  done_global_hints */
+    af_autofitter_load_glyph  /* FT_AutoHinter_GlyphLoadFunc   load_glyph        */
   )
 
   FT_DEFINE_MODULE(
@@ -517,9 +518,9 @@
 
     (const void*)&af_autofitter_interface,
 
-    (FT_Module_Constructor)af_autofitter_init,  /* module_init   */
-    (FT_Module_Destructor) af_autofitter_done,  /* module_done   */
-    (FT_Module_Requester)  af_get_interface     /* get_interface */
+    af_autofitter_init,  /* FT_Module_Constructor module_init   */
+    af_autofitter_done,  /* FT_Module_Destructor  module_done   */
+    af_get_interface     /* FT_Module_Requester   get_interface */
   )
 
 

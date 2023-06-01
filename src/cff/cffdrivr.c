@@ -442,8 +442,8 @@
   FT_DEFINE_SERVICE_GLYPHDICTREC(
     cff_service_glyph_dict,
 
-    (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,      /* get_name   */
-    (FT_GlyphDict_NameIndexFunc)cff_get_name_index       /* name_index */
+    cff_get_glyph_name,  /* FT_GlyphDict_GetNameFunc   get_name   */
+    cff_get_name_index   /* FT_GlyphDict_NameIndexFunc name_index */
   )
 
 
@@ -592,13 +592,13 @@
   FT_DEFINE_SERVICE_PSINFOREC(
     cff_service_ps_info,
 
-    (PS_GetFontInfoFunc)   cff_ps_get_font_info,    /* ps_get_font_info    */
-    (PS_GetFontExtraFunc)  cff_ps_get_font_extra,   /* ps_get_font_extra   */
-    (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,  /* ps_has_glyph_names  */
+    cff_ps_get_font_info,    /* PS_GetFontInfoFunc    ps_get_font_info    */
+    cff_ps_get_font_extra,   /* PS_GetFontExtraFunc   ps_get_font_extra   */
+    cff_ps_has_glyph_names,  /* PS_HasGlyphNamesFunc  ps_has_glyph_names  */
     /* unsupported with CFF fonts */
-    (PS_GetFontPrivateFunc)NULL,                    /* ps_get_font_private */
+    NULL,                    /* PS_GetFontPrivateFunc ps_get_font_private */
     /* not implemented            */
-    (PS_GetFontValueFunc)  NULL                     /* ps_get_font_value   */
+    NULL                     /* PS_GetFontValueFunc   ps_get_font_value   */
   )
 
 
@@ -640,7 +640,7 @@
   FT_DEFINE_SERVICE_PSFONTNAMEREC(
     cff_service_ps_name,
 
-    (FT_PsName_GetFunc)cff_get_ps_name      /* get_ps_font_name */
+    cff_get_ps_name  /* FT_PsName_GetFunc get_ps_font_name */
   )
 
 
@@ -688,7 +688,7 @@
   FT_DEFINE_SERVICE_TTCMAPSREC(
     cff_service_get_cmap_info,
 
-    (TT_CMap_Info_GetFunc)cff_get_cmap_info    /* get_cmap_info */
+    cff_get_cmap_info  /* TT_CMap_Info_GetFunc get_cmap_info */
   )
 
 
@@ -820,12 +820,12 @@
   FT_DEFINE_SERVICE_CIDREC(
     cff_service_cid_info,
 
-    (FT_CID_GetRegistryOrderingSupplementFunc)
-      cff_get_ros,                             /* get_ros                  */
-    (FT_CID_GetIsInternallyCIDKeyedFunc)
-      cff_get_is_cid,                          /* get_is_cid               */
-    (FT_CID_GetCIDFromGlyphIndexFunc)
-      cff_get_cid_from_glyph_index             /* get_cid_from_glyph_index */
+    cff_get_ros,
+      /* FT_CID_GetRegistryOrderingSupplementFunc get_ros                  */
+    cff_get_is_cid,
+      /* FT_CID_GetIsInternallyCIDKeyedFunc       get_is_cid               */
+    cff_get_cid_from_glyph_index
+      /* FT_CID_GetCIDFromGlyphIndexFunc          get_cid_from_glyph_index */
   )
 
 
@@ -837,9 +837,9 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     cff_service_properties,
 
-    (FT_Properties_SetFunc)ps_property_set,      /* set_property */
-    (FT_Properties_GetFunc)ps_property_get )     /* get_property */
-
+    ps_property_set,  /* FT_Properties_SetFunc set_property */
+    ps_property_get   /* FT_Properties_GetFunc get_property */
+  )
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -1044,45 +1044,35 @@
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     cff_service_multi_masters,
 
-    (FT_Get_MM_Func)        NULL,               /* get_mm                     */
-    (FT_Set_MM_Design_Func) NULL,               /* set_mm_design              */
-    (FT_Set_MM_Blend_Func)  cff_set_mm_blend,   /* set_mm_blend               */
-    (FT_Get_MM_Blend_Func)  cff_get_mm_blend,   /* get_mm_blend               */
-    (FT_Get_MM_Var_Func)    cff_get_mm_var,     /* get_mm_var                 */
-    (FT_Set_Var_Design_Func)cff_set_var_design, /* set_var_design             */
-    (FT_Get_Var_Design_Func)cff_get_var_design, /* get_var_design             */
-    (FT_Set_Named_Instance_Func)
-                            cff_set_named_instance,
-                                                /* set_named_instance         */
-    (FT_Get_Default_Named_Instance_Func)
-                            cff_get_default_named_instance,
-                                                /* get_default_named_instance */
-    (FT_Set_MM_WeightVector_Func)
-                            cff_set_mm_weightvector,
-                                                /* set_mm_weightvector        */
-    (FT_Get_MM_WeightVector_Func)
-                            cff_get_mm_weightvector,
-                                                /* get_mm_weightvector        */
-
-    (FT_Construct_PS_Name_Func)
-                            cff_construct_ps_name,
-                                                /* construct_ps_name          */
-    (FT_Var_Load_Delta_Set_Idx_Map_Func)
-                            cff_load_delta_set_index_mapping,
-                                                /* load_delta_set_idx_map     */
-    (FT_Var_Load_Item_Var_Store_Func)
-                            cff_load_item_variation_store,
-                                                /* load_item_variation_store  */
-    (FT_Var_Get_Item_Delta_Func)
-                            cff_get_item_delta, /* get_item_delta             */
-    (FT_Var_Done_Item_Var_Store_Func)
-                            cff_done_item_variation_store,
-                                                /* done_item_variation_store  */
-    (FT_Var_Done_Delta_Set_Idx_Map_Func)
-                            cff_done_delta_set_index_map,
-                                                /* done_delta_set_index_map   */
-    (FT_Get_Var_Blend_Func) cff_get_var_blend,  /* get_var_blend              */
-    (FT_Done_Blend_Func)    cff_done_blend      /* done_blend                 */
+    NULL,                /* FT_Get_MM_Func         get_mm                     */
+    NULL,                /* FT_Set_MM_Design_Func  set_mm_design              */
+    cff_set_mm_blend,    /* FT_Set_MM_Blend_Func   set_mm_blend               */
+    cff_get_mm_blend,    /* FT_Get_MM_Blend_Func   get_mm_blend               */
+    cff_get_mm_var,      /* FT_Get_MM_Var_Func     get_mm_var                 */
+    cff_set_var_design,  /* FT_Set_Var_Design_Func set_var_design             */
+    cff_get_var_design,  /* FT_Get_Var_Design_Func get_var_design             */
+    cff_set_named_instance,
+             /* FT_Set_Named_Instance_Func         set_named_instance         */
+    cff_get_default_named_instance,
+             /* FT_Get_Default_Named_Instance_Func get_default_named_instance */
+    cff_set_mm_weightvector,
+             /* FT_Set_MM_WeightVector_Func        set_mm_weightvector        */
+    cff_get_mm_weightvector,
+             /* FT_Get_MM_WeightVector_Func        get_mm_weightvector        */
+    cff_construct_ps_name,
+             /* FT_Construct_PS_Name_Func          construct_ps_name          */
+    cff_load_delta_set_index_mapping,
+             /* FT_Var_Load_Delta_Set_Idx_Map_Func load_delta_set_idx_map     */
+    cff_load_item_variation_store,
+             /* FT_Var_Load_Item_Var_Store_Func    load_item_variation_store  */
+    cff_get_item_delta,
+             /* FT_Var_Get_Item_Delta_Func         get_item_delta             */
+    cff_done_item_variation_store,
+             /* FT_Var_Done_Item_Var_Store_Func    done_item_variation_store  */
+    cff_done_delta_set_index_map,
+             /* FT_Var_Done_Delta_Set_Idx_Map_Func done_delta_set_index_map   */
+    cff_get_var_blend,   /* FT_Get_Var_Blend_Func  get_var_blend              */
+    cff_done_blend       /* FT_Done_Blend_Func     done_blend                 */
   )
 
 
@@ -1120,17 +1110,17 @@
   FT_DEFINE_SERVICE_METRICSVARIATIONSREC(
     cff_service_metrics_variations,
 
-    (FT_HAdvance_Adjust_Func)cff_hadvance_adjust,    /* hadvance_adjust */
-    (FT_LSB_Adjust_Func)     NULL,                   /* lsb_adjust      */
-    (FT_RSB_Adjust_Func)     NULL,                   /* rsb_adjust      */
+    cff_hadvance_adjust,  /* FT_HAdvance_Adjust_Func hadvance_adjust */
+    NULL,                 /* FT_LSB_Adjust_Func      lsb_adjust      */
+    NULL,                 /* FT_RSB_Adjust_Func      rsb_adjust      */
 
-    (FT_VAdvance_Adjust_Func)NULL,                   /* vadvance_adjust */
-    (FT_TSB_Adjust_Func)     NULL,                   /* tsb_adjust      */
-    (FT_BSB_Adjust_Func)     NULL,                   /* bsb_adjust      */
-    (FT_VOrg_Adjust_Func)    NULL,                   /* vorg_adjust     */
+    NULL,                 /* FT_VAdvance_Adjust_Func vadvance_adjust */
+    NULL,                 /* FT_TSB_Adjust_Func      tsb_adjust      */
+    NULL,                 /* FT_BSB_Adjust_Func      bsb_adjust      */
+    NULL,                 /* FT_VOrg_Adjust_Func     vorg_adjust     */
 
-    (FT_Metrics_Adjust_Func) cff_metrics_adjust,     /* metrics_adjust  */
-    (FT_Size_Reset_Func)     NULL                    /* size_reset      */
+    cff_metrics_adjust,   /* FT_Metrics_Adjust_Func  metrics_adjust  */
+    NULL                  /* FT_Size_Reset_Func      size_reset      */
   )
 #endif
 
@@ -1143,11 +1133,11 @@
   FT_DEFINE_SERVICE_CFFLOADREC(
     cff_service_cff_load,
 
-    (FT_Get_Standard_Encoding_Func)cff_get_standard_encoding,
-    (FT_Load_Private_Dict_Func)    cff_load_private_dict,
-    (FT_FD_Select_Get_Func)        cff_fd_select_get,
-    (FT_Blend_Check_Vector_Func)   cff_blend_check_vector,
-    (FT_Blend_Build_Vector_Func)   cff_blend_build_vector
+    cff_get_standard_encoding,  /* FT_Get_Standard_Encoding_Func get_standard_encoding */
+    cff_load_private_dict,      /* FT_Load_Private_Dict_Func     load_private_dict     */
+    cff_fd_select_get,          /* FT_FD_Select_Get_Func         fd_select_get         */
+    cff_blend_check_vector,     /* FT_Blend_Check_Vector_Func    blend_check_vector    */
+    cff_blend_build_vector      /* FT_Blend_Build_Vector_Func    blend_build_vector    */
   )
 
 

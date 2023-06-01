@@ -172,9 +172,9 @@
   FT_DEFINE_SERVICE_SFNT_TABLEREC(
     sfnt_service_sfnt_table,
 
-    (FT_SFNT_TableLoadFunc)sfnt_load_table,      /* load_table */
-    (FT_SFNT_TableGetFunc) get_sfnt_table,       /* get_table  */
-    (FT_SFNT_TableInfoFunc)sfnt_table_info       /* table_info */
+    sfnt_load_table,  /* FT_SFNT_TableLoadFunc load_table */
+    get_sfnt_table,   /* FT_SFNT_TableGetFunc  get_table  */
+    sfnt_table_info   /* FT_SFNT_TableInfoFunc table_info */
   )
 
 
@@ -240,8 +240,8 @@
   FT_DEFINE_SERVICE_GLYPHDICTREC(
     sfnt_service_glyph_dict,
 
-    (FT_GlyphDict_GetNameFunc)  sfnt_get_glyph_name,    /* get_name   */
-    (FT_GlyphDict_NameIndexFunc)sfnt_get_name_index     /* name_index */
+    sfnt_get_glyph_name,  /* FT_GlyphDict_GetNameFunc   get_name   */
+    sfnt_get_name_index   /* FT_GlyphDict_NameIndexFunc name_index */
   )
 
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
@@ -1113,7 +1113,7 @@
   FT_DEFINE_SERVICE_PSFONTNAMEREC(
     sfnt_service_ps_name,
 
-    (FT_PsName_GetFunc)sfnt_get_ps_name       /* get_ps_font_name */
+    sfnt_get_ps_name  /* FT_PsName_GetFunc get_ps_font_name */
   )
 
 
@@ -1123,7 +1123,7 @@
   FT_DEFINE_SERVICE_TTCMAPSREC(
     tt_service_get_cmap_info,
 
-    (TT_CMap_Info_GetFunc)tt_get_cmap_info    /* get_cmap_info */
+    tt_get_cmap_info  /* TT_CMap_Info_GetFunc get_cmap_info */
   )
 
 
@@ -1168,8 +1168,8 @@
   FT_DEFINE_SERVICE_BDFRec(
     sfnt_service_bdf,
 
-    (FT_BDF_GetCharsetIdFunc)sfnt_get_charset_id,     /* get_charset_id */
-    (FT_BDF_GetPropertyFunc) tt_face_find_bdf_prop    /* get_property   */
+    sfnt_get_charset_id,   /* FT_BDF_GetCharsetIdFunc get_charset_id */
+    tt_face_find_bdf_prop  /* FT_BDF_GetPropertyFunc  get_property   */
   )
 
 
@@ -1360,9 +1360,9 @@
 
     (const void*)&sfnt_interface,  /* module specific interface */
 
-    (FT_Module_Constructor)NULL,               /* module_init   */
-    (FT_Module_Destructor) NULL,               /* module_done   */
-    (FT_Module_Requester)  sfnt_get_interface  /* get_interface */
+    NULL,               /* FT_Module_Constructor module_init   */
+    NULL,               /* FT_Module_Destructor  module_done   */
+    sfnt_get_interface  /* FT_Module_Requester   get_interface */
   )
 
 

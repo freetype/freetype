@@ -95,14 +95,14 @@
 
   static const FT_Service_PsInfoRec  cid_service_ps_info =
   {
-    (PS_GetFontInfoFunc)   cid_ps_get_font_info,   /* ps_get_font_info    */
-    (PS_GetFontExtraFunc)  cid_ps_get_font_extra,  /* ps_get_font_extra   */
+    cid_ps_get_font_info,   /* PS_GetFontInfoFunc    ps_get_font_info    */
+    cid_ps_get_font_extra,  /* PS_GetFontExtraFunc   ps_get_font_extra   */
     /* unsupported with CID fonts */
-    (PS_HasGlyphNamesFunc) NULL,                   /* ps_has_glyph_names  */
+    NULL,                   /* PS_HasGlyphNamesFunc  ps_has_glyph_names  */
     /* unsupported                */
-    (PS_GetFontPrivateFunc)NULL,                   /* ps_get_font_private */
+    NULL,                   /* PS_GetFontPrivateFunc ps_get_font_private */
     /* not implemented            */
-    (PS_GetFontValueFunc)  NULL                    /* ps_get_font_value   */
+    NULL                    /* PS_GetFontValueFunc   ps_get_font_value   */
   };
 
 
@@ -182,12 +182,12 @@
 
   static const FT_Service_CIDRec  cid_service_cid_info =
   {
-    (FT_CID_GetRegistryOrderingSupplementFunc)
-      cid_get_ros,                             /* get_ros                  */
-    (FT_CID_GetIsInternallyCIDKeyedFunc)
-      cid_get_is_cid,                          /* get_is_cid               */
-    (FT_CID_GetCIDFromGlyphIndexFunc)
-      cid_get_cid_from_glyph_index             /* get_cid_from_glyph_index */
+    cid_get_ros,
+      /* FT_CID_GetRegistryOrderingSupplementFunc get_ros                  */
+    cid_get_is_cid,
+      /* FT_CID_GetIsInternallyCIDKeyedFunc       get_is_cid               */
+    cid_get_cid_from_glyph_index
+      /* FT_CID_GetCIDFromGlyphIndexFunc          get_cid_from_glyph_index */
   };
 
 
@@ -199,9 +199,9 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     cid_service_properties,
 
-    (FT_Properties_SetFunc)ps_property_set,      /* set_property */
-    (FT_Properties_GetFunc)ps_property_get )     /* get_property */
-
+    ps_property_set,  /* FT_Properties_SetFunc set_property */
+    ps_property_get   /* FT_Properties_GetFunc get_property */
+  )
 
   /*
    * SERVICE LIST

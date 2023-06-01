@@ -3283,11 +3283,11 @@
 
     FT_GLYPH_FORMAT_OUTLINE,
 
-    (FT_Raster_New_Func)     ft_black_new,       /* raster_new      */
-    (FT_Raster_Reset_Func)   ft_black_reset,     /* raster_reset    */
-    (FT_Raster_Set_Mode_Func)ft_black_set_mode,  /* raster_set_mode */
-    (FT_Raster_Render_Func)  ft_black_render,    /* raster_render   */
-    (FT_Raster_Done_Func)    ft_black_done       /* raster_done     */
+    ft_black_new,       /* FT_Raster_New_Func      raster_new      */
+    ft_black_reset,     /* FT_Raster_Reset_Func    raster_reset    */
+    ft_black_set_mode,  /* FT_Raster_Set_Mode_Func raster_set_mode */
+    ft_black_render,    /* FT_Raster_Render_Func   raster_render   */
+    ft_black_done       /* FT_Raster_Done_Func     raster_done     */
   )
 
 

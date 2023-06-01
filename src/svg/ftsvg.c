@@ -153,7 +153,7 @@
 
   static const SVG_Interface  svg_interface =
   {
-    (Preset_Bitmap_Func)ft_svg_preset_slot
+    ft_svg_preset_slot  /* Preset_Bitmap_Func preset_slot */
   };
 
 
@@ -231,8 +231,8 @@
   FT_DEFINE_SERVICE_PROPERTIESREC(
     ft_svg_service_properties,
 
-    (FT_Properties_SetFunc)ft_svg_property_set, /* set_property */
-    (FT_Properties_GetFunc)ft_svg_property_get  /* get_property */
+    ft_svg_property_set,  /* FT_Properties_SetFunc set_property */
+    ft_svg_property_get   /* FT_Properties_GetFunc get_property */
   )
 
 
@@ -338,17 +338,17 @@
 
       (const void*)PUT_SVG_MODULE( &svg_interface ), /* module specific interface */
 
-      (FT_Module_Constructor)PUT_SVG_MODULE( ft_svg_init ), /* module_init   */
-      (FT_Module_Destructor)PUT_SVG_MODULE( ft_svg_done ),  /* module_done   */
-      PUT_SVG_MODULE( ft_svg_get_interface ),               /* get_interface */
+      PUT_SVG_MODULE( ft_svg_init ),           /* FT_Module_Constructor module_init   */
+      PUT_SVG_MODULE( ft_svg_done ),           /* FT_Module_Destructor  module_done   */
+      PUT_SVG_MODULE( ft_svg_get_interface ),  /* FT_Module_Requester   get_interface */
 
       SVG_GLYPH_FORMAT,
 
-      (FT_Renderer_RenderFunc)   PUT_SVG_MODULE( ft_svg_render ),    /* render_glyph    */
-      (FT_Renderer_TransformFunc)PUT_SVG_MODULE( ft_svg_transform ), /* transform_glyph */
-      NULL,                                                          /* get_glyph_cbox  */
-      NULL,                                                          /* set_mode        */
-      NULL                                                           /* raster_class    */
+      PUT_SVG_MODULE( ft_svg_render ),     /* FT_Renderer_RenderFunc    render_glyph    */
+      PUT_SVG_MODULE( ft_svg_transform ),  /* FT_Renderer_TransformFunc transform_glyph */
+      NULL,                                /* FT_Renderer_GetCBoxFunc   get_glyph_cbox  */
+      NULL,                                /* FT_Renderer_SetModeFunc   set_mode        */
+      NULL                                 /* FT_Raster_Funcs*          raster_class    */
   )
 
 
