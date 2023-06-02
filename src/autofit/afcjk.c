@@ -567,8 +567,8 @@
   af_cjk_metrics_check_digits( AF_CJKMetrics  metrics,
                                FT_Face        face )
   {
-    FT_Bool   started = 0, same_width = 1;
-    FT_Fixed  advance = 0, old_advance = 0;
+    FT_Bool  started = 0, same_width = 1;
+    FT_Long  advance = 0, old_advance = 0;
 
     /* If HarfBuzz is not available, we need a pointer to a single */
     /* unsigned long value.                                        */
