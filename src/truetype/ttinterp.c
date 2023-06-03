@@ -3547,7 +3547,8 @@
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     /* arguments to opcodes are skipped by `SKIP_Code' */
-    FT_Byte    opcode_pattern[9][12] = {
+    FT_Byte    opcode_pattern[9][12] =
+               {
                  /* #0 inline delta function 1 */
                  {
                    0x4B, /* PPEM    */
@@ -7679,13 +7680,14 @@
     FT_UShort  i;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    FT_Byte    opcode_pattern[1][2] = {
-                  /* #8 TypeMan Talk Align */
-                  {
-                    0x06, /* SPVTL   */
-                    0x7D, /* RDTG    */
-                  },
-                };
+    FT_Byte    opcode_pattern[1][2] =
+               {
+                 /* #8 TypeMan Talk Align */
+                 {
+                   0x06, /* SPVTL   */
+                   0x7D, /* RDTG    */
+                 },
+               };
     FT_UShort  opcode_patterns   = 1;
     FT_UShort  opcode_pointer[1] = { 0 };
     FT_UShort  opcode_size[1]    = { 1 };
