@@ -22,6 +22,7 @@
 #include "afglobal.h"
 #include "aflatin.h"
 #include "aferrors.h"
+#include "afadjust.h"
 
 
   /**************************************************************************
@@ -227,7 +228,6 @@
                                      dummy->units_per_em / 100 );
         axis->width_count = num_widths;
       }
-
     Exit:
       for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
       {
@@ -1153,6 +1153,8 @@
         goto Exit;
       }
       af_latin_metrics_check_digits( metrics, face );
+      
+      af_reverse_character_map_new( face, &metrics->root.reverse_charmap, face->memory );
     }
 
   Exit:
@@ -1502,6 +1504,11 @@
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );
   }
 
+  FT_CALLBACK_DEF( void )
+  af_latin_metrics_done( AF_StyleMetrics metrics_ ) {
+    AF_LatinMetrics metrics = (AF_LatinMetrics)metrics_;
+    af_reverse_character_map_done( metrics->root.reverse_charmap, metrics->root.globals->face->memory );
+  }
 
   /* Extract standard_width from writing system/script specific */
   /* metrics class.                                             */
@@ -2738,6 +2745,83 @@
   }
 
 
+void af_glyph_hints_apply_adjustments(AF_GlyphHints hints, AF_Dimension dim, FT_Int glyph_index, AF_ReverseCharacterMap reverse_charmap) {
+  if ( dim != AF_DIMENSION_VERT ) {
+    return;
+  }
+  if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_ONE_ON_ONE &&
+      hints->num_contours == 2 ) {
+    
+    /* Figure out which contout is the higher one by finding the one */
+    /* with the highest minimum y value */
+
+    FT_Int highest_contour = -1;
+    FT_Pos highest_min_y = 0;
+    FT_Pos current_min_y = 0;
+
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ ) {
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL ) { /*TODO: is this necessary?*/
+        continue;
+      }
+      current_min_y = point->y;
+
+      do {
+        if ( point->y < current_min_y ) {
+          current_min_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( highest_contour == -1 || current_min_y > highest_min_y ) {
+        highest_min_y = current_min_y;
+        highest_contour = contour;
+      }
+    }
+
+    /* If there are any contours that have a maximum y coordinate */
+    /* greater or equal to the minimum y coordinate of the previously found highest*/
+    /* contour, bump the high contour up until the distance is one pixel */
+
+    FT_Int adjustment_amount = 0;
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ ) {
+      if (contour == highest_contour) {
+        continue;
+      }
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL ) {
+        continue;
+      }
+      FT_Pos max_y = point->y;
+
+      do {
+        if ( point->y > max_y ) {
+          max_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( max_y >= highest_min_y - 64 ) {
+        adjustment_amount = 64 - (highest_min_y - max_y);
+      }
+    }
+
+    if ( adjustment_amount > 0 ) {
+      AF_Point point = hints->contours[highest_contour];
+      AF_Point first_point = point;
+      if ( point != NULL ) {
+        do {
+          point->y += adjustment_amount;
+          point = point->next;
+        } while ( point != first_point );
+      }
+    }
+  }
+}
+
+
   /* Compute the snapped width of a given stem, ignoring very thin ones. */
   /* There is a lot of voodoo in this function; changing the hard-coded  */
   /* parameters influence the whole hinting process.                     */
@@ -3605,6 +3689,7 @@
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
+        af_glyph_hints_apply_adjustments(hints, (AF_Dimension) dim, glyph_index, metrics->root.reverse_charmap);
       }
     }
 
@@ -3633,12 +3718,11 @@
 
     (AF_WritingSystem_InitMetricsFunc) af_latin_metrics_init,        /* style_metrics_init    */
     (AF_WritingSystem_ScaleMetricsFunc)af_latin_metrics_scale,       /* style_metrics_scale   */
-    (AF_WritingSystem_DoneMetricsFunc) NULL,                         /* style_metrics_done    */
+    (AF_WritingSystem_DoneMetricsFunc) af_latin_metrics_done,        /* style_metrics_done    */
     (AF_WritingSystem_GetStdWidthsFunc)af_latin_get_standard_widths, /* style_metrics_getstdw */
 
     (AF_WritingSystem_InitHintsFunc)   af_latin_hints_init,          /* style_hints_init      */
     (AF_WritingSystem_ApplyHintsFunc)  af_latin_hints_apply          /* style_hints_apply     */
   )
-
 
 /* END */

@@ -39,6 +39,7 @@
 #include <freetype/internal/ftdebug.h>
 
 #include "afblue.h"
+#include "afadjust.h"
 
 #ifdef FT_DEBUG_AUTOFIT
 #include FT_CONFIG_STANDARD_LIBRARY_H
@@ -417,6 +418,7 @@ extern void*  af_debug_hints_;
     FT_Bool         digits_have_same_width;
 
     AF_FaceGlobals  globals;    /* to access properties */
+    AF_ReverseCharacterMap  reverse_charmap;
 
   } AF_StyleMetricsRec;
 
