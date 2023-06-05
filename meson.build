@@ -395,6 +395,13 @@ if use_unix_ftsystem_c
 endif
 
 
+if cc.get_id() == 'msvc'
+  ft2_defines += ['/arch:AVX']
+else
+  ft2_defines += ['-msse4.1']
+endif
+
+
 ft2_lib = library('freetype',
   sources: ft2_sources + [ftmodule_h],
   c_args: ft2_defines,
@@ -403,7 +410,7 @@ ft2_lib = library('freetype',
   dependencies: ft2_deps,
   install: true,
   version: ft2_so_version,
-  link_args: common_ldflags,
+  link_args: common_ldflags + ['-lm'],
 )
 
 
