@@ -154,7 +154,7 @@ dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
     {
       int linestart = y * worker->m_w;
 
-     FT26D6 dy   = min( (y + 1)<<6, to_y ) - max( y<<6, from_y );
+     FT26D6 dy   = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
 
       m_a[linestart + x0i] += dir*dy*(64 - x + x0floor);
       m_a[linestart + ( x0i + 1 )] += dir*dy*(x-x0floor);
@@ -457,7 +457,7 @@ __m128i offset = _mm_setzero_si128();
     // shuffle
     y = _mm_shuffle_epi8( y, mask );
 
-    _mm_store_ss( (float*)&dest[i], (__m128)y );
+    _mm_store_ss( (float*)&dest[i], _mm_castsi128_ps(y) );
 
     // store the current prefix sum in offset
     offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
