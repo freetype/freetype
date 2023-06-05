@@ -247,6 +247,8 @@ if (BUILD_FRAMEWORK)
 endif ()
 
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.1")
+
 # Find dependencies
 include(FindPkgConfig)
 
