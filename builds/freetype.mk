@@ -162,6 +162,11 @@ FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 include $(TOP_DIR)/builds/exports.mk
 
 
+# Include the `testing' rules file.
+#
+include $(TOP_DIR)/builds/testing.mk
+
+
 # Initialize the list of objects.
 #
 OBJECTS_LIST :=
