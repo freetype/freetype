@@ -11,9 +11,9 @@ with open('../../../../benchmark.html', 'w') as f:
     f.write('<h1>Benchmark Results</h1>\n')
 
     # Traverse through the 'baselines' directory
-    for filename in os.listdir('../baselines'):
-        baseline_filepath = os.path.join('../baselines', filename)
-        benchmark_filepath = os.path.join('../benchmarks', filename)
+    for filename in os.listdir('../baseline'):
+        baseline_filepath = os.path.join('../baseline', filename)
+        benchmark_filepath = os.path.join('../benchmark', filename)
 
         # Process the baseline file
         with open(baseline_filepath, 'r') as baseline_file:
