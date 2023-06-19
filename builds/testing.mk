@@ -2,6 +2,7 @@
 FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_BIN = $(OBJ_DIR)/bench.o
+FTBENCH_FLAG = -c 50
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE = $(addprefix $(FTBENCH_DIR)/baseline/, $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(FTBENCH_DIR)/benchmark/, $(notdir $(FONTS:.ttf=.txt)))
@@ -25,7 +26,7 @@ $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 	@echo "Creating baseline..."
 	@$(foreach font, $(FONTS), \
-		$(FTBENCH_BIN) $(font) > $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
+		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) > $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
 	@echo "Baseline created."
 
@@ -34,9 +35,9 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 	@echo "Creating benchmark..."
 	@$(foreach font, $(FONTS), \
-		$(FTBENCH_BIN) $(font) > $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
+		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) > $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
-	@$(PYTHON) $(HTMLCREATOR) > $(HTMLFILE)
+	@$(PYTHON) $(HTMLCREATOR)
 	@echo "Benchmark created."
 
 .PHONY: clean-benchmark

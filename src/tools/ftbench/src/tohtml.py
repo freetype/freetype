@@ -2,7 +2,15 @@ import os
 import re
 
 # Create the HTML file
-with open('../../../../benchmark.html', 'w') as f:
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Get the project root directory (assuming the script is inside nested directories in the project root)
+project_root = os.path.abspath(os.path.join(current_dir, '../../../../'))
+
+# Construct the absolute path to the benchmark file
+benchmark_file = os.path.join(project_root, 'benchmark.html')
+
+with open(benchmark_file, 'w') as f:
     f.write('<html>\n')
     f.write('<head>\n')
     f.write('<title>Benchmark Results</title>\n')
@@ -10,10 +18,10 @@ with open('../../../../benchmark.html', 'w') as f:
     f.write('<body>\n')
     f.write('<h1>Benchmark Results</h1>\n')
 
-    # Traverse through the 'baselines' directory
-    for filename in os.listdir('../baseline'):
-        baseline_filepath = os.path.join('../baseline', filename)
-        benchmark_filepath = os.path.join('../benchmark', filename)
+    # Traverse through the 'baseline directory
+    for filename in os.listdir(os.path.join(project_root, 'src/tools/ftbench/baseline')):
+        baseline_filepath = os.path.join(os.path.join(project_root, 'src/tools/ftbench/baseline'), filename)
+        benchmark_filepath = os.path.join(os.path.join(project_root, 'src/tools/ftbench/benchmark'), filename)
 
         # Process the baseline file
         with open(baseline_filepath, 'r') as baseline_file:
