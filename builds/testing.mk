@@ -26,10 +26,10 @@ $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 	@echo "Creating baseline..."
 	@$(foreach font, $(FONTS), \
-		echo "Parameters: $(FTBENCH_FLAG)" > $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Commit ID: `git rev-parse HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Commit Date: `git show -s --format=%ci HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Branch: `git rev-parse --abbrev-ref HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "$(FTBENCH_FLAG)" > $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git rev-parse HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git show -s --format=%ci HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git rev-parse --abbrev-ref HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
 	@echo "Baseline created."
@@ -39,10 +39,10 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 	@echo "Creating benchmark..."
 	@$(foreach font, $(FONTS), \
-		echo "Parameters: $(FTBENCH_FLAG)" > $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Commit ID: `git rev-parse HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Commit Date: `git show -s --format=%ci HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "Branch: `git rev-parse --abbrev-ref HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "$(FTBENCH_FLAG)" > $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git rev-parse HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git show -s --format=%ci HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
+		echo "`git rev-parse --abbrev-ref HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
 	@$(PYTHON) $(HTMLCREATOR)
