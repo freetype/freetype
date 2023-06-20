@@ -35,8 +35,14 @@ with open(benchmark_file, 'w') as f:
         f.write('<table border="1">\n')
         f.write('<tr><th>Test</th><th>Baseline</th><th>Benchmark</th></tr>\n')
 
+        # Write the meta-data to the HTML file
+        f.write(f'<tr><td>Parameters</td><td>{baseline_lines[0]}</td><td>{benchmark_lines[0]}</td></tr>\n')
+        f.write(f'<tr><td>Commit ID</td><td>{baseline_lines[1]}</td><td>{benchmark_lines[1]}</td></tr>\n')
+        f.write(f'<tr><td>Commit Date</td><td>{baseline_lines[2]}</td><td>{benchmark_lines[2]}</td></tr>\n')
+        f.write(f'<tr><td>Branch</td><td>{baseline_lines[3]}</td><td>{benchmark_lines[3]}</td></tr>\n')
+
         # For each line in the baseline and benchmark files
-        for baseline_line, benchmark_line in zip(baseline_lines, benchmark_lines):
+        for baseline_line, benchmark_line in zip(baseline_lines[4:], benchmark_lines[4:]):
             # If the line starts with a space, it's a test result line
             if baseline_line.startswith('  '):
                 # Extract the test name, the time per operation, and the number of operations done
