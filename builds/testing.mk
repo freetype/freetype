@@ -2,7 +2,7 @@
 FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_BIN = $(OBJ_DIR)/bench.o
-FTBENCH_FLAG = -c 50
+FTBENCH_FLAG ?= -c 200
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE = $(addprefix $(FTBENCH_DIR)/baseline/, $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(FTBENCH_DIR)/benchmark/, $(notdir $(FONTS:.ttf=.txt)))
