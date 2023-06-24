@@ -76,7 +76,7 @@ variables:
 
 
 # Format of job names:
-# <OS> <Build-Tool> <Build-Params> <Architecture> 
+# <OS> <Build-Tool> <Build-Params> <Architecture>
 
 
 # Windows jobs.

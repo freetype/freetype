@@ -1,4 +1,4 @@
-CHANGES BETWEEN 2.13.0 and 2.13.1 (2023-XXX-XX)
+CHANGES BETWEEN 2.13.0 and 2.13.1 (2023-Jun-24)
 
   I. MISCELLANEOUS
 
@@ -7,6 +7,33 @@ CHANGES BETWEEN 2.13.0 and 2.13.1 (2023-XXX-XX)
 
   - A new load flag `FT_LOAD_NO_SVG` to make FreeType ignore glyphs in
     an 'SVG ' table.
+
+  - New  function  `FT_GlyphSlot_AdjustWeight`  to  adjust  the  glyph
+    weight either  horizontally or  vertically.  This  is part  of the
+    `ftsynth.h` header file, which is  still considered to be in alpha
+    stage.
+
+  - TrueType interpreter  version 38 (also known  as 'Infinality') has
+    been deactivated; the value  of `TT_INTERPRETER_VERSION_38` is now
+    the same as `TT_INTERPRETER_VERSION_40`.
+
+  - Updated OpenVMS support.
+
+  - The  base  API  documentation  has  been  modularized  for  easier
+    handling.
+
+  - Switching named instances on and  off in Variation Fonts was buggy
+    if the design coordinates didn't change.
+
+  - `ftbench`  has a  new  command-line option  `-a`  to apply  design
+    coordinates.
+
+  - `ftview` can now flip SVG rendering on and off using the 'Z' key.
+
+  - In  `ftmulti` it  is  now possible  to toggle  the  fill rule  and
+    overlap flag  used for  rendering glyphs using  the 'F3'  and 'F4'
+    keys,  respectively.   Toggling  the anti-aliased  mode  has  been
+    changed to the 'TAB' key.
 
 
 ======================================================================

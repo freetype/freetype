@@ -199,7 +199,7 @@ which isn't supported yet please send a mail too.
     defined in the OpenType specification 1.6 and newer.
 
 [7] `The Type 1 GX Font Format' (dated 1995-09-27)  was distributed in
-    Apple Developer CD-ROM in those days.  The content of `TYP1' table 
+    Apple Developer CD-ROM in those days.  The content of `TYP1' table
     is a PostScript Type 1 font without the eexec encryption.  Current
     versions of FreeType don't not support this format,  but FontForge
     can load it.

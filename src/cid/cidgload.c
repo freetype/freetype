@@ -92,7 +92,7 @@
       *off1_p = off1;
     if ( off2_p )
       *off2_p = off2;
-  
+
     if ( fd_select >= cid->num_dicts )
     {
       /*
@@ -147,7 +147,7 @@
       if ( need_frame_exit )
         FT_FRAME_EXIT();
 
-    return error; 
+    return error;
   }
 
 
