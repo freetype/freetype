@@ -1153,7 +1153,7 @@
         goto Exit;
       }
       af_latin_metrics_check_digits( metrics, face );
-      
+
       af_reverse_character_map_new( face, &metrics->root.reverse_charmap, face->memory );
     }
 
@@ -2745,13 +2745,25 @@
   }
 
 
-void af_glyph_hints_apply_adjustments(AF_GlyphHints hints, AF_Dimension dim, FT_Int glyph_index, AF_ReverseCharacterMap reverse_charmap) {
-  if ( dim != AF_DIMENSION_VERT ) {
+#undef  FT_COMPONENT
+#define FT_COMPONENT  afadjust
+
+void
+af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
+                                                      AF_Dimension dim,
+                                                      FT_Int glyph_index,
+                                                      AF_ReverseCharacterMap reverse_charmap )
+{
+  if ( dim != AF_DIMENSION_VERT )
+  {
     return;
   }
-  if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_ONE_ON_ONE &&
-      hints->num_contours == 2 ) {
-    
+
+  if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP
+       && hints->num_contours >= 2 )
+  {
+    FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: Applying vertical adjustment: AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP\n" ));
+
     /* Figure out which contout is the higher one by finding the one */
     /* with the highest minimum y value */
 
@@ -2759,22 +2771,27 @@ void af_glyph_hints_apply_adjustments(AF_GlyphHints hints, AF_Dimension dim, FT_
     FT_Pos highest_min_y = 0;
     FT_Pos current_min_y = 0;
 
-    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ ) {
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
       AF_Point point = hints->contours[contour];
       AF_Point first_point = point;
-      if ( point == NULL ) { /*TODO: is this necessary?*/
+      if ( point == NULL )
+      { /*TODO: is this necessary?*/
         continue;
       }
       current_min_y = point->y;
 
-      do {
-        if ( point->y < current_min_y ) {
+      do
+      {
+        if ( point->y < current_min_y )
+        {
           current_min_y = point->y;
         }
         point = point->next;
       } while ( point != first_point );
 
-      if ( highest_contour == -1 || current_min_y > highest_min_y ) {
+      if ( highest_contour == -1 || current_min_y > highest_min_y )
+      {
         highest_min_y = current_min_y;
         highest_contour = contour;
       }
@@ -2785,41 +2802,56 @@ void af_glyph_hints_apply_adjustments(AF_GlyphHints hints, AF_Dimension dim, FT_
     /* contour, bump the high contour up until the distance is one pixel */
 
     FT_Int adjustment_amount = 0;
-    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ ) {
-      if (contour == highest_contour) {
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
+      if ( contour == highest_contour )
+      {
         continue;
       }
       AF_Point point = hints->contours[contour];
       AF_Point first_point = point;
-      if ( point == NULL ) {
+      if ( point == NULL )
+      {
         continue;
       }
       FT_Pos max_y = point->y;
 
-      do {
-        if ( point->y > max_y ) {
+      do
+      {
+        if ( point->y > max_y )
+        {
           max_y = point->y;
         }
         point = point->next;
       } while ( point != first_point );
 
-      if ( max_y >= highest_min_y - 64 ) {
-        adjustment_amount = 64 - (highest_min_y - max_y);
+      if ( max_y >= highest_min_y - 64 )
+      {
+        adjustment_amount = 64 - ( highest_min_y - max_y );
       }
     }
 
+    FT_TRACE4(( "    Pushing top contour %d units up\n", adjustment_amount ));
     if ( adjustment_amount > 0 ) {
       AF_Point point = hints->contours[highest_contour];
       AF_Point first_point = point;
-      if ( point != NULL ) {
-        do {
+      if ( point != NULL )
+      {
+        do
+        {
           point->y += adjustment_amount;
           point = point->next;
         } while ( point != first_point );
       }
     }
+  } else {
+    FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: No vertical adjustment needed\n" ));
   }
 }
+
+#undef  FT_COMPONENT
+#define FT_COMPONENT  aflatin
+
 
 
   /* Compute the snapped width of a given stem, ignoring very thin ones. */
@@ -3689,7 +3721,7 @@ void af_glyph_hints_apply_adjustments(AF_GlyphHints hints, AF_Dimension dim, FT_
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
-        af_glyph_hints_apply_adjustments(hints, (AF_Dimension) dim, glyph_index, metrics->root.reverse_charmap);
+        af_glyph_hints_apply_vertical_separation_adjustments(hints, (AF_Dimension) dim, glyph_index, metrics->root.reverse_charmap);
       }
     }
 
