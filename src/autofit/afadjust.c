@@ -4,7 +4,7 @@
 #include <freetype/internal/ftmemory.h>
 #include <freetype/internal/ftdebug.h>
 
-#define AF_ADJUSTMENT_DATABASE_LENGTH (sizeof(adjustment_database)/sizeof(adjustment_database[0]))
+#define AF_ADJUSTMENT_DATABASE_LENGTH ( sizeof(adjustment_database)/sizeof(adjustment_database[0]) )
 #undef  FT_COMPONENT
 #define FT_COMPONENT  afadjust
 
@@ -38,15 +38,22 @@ adjustment_database[] =
 FT_LOCAL_DEF( const AF_AdjustmentDatabaseEntry* )
 af_adjustment_database_lookup( FT_UInt32 codepoint ) {
     /* Binary search for database entry */
-    FT_UInt low = 0;
-    FT_UInt high = AF_ADJUSTMENT_DATABASE_LENGTH - 1;
-    while (high > low) {
-        FT_UInt mid = (low + high) / 2;
-        if (adjustment_database[mid].codepoint < codepoint) {
+    FT_Int low = 0;
+    FT_Int high = AF_ADJUSTMENT_DATABASE_LENGTH - 1;
+    while ( high > low )
+    {
+        FT_Int mid = ( low + high ) / 2;
+        FT_UInt32 mid_codepoint = adjustment_database[mid].codepoint;
+        if ( mid_codepoint < codepoint )
+        {
             low = mid + 1;
-        } else if (adjustment_database[mid].codepoint > codepoint) {
+        }
+        else if ( mid_codepoint > codepoint )
+        {
             high = mid - 1;
-        } else {
+        }
+        else
+        {
             return &adjustment_database[mid];
         }
     }
@@ -77,19 +84,31 @@ typedef struct AF_ReverseCharacterMap_
     AF_ReverseMapEntry *entries;
 } AF_ReverseCharacterMap_Rec;
 
-FT_LOCAL_DEF(FT_UInt32)
+FT_LOCAL_DEF( FT_UInt32 )
 af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index )
 {
     if ( map == NULL )
     {
         return 0;
     }
-
-    for ( FT_UInt entry = 0; entry < map->length; entry++ )
+    /* Binary search for reverse character map entry */
+    FT_Int low = 0;
+    FT_Int high = map->length - 1;
+    while ( high > low )
     {
-        if ( map->entries[entry].glyph_index == glyph_index )
+        FT_Int mid = ( high + low ) / 2;
+        FT_Int mid_glyph_index = map->entries[mid].glyph_index;
+        if ( glyph_index < mid_glyph_index )
         {
-            return map->entries[entry].codepoint;
+            high = mid - 1;
+        }
+        else if ( glyph_index > mid_glyph_index )
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            return map->entries[mid].codepoint;
         }
     }
 
@@ -131,7 +150,7 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
     FT_Int capacity = 10;
     FT_Int size = 0;
 
-    if ( FT_NEW_ARRAY((*map)->entries, capacity) )
+    if ( FT_NEW_ARRAY( ( *map )->entries, capacity) )
     {
         goto Exit;
     }

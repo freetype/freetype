@@ -2832,7 +2832,8 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
     }
 
     FT_TRACE4(( "    Pushing top contour %d units up\n", adjustment_amount ));
-    if ( adjustment_amount > 0 ) {
+    if ( adjustment_amount > 0 )
+    {
       AF_Point point = hints->contours[highest_contour];
       AF_Point first_point = point;
       if ( point != NULL )
@@ -2844,7 +2845,9 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
         } while ( point != first_point );
       }
     }
-  } else {
+  }
+  else
+  {
     FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: No vertical adjustment needed\n" ));
   }
 }
