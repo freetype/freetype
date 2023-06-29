@@ -6,6 +6,12 @@ reference/
 *.md
 
 !INSTALL.md
+!INSTALL_ANY.md
+!INSTALL_CROSS.md
+!INSTALL_GNU.md
+!INSTALL_MAC.md
+!INSTALL_UNIX.md
+!INSTALL_VMS.md
 
 # MkDocs Config file
 mkdocs.yml
