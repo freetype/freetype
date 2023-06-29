@@ -5,6 +5,8 @@ reference/
 *.html
 *.md
 
+!INSTALL.md
+
 # MkDocs Config file
 mkdocs.yml
 

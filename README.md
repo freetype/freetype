@@ -153,7 +153,7 @@ and accept it fully.
 [Releases]: https://download.savannah.gnu.org/releases/freetype/
 [API]: https://freetype.org/freetype2/docs/reference/index.html
 
-[INSTALL]: ./docs/INSTALL
+[INSTALL]: ./docs/INSTALL.md
 [CHANGES]: ./docs/CHANGES
 [LICENSE]: ./LICENSE.TXT
 [DOCGUIDE]: ./docs/DOCGUIDE
