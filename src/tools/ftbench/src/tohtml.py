@@ -57,9 +57,9 @@ with open(benchmark_file, 'w') as f:
 
                     # Write the test result to the HTML file
                     if baseline_value > benchmark_value:
-                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td style="background-color: green;">{baseline_match.group(3)}</td><td>{benchmark_match.group(3)}</td></tr>\n')
+                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td>{baseline_match.group(3)} &#181;s/op</td><td style="background-color: green;">{benchmark_match.group(3)} &#181;s/op</td></tr>\n')
                     else:
-                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td>{baseline_match.group(3)}</td><td style="background-color: green;">{benchmark_match.group(3)}</td></tr>\n')
+                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td style="background-color: green;">{baseline_match.group(3)} &#181;s/op</td><td>{benchmark_match.group(3)} &#181;s/op</td></tr>\n')
 
         f.write('</table>\n')
 
