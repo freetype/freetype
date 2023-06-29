@@ -121,26 +121,16 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
     /* Search for a unicode charmap */
     /* If there isn't one, create a blank map */
 
-    /*TODO: change this to logic that searches for a "preferred" unicode charmap that maps the most codepoints*/
-    /*see find_unicode_charmap*/
     /*TODO: use GSUB lookups    */
     FT_TRACE4(( "af_reverse_character_map_new: building reverse character map\n" ));
-    FT_CMap unicode_charmap = NULL;
-    for ( FT_UInt i = 0; i < face->num_charmaps; i++ )
-    {
-        if ( face->charmaps[i]->encoding == FT_ENCODING_UNICODE )
-        {
-            unicode_charmap = FT_CMAP( face->charmaps[i] );
-        }
-    }
-
-    if ( unicode_charmap == NULL )
-    {
-        *map = NULL;
-        return FT_Err_Ok;
-    }
 
     FT_Error error;
+    /* backup face->charmap because find_unicode_charmap sets it */
+    FT_CharMap old_charmap = face->charmap;
+    if (( error = find_unicode_charmap( face ) )) {
+        *map = NULL;
+        goto Exit;
+    }
 
     if ( FT_NEW( *map ) )
     {
@@ -160,7 +150,7 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
     for ( FT_Int i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
     {
         FT_UInt32 codepoint = adjustment_database[i].codepoint;
-        FT_Int glyph = unicode_charmap->clazz->char_index(unicode_charmap, codepoint);
+        FT_Int glyph = FT_Get_Char_Index( face, codepoint );
         if ( glyph == 0 )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -183,6 +173,7 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
     ( *map )->length = size;
 
 Exit:
+    face->charmap = old_charmap;
     if ( error )
     {
         FT_TRACE4(( "    error while building reverse character map.  Using blank map.\n" ));
