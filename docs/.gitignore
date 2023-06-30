@@ -12,6 +12,7 @@ reference/
 !INSTALL_MAC.md
 !INSTALL_UNIX.md
 !INSTALL_VMS.md
+!MODIFYING.md
 
 # MkDocs Config file
 mkdocs.yml
