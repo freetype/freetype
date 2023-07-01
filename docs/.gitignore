@@ -15,6 +15,7 @@ reference/
 !INSTALL_ANDROID.md
 !MODIFYING.md
 !DEVELOPING.md
+!Raster_Algorithm.md
 
 # MkDocs Config file
 mkdocs.yml
