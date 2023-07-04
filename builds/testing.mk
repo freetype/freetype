@@ -8,6 +8,8 @@ BASELINE = $(addprefix $(FTBENCH_DIR)/baseline/, $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(FTBENCH_DIR)/benchmark/, $(notdir $(FONTS:.ttf=.txt)))
 BASELINE_DIR = $(FTBENCH_DIR)/baseline/
 BENCHMARK_DIR = $(FTBENCH_DIR)/benchmark/
+BASELINE_INFO = $(BASELINE_DIR)info.txt
+BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
 HTMLCREATOR = $(FTBENCH_DIR)/src/tohtml.py
 HTMLFILE = $(TOP_DIR)/benchmark.html
 
@@ -25,11 +27,11 @@ $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 .PHONY: baseline
 baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 	@echo "Creating baseline..."
+	@echo "$(FTBENCH_FLAG)" > $(BASELINE_INFO)
+	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BASELINE_INFO)
+	@echo "`git -C $(TOP_DIR) show -s --format=%ci HEAD`" >> $(BASELINE_INFO)
+	@echo "`git -C $(TOP_DIR) rev-parse --abbrev-ref HEAD`" >> $(BASELINE_INFO)
 	@$(foreach font, $(FONTS), \
-		echo "$(FTBENCH_FLAG)" > $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git rev-parse HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git show -s --format=%ci HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git rev-parse --abbrev-ref HEAD`" >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
 	@echo "Baseline created."
@@ -38,20 +40,19 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 .PHONY: benchmark
 benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 	@echo "Creating benchmark..."
+	@echo "$(FTBENCH_FLAG)" > $(BENCHMARK_INFO)
+	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BENCHMARK_INFO)
+	@echo "`git -C $(TOP_DIR) show -s --format=%ci HEAD`" >> $(BENCHMARK_INFO)
+	@echo "`git -C $(TOP_DIR) rev-parse --abbrev-ref HEAD`" >> $(BENCHMARK_INFO)
 	@$(foreach font, $(FONTS), \
-		echo "$(FTBENCH_FLAG)" > $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git rev-parse HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git show -s --format=%ci HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-		echo "`git rev-parse --abbrev-ref HEAD`" >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
 	@$(PYTHON) $(HTMLCREATOR)
 	@echo "Benchmark created."
 
-
 .PHONY: clean-benchmark
 clean-benchmark:
 	@echo "Cleaning..."
 	@$(RM) $(FTBENCH_BIN)
-	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE) 
+	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE)
 	@echo "Cleaned."

@@ -3,65 +3,75 @@ import re
 
 # Create the HTML file
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Get the project root directory (assuming the script is inside nested directories in the project root)
 project_root = os.path.abspath(os.path.join(current_dir, '../../../../'))
+benchmark_html = os.path.join(project_root, 'benchmark.html')
 
-# Construct the absolute path to the benchmark file
-benchmark_file = os.path.join(project_root, 'benchmark.html')
+# GitLab URL
+gitlab_url = 'https://gitlab.freedesktop.org/freetype/freetype/-/commit/'
 
-with open(benchmark_file, 'w') as f:
-    f.write('<html>\n')
-    f.write('<head>\n')
-    f.write('<title>Benchmark Results</title>\n')
-    f.write('</head>\n')
-    f.write('<body>\n')
-    f.write('<h1>Benchmark Results</h1>\n')
+# Directories
+baseline_dir = os.path.join(project_root, 'src/tools/ftbench/baseline')
+benchmark_dir = os.path.join(project_root, 'src/tools/ftbench/benchmark')
 
-    # Traverse through the 'baseline directory
-    for filename in os.listdir(os.path.join(project_root, 'src/tools/ftbench/baseline')):
-        baseline_filepath = os.path.join(os.path.join(project_root, 'src/tools/ftbench/baseline'), filename)
-        benchmark_filepath = os.path.join(os.path.join(project_root, 'src/tools/ftbench/benchmark'), filename)
+# Open HTML file for writing
+with open(benchmark_html, 'w') as html_file:
+    html_file.write('<html>\n<head>\n<title>Benchmark Results</title>\n</head>\n<body>\n<h1>Benchmark Results</h1>\n')
 
-        # Process the baseline file
-        with open(baseline_filepath, 'r') as baseline_file:
-            baseline_lines = baseline_file.readlines()
+    # If it's the info file, we want to handle it differently
+    with open(os.path.join(baseline_dir, "info.txt"), 'r') as f:
+        baseline_info = f.readlines()
+    with open(os.path.join(benchmark_dir, "info.txt"), 'r') as f:
+        benchmark_info = f.readlines()
 
-        # Process the benchmark file
-        with open(benchmark_filepath, 'r') as benchmark_file:
-            benchmark_lines = benchmark_file.readlines()
+    # Check if commit ids are the same
+    if baseline_info[1].strip() == benchmark_info[1].strip():
+        html_file.write('<h2 style="color:red;">Warning: Baseline and Benchmark have the same commit ID</h2>\n')
+        
+    baseline_info[1] = '<a href="{}{}">{}</a>\n'.format(gitlab_url, baseline_info[1].strip(), baseline_info[1][:8])
+    
+    benchmark_info[1] = '<a href="{}{}">{}</a>\n'.format(gitlab_url, benchmark_info[1].strip(), benchmark_info[1][:8])
 
-        f.write(f'<h2>Results for {filename}</h2>\n')
-        f.write('<table border="1">\n')
-        f.write('<tr><th>Test</th><th>Baseline</th><th>Benchmark</th></tr>\n')
+    # Write info to HTML
+    html_file.write('<h2>Info</h2>\n')
+    html_file.write('<table border="1">\n')
+    html_file.write('<tr><th>Info</th><th>Baseline</th><th>Benchmark</th></tr>\n')
+    info_list = ['Parameters', 'Commit ID', 'Commit Date', 'Branch']
+    for info, baseline_line, benchmark_line in zip(info_list, baseline_info, benchmark_info):
+        html_file.write('<tr><td>{}</td><td>{}</td><td>{}</td></tr>\n'.format(info, baseline_line.strip(), benchmark_line.strip()))
+    html_file.write('</table><br/>\n')
 
-        # Write the meta-data to the HTML file
-        f.write(f'<tr><td>Parameters</td><td>{baseline_lines[0]}</td><td>{benchmark_lines[0]}</td></tr>\n')
-        f.write(f'<tr><td>Commit ID</td><td>{baseline_lines[1]}</td><td>{benchmark_lines[1]}</td></tr>\n')
-        f.write(f'<tr><td>Commit Date</td><td>{baseline_lines[2]}</td><td>{benchmark_lines[2]}</td></tr>\n')
-        f.write(f'<tr><td>Branch</td><td>{baseline_lines[3]}</td><td>{benchmark_lines[3]}</td></tr>\n')
+    # Traverse through the 'baseline' directory
+    for filename in os.listdir(baseline_dir):
+        if filename != 'info.txt':
+            # If it's not the info file, it's a font file
+            fontname = filename.split('.')[0]
+            with open(os.path.join(baseline_dir, filename), 'r') as f:
+                baseline_results = f.readlines()
+            with open(os.path.join(benchmark_dir, filename), 'r') as f:
+                benchmark_results = f.readlines()
 
-        # For each line in the baseline and benchmark files
-        for baseline_line, benchmark_line in zip(baseline_lines[4:], benchmark_lines[4:]):
-            # If the line starts with a space, it's a test result line
-            if baseline_line.startswith('  '):
-                # Extract the test name, the time per operation, and the number of operations done
-                baseline_match = re.match(r'  (\w+(\s\(\w+\))?)\s+(\d+\.\d+)\s', baseline_line)
-                benchmark_match = re.match(r'  (\w+(\s\(\w+\))?)\s+(\d+\.\d+)\s', benchmark_line)
+            # Write results to HTML
+            html_file.write('<h2>Results for {}</h2>\n'.format(fontname))
+            html_file.write('<table border="1">\n')
+            html_file.write('<tr><th> Test </th><th> Baseline </th><th> Benchmark </th><th> Difference </th></tr>\n')
 
-                # If the line could be parsed
-                if baseline_match and benchmark_match:
-                    # Check which value is higher
-                    baseline_value = float(baseline_match.group(3))
-                    benchmark_value = float(benchmark_match.group(3))
+            for baseline_line, benchmark_line in zip(baseline_results, benchmark_results):
+                if baseline_line.startswith('  '):
+                    baseline_match = re.match(r'  (\w+(\s\(\w+\))?)\s+(\d+\.\d+)\s', baseline_line)
+                    benchmark_match = re.match(r'  (\w+(\s\(\w+\))?)\s+(\d+\.\d+)\s', benchmark_line)
 
-                    # Write the test result to the HTML file
-                    if baseline_value > benchmark_value:
-                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td>{baseline_match.group(3)} &#181;s/op</td><td style="background-color: green;">{benchmark_match.group(3)} &#181;s/op</td></tr>\n')
-                    else:
-                        f.write(f'<tr><td>{baseline_match.group(1)}</td><td style="background-color: green;">{baseline_match.group(3)} &#181;s/op</td><td>{benchmark_match.group(3)} &#181;s/op</td></tr>\n')
+                    if baseline_match and benchmark_match:
+                        baseline_value = float(baseline_match.group(3))
+                        benchmark_value = float(benchmark_match.group(3))
 
-        f.write('</table>\n')
+                        # Calculate the percentage difference
+                        percentage_diff =  ((baseline_value - benchmark_value) / baseline_value) * 100
 
-    f.write('</body>\n')
-    f.write('</html>\n')
+                        if baseline_value > benchmark_value:
+                            html_file.write('<tr><td>{}</td><td>{:.2f}\tus/op</td><td style="background-color: green;">{:.2f}\tus/op</td><td>{:.2f}%</td></tr>\n'.format(baseline_match.group(1), baseline_value, benchmark_value, percentage_diff))
+                        else:
+                            html_file.write('<tr><td>{}</td><td>{:.2f}\tus/op</td><td>{:.2f}\tus/op</td><td>{:.2f}%</td></tr>\n'.format(baseline_match.group(1), baseline_value, benchmark_value, percentage_diff))
+
+            html_file.write('</table><br/>\n')
+
+    html_file.write('<center>Freetype Benchmark</body>\n</html>\n')
