@@ -9,14 +9,17 @@ FT_BEGIN_HEADER
 /*stacked vertically merge, even though they should be separate*/
 typedef enum AF_VerticalSeparationAdjustmentType_
 {
-    AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP,
     /*This means that the hinter should find the topmost contour and push it up until its lowest point is 1 pixel*/
     /*above the highest point not part of that contour.*/
+    AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP,
+
+    /*This is the opposite direction.  The hinter should find the bottommost contour*/
+    /*And push it down until there is a 1 pixel gap*/
+    AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN,
+
     AF_VERTICAL_ADJUSTMENT_NONE
 
-    /*others will be needed, such as the case where the lower contour should be moved in the adjustment instead of the upper one*/
-    /*or umlats, where there are 2 contours which should be moved together*/
-    /*and a way of handling A and O, where the letter consists of 2 contours*/
+    /*others will be needed, such as umlats, where there are 2 contours which should be moved together*/
 } AF_VerticalSeparationAdjustmentType;
 
 typedef struct AF_AdjustmentDatabaseEntry_
