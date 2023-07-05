@@ -26,6 +26,7 @@ $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 # Create a baseline
 .PHONY: baseline
 baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
+	@$(RM) -f $(BASELINE)
 	@echo "Creating baseline..."
 	@echo "$(FTBENCH_FLAG)" > $(BASELINE_INFO)
 	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BASELINE_INFO)
@@ -39,6 +40,7 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 # Benchmark and compare to baseline
 .PHONY: benchmark
 benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
+	@$(RM) -f $(BENCHMARK) $(HTMLFILE)
 	@echo "Creating benchmark..."
 	@echo "$(FTBENCH_FLAG)" > $(BENCHMARK_INFO)
 	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BENCHMARK_INFO)
