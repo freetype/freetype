@@ -43,12 +43,17 @@ with open(benchmark_html, 'w') as html_file:
     # Traverse through the 'baseline' directory
     for filename in os.listdir(baseline_dir):
         if filename != 'info.txt':
-            # If it's not the info file, it's a font file
-            fontname = filename.split('.')[0]
+            
             with open(os.path.join(baseline_dir, filename), 'r') as f:
                 baseline_results = f.readlines()
             with open(os.path.join(benchmark_dir, filename), 'r') as f:
                 benchmark_results = f.readlines()
+                
+            # Get font name from within the .txt file
+            for line in baseline_results:
+                if line.startswith("ftbench results for font"):
+                    fontname = line.split('/')[-1].strip("'")[:-2]
+
 
             # Write results to HTML
             html_file.write('<h2>Results for {}</h2>\n'.format(fontname))

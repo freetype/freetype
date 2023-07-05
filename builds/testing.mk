@@ -3,6 +3,7 @@ FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_BIN = $(OBJ_DIR)/bench.o
 FTBENCH_FLAG ?= -c 200
+INCLUDES = -I$(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE = $(addprefix $(FTBENCH_DIR)/baseline/, $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(FTBENCH_DIR)/benchmark/, $(notdir $(FONTS:.ttf=.txt)))
@@ -15,13 +16,12 @@ HTMLFILE = $(TOP_DIR)/benchmark.html
 
 # Create directories for baseline and benchmark
 $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
-	@echo "Creating directory..."
 	@mkdir -p $@
 
 # Build ftbench
 $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 	@echo "Building ftbench..."
-	@$(CC) -I$(TOP_DIR)/include -lfreetype $< -o $@
+	$(CC) $(INCLUDES) $< -lfreetype -o $@
 
 # Create a baseline
 .PHONY: baseline
