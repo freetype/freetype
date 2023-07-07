@@ -820,7 +820,7 @@
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
 
     /* Reset graphics state. */
-    loader->exec->GS = loader->size->GS;
+    exec->GS = loader->size->GS;
 
     /* XXX: UNDOCUMENTED! Hinting instructions of a composite glyph */
     /*      completely refer to the (already) hinted subglyphs.     */
@@ -860,7 +860,7 @@
       exec->is_composite = is_composite;
       exec->pts          = *zone;
 
-      error = TT_Run_Context( loader->exec );
+      error = TT_Run_Context( exec );
       if ( error && exec->pedantic_hinting )
         return error;
 
