@@ -5,14 +5,14 @@ FTBENCH_BIN = $(OBJ_DIR)/bench.o
 FTBENCH_FLAG ?= -c 200
 INCLUDES = -I$(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
-BASELINE = $(addprefix $(FTBENCH_DIR)/baseline/, $(notdir $(FONTS:.ttf=.txt)))
-BENCHMARK = $(addprefix $(FTBENCH_DIR)/benchmark/, $(notdir $(FONTS:.ttf=.txt)))
-BASELINE_DIR = $(FTBENCH_DIR)/baseline/
-BENCHMARK_DIR = $(FTBENCH_DIR)/benchmark/
+BASELINE_DIR = $(OBJ_DIR)/baseline/
+BENCHMARK_DIR = $(OBJ_DIR)/benchmark/
+BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
+BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BASELINE_INFO = $(BASELINE_DIR)info.txt
 BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
 HTMLCREATOR = $(FTBENCH_DIR)/src/tohtml.py
-HTMLFILE = $(TOP_DIR)/benchmark.html
+HTMLFILE = $(OBJ_DIR)/benchmark.html
 
 # Create directories for baseline and benchmark
 $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
@@ -21,7 +21,7 @@ $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
 # Build ftbench
 $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 	@echo "Building ftbench..."
-	$(CC) $(INCLUDES) $< -lfreetype -o $@
+	@$(CC) $(INCLUDES) $< -lfreetype -o $@
 
 # Create a baseline
 .PHONY: baseline
@@ -49,7 +49,7 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 	@$(foreach font, $(FONTS), \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
 	)
-	@$(PYTHON) $(HTMLCREATOR)
+	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
 	@echo "Benchmark created."
 
 .PHONY: clean-benchmark
