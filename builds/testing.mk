@@ -22,6 +22,7 @@ $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
 $(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
 	@echo "Building ftbench..."
 	@$(CC) $(INCLUDES) $< -lfreetype -o $@
+	@echo "Built."
 
 # Create a baseline
 .PHONY: baseline
@@ -32,10 +33,16 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BASELINE_INFO)
 	@echo "`git -C $(TOP_DIR) show -s --format=%ci HEAD`" >> $(BASELINE_INFO)
 	@echo "`git -C $(TOP_DIR) rev-parse --abbrev-ref HEAD`" >> $(BASELINE_INFO)
-	@$(foreach font, $(FONTS), \
-		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BASELINE_DIR)$(notdir $(font:.ttf=.txt)); \
-	)
-	@echo "Baseline created."
+	@fonts=($(FONTS)); \
+	total_fonts=$${#fonts[@]}; \
+	step=0; \
+	for font in $${fonts[@]}; do \
+		step=$$((step+1)); \
+		percent=$$((step * 100 / total_fonts)); \
+		printf "\rProcessing %d%%..." $$percent; \
+		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BASELINE_DIR)$$(basename $$font .ttf).txt; \
+	done
+	@echo "\nBaseline created."
 
 # Benchmark and compare to baseline
 .PHONY: benchmark
@@ -46,11 +53,17 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 	@echo "`git -C $(TOP_DIR) rev-parse HEAD`" >> $(BENCHMARK_INFO)
 	@echo "`git -C $(TOP_DIR) show -s --format=%ci HEAD`" >> $(BENCHMARK_INFO)
 	@echo "`git -C $(TOP_DIR) rev-parse --abbrev-ref HEAD`" >> $(BENCHMARK_INFO)
-	@$(foreach font, $(FONTS), \
-		$(FTBENCH_BIN) $(FTBENCH_FLAG) $(font) >> $(BENCHMARK_DIR)$(notdir $(font:.ttf=.txt)); \
-	)
+	@fonts=($(FONTS)); \
+	total_fonts=$${#fonts[@]}; \
+	step=0; \
+	for font in $${fonts[@]}; do \
+		step=$$((step+1)); \
+		percent=$$((step * 100 / total_fonts)); \
+		printf "\rProcessing %d%%..." $$percent; \
+		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BENCHMARK_DIR)$$(basename $$font .ttf).txt; \
+	done
 	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
-	@echo "Benchmark created."
+	@echo "\nBenchmark created."
 
 .PHONY: clean-benchmark
 clean-benchmark:
