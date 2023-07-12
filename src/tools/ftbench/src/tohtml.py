@@ -86,13 +86,13 @@ with open(benchmark_html, 'w') as html_file:
             # Write results to HTML
             html_file.write('<h2>Results for {}</h2>\n'.format(fontname))
             html_file.write('<table border="1">\n')
-            html_file.write('<tr><th> Test </th><th><a href="{}.txt">Baseline</a> (&#181;s/op)</th><th> <a href="{}.txt">Benchmark</a> (&#181;s/op)</th><th> Difference (%)</th></tr>\n'.format(os.path.join(baseline_dir,fontname[:-4]),os.path.join(benchmark_dir,fontname[:-4])))
+            html_file.write('<tr><th>Test</th><th>N</th><th><a href="{}.txt">Baseline</a> (ms)</th><th> <a href="{}.txt">Benchmark</a> (ms)</th><th>Difference (%)</th></tr>\n'.format(os.path.join(baseline_dir,fontname[:-4]),os.path.join(benchmark_dir,fontname[:-4])))
             
             for baseline_line, benchmark_line in zip(baseline_results, benchmark_results):
                 if baseline_line.startswith('  '):
-                    baseline_match = re.match(r'  (.*\S)\s+(\d+\.\d+)\s', baseline_line)
+                    baseline_match = re.match(r'\s+(.*?)\s+(\d+\.\d+)\s+ms\s+(\d+)\s', baseline_line)
 
-                    benchmark_match = re.match(r'  (.*\S)\s+(\d+\.\d+)\s', benchmark_line)
+                    benchmark_match = re.match(r'\s+(.*?)\s+(\d+\.\d+)\s+ms\s+(\d+)\s', benchmark_line)
 
                     if baseline_match and benchmark_match:
                         baseline_value = float(baseline_match.group(2))
@@ -100,11 +100,20 @@ with open(benchmark_html, 'w') as html_file:
 
                         # Calculate the percentage difference
                         percentage_diff =  ((baseline_value - benchmark_value) / baseline_value) * 100
+                        
+                        baseline_n = baseline_match.group(3)
+                        benchmark_n = benchmark_match.group(3)
+                        
+                        if(baseline_n == benchmark_n):
+                            total_n = baseline_n
+                        else:
+                            total_n = baseline_n + " / " + benchmark_n
+                            
 
                         if baseline_value > benchmark_value:
-                            html_file.write('<tr><td class="col1">{}</td><td class="lowlight">{:.2f}</td><td class="highlight">{:.2f}</td><td>{:.2f}</td></tr>\n'.format(baseline_match.group(1), baseline_value, benchmark_value, percentage_diff))
+                            html_file.write('<tr><td class="col1">{}</td><td>{}</td><td class="lowlight">{:.2f}</td><td class="highlight">{:.2f}</td><td>{:.2f}</td></tr>\n'.format(baseline_match.group(1), total_n,baseline_value, benchmark_value, percentage_diff))
                         else:
-                            html_file.write('<tr><td class="col1">{}</td><td class="highlight">{:.2f}</td><td class="lowlight">{:.2f}</td><td>{:.2f}</td></tr>\n'.format(baseline_match.group(1), baseline_value, benchmark_value, percentage_diff))
+                            html_file.write('<tr><td class="col1">{}</td><td>{}</td><td class="highlight">{:.2f}</td><td class="lowlight">{:.2f}</td><td>{:.2f}</td></tr>\n'.format(baseline_match.group(1), total_n,baseline_value, benchmark_value, percentage_diff))
 
             html_file.write('</table><br/>\n')
 
