@@ -1,7 +1,8 @@
 # Variables
 FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
-FTBENCH_BIN = $(OBJ_DIR)/bench.o
+FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
+FTBENCH_BIN = $(OBJ_DIR)/bench
 FTBENCH_FLAG ?= -c 200
 INCLUDES = -I$(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
@@ -18,10 +19,15 @@ HTMLFILE = $(OBJ_DIR)/benchmark.html
 $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
+# Build ftbench.o
+$(FTBENCH_OBJ): $(FTBENCH_SRC)
+	@echo "Building ftbench object..."
+	$(CC) $(INCLUDES) -c $< -o $@
+	
 # Build ftbench
-$(FTBENCH_BIN): $(FTBENCH_SRC) | $(OBJ_DIR)
-	@echo "Building ftbench..."
-	@$(CC) $(INCLUDES) $< -lfreetype -o $@
+$(FTBENCH_BIN): $(FTBENCH_OBJ)
+	@echo "Linking ftbench..."
+	$(LIBTOOL) --mode=link gcc -L$(LIB_DIR) -lfreetype $< -o $@
 	@echo "Built."
 
 # Create a baseline
@@ -68,6 +74,6 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 .PHONY: clean-benchmark
 clean-benchmark:
 	@echo "Cleaning..."
-	@$(RM) $(FTBENCH_BIN)
+	@$(RM) $(FTBENCH_BIN) $(FTBENCH_OBJ)
 	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE)
 	@echo "Cleaned."
