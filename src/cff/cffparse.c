@@ -554,7 +554,7 @@
 
 
   /* read a floating point number, either integer or real */
-  static FT_Fixed
+  FT_LOCAL_DEF( FT_Fixed )
   cff_parse_fixed( CFF_Parser  parser,
                    FT_Byte**   d )
   {
