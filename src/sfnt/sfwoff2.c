@@ -2266,7 +2266,8 @@
     if ( woff2.uncompressed_size > MAX_SFNT_SIZE )
     {
       FT_ERROR(( "Uncompressed font too large.\n" ));
-      return FT_THROW( Array_Too_Large );
+      error = FT_THROW( Array_Too_Large );
+      goto Exit;
     }
 
     /* Allocate memory for uncompressed table data. */
