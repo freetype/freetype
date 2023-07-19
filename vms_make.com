@@ -74,16 +74,26 @@ $!
 $!
 $! Pull in external libraries
 $!
+$ have_png = f$search("sys$library:libpng.olb/lib") .nes. ""
+$ have_bz2 = f$search("sys$library:libbz2.olb") .nes. ""
+$ have_z = f$search("sys$library:libpng.olb") .nes. ""
+$ have_harfbuzz = f$search("") .nes. "sys$library:libharfbuzz.olb/lib"
+$!
 $ create libs.opt
 $ open/write libsf libs.opt
-$ write libsf "sys$library:libpng.olb/lib"
-$ write libsf "sys$library:libbz2.olb/lib"
-$ write libsf "sys$library:libz.olb/lib"
+$ if ( have_harfbuzz ) then write libsf "sys$library:libharfbuzz.olb/lib"
+$ if ( have_png ) then write libsf "sys$library:libpng.olb/lib"
+$ if ( have_bz2 ) then write libsf "sys$library:libbz2.olb/lib"
+$ if ( have_z ) then write libsf "sys$library:libz.olb/lib"
 $ close libsf
 $!
 $! Create objects
 $!
-$ libdefs = "FT2_BUILD_LIBRARY,FT_CONFIG_OPTION_OLD_INTERNALS,FT_CONFIG_OPTION_USE_BZIP2=1,FT_CONFIG_OPTION_USE_PNG=1,FT_CONFIG_OPTION_SYSTEM_ZLIB=1"
+$ libdefs = "FT2_BUILD_LIBRARY,FT_CONFIG_OPTION_OLD_INTERNALS"
+$ if ( have_bz2 ) then libdef=libdefs+",FT_CONFIG_OPTION_USE_BZIP2=1"
+$ if ( have_png ) then libdef=libdefs+",FT_CONFIG_OPTION_USE_PNG=1"
+$ if ( have_z ) then libdef=libdefs+",FT_CONFIG_OPTION_USE_ZLIB=1"
+$ if ( have_harfbuzz ) then libdef=libdefs+",FT_CONFIG_OPTION_USE_HARFBUZZ=1"
 $ if libdefs .nes. ""
 $ then
 $   ccopt = ccopt + "/define=(" + f$extract(0,f$length(libdefs)-1,libdefs) + ")"
