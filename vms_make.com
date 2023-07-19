@@ -268,10 +268,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/list/show=all/include=([],[--.include],[--.src.base])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
+	cc$(CFLAGS)/warn=noinfo/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
 	$(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -310,10 +310,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.autofit])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -351,10 +351,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -427,7 +427,7 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.bdf])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
 	cc$(CFLAGS)/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
@@ -468,7 +468,7 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cache])/nowarn
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
 	cc$(CFLAGS)/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
@@ -512,10 +512,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cff])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -553,10 +553,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cid])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -594,10 +594,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.gxvalid])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -638,10 +638,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.gzip])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -684,10 +684,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.bzip2])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -728,10 +728,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.lzw])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -769,10 +769,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.otvalid])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -822,10 +822,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pcf])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -863,10 +863,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pfr])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -904,10 +904,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psaux])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -945,10 +945,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psnames])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -986,10 +986,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psnames])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1027,10 +1027,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.raster])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1068,10 +1068,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.sfnt])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1109,7 +1109,7 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.smooth])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
 	cc$(CFLAGS)/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
@@ -1150,7 +1150,7 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.svg])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
 	cc$(CFLAGS)/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
@@ -1191,10 +1191,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.truetype])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1232,10 +1232,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type1])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1275,10 +1275,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type1])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1318,10 +1318,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type42])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
@@ -1359,10 +1359,10 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.winfonts])
 
 .c.obj :
-	cc$(CFLAGS)/point=32/list/show=all $(MMS$TARGET_NAME).c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=disable=(MAYLOSEDATA3)/point=64\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64\
 	/obj=$(MMS$TARGET_NAME)_64.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 
