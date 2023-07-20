@@ -3,8 +3,8 @@ FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
 FTBENCH_BIN = $(OBJ_DIR)/bench
-FTBENCH_FLAG ?= -c 200
-INCLUDES = -I$(TOP_DIR)/include
+FTBENCH_FLAG ?= -c 2000
+INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE_DIR = $(OBJ_DIR)/baseline/
 BENCHMARK_DIR = $(OBJ_DIR)/benchmark/
@@ -15,19 +15,40 @@ BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
 HTMLCREATOR = $(FTBENCH_DIR)/src/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
+FT_INCLUDES := $(OBJ_BUILD) \
+                 $(INCLUDES) 
+
+COMPILE = $(CC) $(ANSIFLAGS) \
+                  $(INCLUDES:%=$I%) \
+                  $(CFLAGS)
+
+ifneq ($(findstring -pedantic,$(COMPILE)),)
+    ifeq ($(findstring ++,$(CC)),)
+      COMPILE += -std=c99
+    endif
+endif
+
+FTLIB := $(LIB_DIR)/$(LIBRARY).$A
+
+override CC = $(CCraw)
+LINK_CMD    = $(LIBTOOL) --mode=link $(CC) $(LDFLAGS)
+
+EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
+
+INCLUDES := $(subst /,$(COMPILER_SEP),$(FT_INCLUDES))
+
 # Create directories for baseline and benchmark
 $(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
-# Build ftbench.o
-$(FTBENCH_OBJ): $(FTBENCH_SRC)
-	@echo "Building ftbench object..."
-	$(CC) $(INCLUDES) -c $< -o $@
-	
+$(FTBENCH_OBJ): $(FTBENCH_SRC) 
+	  $(COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<) $(EXTRAFLAGS)
+	  @echo "Object created."
+
 # Build ftbench
-$(FTBENCH_BIN): $(FTBENCH_OBJ)
+$(FTBENCH_BIN): $(FTBENCH_OBJ) 
 	@echo "Linking ftbench..."
-	$(LIBTOOL) --mode=link gcc -L$(LIB_DIR) -lfreetype $< -o $@
+	$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(FTLIB)
 	@echo "Built."
 
 # Create a baseline
@@ -76,4 +97,5 @@ clean-benchmark:
 	@echo "Cleaning..."
 	@$(RM) $(FTBENCH_BIN) $(FTBENCH_OBJ)
 	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE)
-	@echo "Cleaned."
+	@echo "Cleaned"
+
