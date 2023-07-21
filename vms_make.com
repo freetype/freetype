@@ -74,10 +74,10 @@ $!
 $!
 $! Pull in external libraries
 $!
-$ have_png = f$search("sys$library:libpng.olb/lib") .nes. ""
+$ have_png = f$search("sys$library:libpng.olb") .nes. ""
 $ have_bz2 = f$search("sys$library:libbz2.olb") .nes. ""
-$ have_z = f$search("sys$library:libpng.olb") .nes. ""
-$ have_harfbuzz = f$search("") .nes. "sys$library:libharfbuzz.olb/lib"
+$ have_z = f$search("sys$library:libz.olb") .nes. ""
+$ have_harfbuzz = f$search("sys$library:libharfbuzz.olb") .nes. ""
 $!
 $ create libs.opt
 $ open/write libsf libs.opt
