@@ -2,7 +2,7 @@
 FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
-FTBENCH_BIN = $(OBJ_DIR)/bench
+FTBENCH_BIN = $(OBJ_DIR)/bench$E
 FTBENCH_FLAG ?= -c 2000
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
@@ -37,11 +37,9 @@ endif
 FTLIB := $(LIB_DIR)/$(LIBRARY).$A
 
 ifeq ($(PLATFORM),unix)
-    override CC = $(CCraw)
-    LINK_CMD    = $(LIBTOOL) --mode=link $(CC) \
+    LINK_CMD    = $(LIBTOOL) --mode=link $(CCraw) \
                   $(subst /,$(COMPILER_SEP),$(LDFLAGS))
-    LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) \
-                  $(FT_DEMO_LDFLAGS)
+    LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) 
 else
     LINK_CMD = $(CC) $(subst /,$(COMPILER_SEP),$(LDFLAGS))
     ifeq ($(PLATFORM),unixdev)
@@ -54,9 +52,6 @@ else
     else
       LINK_LIBS = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE))
     endif
-endif
-ifeq ($(OS),Windows_NT)
-    LINK_LIBS += -lgdiplus
 endif
 
 ifeq ($(OS),Windows_NT)
