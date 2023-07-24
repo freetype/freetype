@@ -22,6 +22,12 @@ COMPILE = $(CC) $(ANSIFLAGS) \
                   $(INCLUDES:%=$I%) \
                   $(CFLAGS)
 
+ifeq ($(PLATFORM),unix)
+    ifdef DEVEL_DIR
+      PLATFORM := unixdev
+    endif
+endif
+
 ifneq ($(findstring -pedantic,$(COMPILE)),)
     ifeq ($(findstring ++,$(CC)),)
       COMPILE += -std=c99
@@ -30,15 +36,45 @@ endif
 
 FTLIB := $(LIB_DIR)/$(LIBRARY).$A
 
-override CC = $(CCraw)
-LINK_CMD    = $(LIBTOOL) --mode=link $(CC) $(LDFLAGS)
+ifeq ($(PLATFORM),unix)
+    override CC = $(CCraw)
+    LINK_CMD    = $(LIBTOOL) --mode=link $(CC) \
+                  $(subst /,$(COMPILER_SEP),$(LDFLAGS))
+    LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) \
+                  $(FT_DEMO_LDFLAGS)
+else
+    LINK_CMD = $(CC) $(subst /,$(COMPILER_SEP),$(LDFLAGS))
+    ifeq ($(PLATFORM),unixdev)
+      LINK_LIBS := $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) \
+                   -lm -lrt -lz -lbz2 -lpthread
+      LINK_LIBS += $(shell pkg-config --libs libpng)
+      LINK_LIBS += $(shell pkg-config --libs harfbuzz)
+      LINK_LIBS += $(shell pkg-config --libs libbrotlidec)
+      LINK_LIBS += $(shell pkg-config --libs librsvg-2.0)
+    else
+      LINK_LIBS = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE))
+    endif
+endif
+ifeq ($(OS),Windows_NT)
+    LINK_LIBS += -lgdiplus
+endif
 
-EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
+ifeq ($(OS),Windows_NT)
+    LINK_LIBS += -lgdiplus
+endif
+
+ifeq ($(PLATFORM),unix)
+    EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
+endif
+
+ifeq ($(PLATFORM),unixdev)
+    EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
+endif
 
 INCLUDES := $(subst /,$(COMPILER_SEP),$(FT_INCLUDES))
 
 # Create directories for baseline and benchmark
-$(OBJ_DIR) $(BASELINE_DIR) $(BENCHMARK_DIR):
+$(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
 $(FTBENCH_OBJ): $(FTBENCH_SRC) 
@@ -48,7 +84,7 @@ $(FTBENCH_OBJ): $(FTBENCH_SRC)
 # Build ftbench
 $(FTBENCH_BIN): $(FTBENCH_OBJ) 
 	@echo "Linking ftbench..."
-	$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(FTLIB)
+	$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
 	@echo "Built."
 
 # Create a baseline
@@ -98,4 +134,3 @@ clean-benchmark:
 	@$(RM) $(FTBENCH_BIN) $(FTBENCH_OBJ)
 	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE)
 	@echo "Cleaned"
-
