@@ -3,7 +3,7 @@ FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
 FTBENCH_BIN = $(OBJ_DIR)/bench$E
-FTBENCH_FLAG ?= -c 2000
+FTBENCH_FLAG ?= -c 500
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE_DIR = $(OBJ_DIR)/baseline/
@@ -73,13 +73,13 @@ $(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
 $(FTBENCH_OBJ): $(FTBENCH_SRC) 
-	  $(COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<) $(EXTRAFLAGS)
-	  @echo "Object created."
+	@$(COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<) $(EXTRAFLAGS)
+	@echo "Object created."
 
 # Build ftbench
 $(FTBENCH_BIN): $(FTBENCH_OBJ) 
 	@echo "Linking ftbench..."
-	$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
+	@$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
 	@echo "Built."
 
 # Create a baseline
