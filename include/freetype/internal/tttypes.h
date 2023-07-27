@@ -1597,13 +1597,6 @@ FT_BEGIN_HEADER
     FT_ULong              horz_metrics_offset;
     FT_ULong              vert_metrics_offset;
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    /* since 2.4.12 */
-    FT_ULong              sph_found_func_flags; /* special functions found */
-                                                /* for this face           */
-    FT_Bool               sph_compatibility_mode;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* since 2.7 */
     FT_ULong              ebdt_start;  /* either `CBDT', `EBDT', or `bdat' */

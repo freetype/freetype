@@ -35,7 +35,6 @@
 #endif
 
 #include "tterrors.h"
-#include "ttsubpix.h"
 
 
   /**************************************************************************
@@ -152,9 +151,6 @@
                   FT_UInt    glyph_index )
   {
     TT_Face    face   = loader->face;
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
-#endif
 
     FT_Error   error;
     FT_Stream  stream = loader->stream;
@@ -182,20 +178,6 @@
     loader->advance      = advance_width;
     loader->top_bearing  = top_bearing;
     loader->vadvance     = advance_height;
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 &&
-         loader->exec                                             )
-    {
-      loader->exec->sph_tweak_flags = 0;
-
-      /* This may not be the right place for this, but it works...  */
-      /* Note that we have to unconditionally load the tweaks since */
-      /* it is possible that glyphs individually switch ClearType's */
-      /* backward compatibility mode on and off.                    */
-      sph_set_tweaks( loader, glyph_index );
-    }
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     /* With the incremental interface, these values are set by  */
@@ -798,8 +780,7 @@
   TT_Hint_Glyph( TT_Loader  loader,
                  FT_Bool    is_composite )
   {
-#if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
-    defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     TT_Face    face   = loader->face;
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 #endif
@@ -887,17 +868,6 @@
     }
 #endif
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-    {
-      if ( exec->sph_tweak_flags & SPH_TWEAK_DEEMBOLDEN )
-        FT_Outline_EmboldenXY( &loader->gloader->current.outline, -24, 0 );
-
-      else if ( exec->sph_tweak_flags & SPH_TWEAK_EMBOLDEN )
-        FT_Outline_EmboldenXY( &loader->gloader->current.outline, 24, 0 );
-    }
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
     return FT_Err_Ok;
   }
 
@@ -960,16 +930,6 @@
     }
 
     {
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-      TT_Face    face   = loader->face;
-      TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
-
-      FT_String*  family         = face->root.family_name;
-      FT_UInt     ppem           = loader->size->metrics->x_ppem;
-      FT_String*  style          = face->root.style_name;
-      FT_UInt     x_scale_factor = 1000;
-#endif
-
       FT_Vector*  vec   = outline->points;
       FT_Vector*  limit = outline->points + n_points;
 
@@ -978,52 +938,6 @@
 
       FT_Bool  do_scale = FALSE;
 
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-      {
-        /* scale, but only if enabled and only if TT hinting is being used */
-        if ( IS_HINTED( loader->load_flags ) )
-          x_scale_factor = sph_test_tweak_x_scaling( face,
-                                                     family,
-                                                     ppem,
-                                                     style,
-                                                     loader->glyph_index );
-        /* scale the glyph */
-        if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 ||
-             x_scale_factor != 1000                         )
-        {
-          x_scale = FT_MulDiv( loader->size->metrics->x_scale,
-                               (FT_Long)x_scale_factor, 1000 );
-          y_scale = loader->size->metrics->y_scale;
-
-          /* compensate for any scaling by de/emboldening; */
-          /* the amount was determined via experimentation */
-          if ( x_scale_factor != 1000 && ppem > 11 )
-          {
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-            FT_Vector*  orig_points = outline->points;
-
-
-            if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
-              outline->points = unrounded;
-#endif
-            FT_Outline_EmboldenXY( outline,
-                                   FT_MulFix( 1280 * ppem,
-                                              1000 - x_scale_factor ),
-                                   0 );
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-            if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
-              outline->points = orig_points;
-#endif
-          }
-          do_scale = TRUE;
-        }
-      }
-      else
-
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
       {
         /* scale the glyph */
@@ -1460,15 +1374,6 @@
 #endif
 
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-    {
-      subpixel_hinting = loader->exec ? loader->exec->subpixel_hinting
-                                      : 0;
-      grayscale        = loader->exec ? loader->exec->grayscale
-                                      : 0;
-    }
-#endif
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
     {
@@ -2277,8 +2182,7 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
     FT_Error   error;
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
-#if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
-    defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     TT_Driver  driver   = (TT_Driver)FT_FACE_DRIVER( glyph->face );
 #endif
 #endif
@@ -2297,20 +2201,6 @@
       FT_Bool         subpixel_hinting_lean;
       FT_Bool         grayscale_cleartype;
 #endif
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-      FT_Bool  subpixel_hinting = FALSE;
-
-#if 0
-      /* not used yet */
-      FT_Bool  compatible_widths;
-      FT_Bool  symmetrical_smoothing;
-      FT_Bool  bgr;
-      FT_Bool  vertical_lcd;
-      FT_Bool  subpixel_positioned;
-      FT_Bool  gray_cleartype;
-#endif
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
       FT_Bool  reexecute = FALSE;
 
@@ -2356,65 +2246,6 @@
       }
 #endif
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-      {
-        subpixel_hinting = FT_BOOL( ( FT_LOAD_TARGET_MODE( load_flags ) !=
-                                      FT_RENDER_MODE_MONO               )  &&
-                                    SPH_OPTION_SET_SUBPIXEL                );
-
-        if ( subpixel_hinting )
-          grayscale = FALSE;
-        else if ( SPH_OPTION_SET_GRAYSCALE )
-        {
-          grayscale        = TRUE;
-          subpixel_hinting = FALSE;
-        }
-        else
-          grayscale = FALSE;
-
-        if ( FT_IS_TRICKY( glyph->face ) )
-          subpixel_hinting = FALSE;
-
-        exec->ignore_x_mode      = subpixel_hinting || grayscale;
-        exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-        if ( exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
-          exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
-
-#if 1
-        exec->compatible_widths     = SPH_OPTION_SET_COMPATIBLE_WIDTHS;
-        exec->symmetrical_smoothing = TRUE;
-        exec->bgr                   = FALSE;
-        exec->vertical_lcd          = FALSE;
-        exec->subpixel_positioned   = TRUE;
-        exec->gray_cleartype        = FALSE;
-#else /* 0 */
-        exec->compatible_widths =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_COMPATIBLE_WIDTHS );
-        exec->symmetrical_smoothing =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_SYMMETRICAL_SMOOTHING );
-        exec->bgr =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_BGR );
-        exec->vertical_lcd =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_VERTICAL_LCD );
-        exec->subpixel_positioned =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_SUBPIXEL_POSITIONED );
-        exec->gray_cleartype =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   TT_LOAD_GRAY_CLEARTYPE );
-#endif /* 0 */
-
-      }
-      else
-
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
         grayscale = FT_BOOL( !subpixel_hinting_lean               &&
@@ -2428,36 +2259,6 @@
       error = TT_Load_Context( exec, face, size );
       if ( error )
         return error;
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
-      {
-        /* a change from mono to subpixel rendering (and vice versa) */
-        /* requires a re-execution of the CVT program                */
-        if ( subpixel_hinting != exec->subpixel_hinting )
-        {
-          FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
-                      " re-executing `prep' table\n" ));
-
-          exec->subpixel_hinting = subpixel_hinting;
-          reexecute              = TRUE;
-        }
-
-        /* a change from mono to grayscale rendering (and vice versa) */
-        /* requires a re-execution of the CVT program                 */
-        if ( grayscale != exec->grayscale )
-        {
-          FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
-                      " re-executing `prep' table\n" ));
-
-          exec->grayscale = grayscale;
-          reexecute       = TRUE;
-        }
-      }
-      else
-
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
       {
 
@@ -2518,14 +2319,6 @@
       if ( exec->GS.instruct_control & 2 )
         exec->GS = tt_default_graphics_state;
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-      /* check whether we have a font hinted for ClearType --           */
-      /* note that this flag can also be modified in a glyph's bytecode */
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 &&
-           exec->GS.instruct_control & 4                            )
-        exec->ignore_x_mode = FALSE;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       /*
        * Toggle backward compatibility according to what font wants, except
@@ -2561,13 +2354,6 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
            !( driver->interpreter_version == TT_INTERPRETER_VERSION_40  &&
               exec->backward_compatibility                              ) &&
-#endif
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-           !( driver->interpreter_version == TT_INTERPRETER_VERSION_38  &&
-              !SPH_OPTION_BITMAP_WIDTHS                                 &&
-              FT_LOAD_TARGET_MODE( loader->load_flags ) !=
-                                                   FT_RENDER_MODE_MONO  &&
-              exec->compatible_widths                                   ) &&
 #endif
            !face->postscript.isFixedPitch                                 )
       {
