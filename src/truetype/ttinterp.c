@@ -3544,8 +3544,6 @@
     rec->opc            = (FT_UInt16)n;
     rec->start          = exc->IP + 1;
     rec->active         = TRUE;
-    rec->inline_delta   = FALSE;
-    rec->sph_fdef_flags = 0x0000;
 
     if ( n > exc->maxFunc )
       exc->maxFunc = (FT_UInt16)n;
