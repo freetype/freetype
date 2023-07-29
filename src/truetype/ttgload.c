@@ -852,21 +852,20 @@
 
 #endif
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     /* Save possibly modified glyph phantom points unless in v40 backward  */
     /* compatibility mode, where no movement on the x axis means no reason */
     /* to change bearings or advance widths.                               */
-    if ( !( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-            exec->backward_compatibility ) )
-    {
-#endif
-      loader->pp1 = zone->cur[zone->n_points - 4];
-      loader->pp2 = zone->cur[zone->n_points - 3];
-      loader->pp3 = zone->cur[zone->n_points - 2];
-      loader->pp4 = zone->cur[zone->n_points - 1];
+
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    }
+    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
+         exec->backward_compatibility )
+      return FT_Err_Ok;
 #endif
+
+    loader->pp1 = zone->cur[zone->n_points - 4];
+    loader->pp2 = zone->cur[zone->n_points - 3];
+    loader->pp3 = zone->cur[zone->n_points - 2];
+    loader->pp4 = zone->cur[zone->n_points - 1];
 
     return FT_Err_Ok;
   }
@@ -1365,36 +1364,31 @@
   static void
   tt_loader_set_pp( TT_Loader  loader )
   {
-    FT_Bool  subpixel_hinting = 0;
-    FT_Bool  grayscale        = 0;
-    FT_Bool  use_aw_2         = 0;
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    TT_Driver driver = (TT_Driver)FT_FACE_DRIVER( loader->face );
-#endif
-
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
-    {
-      subpixel_hinting = loader->exec ? loader->exec->subpixel_hinting_lean
-                                      : 0;
-      grayscale        = loader->exec ? loader->exec->grayscale_cleartype
-                                      : 0;
-    }
-#endif
-
-    use_aw_2 = FT_BOOL( subpixel_hinting && grayscale );
-
     loader->pp1.x = loader->bbox.xMin - loader->left_bearing;
     loader->pp1.y = 0;
     loader->pp2.x = loader->pp1.x + loader->advance;
     loader->pp2.y = 0;
 
-    loader->pp3.x = use_aw_2 ? loader->advance / 2 : 0;
+    loader->pp3.x = 0;
     loader->pp3.y = loader->bbox.yMax + loader->top_bearing;
-    loader->pp4.x = use_aw_2 ? loader->advance / 2 : 0;
+    loader->pp4.x = 0;
     loader->pp4.y = loader->pp3.y - loader->vadvance;
+
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    {
+      TT_Driver driver = (TT_Driver)FT_FACE_DRIVER( loader->face );
+
+
+      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
+           loader->exec                                             &&
+           loader->exec->subpixel_hinting_lean                      &&
+           loader->exec->grayscale_cleartype                        )
+      {
+        loader->pp3.x = loader->advance / 2;
+        loader->pp4.x = loader->advance / 2;
+      }
+    }
+#endif
   }
 
 
@@ -2221,6 +2215,9 @@
       if ( !exec )
         return FT_THROW( Could_Not_Find_Context );
 
+      grayscale = FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
+                             FT_RENDER_MODE_MONO             );
+
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
       {
@@ -2237,6 +2234,7 @@
           FT_BOOL( subpixel_hinting_lean    &&
                    ( load_flags           &
                      FT_LOAD_TARGET_LCD_V ) );
+        grayscale = FT_BOOL( grayscale && !subpixel_hinting_lean );
       }
       else
       {
@@ -2246,22 +2244,11 @@
       }
 #endif
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
-        grayscale = FT_BOOL( !subpixel_hinting_lean               &&
-                             FT_LOAD_TARGET_MODE( load_flags ) !=
-                               FT_RENDER_MODE_MONO                );
-      else
-#endif
-        grayscale = FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                               FT_RENDER_MODE_MONO             );
-
       error = TT_Load_Context( exec, face, size );
       if ( error )
         return error;
 
       {
-
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
         if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
         {
