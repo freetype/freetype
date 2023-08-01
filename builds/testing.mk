@@ -3,7 +3,7 @@ FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
 FTBENCH_BIN = $(OBJ_DIR)/bench$E
-FTBENCH_FLAG ?= -c 500
+FTBENCH_FLAG ?= -c 100
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE_DIR = $(OBJ_DIR)/baseline/
@@ -100,7 +100,7 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 		printf "\rProcessing %d%%..." $$percent; \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BASELINE_DIR)$$(basename $$font .ttf).txt; \
 	done
-	@echo "\nBaseline created."
+	@echo "Baseline created."
 
 # Benchmark and compare to baseline
 .PHONY: benchmark
@@ -121,7 +121,7 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BENCHMARK_DIR)$$(basename $$font .ttf).txt; \
 	done
 	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
-	@echo "\nBenchmark created."
+	@echo "Benchmark results created in file: $(HTMLFILE)"
 
 .PHONY: clean-benchmark
 clean-benchmark:

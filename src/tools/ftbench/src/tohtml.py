@@ -42,6 +42,7 @@ def main():
         write_to_html(html_file, "<html>\n<head>\n")
         write_to_html(html_file, CSS_STYLE)
         write_to_html(html_file, "</head>\n<body>\n")
+        write_to_html(html_file, "<h1>Freetype Benchmark Results</h1>\n")
 
         baseline_info = parse_info_file(os.path.join(BASELINE_DIR, "info.txt"))
         benchmark_info = parse_info_file(os.path.join(BENCHMARK_DIR, "info.txt"))
@@ -49,7 +50,7 @@ def main():
         if baseline_info[1].strip() == benchmark_info[1].strip():
             write_to_html(
                 html_file,
-                '<h2 class="warning">Warning: Baseline and Benchmark have the same commit ID</h2>\n',
+                '<h2 class="warning">Warning: Baseline and Benchmark have the same commit ID!</h2>\n',
             )
 
         generate_info_table(html_file, baseline_info, benchmark_info)
@@ -63,7 +64,7 @@ def main():
                 generate_results_table(
                     html_file, baseline_results, benchmark_results, filename
                 )
-
+        write_to_html(html_file, "<center>Freetype Benchmark</center>\n")
         write_to_html(html_file, "</body>\n</html>\n")
 
 def write_to_html(html_file, content):
@@ -102,7 +103,7 @@ def generate_info_table(html_file, baseline_info, benchmark_info):
             ),
         )
     write_to_html(html_file, "</table><br/>")
-    write_to_html(html_file, "*Smaller values mean faster operation<br/>\n")
+    write_to_html(html_file, "* Smaller values mean faster operation<br/>\n")
 
 
 def generate_results_table(html_file, baseline_results, benchmark_results, filename):
@@ -118,8 +119,8 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
     write_to_html(
         html_file,
         '<tr><th>Test</th><th>N</th>\
-        <th><a href="{}.txt">Baseline</a> (ms)</th>\
-        <th><a href="{}.txt">Benchmark</a> (ms)</th>\
+        <th>* <a href="{}.txt">Baseline</a> (ms)</th>\
+        <th>* <a href="{}.txt">Benchmark</a> (ms)</th>\
         <th>Difference (%)</th></tr>\n'.format(
             os.path.join(BASELINE_DIR, filename[:-4]),
             os.path.join(BENCHMARK_DIR, filename[:-4]),
@@ -151,7 +152,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
                 n = (
                     baseline_n
                     if baseline_n == benchmark_n
-                    else baseline_n + " / " + benchmark_n
+                    else baseline_n + " | " + benchmark_n
                 )
 
                 total_n += int(baseline_n)
