@@ -431,7 +431,7 @@ FT_BEGIN_HEADER
    *   them for certain configurations only.
    */
 /* #define FT_DEBUG_LEVEL_ERROR */
-/* #define FT_DEBUG_LEVEL_TRACE */
+#define FT_DEBUG_LEVEL_TRACE
 
 
   /**************************************************************************

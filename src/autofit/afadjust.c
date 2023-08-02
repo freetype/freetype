@@ -168,6 +168,17 @@ af_lookup_vertical_seperation_type( AF_ReverseCharacterMap map, FT_Int glyph_ind
     return entry->vertical_separation_adjustment_type;
 }
 
+/*TODO: this is a testing placeholder
+  it only returns 1 for n with tilde*/
+FT_LOCAL_DEF( FT_Int )
+af_lookup_tilde_correction_type( AF_ReverseCharacterMap map, FT_Int glyph_index ) {
+    FT_UInt32 codepoint = af_reverse_character_map_lookup( map, glyph_index );
+    if ( codepoint == 0xF1 ) {
+        return 1;
+    }
+    return 0;
+}
+
 typedef struct AF_ReverseMapEntry_
 {
     FT_Int glyph_index;
