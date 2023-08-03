@@ -98,6 +98,7 @@
 
 #define CACHE_SIZE  1024
 #define BENCH_TIME  2.0
+#define WARMUP_TIME 1.0
 #define FACE_SIZE   10
 
 
@@ -268,11 +269,13 @@
   benchmark( FT_Face   face,
              btest_t*  test,
              int       max_iter,
-             double    max_time )
+             double    max_time,
+             double    warmup )
   {
+    
     int       n, done;
     btimer_t  timer, elapsed;
-
+    double    warmup_time = warmup * 1E6; // Convert to microseconds
 
     if ( test->cache_first )
     {
@@ -286,15 +289,28 @@
     TIMER_RESET( &timer );
     TIMER_RESET( &elapsed );
 
+    int is_warmup = 1;
+
     for ( n = 0, done = 0; !max_iter || n < max_iter; n++ )
     {
+      if ( is_warmup )
+        n = 0;
+
       TIMER_START( &elapsed );
 
       done += test->bench( &timer, face, test->user_data );
 
       TIMER_STOP( &elapsed );
 
-      if ( TIMER_GET( &elapsed ) > 1E6 * max_time )
+      if ( is_warmup && TIMER_GET( &elapsed ) > warmup_time )
+      {
+        is_warmup = 0;
+        done = 0;
+        TIMER_RESET( &timer );
+        TIMER_RESET( &elapsed );
+      }
+
+      else if ( !is_warmup && TIMER_GET( &elapsed ) > 1E6 * max_time )
         break;
     }
 
@@ -1010,7 +1026,7 @@
                 ps_hinting_engine_names[ps_hinting_engines[0]],
                 ps_hinting_engine_names[ps_hinting_engines[1]] );
 
-
+    // TODO: add here -w option
     fprintf( stderr,
       "\n"
       "ftbench: run FreeType benchmarks\n"
@@ -1101,6 +1117,7 @@
     unsigned int   size           = FACE_SIZE;
     int            max_iter       = 0;
     double         max_time       = BENCH_TIME;
+    double         warmup_time    = WARMUP_TIME;
     int            j;
 
     unsigned int  versions[2] = { TT_INTERPRETER_VERSION_35,
@@ -1172,7 +1189,7 @@
       int  opt;
 
 
-      opt = getopt( argc, argv, "a:b:Cc:e:f:H:I:i:l:m:pr:s:t:v" );
+      opt = getopt( argc, argv, "a:b:Cc:e:f:H:I:i:l:m:pr:s:t:w:v" );
 
       if ( opt == -1 )
         break;
@@ -1340,6 +1357,15 @@
           printf( "\n" );
           exit( 0 );
         }
+        break;
+
+      case 'w':
+        warmup_time = atof( optarg );
+        if ( warmup_time < 0 )
+          warmup_time = -warmup_time;
+        break;
+  
+      
         /* break; */
 
       default:
@@ -1428,6 +1454,8 @@
     if ( max_iter )
       printf( "number of iterations for each test: at most %d\n",
               max_iter );
+    printf( "number of seconds as warmup time before all tests: %.0f\n",
+              warmup_time );
 
     printf( "\n"
             "executing tests:\n" );
@@ -1451,7 +1479,7 @@
       case FT_BENCH_LOAD_GLYPH:
         test.title = "Load";
         test.bench = test_load;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
 
         if ( cache_man )
         {
@@ -1461,7 +1489,7 @@
           {
             test.title = "Load (image cached)";
             test.bench = test_image_cache;
-            benchmark( face, &test, max_iter, max_time );
+            benchmark( face, &test, max_iter, max_time, warmup_time );
           }
 
           if ( !FTC_SBitCache_New( cache_man, &sbit_cache ) )
@@ -1469,7 +1497,7 @@
             test.title = "Load (sbit cached)";
             test.bench = test_sbit_cache;
             if ( size )
-              benchmark( face, &test, max_iter, max_time );
+              benchmark( face, &test, max_iter, max_time, warmup_time );
             else
               printf( "  %-25s disabled (size = 0)\n", test.title );
           }
@@ -1482,24 +1510,24 @@
         test.title = "Load_Advances (Normal)";
         test.bench = test_load_advances;
         flags      = FT_LOAD_DEFAULT;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
 
         test.title  = "Load_Advances (Fast)";
         test.bench  = test_load_advances;
         flags       = FT_LOAD_TARGET_LIGHT;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
 
         test.title  = "Load_Advances (Unscaled)";
         test.bench  = test_load_advances;
         flags       = FT_LOAD_NO_SCALE;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
 
       case FT_BENCH_RENDER:
         test.title = "Render";
         test.bench = test_render;
         if ( size )
-          benchmark( face, &test, max_iter, max_time );
+          benchmark( face, &test, max_iter, max_time, warmup_time );
         else
           printf( "  %-25s disabled (size = 0)\n", test.title );
         break;
@@ -1507,13 +1535,13 @@
       case FT_BENCH_GET_GLYPH:
         test.title = "Get_Glyph";
         test.bench = test_get_glyph;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
 
       case FT_BENCH_GET_CBOX:
         test.title = "Get_CBox";
         test.bench = test_get_cbox;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
 
       case FT_BENCH_GET_BBOX:
@@ -1525,7 +1553,7 @@
 
           /* rotate outlines by 30 degrees so that CBox and BBox differ */
           FT_Set_Transform( face, &rot30, NULL );
-          benchmark( face, &test, max_iter, max_time );
+          benchmark( face, &test, max_iter, max_time, warmup_time );
           FT_Set_Transform( face, NULL, NULL );
         }
         break;
@@ -1544,7 +1572,7 @@
             test.title = "Get_Char_Index";
             test.bench = test_get_char_index;
 
-            benchmark( face, &test, max_iter, max_time );
+            benchmark( face, &test, max_iter, max_time, warmup_time );
 
             if ( cache_man                                    &&
                  !FTC_CMapCache_New( cache_man, &cmap_cache ) )
@@ -1553,7 +1581,7 @@
 
               test.title = "Get_Char_Index (cached)";
               test.bench = test_cmap_cache;
-              benchmark( face, &test, max_iter, max_time );
+              benchmark( face, &test, max_iter, max_time, warmup_time );
             }
 
             free( charset.code );
@@ -1564,20 +1592,20 @@
       case FT_BENCH_CMAP_ITER:
         test.title = "Iterate CMap";
         test.bench = test_cmap_iter;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
 
       case FT_BENCH_NEW_FACE:
         test.title = "New_Face";
         test.bench = test_new_face;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
 
       case FT_BENCH_EMBOLDEN:
         test.title = "Embolden";
         test.bench = test_embolden;
         if ( size )
-          benchmark( face, &test, max_iter, max_time );
+          benchmark( face, &test, max_iter, max_time, warmup_time );
         else
           printf( "  %-25s disabled (size = 0)\n", test.title );
         break;
@@ -1586,7 +1614,7 @@
         test.title = "Stroke";
         test.bench = test_stroke;
         if ( size )
-          benchmark( face, &test, max_iter, max_time );
+          benchmark( face, &test, max_iter, max_time, warmup_time );
         else
           printf( "  %-25s disabled (size = 0)\n", test.title );
         break;
@@ -1594,7 +1622,7 @@
       case FT_BENCH_NEW_FACE_AND_LOAD_GLYPH:
         test.title = "New_Face & load glyph(s)";
         test.bench = test_new_face_and_load_glyph;
-        benchmark( face, &test, max_iter, max_time );
+        benchmark( face, &test, max_iter, max_time, warmup_time );
         break;
       }
     }
