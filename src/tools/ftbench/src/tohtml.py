@@ -132,10 +132,10 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
     for baseline_line, benchmark_line in zip(baseline_results, benchmark_results):
         if baseline_line.startswith("  "):
             baseline_match = re.match(
-                r"\s+(.*?)\s+(\d+\.\d+)\s+ms\s+(\d+)\s", baseline_line
+                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line
             )
             benchmark_match = re.match(
-                r"\s+(.*?)\s+(\d+\.\d+)\s+ms\s+(\d+)\s", benchmark_line
+                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", benchmark_line
             )
 
             if baseline_match and benchmark_match:

@@ -312,7 +312,7 @@
     }
 
     if ( done )
-      printf( "%10.1f ms %10d done\n",
+      printf( "%10.1f microseconds %10d done\n",
               TIMER_GET( &timer ), done );
     else
       printf( "no error-free calls\n" );
