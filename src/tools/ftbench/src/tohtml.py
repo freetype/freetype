@@ -103,7 +103,7 @@ def generate_info_table(html_file, baseline_info, benchmark_info):
             ),
         )
     write_to_html(html_file, "</table><br/>")
-    write_to_html(html_file, "* Smaller values mean faster operation<br/>\n")
+    write_to_html(html_file, "* Cumulative time for iterations which is better in smaller values<br/>\n")
 
 
 def generate_results_table(html_file, baseline_results, benchmark_results, filename):
@@ -119,8 +119,8 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
     write_to_html(
         html_file,
         '<tr><th>Test</th><th>N</th>\
-        <th>* <a href="{}.txt">Baseline</a> (ms)</th>\
-        <th>* <a href="{}.txt">Benchmark</a> (ms)</th>\
+        <th>* <a href="{}.txt">Baseline</a> (&#181;s)</th>\
+        <th>* <a href="{}.txt">Benchmark</a> (&#181;s)</th>\
         <th>Difference (%)</th></tr>\n'.format(
             os.path.join(BASELINE_DIR, filename[:-4]),
             os.path.join(BENCHMARK_DIR, filename[:-4]),
@@ -159,13 +159,13 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
                 total_n += int(benchmark_n)
                 total_time_baseline += baseline_value
                 total_time_benchmark += benchmark_value
-                total_difference += percentage_diff
+                
 
                 if baseline_value > benchmark_value:
                     write_to_html(
                         html_file,
                         '<tr><td class="col1">{}</td><td>{}</td>\
-                        <td class="lowlight">{:.3f}</td><td class="highlight">{:.3f}</td><td>{:.1f}</td></tr>\n'.format(
+                        <td class="lowlight">{:.0f}</td><td class="highlight">{:.0f}</td><td>{:.1f}</td></tr>\n'.format(
                             baseline_match.group(1),
                             n,
                             baseline_value,
@@ -177,7 +177,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
                     write_to_html(
                         html_file,
                         '<tr><td class="col1">{}</td><td>{}</td>\
-                        <td class="highlight">{:.3f}</td><td class="lowlight">{:.3f}</td><td>{:.1f}</td></tr>\n'.format(
+                        <td class="highlight">{:.0f}</td><td class="lowlight">{:.0f}</td><td>{:.1f}</td></tr>\n'.format(
                             baseline_match.group(1),
                             n,
                             baseline_value,
@@ -189,8 +189,8 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
     write_to_html(
         html_file,
         '<tr><td class="col1">TOTAL</td><td class="col1">{}</td>\
-                        <td class="col1">{:.3f}</td><td class="col1">{:.3f}</td><td class="col1">{:.1f}</td></tr>\n'.format(
-            total_n, total_time_baseline, total_time_benchmark, total_difference / 14
+                        <td class="col1">{:.0f}</td><td class="col1">{:.0f}</td><td class="col1">{:.1f}</td></tr>\n'.format(
+            total_n, total_time_baseline, total_time_benchmark, (total_time_baseline - total_time_benchmark) / total_time_baseline * -100
         ),
     )
     write_to_html(html_file, "</table><br/>\n")
