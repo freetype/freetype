@@ -2636,6 +2636,7 @@
 
           driver = FT_DRIVER( cur[0] );
 
+          // TODO: Check the args for a "preload" flag and act accordingly
           if ( args->flags & FT_OPEN_PARAMS )
           {
             num_params = args->num_params;
@@ -2726,6 +2727,7 @@
     /* face->driver instead.                                   */
     FT_List_Add( &face->driver->faces_list, node );
 
+    // TODO: The preload logic should be performed here
     /* now allocate a glyph slot object for the face */
     FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
 
