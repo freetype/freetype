@@ -1934,7 +1934,7 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( continued )
         FT_Trace_Enable();
 
-      FT_TRACE7(( "band [%d..%d]: %ld cell%s remaining/\n",
+      FT_TRACE7(( "band [%d..%d]: %td cell%s remaining/\n",
                   ras.min_ey,
                   ras.max_ey,
                   ras.cell_null - ras.cell_free,
