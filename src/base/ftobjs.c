@@ -4908,6 +4908,10 @@
                     pixel_modes[slot->bitmap.pixel_mode],
                     slot->bitmap.pixel_mode ));
 
+        if(pitch<0)
+        {
+          pitch = -pitch;
+        }
         for ( i = 0; i < rows; i++ )
           for ( j = 0; j < pitch; j++ )
             coverage += bitmap.buffer[i * pitch + j];

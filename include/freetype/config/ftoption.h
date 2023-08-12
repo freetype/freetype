@@ -430,8 +430,8 @@ FT_BEGIN_HEADER
    *   Do not `#undef` these macros here since the build system might define
    *   them for certain configurations only.
    */
-/* #define FT_DEBUG_LEVEL_ERROR */
-/* #define FT_DEBUG_LEVEL_TRACE */
+#define FT_DEBUG_LEVEL_ERROR
+#define FT_DEBUG_LEVEL_TRACE
 
 
   /**************************************************************************
@@ -647,7 +647,7 @@ FT_BEGIN_HEADER
    * Do not `#undef` this macro here, since the build system might define it
    * for certain configurations only.
    */
-#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+// #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /**************************************************************************
@@ -681,7 +681,7 @@ FT_BEGIN_HEADER
    * [1]
    * https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
    */
-#define TT_CONFIG_OPTION_SUBPIXEL_HINTING
+// #define TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
 
   /**************************************************************************
