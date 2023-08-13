@@ -2799,6 +2799,87 @@ af_find_highest_contour( AF_GlyphHints hints ) {
   return highest_contour;
 }
 
+static void
+af_remove_segments_containing_point(AF_GlyphHints hints, AF_Point point)
+{
+  AF_AxisHints axis = &hints->axis[AF_DIMENSION_VERT];
+  AF_Segment segments = axis->segments;
+  AF_Segment segment_limit = FT_OFFSET( segments, axis->num_segments );
+  for ( FT_Int i = 0; i < axis->num_segments; i++ )
+  {
+    AF_Segment seg = &segments[i];
+    FT_Bool remove = 0;
+    for ( AF_Point p = seg->first; p <= seg->last; p = p->next )
+    {
+      if ( p == point )
+      {
+        remove = 1;
+        break;
+      }
+    }
+
+    if ( remove )
+    {
+      FT_TRACE4(("Removing segment %d\n", i));
+      /* first, check the first and last fields of the edge */
+      AF_Edge edge = seg->edge;
+      if ( edge->first == seg && edge->last == seg )
+      {
+        /* The edge only consists of the segment to be removed.  remove the edge*/
+          *edge = axis->edges[--axis->num_edges];
+      }
+      else
+      {
+        if ( edge->first == seg )
+        {
+          edge->first = seg->edge_next;
+        }
+        if ( edge->last == seg )
+        {
+          edge->last = edge->first;
+          while ( edge->last->edge_next != seg )
+          {
+            edge->last = edge->last->edge_next;
+          }
+        }
+      }
+
+      /* Now, delete the segment */
+      *seg = axis->segments[--axis->num_segments];
+
+      i--; /* we have to check the new segment at this position */
+    }
+  }
+}
+
+static void
+af_latin_stretch_tildes_step_2( AF_GlyphHints hints,
+                                FT_Int glyph_index,
+                                AF_ReverseCharacterMap reverse_charmap )
+{
+  if (af_lookup_tilde_correction_type(reverse_charmap, glyph_index)) {
+    FT_Int highest_contour = af_find_highest_contour(hints);
+    AF_Point first_point = hints->contours[highest_contour];
+
+    /* search for any curve tips that are on a y extrema, and delete any
+      segments that contain this point.*/
+    AF_Point p = first_point;
+
+    do
+    {
+      p = p->next;
+      if ( /*!(p->flags & AF_FLAG_CONTROL)
+            && p->prev->y == p->y && p->next->y == p->y
+            && p->prev->flags & AF_FLAG_CONTROL
+            && p->next->flags & AF_FLAG_CONTROL*/ 1 )
+      {
+        af_remove_segments_containing_point( hints, p );
+      }
+    } while ( p != first_point );
+  }
+
+}
+
 void
 af_latin_stretch_tildes( AF_GlyphHints hints,
                          FT_Int glyph_index,
@@ -2814,82 +2895,99 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
     FT_Short min_fy, max_fy;
     min_fy = max_fy = p->fy;
 
-    do {
+    do
+    {
       p = p->next;
-      if ( p->y < min_y ) {
+      if ( p->y < min_y )
+      {
         min_y = p->y;
       }
-      if ( p->y > max_y ) {
+      if ( p->y > max_y )
+      {
         max_y = p->y;
       }
 
-      if ( p->fy < min_fy ) {
+      if ( p->fy < min_fy )
+      {
         min_fy = p->fy;
       }
 
-      if ( p->fy > max_fy ) {
+      if ( p->fy > max_fy )
+      {
         max_fy = p->fy;
       }
 
-    } while ( p != first_point );
+    }
+    while ( p != first_point );
 
     FT_Pos min_measurement = 32000;
     FT_UInt measurements_taken = 0;
 
-    do {
+    do
+    {
       p = p->next;
       if ( !(p->flags & AF_FLAG_CONTROL)
            && p->prev->y == p->y && p->next->y == p->y
            && p->y != min_y && p->y != max_y
            && p->prev->flags & AF_FLAG_CONTROL
-           && p->next->flags & AF_FLAG_CONTROL ) {
+           && p->next->flags & AF_FLAG_CONTROL )
+      {
         /* This point could be a candidate.  Find the next and previous on-curve */
         /* points, and make sure they are both either above or below the point, */
         /* Then make the measurement */
         AF_Point prevOn = p->prev;
         AF_Point nextOn = p->next;
-        while ( prevOn->flags & AF_FLAG_CONTROL ) {
+        while ( prevOn->flags & AF_FLAG_CONTROL )
+        {
           prevOn = prevOn->prev;
         }
-        while ( nextOn->flags & AF_FLAG_CONTROL ) {
+        while ( nextOn->flags & AF_FLAG_CONTROL )
+        {
           nextOn = nextOn->next;
         }
         FT_Pos measurement;
-        if ( nextOn->y > p->y && prevOn->y > p->y ) {
+        if ( nextOn->y > p->y && prevOn->y > p->y )
+        {
           measurement = p->y - min_y;
-        } else if ( nextOn->y < p->y && prevOn->y < p->y ) {
+        }
+        else if ( nextOn->y < p->y && prevOn->y < p->y )
+        {
           measurement = max_y - p->y;
-        } else {
+        }
+        else
+        {
           continue;
         }
 
-        if (measurement < min_measurement) {
+        if (measurement < min_measurement)
+        {
           min_measurement = measurement;
         }
         measurements_taken++;
       }
 
-    } while ( p != first_point );
+    }
+    while ( p != first_point );
 
     FT_Pos height = max_y - min_y;
 
     FT_Pos target_height = min_measurement + 64;
-    if ( height >= target_height ) {
+    if ( height >= target_height )
+    {
       return;
     }
 
     p = first_point;
-    do {
+    do
+    {
       p = p->next;
-      /*if ( p->flags & AF_FLAG_CONTROL ) {
-        continue;
-      }*/
       p->y = ((p->y - min_y) * target_height / height) + min_y;
       p->fy = ((p->fy - min_fy) * target_height / height) + min_fy;
       p->oy = p->y;
       if ( !(p->flags & AF_FLAG_CONTROL) )
         p->flags |= AF_FLAG_TOUCH_Y;
-    } while ( p != first_point );
+    }
+    while ( p != first_point );
 
     FT_TRACE4(( "af_latin_stretch_tildes: Height: %d, measurement: %d, measurements taken: %d\n", height, min_measurement, measurements_taken ));
 
@@ -2898,18 +2996,73 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
     p = first_point;
     do {
       p = p->next;
-      if ( p->y < new_min_y ) {
+      if ( p->y < new_min_y )
+      {
         new_min_y = p->y;
       }
-      if ( p->y > new_max_y ) {
+      if ( p->y > new_max_y )
+      {
         new_max_y = p->y;
       }
-    } while ( p != first_point );
+    }
+    while ( p != first_point );
 
-    FT_TRACE4(( "af_latin_stretch_tildes_merp: New height: %d\n, miny: %d, maxy: %d", new_max_y - new_min_y, new_min_y, new_max_y));
+    FT_TRACE4(( "af_latin_stretch_tildes: New height: %d\n, miny: %d, maxy: %d", new_max_y - new_min_y, new_min_y, new_max_y));
+  }
+}
+
+/*True if the given contour overlaps horizontally with the bounding box
+  Of all other contours combined.
+  This is a helper for af_glyph_hints_apply_vertical_separation_adjustments */
+FT_Bool
+af_check_contour_horizontal_overlap( AF_GlyphHints hints,
+                                     FT_Int contour_index )
+{
+  FT_Pos contour_max_x = -32000;
+  FT_Pos contour_min_x = 32000;
+  FT_Pos others_max_x = -32000;
+  FT_Pos others_min_x = 32000;
+
+  for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+  {
+    AF_Point first_point = hints->contours[contour];
+    AF_Point p = first_point;
+
+    do
+    {
+      p = p->next;
+      if ( contour == contour_index )
+      {
+        if ( p->x < contour_min_x )
+        {
+          contour_min_x = p->x;
+        }
+        if ( p->x > contour_max_x )
+        {
+          contour_max_x = p->x;
+        }
+      }
+      else /* ( contour != contour_index ) */
+      {
+        if ( p->x < others_min_x )
+        {
+          others_min_x = p->x;
+        }
+        if ( p->x > others_max_x )
+        {
+          others_max_x = p->x;
+        }
+      }
+    }
+    while (p != first_point);
   }
 
+  FT_Bool horizontal_overlap =
+    (others_min_x <= contour_max_x && contour_max_x <= others_max_x) ||
+    (others_min_x <= contour_min_x && contour_min_x <= others_max_x) ||
+    (contour_max_x >= others_max_x && contour_min_x <= others_min_x);
 
+  return horizontal_overlap;
 }
 
 void
@@ -2961,6 +3114,15 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
       }
     }
 
+    /* check for a horizontal overtap between the top contour and the rest */
+    /* if there is no overlap, do not adjust. */
+
+    FT_Bool horizontal_overlap = af_check_contour_horizontal_overlap( hints, highest_contour );
+    if (!horizontal_overlap) {
+      FT_TRACE4(( "    Top contour does not horizontally overlap with other contours.  Skipping adjustment.\n" ));
+      return;
+    }
+
     /* If there are any contours that have a maximum y coordinate */
     /* greater or equal to the minimum y coordinate of the previously found highest*/
     /* contour, bump the high contour up until the distance is one pixel */
@@ -2995,9 +3157,13 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
       }
     }
 
-    FT_TRACE4(( "    Pushing top contour %d units up\n", adjustment_amount ));
-    if ( adjustment_amount > 0 )
+    if ( adjustment_amount > 64 )
     {
+      FT_TRACE4(( "    Calculated adjustment amount %d was more than threshold of 64.  Not adjusting\n", adjustment_amount ));
+    }
+    else if ( adjustment_amount > 0 )
+    {
+      FT_TRACE4(( "    Pushing top contour %d units up\n", adjustment_amount ));
       af_move_contour_vertically(hints->contours[highest_contour], adjustment_amount);
     }
   } else if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN
@@ -3065,9 +3231,13 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
         adjustment_amount = 64 - ( min_y - lowest_max_y );
       }
 
-      FT_TRACE4(( "    Pushing bottom contour %d units down\n", adjustment_amount ));
-      if ( adjustment_amount > 0 )
+      if ( adjustment_amount > 64 )
       {
+        FT_TRACE4(( "    Calculated adjustment amount %d was more than threshold of 64.  Not adjusting\n", adjustment_amount ));
+      }
+      else if ( adjustment_amount > 0 )
+      {
+        FT_TRACE4(( "    Pushing bottom contour %d units down\n", adjustment_amount ));
         af_move_contour_vertically(hints->contours[lowest_contour], -adjustment_amount);
       }
     }
@@ -3900,7 +4070,6 @@ static void traceheight(FT_UInt num, AF_GlyphHints hints) {
 
   FT_Pos min_y, max_y;
   min_y = max_y = p->y;
-  FT_UInt candidates = 0;
 
   do {
     p = p->next;
@@ -3952,12 +4121,13 @@ static void traceheight(FT_UInt num, AF_GlyphHints hints) {
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
-      af_latin_stretch_tildes( hints, glyph_index, metrics->root.reverse_charmap );
+      /*af_latin_stretch_tildes( hints, glyph_index, metrics->root.reverse_charmap );*/
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
+      af_latin_stretch_tildes_step_2( hints, glyph_index, metrics->root.reverse_charmap );
       if ( error )
         goto Exit;
 

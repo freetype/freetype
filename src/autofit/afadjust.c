@@ -10,6 +10,9 @@
 
 /*TODO: find out whether capital u/U with accent entries are needed*/
 /*the accent won't merge with the rest of the glyph because the accent mark is sitting above empty space*/
+/*
+  All entries in this list must be sorted by unicode codepoint ascending
+*/
 FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
 adjustment_database[] =
 {
