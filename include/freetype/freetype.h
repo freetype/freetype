@@ -2399,6 +2399,9 @@ FT_BEGIN_HEADER
    *   FT_OPEN_PARAMS ::
    *     Use the `num_params` and `params` fields.
    *
+   *   FT_OPEN_PRELOAD ::
+   *     Preprocess the font outline to save cpu time later.
+   *
    * @note:
    *   The `FT_OPEN_MEMORY`, `FT_OPEN_STREAM`, and `FT_OPEN_PATHNAME` flags
    *   are mutually exclusive.
@@ -2408,7 +2411,7 @@ FT_BEGIN_HEADER
 #define FT_OPEN_PATHNAME  0x4
 #define FT_OPEN_DRIVER    0x8
 #define FT_OPEN_PARAMS    0x10
-
+#define FT_OPEN_PRELOAD   0x20
 
   /* these constants are deprecated; use the corresponding `FT_OPEN_XXX` */
   /* values instead                                                      */
@@ -2572,6 +2575,12 @@ FT_BEGIN_HEADER
                FT_Long      face_index,
                FT_Face     *aface );
 
+  FT_EXPORT( FT_Error )
+  FT_New_Face2( FT_Library   library,
+               const char*  filepathname,
+               FT_Long      face_index,
+               FT_Face     *aface,
+               FT_UInt      flags);
 
   /**************************************************************************
    *

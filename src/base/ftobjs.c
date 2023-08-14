@@ -1610,7 +1610,6 @@
   {
     FT_Open_Args  args;
 
-
     /* test for valid `library' and `aface' delayed to `FT_Open_Face' */
     if ( !pathname )
       return FT_THROW( Invalid_Argument );
@@ -1621,6 +1620,29 @@
 
     return ft_open_face_internal( library, &args, face_index, aface, 1 );
   }
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face2( FT_Library   library,
+                const char*  pathname,
+                FT_Long      face_index,
+                FT_Face     *aface,
+                FT_UInt      flags)
+  {
+    FT_Open_Args  args;
+
+    /* test for valid `library' and `aface' delayed to `FT_Open_Face' */
+    if ( !pathname )
+      return FT_THROW( Invalid_Argument );
+
+    args.flags    = FT_OPEN_PATHNAME;
+    args.flags   |= flags;
+    args.pathname = (char*)pathname;
+    args.stream   = NULL;
+
+    return ft_open_face_internal( library, &args, face_index, aface, 1 );
+  }
+
 
 #endif
 
@@ -2540,7 +2562,11 @@
     FT_UNUSED( test_mac_fonts );
 #endif
 
-
+    if (args->flags & FT_OPEN_PRELOAD)
+    {
+      FT_TRACE0(("Requested Preload\n"));
+    }
+    
     /* only use lower 31 bits together with sign bit */
     if ( face_index > 0 )
       face_index &= 0x7FFFFFFFL;
@@ -2636,7 +2662,6 @@
 
           driver = FT_DRIVER( cur[0] );
 
-          // TODO: Check the args for a "preload" flag and act accordingly
           if ( args->flags & FT_OPEN_PARAMS )
           {
             num_params = args->num_params;
@@ -2727,7 +2752,12 @@
     /* face->driver instead.                                   */
     FT_List_Add( &face->driver->faces_list, node );
 
-    // TODO: The preload logic should be performed here
+    if (args->flags & FT_OPEN_PRELOAD)
+    {
+      /* Preload the font here */
+    }
+    
+
     /* now allocate a glyph slot object for the face */
     FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
 
@@ -2749,6 +2779,8 @@
           goto Fail;
 
         face->size = size;
+        // FT_Outline_Decompose here
+
       }
     }
 
