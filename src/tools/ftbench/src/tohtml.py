@@ -55,6 +55,9 @@ def main():
 
         generate_info_table(html_file, baseline_info, benchmark_info)
 
+        # Generate total results table
+        generate_total_results_table(html_file, BASELINE_DIR, BENCHMARK_DIR)
+        
         # Generate results tables
         for filename in os.listdir(BASELINE_DIR):
             if filename.endswith(".txt") and not filename == "info.txt":
@@ -64,6 +67,8 @@ def main():
                 generate_results_table(
                     html_file, baseline_results, benchmark_results, filename
                 )
+       
+                
         write_to_html(html_file, "<center>Freetype Benchmark</center>\n")
         write_to_html(html_file, "</body>\n</html>\n")
 
@@ -103,7 +108,95 @@ def generate_info_table(html_file, baseline_info, benchmark_info):
             ),
         )
     write_to_html(html_file, "</table><br/>")
-    write_to_html(html_file, "* Cumulative time for iterations which is better in smaller values<br/>\n")
+    write_to_html(html_file, "<p>* Average time for all iterations. Smaller values are better.</p>")
+    write_to_html(html_file, "<p>** N count in (x | y) format is for showing baseline and benchmark N counts seperately when they differs.</p>")
+    
+
+def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
+    """Prepare total results table for html"""
+    
+    # This dictionary will store aggregated results.
+    test_results = {test: {"baseline": 0, "benchmark": 0, "n_baseline": 0, "n_benchmark": 0} for test in [
+        "Load", "Load_Advances (Normal)", "Load_Advances (Fast)", "Load_Advances (Unscaled)", "Render",
+        "Get_Glyph", "Get_Char_Index", "Iterate CMap", "New_Face", "Embolden", "Stroke", "Get_BBox",
+        "Get_CBox", "New_Face & load glyph(s)"
+    ]}
+    
+    for filename in os.listdir(baseline_dir):
+        if filename.endswith(".txt") and not filename == "info.txt":
+            
+            baseline_results = read_file(os.path.join(baseline_dir, filename))
+            benchmark_results = read_file(os.path.join(benchmark_dir, filename))
+            
+            for baseline_line, benchmark_line in zip(baseline_results, benchmark_results):
+                if baseline_line.startswith("  "):
+                    baseline_match = re.match(r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line)
+                    benchmark_match = re.match(r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", benchmark_line)
+                    
+                    if baseline_match and benchmark_match:
+                        test = baseline_match.group(1).strip()
+                        baseline_value = float(baseline_match.group(2))
+                        benchmark_value = float(benchmark_match.group(2))
+                        baseline_n = int(baseline_match.group(3))
+                        benchmark_n = int(benchmark_match.group(3))
+                        
+                        # Aggregate the results
+                        if test in test_results:
+                            test_results[test]["baseline"] += baseline_value
+                            test_results[test]["benchmark"] += benchmark_value
+                            test_results[test]["n_baseline"] += baseline_n
+                            test_results[test]["n_benchmark"] += benchmark_n
+    
+    # Writing to HTML
+    write_to_html(html_file, "<h2>Total Results</h2>\n")
+    write_to_html(html_file, '<table border="1">\n')
+    write_to_html(
+        html_file,
+        '<tr><th>Test</th><th>N</th><th>Baseline (&#181;s)</th>\
+        <th>Benchmark (&#181;s)</th><th>Difference (%)</th></tr>\n'
+    )
+
+    total_baseline = total_benchmark = total_diff = total_n_baseline = total_n_benchmark = 0
+    
+    for test, values in test_results.items():
+        baseline = values["baseline"]
+        benchmark = values["benchmark"]
+        n_baseline = values["n_baseline"]
+        n_benchmark = values["n_benchmark"]
+        
+        n_display = f"{n_baseline} | {n_benchmark}" if n_baseline != n_benchmark else str(n_baseline)
+        
+        diff = ((baseline - benchmark) / baseline) * 100
+
+        # Calculate for total row
+        total_baseline += baseline
+        total_benchmark += benchmark
+        total_n_baseline += n_baseline
+        total_n_benchmark += n_benchmark
+        
+        # Check which value is smaller for color highlighting
+        baseline_color = "highlight" if baseline <= benchmark else ""
+        benchmark_color = "highlight" if benchmark <= baseline else ""
+
+        write_to_html(
+            html_file,
+            f'<tr><td class="col1">{test}</td><td>{n_display}</td>\
+            <td class="{baseline_color}">{baseline:.0f}</td>\
+            <td class="{benchmark_color}">{benchmark:.0f}</td><td>{diff:.1f}</td></tr>\n'
+        )
+
+    total_diff = ((total_baseline - total_benchmark) / total_baseline) * 100
+    total_n_display = f"{total_n_baseline} | {total_n_benchmark}" if total_n_baseline != total_n_benchmark else str(total_n_baseline)
+    
+    write_to_html(
+        html_file,
+        f'<tr><td class="col1">TOTAL</td><td class="col1">{total_n_display}</td>\
+        <td class="col1">{total_baseline:.0f}</td><td class="col1">{total_benchmark:.0f}</td>\
+        <td class="col1">{total_diff:.1f}</td></tr>\n'
+    )
+    
+    write_to_html(html_file, "</table><br/>\n")
+
 
 
 def generate_results_table(html_file, baseline_results, benchmark_results, filename):
@@ -114,7 +207,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
         if line.startswith("ftbench results for font")
     ][0]
 
-    write_to_html(html_file, "<h2>Results for {}</h2>\n".format(fontname))
+    write_to_html(html_file, "<h3>Results for {}</h2>\n".format(fontname))
     write_to_html(html_file, '<table border="1">\n')
     write_to_html(
         html_file,
@@ -185,7 +278,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
                             percentage_diff,
                         ),
                     )
-
+                
     write_to_html(
         html_file,
         '<tr><td class="col1">TOTAL</td><td class="col1">{}</td>\

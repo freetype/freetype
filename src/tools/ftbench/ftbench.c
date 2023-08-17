@@ -260,10 +260,17 @@
 #define TIMER_GET( timer )    ( timer )->total
 #define TIMER_RESET( timer )  ( timer )->total = 0
 
+#define CHUNK_SIZE 100
 
+int compare(const void* a, const void* b) {
+    if (*(double*)a > *(double*)b) return 1;
+    if (*(double*)a < *(double*)b) return -1;
+    return 0;
+}
   /*
    * Bench code
    */
+
 
   static void
   benchmark( FT_Face   face,
@@ -276,6 +283,8 @@
     int       n, done;
     btimer_t  timer, elapsed;
    
+    int NUM_CHUNKS = max_iter / CHUNK_SIZE;
+    double results[NUM_CHUNKS];
 
     if ( test->cache_first )
     {
@@ -283,39 +292,59 @@
       test->bench( &timer, face, test->user_data );
     }
 
+    // Initial warm-up
+    for (n = 0; n < warmup; n++) {
+        test->bench(&timer, face, test->user_data);
+    }
+
     printf( "  %-25s ", test->title );
     fflush( stdout );
 
-    TIMER_RESET( &timer );
-    TIMER_RESET( &elapsed );
 
-    int is_warmup = 1;
-
-    for ( n = 0, done = 0; !max_iter || n < max_iter; n++ )
-    {
-      if ( is_warmup && n == warmup ){
-        is_warmup = 0;
+    for (int chunk = 0; chunk < NUM_CHUNKS; chunk++) {
         TIMER_RESET( &timer );
         TIMER_RESET( &elapsed );
-      }
-    
 
-      TIMER_START( &elapsed );
+        // Execute a chunk of iterations
+        for (n = 0, done = 0; n < CHUNK_SIZE; n++) {
+            TIMER_START( &elapsed );
+            done += test->bench( &timer, face, test->user_data );
+            TIMER_STOP( &elapsed );
 
-      done += test->bench( &timer, face, test->user_data );
-
-      TIMER_STOP( &elapsed );
-
-      
-      if (!is_warmup && TIMER_GET( &elapsed ) > 1E6 * max_time )
-        break;
+           
+        }
+         if (TIMER_GET( &elapsed ) > 1E6 * max_time) {
+                //break;
+          }
+        results[chunk] = TIMER_GET( &timer );
     }
 
-    if ( done )
-      printf( "%10.1f microseconds %10d done\n",
-              TIMER_GET( &timer ), done );
-    else
-      printf( "no error-free calls\n" );
+    // Sort results for IQR calculation
+    qsort(results, NUM_CHUNKS, sizeof(double), compare);
+
+    double q1 = results[NUM_CHUNKS / 4];
+    double q3 = results[3 * NUM_CHUNKS / 4];
+    double iqr = q3 - q1;
+    double lower_bound = q1 - 1.5 * iqr;
+    double upper_bound = q3 + 1.5 * iqr;
+
+    double total_time = 0.0;
+    int valid_chunks = 0;
+
+    for (int chunk = 0; chunk < NUM_CHUNKS; chunk++) {
+        if (results[chunk] >= lower_bound && results[chunk] <= upper_bound) {
+            total_time += results[chunk];
+            valid_chunks++;
+        }
+    }
+
+    double average_time = total_time / valid_chunks;
+
+
+    
+    printf( "%10.1f microseconds %10d done\n",
+              average_time, done );
+      
   }
 
 
