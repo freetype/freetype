@@ -267,29 +267,19 @@ int compare(const void* a, const void* b) {
     if (*(double*)a < *(double*)b) return -1;
     return 0;
 }
-  /*
-   * Bench code
-   */
 
+static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time, double warmup) {
+    int n, done;
+    int total_done = 0; // track total iterations done across all chunks
+    btimer_t timer, elapsed;
 
-  static void
-  benchmark( FT_Face   face,
-             btest_t*  test,
-             int       max_iter,
-             double    max_time,
-             double    warmup )
-  {
-    
-    int       n, done;
-    btimer_t  timer, elapsed;
-   
     int NUM_CHUNKS = max_iter / CHUNK_SIZE;
-    double results[NUM_CHUNKS];
+    double medians[NUM_CHUNKS];
+    double errors[NUM_CHUNKS];
 
-    if ( test->cache_first )
-    {
-      TIMER_RESET( &timer );
-      test->bench( &timer, face, test->user_data );
+    if (test->cache_first) {
+        TIMER_RESET(&timer);
+        test->bench(&timer, face, test->user_data);
     }
 
     // Initial warm-up
@@ -297,56 +287,47 @@ int compare(const void* a, const void* b) {
         test->bench(&timer, face, test->user_data);
     }
 
-    printf( "  %-25s ", test->title );
-    fflush( stdout );
-
+    printf("  %-25s ", test->title);
+    fflush(stdout);
 
     for (int chunk = 0; chunk < NUM_CHUNKS; chunk++) {
-        TIMER_RESET( &timer );
-        TIMER_RESET( &elapsed );
+        double chunk_results[CHUNK_SIZE];
+        TIMER_RESET(&timer);
+        TIMER_RESET(&elapsed);
 
         // Execute a chunk of iterations
         for (n = 0, done = 0; n < CHUNK_SIZE; n++) {
-            TIMER_START( &elapsed );
-            done += test->bench( &timer, face, test->user_data );
-            TIMER_STOP( &elapsed );
-
-           
+            TIMER_START(&elapsed);
+            done += test->bench(&timer, face, test->user_data);
+            TIMER_STOP(&elapsed);
+            chunk_results[n] = TIMER_GET(&elapsed);
+            
+            // Check max_time for each iteration, break if exceeded
+            if (TIMER_GET(&elapsed) > 1E6 * max_time) {
+                break;
+            }
         }
-         if (TIMER_GET( &elapsed ) > 1E6 * max_time) {
-                //break;
-          }
-        results[chunk] = TIMER_GET( &timer );
+        total_done += done;
+
+        qsort(chunk_results, CHUNK_SIZE, sizeof(double), compare);
+        if (CHUNK_SIZE % 2 == 0) {
+            medians[chunk] = (chunk_results[CHUNK_SIZE / 2 - 1] + chunk_results[CHUNK_SIZE / 2]) / 2.0;
+        } else {
+            medians[chunk] = chunk_results[CHUNK_SIZE / 2];
+        }
+        errors[chunk] = chunk_results[91 * CHUNK_SIZE / 100] - chunk_results[10 * CHUNK_SIZE / 100];
     }
 
-    // Sort results for IQR calculation
-    qsort(results, NUM_CHUNKS, sizeof(double), compare);
-
-    double q1 = results[NUM_CHUNKS / 4];
-    double q3 = results[3 * NUM_CHUNKS / 4];
-    double iqr = q3 - q1;
-    double lower_bound = q1 - 1.5 * iqr;
-    double upper_bound = q3 + 1.5 * iqr;
-
-    double total_time = 0.0;
-    int valid_chunks = 0;
-
-    for (int chunk = 0; chunk < NUM_CHUNKS; chunk++) {
-        if (results[chunk] >= lower_bound && results[chunk] <= upper_bound) {
-            total_time += results[chunk];
-            valid_chunks++;
-        }
+    qsort(medians, NUM_CHUNKS, sizeof(double), compare);
+    double final_median;
+    if (NUM_CHUNKS % 2 == 0) {
+        final_median = (medians[NUM_CHUNKS / 2 - 1] + medians[NUM_CHUNKS / 2]) / 2.0;
+    } else {
+        final_median = medians[NUM_CHUNKS / 2];
     }
-
-    double average_time = total_time / valid_chunks;
-
-
     
-    printf( "%10.1f microseconds %10d done\n",
-              average_time, done );
-      
-  }
-
+    printf("%10.1f microseconds %10d done\n", final_median, total_done);
+}
 
   /*
    * Various tests
