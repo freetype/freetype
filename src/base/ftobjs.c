@@ -914,7 +914,7 @@
     /* The validity test for `glyph_index' is performed by the */
     /* font drivers.                                           */
 
-    slot = face->glyph;
+    slot = face->garray[face->glyph->glyph_index];
     ft_glyphslot_clear( slot );
 
     driver  = face->driver;
@@ -2782,6 +2782,29 @@
         // FT_Outline_Decompose here
 
       }
+
+      face->garray = (FT_GlyphSlot*)malloc(
+          face->driver->clazz->slot_object_size * face->num_glyphs );
+      error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
+      int glyph_index = FT_Get_Char_Index( face, 'A' );
+      // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
+
+      for ( int gindex = 0; gindex < face->num_glyphs; gindex++ )
+      {
+        driver = face->driver;
+        FT_Driver_Class clazz  = driver->clazz;
+        memory = driver->root.memory;
+
+        FT_ALLOC(face->garray[gindex], clazz->slot_object_size);
+        face->garray[gindex]->face = face;
+        ft_glyphslot_init(face->garray[gindex]);
+        face->garray[gindex]->next = face->garray[gindex];
+        face->glyph = face->garray[gindex];
+
+        FT_Load_Glyph(face, glyph_index, FT_LOAD_NO_HINTING);
+      }
+
+
     }
 
     /* some checks */

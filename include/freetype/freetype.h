@@ -1276,6 +1276,7 @@ FT_BEGIN_HEADER
     FT_ListRec        sizes_list;
 
     FT_Generic        autohint;   /* face-specific auto-hinter data */
+    FT_GlyphSlot*     garray;
     void*             extensions; /* unused                         */
 
     FT_Face_Internal  internal;
