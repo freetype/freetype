@@ -1041,6 +1041,13 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_Face_InternalRec_*  FT_Face_Internal;
 
+  typedef struct FT_PreLineRec_* FT_PreLine;
+  typedef struct FT_PreLineRec_
+  {
+    int x1, x2, y1, y2;
+    FT_PreLine next;
+  } FT_PreLineRec;
+
 
   /**************************************************************************
    *
@@ -2289,6 +2296,7 @@ FT_BEGIN_HEADER
     FT_Pos            rsb_delta;
 
     void*             other;
+    FT_PreLine        prelines;
 
     FT_Slot_Internal  internal;
 

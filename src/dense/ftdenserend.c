@@ -5,7 +5,7 @@
 #include <freetype/internal/ftobjs.h>
 #include "ftdenserend.h"
 #include "ftdense.h"
-
+#include <stdio.h>
 #include "ftdenseerrs.h"
 
   /**************************************************************************
@@ -90,6 +90,7 @@
                    FT_Render_Mode   mode,
                    const FT_Vector* origin )
   {
+    printf("%d %d %d %d \n", slot->prelines->x1, slot->prelines->x2, slot->prelines->y1, slot->prelines->y2);
     FT_Error    error   = FT_Err_Ok;
     FT_Outline* outline = &slot->outline;
     FT_Bitmap*  bitmap  = &slot->bitmap;

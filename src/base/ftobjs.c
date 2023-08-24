@@ -1169,6 +1169,7 @@
         error = FT_Render_Glyph( slot, mode );
       else
         ft_glyphslot_preset_bitmap( slot, mode, NULL );
+      
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -2786,7 +2787,7 @@
       face->garray = (FT_GlyphSlot*)malloc(
           face->driver->clazz->slot_object_size * face->num_glyphs );
       error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
-      int glyph_index = FT_Get_Char_Index( face, 'A' );
+      // int glyph_index = FT_Get_Char_Index( face, 'A' );
       // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
 
       for ( int gindex = 0; gindex < face->num_glyphs; gindex++ )
@@ -2797,11 +2798,15 @@
 
         FT_ALLOC(face->garray[gindex], clazz->slot_object_size);
         face->garray[gindex]->face = face;
+        face->garray[gindex]->glyph_index = gindex;
         ft_glyphslot_init(face->garray[gindex]);
         face->garray[gindex]->next = face->garray[gindex];
-        face->glyph = face->garray[gindex];
+        *face->glyph = *face->garray[gindex];
 
-        FT_Load_Glyph(face, glyph_index, FT_LOAD_NO_HINTING);
+        FT_Load_Glyph(face, gindex, FT_LOAD_NO_HINTING);
+
+        *face->garray[gindex]->prelines = (FT_PreLineRec){1,2,3,4, NULL}; // need to revise structs and pointers.
+
       }
 
 
