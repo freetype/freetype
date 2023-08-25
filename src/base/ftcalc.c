@@ -1070,9 +1070,6 @@
   {
     FT_UInt   i;
     FT_Int64  temp;
-#ifndef FT_INT64
-    FT_Int64  halfUnit;
-#endif
 
 
 #ifdef FT_INT64
@@ -1117,13 +1114,10 @@
       FT_Add64( &temp, &multResult, &temp );
     }
 
-    /* Round value. */
-    halfUnit.hi = 0;
-    halfUnit.lo = 0x8000;
-    FT_Add64( &temp, &halfUnit, &temp );
+    /* Shift and round value. */
+    return (FT_Int32)( ( ( temp.hi << 16 ) | ( temp.lo >> 16 ) )
+                                     + ( 1 & ( temp.lo >> 15 ) ) );
 
-    return (FT_Int32)( ( (FT_Int32)( temp.hi & 0xFFFF ) << 16 ) |
-                                   ( temp.lo >> 16 )            );
 
 #endif /* !FT_INT64 */
 
