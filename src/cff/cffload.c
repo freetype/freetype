@@ -1361,7 +1361,7 @@
     for ( i = 0; i < numBlends; i++ )
     {
       const FT_Int32*  weight = &blend->BV[1];
-      FT_UInt32        sum;
+      FT_Fixed         sum;
 
 
       /* convert inputs to 16.16 fixed point */
