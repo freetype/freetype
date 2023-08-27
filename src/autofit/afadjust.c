@@ -21,7 +21,7 @@
 FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
 adjustment_database[] =
 {
-    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* ! *
+    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* ! */
     {0x69,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* i */
     {0x6A,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* j */
     {0xA1,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /*Inverted Exclamation Mark*/
@@ -417,7 +417,6 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
         FT_Long index = ( *map )->length++;
         ( *map )->entries[index].glyph_index = output_glyph_index;
         ( *map )->entries[index].codepoint = input_codepoint;
-        FT_TRACE4(("Adding entry: %d -> %d\n", output_glyph_index, input_codepoint));
 
         end: ;
     }

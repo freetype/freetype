@@ -2820,7 +2820,6 @@ af_remove_segments_containing_point(AF_GlyphHints hints, AF_Point point)
 
     if ( remove )
     {
-      FT_TRACE4(("Removing segment %d\n", i));
       /* first, check the first and last fields of the edge */
       AF_Edge edge = seg->edge;
       if ( edge->first == seg && edge->last == seg )
@@ -2989,8 +2988,6 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
     }
     while ( p != first_point );
 
-    FT_TRACE4(( "af_latin_stretch_tildes: Height: %d, measurement: %d, measurements taken: %d\n", height, min_measurement, measurements_taken ));
-
     FT_Pos new_min_y, new_max_y;
     new_min_y = new_max_y = first_point->y;
     p = first_point;
@@ -3006,8 +3003,6 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
       }
     }
     while ( p != first_point );
-
-    FT_TRACE4(( "af_latin_stretch_tildes: New height: %d\n, miny: %d, maxy: %d", new_max_y - new_min_y, new_min_y, new_max_y));
   }
 }
 
