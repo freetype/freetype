@@ -39,7 +39,6 @@
 #include <freetype/internal/ftdebug.h>
 
 #include "afblue.h"
-#include "afadjust.h"
 
 #ifdef FT_DEBUG_AUTOFIT
 #include FT_CONFIG_STANDARD_LIBRARY_H
@@ -410,6 +409,10 @@ extern void*  af_debug_hints_;
   /* This is the main structure that combines everything.  Autofit modules */
   /* specific to writing systems derive their structures from it, for      */
   /* example `AF_LatinMetrics'.                                            */
+
+  struct AF_ReverseCharacterMap_;
+
+  typedef struct AF_ReverseCharacterMap_ *AF_ReverseCharacterMap;
 
   typedef struct  AF_StyleMetricsRec_
   {

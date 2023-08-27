@@ -1154,7 +1154,7 @@
       }
       af_latin_metrics_check_digits( metrics, face );
 
-      af_reverse_character_map_new( face, &metrics->root.reverse_charmap, face->memory );
+      af_reverse_character_map_new( &metrics->root.reverse_charmap, metrics->root.globals );
     }
 
   Exit:

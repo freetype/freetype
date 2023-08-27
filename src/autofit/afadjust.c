@@ -8,6 +8,11 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  afadjust
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    #include <hb.h>
+    #include <hb-ot.h>
+#endif
+
 /*TODO: find out whether capital u/U with accent entries are needed*/
 /*the accent won't merge with the rest of the glyph because the accent mark is sitting above empty space*/
 /*
@@ -16,7 +21,7 @@
 FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
 adjustment_database[] =
 {
-    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* ! */
+    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* ! *
     {0x69,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* i */
     {0x6A,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* j */
     {0xA1,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /*Inverted Exclamation Mark*/
@@ -133,6 +138,12 @@ adjustment_database[] =
     {0x17E, AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}
 };
 
+FT_LOCAL_DEF( FT_Bool )
+af_adjustment_database_entry_equals( const AF_AdjustmentDatabaseEntry* a, const AF_AdjustmentDatabaseEntry* b )
+{
+    return a->codepoint == b->codepoint && a->vertical_separation_adjustment_type == b->vertical_separation_adjustment_type;
+}
+
 /*Helper function: get the adjustment database entry for a codepoint*/
 FT_LOCAL_DEF( const AF_AdjustmentDatabaseEntry* )
 af_adjustment_database_lookup( FT_UInt32 codepoint ) {
@@ -190,12 +201,12 @@ typedef struct AF_ReverseMapEntry_
 
 typedef struct AF_ReverseCharacterMap_
 {
-    FT_UInt length;
+    FT_Long length;
     AF_ReverseMapEntry *entries;
 } AF_ReverseCharacterMap_Rec;
 
 FT_LOCAL_DEF( FT_UInt32 )
-af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index )
+af_reverse_character_map_lookup_( AF_ReverseCharacterMap map, FT_Int glyph_index, FT_Long length )
 {
     if ( map == NULL )
     {
@@ -225,11 +236,51 @@ af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index 
     return 0;
 }
 
-FT_LOCAL_DEF( FT_Error )
-af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memory memory )
+FT_LOCAL_DEF( FT_UInt32 )
+af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index )
 {
+    return af_reverse_character_map_lookup_( map, glyph_index, map->length );
+}
+
+/*prepare to add one more entry to the reverse character map
+  this is a helper for af_reverse_character_map_new*/
+FT_LOCAL_DEF( FT_Error )
+af_reverse_character_map_expand( AF_ReverseCharacterMap map, FT_Long *capacity, FT_Memory memory )
+{
+    FT_Error error;
+    if ( map->length < *capacity )
+    {
+        return FT_Err_Ok;
+    }
+
+    if ( map->length == *capacity )
+    {
+        FT_Long new_capacity = *capacity + *capacity / 2;
+        if ( FT_RENEW_ARRAY( map->entries, map->length, new_capacity ) ) {
+            return error;
+        }
+        *capacity = new_capacity;
+    }
+
+    return FT_Err_Ok;
+}
+
+/* qsort compare function for reverse character map */
+FT_LOCAL_DEF( FT_Int )
+af_reverse_character_map_entry_compare( const void *a, const void *b ) {
+    const AF_ReverseMapEntry entry_a = *((const AF_ReverseMapEntry *)a);
+    const AF_ReverseMapEntry entry_b = *((const AF_ReverseMapEntry *)b);
+    return entry_a.glyph_index < entry_b.glyph_index ? -1 : entry_a.glyph_index > entry_b.glyph_index ? 1 : 0;
+}
+
+FT_LOCAL_DEF( FT_Error )
+af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals globals )
+{
+    FT_Face face = globals->face;
+    FT_Memory memory = face->memory;
     /* Search for a unicode charmap */
     /* If there isn't one, create a blank map */
+
 
     /*TODO: use GSUB lookups    */
     FT_TRACE4(( "af_reverse_character_map_new: building reverse character map\n" ));
@@ -237,7 +288,7 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
     FT_Error error;
     /* backup face->charmap because find_unicode_charmap sets it */
     FT_CharMap old_charmap = face->charmap;
-    if (( error = find_unicode_charmap( face ) )) {
+    if ( ( error = find_unicode_charmap( face ) ) ) {
         *map = NULL;
         goto Exit;
     }
@@ -247,8 +298,8 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
         goto Exit;
     }
 
-    FT_Int capacity = 10;
-    FT_Int size = 0;
+    FT_Long capacity = 10;
+    ( *map )->length = 0;
 
     if ( FT_NEW_ARRAY( ( *map )->entries, capacity) )
     {
@@ -268,19 +319,117 @@ af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memo
 #endif
             continue;
         }
-        if ( size == capacity )
-        {
-            capacity += capacity / 2;
-            if ( FT_RENEW_ARRAY((*map)->entries, size, capacity) )
-            {
-                goto Exit;
-            }
+        error = af_reverse_character_map_expand( *map, &capacity, memory );
+        if ( error ) {
+            goto Exit;
         }
-        size++;
+
+        ( *map )->length++;
         ( *map )->entries[i].glyph_index = glyph;
         ( *map )->entries[i].codepoint = codepoint;
     }
-    ( *map )->length = size;
+
+    ft_qsort(
+        ( *map )->entries,
+        ( *map )->length,
+        sizeof( AF_ReverseMapEntry ),
+        af_reverse_character_map_entry_compare
+    );
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    hb_font_t *hb_font = globals->hb_font;
+    hb_face_t *hb_face = hb_font_get_face( hb_font );
+    hb_set_t  *feature_indicies = hb_set_create();
+    FT_Long oldlength = ( *map )->length;
+    hb_ot_layout_collect_lookups(
+        hb_face,
+        HB_OT_TAG_GSUB,
+        NULL, /*all scripts*/
+        NULL, /*all languages*/
+        NULL, /*all features*/
+        feature_indicies
+    );
+    hb_codepoint_t feature_index = HB_SET_VALUE_INVALID;
+
+    FT_UInt added_entries = 0;
+    while ( hb_set_next(feature_indicies, &feature_index) )
+    {
+        hb_codepoint_t output_glyph_index;
+        /*TODO: find out whether I can reuse set instances instead of recreating*/
+        hb_set_t *glyphs_before = hb_set_create();
+        hb_set_t *glyphs_input = hb_set_create();
+        hb_set_t *glyphs_after = hb_set_create();
+        hb_set_t *glyphs_output = hb_set_create();
+        hb_ot_layout_lookup_collect_glyphs( hb_face, HB_OT_TAG_GSUB,
+                                            feature_index, glyphs_before,
+                                            glyphs_input, glyphs_after,
+                                            glyphs_output);
+        /*Don't consider anything involving context.  Just do the
+          simple cases*/
+        if ( hb_set_get_population( glyphs_before ) > 0 ||
+             hb_set_get_population( glyphs_after ) > 0 )
+        {
+            continue;
+        }
+        if ( hb_set_get_population( glyphs_output ) != 1 )
+        {
+            continue;
+        }
+
+        hb_codepoint_t input_glyph_index = HB_SET_VALUE_INVALID;
+        const AF_AdjustmentDatabaseEntry* input_entry = NULL;
+        FT_UInt32 input_codepoint;
+        while ( hb_set_next( glyphs_input, &input_glyph_index ) ) {
+            input_codepoint = af_reverse_character_map_lookup_( *map, input_glyph_index, oldlength );
+            if ( input_codepoint == 0 )
+            {
+                continue;
+            }
+            const AF_AdjustmentDatabaseEntry* entry = af_adjustment_database_lookup( input_codepoint );
+            if ( entry == NULL )
+            {
+                continue;
+            }
+
+            if ( input_entry == NULL )
+            {
+                input_entry = entry;
+            }
+            else
+            {
+                if ( !af_adjustment_database_entry_equals( input_entry, entry ) )
+                {
+                    goto end;
+                }
+            }
+        }
+
+
+        output_glyph_index = HB_SET_VALUE_INVALID;
+        hb_set_next( glyphs_output, &output_glyph_index );
+
+        /*Make pair output glyph index -> input unicode*/
+        error = af_reverse_character_map_expand( *map, &capacity, memory );
+        if ( error ) {
+            goto Exit;
+        }
+
+        FT_Long index = ( *map )->length++;
+        ( *map )->entries[index].glyph_index = output_glyph_index;
+        ( *map )->entries[index].codepoint = input_codepoint;
+        FT_TRACE4(("Adding entry: %d -> %d\n", output_glyph_index, input_codepoint));
+
+        end: ;
+    }
+
+    ft_qsort(
+        ( *map )->entries,
+        ( *map )->length,
+        sizeof( AF_ReverseMapEntry ),
+        af_reverse_character_map_entry_compare
+    );
+
+#endif /*FT_CONFIG_OPTION_USE_HARFBUZZ*/
 
 Exit:
     face->charmap = old_charmap;
@@ -296,7 +445,7 @@ Exit:
     }
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_TRACE4(( "    reverse character map built successfully"\
-                " with %d entries and %d failed lookups.\n", size, failed_lookups ));
+                " with %d entries and %d failed lookups.\n", (*map)->length, failed_lookups ));
 #endif
     return FT_Err_Ok;
 }

@@ -1,7 +1,8 @@
 #ifndef AFADJUST_H_
 #define AFADJUST_H_
-
 #include <freetype/fttypes.h>
+#include "aftypes.h"
+#include "afglobal.h"
 
 FT_BEGIN_HEADER
 
@@ -28,10 +29,6 @@ typedef struct AF_AdjustmentDatabaseEntry_
   AF_VerticalSeparationAdjustmentType vertical_separation_adjustment_type;
 } AF_AdjustmentDatabaseEntry;
 
-struct AF_ReverseCharacterMap_;
-
-typedef struct AF_ReverseCharacterMap_ *AF_ReverseCharacterMap;
-
 FT_LOCAL(AF_VerticalSeparationAdjustmentType)
 af_lookup_vertical_seperation_type( AF_ReverseCharacterMap map, FT_Int glyph_index );
 
@@ -43,7 +40,7 @@ af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index 
 
 /*allocate and populate the reverse character map, using the character map within the face*/
 FT_LOCAL( FT_Error )
-af_reverse_character_map_new( FT_Face face, AF_ReverseCharacterMap *map, FT_Memory memory );
+af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals globals );
 
 /*free the reverse character map*/
 FT_LOCAL( FT_Error )
