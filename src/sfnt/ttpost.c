@@ -224,11 +224,9 @@
         FT_UInt  len = strings[p];
 
 
-        if ( len > 63U )
-        {
-          error = FT_THROW( Invalid_File_Format );
-          goto Fail;
-        }
+        FT_TRACE4(( len < 40U ? "" 
+                              : "load_format_20: %u-byte name found\n",
+                                len ));
 
         strings[p]      = 0;
         name_strings[n] = strings + p + 1;
