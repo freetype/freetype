@@ -2805,7 +2805,14 @@
 
         FT_Load_Glyph(face, gindex, FT_LOAD_NO_HINTING);
 
-        *face->garray[gindex]->prelines = (FT_PreLineRec){1,2,3,4, NULL}; // need to revise structs and pointers.
+        // *face->garray[gindex]->prelines = (FT_PreLineRec){1,2,3,4, NULL}; // need to revise structs and pointers.
+        FT_PreLine pl = face->garray[gindex]->prelines = malloc(sizeof(FT_PreLineRec));
+        pl->x1 = 0;
+        pl->x2 = 1;
+        pl->y1 = 2;
+        pl->y2 = 3;
+        pl->next = NULL;
+
 
       }
 
