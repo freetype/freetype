@@ -243,7 +243,7 @@
 #ifdef _POSIX_CPUTIME
     clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &tv );
 #else
-    clock_gettime( CLOCK_REALTIME, &tv );
+    clock_gettime( CLOCK_MONOTONIC, &tv );
 #endif /* _POSIX_CPUTIME */
 
     return 1E6 * (double)tv.tv_sec + 1E-3 * (double)tv.tv_nsec;
@@ -276,14 +276,17 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
     int NUM_CHUNKS = max_iter / CHUNK_SIZE;
     double medians[NUM_CHUNKS];
 
-    // Cache and warmup
+    // Cache
     if (test->cache_first) { 
-      TIMER_START(&timer);
-      for(int i = 0; i<1+warmup; i++)    
-        test->bench(face, test->user_data);  
-      TIMER_STOP(&timer);  
+      test->bench(face, test->user_data);  
     }
-    
+
+    // Warmup
+    TIMER_START(&timer);
+    for(int i = 0; i<warmup; i++)    
+        test->bench(face, test->user_data);  
+    TIMER_STOP(&timer);
+
     printf("  %-25s ", test->title);
     fflush(stdout);
 
