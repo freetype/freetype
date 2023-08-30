@@ -190,8 +190,7 @@ if test -e ".git"; then
     :
   else
     echo "Checking out submodule in \`subprojects/dlg':"
-    git submodule init
-    git submodule update
+    git submodule update --init
   fi
 
   copy_submodule_files
