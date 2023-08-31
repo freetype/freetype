@@ -224,10 +224,9 @@
         FT_UInt  len = strings[p];
 
 
-        /* accept but report names longer than the AGL max */
-        FT_TRACE4(( len < 40U ? "" 
-                              : "load_format_20: %u-byte name found\n",
-                                len ));
+        /* all names in Adobe Glyph List are shorter than 40 characters */
+        if ( len >= 40U )
+          FT_TRACE4(( "load_format_20: unusual %u-char name found\n", len ));
 
         strings[p]      = 0;
         name_strings[n] = strings + p + 1;
