@@ -2542,6 +2542,147 @@
   }
 
 
+
+
+
+  static FT_Error ft_decompose_outline(FT_GlyphSlot* slot){
+    FT_Vector   v_last;
+    FT_Vector   v_control;
+    FT_Vector   v_start;
+
+    FT_Vector*  point;
+    FT_Vector*  limit;
+    char*       tags;
+
+    FT_Error    error;
+
+    FT_Int   n;         /* index of contour in outline     */
+    FT_Int   first;     /* index of first point in contour */
+    FT_Int   last;      /* index of last point in contour  */
+
+    FT_Int   tag;       /* current point's state           */
+
+    FT_Int   shift;
+    FT_Pos   delta;
+
+    FT_Outline* outline = &(*slot)->outline;
+
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
+    
+     for ( n = 0; n < outline->n_contours; n++ )
+    {
+      FT_TRACE5(( "FT_Outline_Decompose: Contour %d\n", n ));
+
+      first = last + 1;
+      last  = outline->contours[n];
+      if ( last < first ){
+        FT_TRACE5(( "Invalid Outline"));
+        break;
+      }
+      limit = outline->points + last;
+
+      v_start   = outline->points[first];
+
+
+      v_last   = outline->points[last];
+
+      v_control = v_start;
+
+      point = outline->points + first;
+      tags  = outline->tags   + first;
+      tag   = FT_CURVE_TAG( tags[0] );
+
+      /* A contour cannot start with a cubic control point! */
+      if ( tag == FT_CURVE_TAG_CUBIC )
+      {
+        FT_TRACE5(( "Invalid Outline"));
+        break;
+      }
+      /* check first point to determine origin */
+      if ( tag == FT_CURVE_TAG_CONIC )
+      {
+        /* first point is conic control.  Yes, this happens. */
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_CURVE_TAG_ON )
+        {
+          /* start at last point if it is on the curve */
+          v_start = v_last;
+          limit--;
+        }
+        else
+        {
+          /* if both first and last points are conic,         */
+          /* start at their middle and record its position    */
+          /* for closure                                      */
+          v_start.x = ( v_start.x + v_last.x ) / 2;
+          v_start.y = ( v_start.y + v_last.y ) / 2;
+
+       /* v_last = v_start; */
+        }
+        point--;
+        tags--;
+      }
+
+      FT_TRACE5(( "  move to (%.2f, %.2f)\n",
+                  (double)v_start.x / 64, (double)v_start.y / 64 ));
+     // error = func_interface->move_to( &v_start, user );
+      // if ( error )
+      //   goto Exit;
+
+      while ( point < limit )
+      {
+        point++;
+        tags++;
+
+        tag = FT_CURVE_TAG( tags[0] );
+        switch ( tag )
+        {
+        case FT_CURVE_TAG_ON:  /* emit a single line_to */
+          {
+            FT_Vector  vec;
+
+
+            vec.x = SCALED( point->x );
+            vec.y = SCALED( point->y );
+
+            FT_TRACE5(( "  line to (%.2f, %.2f)\n",
+                        (double)vec.x / 64, (double)vec.y / 64 ));
+            //error = func_interface->line_to( &vec, user );
+            FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
+            pl->x1 = v_last.x;
+            pl->y1 = v_last.y;
+            pl->x2 = vec.x;
+            pl->y2 = vec.y;
+            pl->next = NULL;
+            (*slot)->prelines->next = pl;
+            continue;
+          }
+
+        }
+      }
+
+      // /* close the contour with a line segment */
+      // FT_TRACE5(( "  line to (%.2f, %.2f)\n",
+      //             (double)v_start.x / 64, (double)v_start.y / 64 ));
+      // error = func_interface->line_to( &v_start, user );
+      
+    }
+
+      return 0;
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
   static FT_Error
   ft_open_face_internal( FT_Library           library,
                          const FT_Open_Args*  args,
@@ -2812,6 +2953,8 @@
         pl->y1 = 2;
         pl->y2 = 3;
         pl->next = NULL;
+
+        ft_decompose_outline(face->garray[gindex]);
 
 
       }
