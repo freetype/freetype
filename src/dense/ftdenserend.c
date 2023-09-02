@@ -90,7 +90,7 @@
                    FT_Render_Mode   mode,
                    const FT_Vector* origin )
   {
-    printf("%d %d %d %d \n", slot->prelines->x1, slot->prelines->x2, slot->prelines->y1, slot->prelines->y2);
+   // printf("%d %d %d %d \n", slot->prelines->x1, slot->prelines->x2, slot->prelines->y1, slot->prelines->y2);
     FT_Error    error   = FT_Err_Ok;
     FT_Outline* outline = &slot->outline;
     FT_Bitmap*  bitmap  = &slot->bitmap;
@@ -168,6 +168,7 @@
     /* set up parameters */
     params.target = bitmap;
     params.source = outline;
+    params.prelines = slot->prelines;
 
     /* render the outline */
     error =

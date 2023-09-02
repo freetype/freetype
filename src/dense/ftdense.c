@@ -9,6 +9,8 @@
 #include <freetype/internal/ftobjs.h>
 #include <math.h>
 
+
+#include <stdio.h>
 #include "ftdense.h"
 #include "ftdenseerrs.h"
 
@@ -416,10 +418,23 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
 )
 
 static int
-dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
+dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl )
 {
-  FT_Error error = FT_Outline_Decompose( &( worker->outline ),
-                                         &dense_decompose_funcs, worker );
+ // FT_Error error = FT_Outline_Decompose( &( worker->outline ),
+ //                                        &dense_decompose_funcs, worker );
+  FT_Vector point = {100, 100};
+  FT_Error error = dense_move_to(&point, worker);
+  while (pl!=NULL)
+  {
+    point.x = pl->x2/64;
+    point.y = pl->y2/64;
+    dense_line_to(&point, worker);
+    pl= pl->next;
+  }
+  point.x = 100;
+  point.y = 100;
+  dense_move_to(&point, worker);
+  
   // Render into bitmap
   const FT20D12* source = worker->m_a;
   unsigned char* dest     = target->buffer;
@@ -495,6 +510,8 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   FT_Bitmap*  target_map = params->target;
+  FT_PreLine pl = params->prelines;
+  printf("%d\n", pl->next->x1);
 
   dense_worker worker[1];
 
@@ -536,7 +553,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   // Invert the pitch to account for different +ve y-axis direction in dense array
   // (maybe temporary solution)
   target_map->pitch *= -1;
-  return dense_render_glyph( worker, target_map );
+  return dense_render_glyph( worker, target_map, pl );
 }
 
 FT_DEFINE_RASTER_FUNCS(

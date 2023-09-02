@@ -1059,6 +1059,7 @@ FT_BEGIN_HEADER
     FT_Raster_BitSet_Func   bit_set;      /* unused */
     void*                   user;
     FT_BBox                 clip_box;
+    void*             prelines;
 
   } FT_Raster_Params;
 

@@ -2570,9 +2570,12 @@
     if ( !outline )
       return FT_THROW( Invalid_Outline );
     
-     for ( n = 0; n < outline->n_contours; n++ )
+    last = -1;
+    FT_PreLine ptr = (*slot)->prelines;
+
+    for ( n = 0; n < outline->n_contours; n++ )
     {
-      FT_TRACE5(( "FT_Outline_Decompose: Contour %d\n", n ));
+      FT_TRACE5(( "ft_decompose_outline: Contour %d\n", n ));
 
       first = last + 1;
       last  = outline->contours[n];
@@ -2629,6 +2632,22 @@
       // if ( error )
       //   goto Exit;
 
+
+      FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
+            pl->x1 = v_start.x/64;
+            pl->y1 = v_start.y/64;
+            pl->x2 = v_start.x/64;
+            pl->y2 = v_start.y/64;
+            pl->next = NULL;
+
+            if((*slot)->prelines == NULL){
+                ptr = (*slot)->prelines = pl;
+            }else{
+            ptr->next = pl;
+
+            }
+      
+
       while ( point < limit )
       {
         point++;
@@ -2642,19 +2661,20 @@
             FT_Vector  vec;
 
 
-            vec.x = SCALED( point->x );
-            vec.y = SCALED( point->y );
+            vec.x = point->x;
+            vec.y = point->y;
 
             FT_TRACE5(( "  line to (%.2f, %.2f)\n",
                         (double)vec.x / 64, (double)vec.y / 64 ));
             //error = func_interface->line_to( &vec, user );
             FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
-            pl->x1 = v_last.x;
-            pl->y1 = v_last.y;
-            pl->x2 = vec.x;
-            pl->y2 = vec.y;
+            pl->x1 = v_last.x/64;
+            pl->y1 = v_last.y/64;
+            pl->x2 = vec.x/64;
+            pl->y2 = vec.y/64;
             pl->next = NULL;
-            (*slot)->prelines->next = pl;
+            ptr->next = pl;
+            ptr = ptr->next;
             continue;
           }
 
@@ -2947,14 +2967,15 @@
         FT_Load_Glyph(face, gindex, FT_LOAD_NO_HINTING);
 
         // *face->garray[gindex]->prelines = (FT_PreLineRec){1,2,3,4, NULL}; // need to revise structs and pointers.
-        FT_PreLine pl = face->garray[gindex]->prelines = malloc(sizeof(FT_PreLineRec));
-        pl->x1 = 0;
-        pl->x2 = 1;
-        pl->y1 = 2;
-        pl->y2 = 3;
-        pl->next = NULL;
+        // FT_PreLine pl = face->garray[gindex]->prelines = malloc(sizeof(FT_PreLineRec));
+        // pl->x1 = 0;
+        // pl->x2 = 1;
+        // pl->y1 = 2;
+        // pl->y2 = 3;
+        // pl->next = NULL;
 
-        ft_decompose_outline(face->garray[gindex]);
+
+        ft_decompose_outline(&face->garray[gindex]);
 
 
       }
