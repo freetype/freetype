@@ -98,7 +98,7 @@ FT_BEGIN_HEADER
 
     /* ignored for horizontal metrics */
     FT_UInt          blue_count;
-    AF_LatinBlueRec  blues[AF_BLUE_STRINGSET_MAX];
+    AF_LatinBlueRec  blues[AF_BLUE_STRINGSET_MAX_LEN];
 
     FT_Fixed         org_scale;
     FT_Pos           org_delta;
