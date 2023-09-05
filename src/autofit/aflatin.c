@@ -981,7 +981,7 @@
       /* `ref' and `shoot' values of two blue zones must not overlap */
 
       FT_UInt       i;
-      AF_LatinBlue  blue_sorted[AF_BLUE_STRINGSET_MAX_LEN + 2];
+      AF_LatinBlue  blue_sorted[AF_BLUE_STRINGSET_MAX_LEN];
 
 
       for ( i = 0; i < axis->blue_count; i++ )
