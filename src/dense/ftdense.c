@@ -85,9 +85,20 @@ dense_line_to( const FT_Vector* to, dense_worker* worker )
   return 0;
 }
 
+static int
+dense_line_to2( const FT_Vector* from, const FT_Vector* to, dense_worker* worker )
+{
+  dense_move_to( from, worker );
+  dense_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
+  dense_move_to( to, worker );
+  return 0;
+}
+
+
 void
 dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
 {
+  printf("Line from %d, %d to %d, %d\n", worker->prev_x, worker->prev_y, tox, toy);
 
   FT26D6 fx = worker->prev_x>>2;
   FT26D6 fy = worker->prev_y>>2;
@@ -422,18 +433,24 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
 {
  // FT_Error error = FT_Outline_Decompose( &( worker->outline ),
  //                                        &dense_decompose_funcs, worker );
-  FT_Vector point = {100, 100};
-  FT_Error error = dense_move_to(&point, worker);
+  FT_Vector point1 = {100, 100};
+  FT_Vector point2 = {100, 100};
+
+  FT_Error error = dense_move_to(&point1, worker);
   while (pl!=NULL)
   {
-    point.x = pl->x2/64;
-    point.y = pl->y2/64;
-    dense_line_to(&point, worker);
+    point1.x = pl->x1;
+    point1.y = pl->y1;
+    point2.x = pl->x2;
+    point2.y = pl->y2;
+
+
+    dense_line_to2(&point1, &point2, worker);
     pl= pl->next;
   }
-  point.x = 100;
-  point.y = 100;
-  dense_move_to(&point, worker);
+  // point.x = 100;
+  // point.y = 100;
+  // dense_move_to(&point, worker);
   
   // Render into bitmap
   const FT20D12* source = worker->m_a;
@@ -522,6 +539,9 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
     return FT_THROW( Invalid_Outline );
 
   worker->outline = *outline;
+
+
+
 
   if ( !target_map )
     return FT_THROW( Invalid_Argument );

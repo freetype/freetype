@@ -2668,8 +2668,8 @@
                         (double)vec.x / 64, (double)vec.y / 64 ));
             //error = func_interface->line_to( &vec, user );
             FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
-            pl->x1 = v_last.x/64;
-            pl->y1 = v_last.y/64;
+            pl->x1 = ptr->x2;
+            pl->y1 = ptr->y2;
             pl->x2 = vec.x/64;
             pl->y2 = vec.y/64;
             pl->next = NULL;
