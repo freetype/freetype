@@ -204,8 +204,8 @@
     /* now load the name strings */
     if ( num_names )
     {
-      FT_ULong   p;
-      FT_Byte*   strings;
+      FT_Byte*   p;
+      FT_Byte*   p_end;
 
 
       post_len -= (FT_ULong)num_glyphs * 2;
@@ -214,25 +214,27 @@
                                     post_len + 1 ) )
         goto Fail;
 
-      strings = (FT_Byte*)( name_strings + num_names );
-      if ( FT_STREAM_READ( strings, post_len ) )
+      p = (FT_Byte*)( name_strings + num_names );
+      if ( FT_STREAM_READ( p, post_len ) )
         goto Fail;
 
+      p_end = p + post_len;
+
       /* convert from Pascal- to C-strings and set pointers */
-      for ( p = 0, n = 0; p < post_len && n < num_names; n++ )
+      for ( n = 0; p < p_end && n < num_names; n++ )
       {
-        FT_UInt  len = strings[p];
+        FT_UInt  len = *p;
 
 
         /* all names in Adobe Glyph List are shorter than 40 characters */
         if ( len >= 40U )
           FT_TRACE4(( "load_format_20: unusual %u-char name found\n", len ));
 
-        strings[p]      = 0;
-        name_strings[n] = strings + p + 1;
-        p              += len + 1;
+        *p++            = 0;
+        name_strings[n] = p;
+        p              += len;
       }
-      strings[post_len] = 0;
+      *p_end = 0;
 
       /* deal with missing or insufficient string data */
       if ( n < num_names )
@@ -241,7 +243,7 @@
                     num_names - n ));
 
         for ( ; n < num_names; n++ )
-          name_strings[n] = strings + post_len;
+          name_strings[n] = p_end;
       }
     }
 
