@@ -312,10 +312,7 @@
       {
         retval = ft_strlen( type1->glyph_names[idx] ) + 1;
         if ( value && value_len >= retval )
-        {
           ft_memcpy( value, (void *)( type1->glyph_names[idx] ), retval );
-          ((FT_Char *)value)[retval - 1] = (FT_Char)'\0';
-        }
       }
       break;
 
@@ -344,11 +341,8 @@
       {
         retval = ft_strlen( type1->encoding.char_name[idx] ) + 1;
         if ( value && value_len >= retval )
-        {
           ft_memcpy( value, (void *)( type1->encoding.char_name[idx] ),
-                     retval - 1 );
-          ((FT_Char *)value)[retval - 1] = (FT_Char)'\0';
-        }
+                     retval );
       }
       break;
 
