@@ -152,18 +152,20 @@
   static const FT_String*
   tt_skip_pdffont_random_tag( const FT_String*  name )
   {
-    unsigned int  i;
+    if ( ft_isupper( name[0] ) &&
+         ft_isupper( name[1] ) &&
+         ft_isupper( name[2] ) &&
+         ft_isupper( name[3] ) &&
+         ft_isupper( name[4] ) &&
+         ft_isupper( name[5] ) &&
+              '+' == name[6]   &&
+                     name[7]   )
+    {
+      FT_TRACE7(( "name without randomization tag: %s\n", name + 7 ));
+      return name + 7;
+    }
 
-
-    if ( ft_strlen( name ) < 8 || name[6] != '+' )
-      return name;
-
-    for ( i = 0; i < 6; i++ )
-      if ( !ft_isupper( name[i] ) )
-        return name;
-
-    FT_TRACE7(( "name without randomization tag: %s\n", name + 7 ));
-    return name + 7;
+    return name;
   }
 
 
