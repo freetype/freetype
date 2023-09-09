@@ -1288,9 +1288,8 @@
             if ( !name )
               continue;
 
-            if ( cur[0] == name[0]                      &&
-                 len == ft_strlen( (const char *)name ) &&
-                 ft_memcmp( cur, name, len ) == 0       )
+            if ( keyword->len == len              &&
+                 ft_memcmp( cur, name, len ) == 0 )
             {
               /* we found it -- run the parsing callback! */
               parser->root.error = t42_load_keyword( face,
