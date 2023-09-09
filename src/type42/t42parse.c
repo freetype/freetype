@@ -99,7 +99,7 @@
     T1_FIELD_CALLBACK( "CharStrings", t42_parse_charstrings, 0 )
     T1_FIELD_CALLBACK( "sfnts",       t42_parse_sfnts,       0 )
 
-    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
+    { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
   };
 
 

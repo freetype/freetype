@@ -388,7 +388,7 @@
     T1_FIELD_CALLBACK( "ExpansionFactor", parse_expansion_factor, 0 )
     T1_FIELD_CALLBACK( "FontName",        parse_font_name, 0 )
 
-    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
+    { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
   };
 
 

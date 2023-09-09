@@ -2284,7 +2284,7 @@
                        T1_FIELD_DICT_PRIVATE )
 #endif
 
-    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
+    { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
   };
 
 
