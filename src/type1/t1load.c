@@ -2284,7 +2284,7 @@
                        T1_FIELD_DICT_PRIVATE )
 #endif
 
-    { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
+    T1_FIELD_ZERO
   };
 
 
@@ -2392,14 +2392,10 @@
           T1_Field  keyword = (T1_Field)t1_keywords;
 
 
-          for (;;)
+          while ( keyword->len )
           {
-            FT_Byte*  name;
+            FT_Byte*  name = (FT_Byte*)keyword->ident;
 
-
-            name = (FT_Byte*)keyword->ident;
-            if ( !name )
-              break;
 
             if ( keyword->len == len              &&
                  ft_memcmp( cur, name, len ) == 0 )

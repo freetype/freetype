@@ -388,7 +388,7 @@
     T1_FIELD_CALLBACK( "ExpansionFactor", parse_expansion_factor, 0 )
     T1_FIELD_CALLBACK( "FontName",        parse_font_name, 0 )
 
-    { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
+    T1_FIELD_ZERO
   };
 
 
@@ -469,14 +469,10 @@
             T1_Field  keyword = (T1_Field)cid_field_records;
 
 
-            for (;;)
+            while ( keyword->len )
             {
-              FT_Byte*  name;
+              FT_Byte*  name = (FT_Byte*)keyword->ident;
 
-
-              name = (FT_Byte*)keyword->ident;
-              if ( !name )
-                break;
 
               if ( keyword->len == len              &&
                    ft_memcmp( cur, name, len ) == 0 )
@@ -489,6 +485,7 @@
                   return parser->root.error;
                 break;
               }
+
               keyword++;
             }
           }

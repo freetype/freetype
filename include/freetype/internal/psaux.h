@@ -276,7 +276,7 @@ FT_BEGIN_HEADER
           {                                                 \
             sizeof ( _ident ) - 1,                          \
             _ident, T1CODE, _type,                          \
-            0,                                              \
+            NULL,                                           \
             FT_FIELD_OFFSET( _fname ),                      \
             FT_FIELD_SIZE( _fname ),                        \
             0, 0,                                           \
@@ -297,7 +297,7 @@ FT_BEGIN_HEADER
           {                                                      \
             sizeof ( _ident ) - 1,                               \
             _ident, T1CODE, _type,                               \
-            0,                                                   \
+            NULL,                                                \
             FT_FIELD_OFFSET( _fname ),                           \
             FT_FIELD_SIZE_DELTA( _fname ),                       \
             _max,                                                \
@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
           {                                                       \
             sizeof ( _ident ) - 1,                                \
             _ident, T1CODE, _type,                                \
-            0,                                                    \
+            NULL,                                                 \
             FT_FIELD_OFFSET( _fname ),                            \
             FT_FIELD_SIZE_DELTA( _fname ),                        \
             _max, 0,                                              \
@@ -358,6 +358,8 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_CALLBACK( _ident, _name, _dict )       \
           T1_NEW_CALLBACK_FIELD( _ident, _name, _dict )
+
+#define T1_FIELD_ZERO  { 0, NULL, 0, 0, NULL, 0, 0, 0, 0, 0 }
 
 
   /*************************************************************************/
