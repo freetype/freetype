@@ -17,6 +17,7 @@
 
 
 #include <freetype/freetype.h>
+#include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/services/svcfftl.h>
@@ -1755,7 +1756,7 @@
             args[0] = 46341;
           else if ( args[0] > 0 )
           {
-            FT_Fixed  root = args[0];
+            FT_Fixed  root = 1 << ( ( 17 + FT_MSB( args[0] ) ) >> 1 );
             FT_Fixed  new_root;
 
 
