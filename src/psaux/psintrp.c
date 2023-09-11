@@ -37,6 +37,7 @@
 
 
 #include "psft.h"
+#include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/services/svcfftl.h>
 
@@ -2276,9 +2277,8 @@
                     arg = cf2_stack_popFixed( opStack );
                     if ( arg > 0 )
                     {
-                      /* use a start value that doesn't make */
-                      /* the algorithm's addition overflow   */
-                      FT_Fixed  root = arg < 10 ? arg : arg >> 1;
+                      /* initial guess based on the most significant bit */
+                      FT_Fixed  root = 1 << ( ( 17 + FT_MSB( arg ) ) >> 1 );
                       FT_Fixed  new_root;
 
 
