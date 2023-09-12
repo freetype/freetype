@@ -3,7 +3,7 @@ FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
 FTBENCH_BIN = $(OBJ_DIR)/bench$E
-FTBENCH_FLAG ?= -c 750 -w 50
+FTBENCH_FLAG ?= -c 1000 -w 100
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 BASELINE_DIR = $(OBJ_DIR)/baseline/
@@ -12,7 +12,7 @@ BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BASELINE_INFO = $(BASELINE_DIR)info.txt
 BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
-HTMLCREATOR = $(FTBENCH_DIR)/src/tohtml.py
+HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
 FT_INCLUDES := $(OBJ_BUILD) \

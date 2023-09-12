@@ -1046,6 +1046,10 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
   {
     FT_Face   face;
     FT_Error  error;
+    btimer_t total;
+
+    TIMER_RESET(&total);
+    TIMER_START(&total);
 
     unsigned long  max_bytes      = CACHE_SIZE * 1024;
     char*          test_string    = NULL;
@@ -1390,7 +1394,7 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
     if ( max_iter )
       printf( "number of iterations for each test: at most %d\n",
               max_iter );
-    printf( "number of iteration as warmup in all tests: %d\n",
+    printf( "number of iterations as warmup in all tests: %d\n",
               warmup_iter );
 
     printf( "\n"
@@ -1562,6 +1566,9 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
         break;
       }
     }
+    TIMER_STOP(&total);
+    double total_time = TIMER_GET(&total);
+    printf("\nTotal time: %.0fs\n", total_time/1000000);
 
     if ( cache_man )
       FTC_Manager_Done( cache_man );
