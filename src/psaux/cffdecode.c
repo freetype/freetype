@@ -1753,7 +1753,7 @@
 
           /* without upper limit the loop below might not finish */
           if ( args[0] > 0x7FFFFFFFL )
-            args[0] = 46341;
+            args[0] = 0xB504F3L;    /* sqrt( 32768.0 ) */
           else if ( args[0] > 0 )
           {
             FT_Fixed  root = 1 << ( ( 17 + FT_MSB( args[0] ) ) >> 1 );
