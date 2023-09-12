@@ -5791,7 +5791,7 @@
     ttface = (TT_Face)face;
     sfnt   = (SFNT_Service)ttface->sfnt;
 
-    if ( sfnt->get_colr_layer )
+    if ( sfnt->get_colr_glyph_paint )
       return sfnt->get_colr_glyph_paint( ttface,
                                          base_glyph,
                                          root_transform,
