@@ -187,8 +187,17 @@ af_lookup_vertical_seperation_type( AF_ReverseCharacterMap map, FT_Int glyph_ind
 FT_LOCAL_DEF( FT_Int )
 af_lookup_tilde_correction_type( AF_ReverseCharacterMap map, FT_Int glyph_index ) {
     FT_UInt32 codepoint = af_reverse_character_map_lookup( map, glyph_index );
-    if ( codepoint == 0xF1 ) {
-        return 1;
+    /* bits are: apply stretch, apply segment removal */
+    if ( codepoint == 0xF1 ) { /*n tilde*/
+        return 0b01;
+    }
+    else if ( codepoint == 0xE3 ) /*a tilde*/
+    {
+        return 0b11;
+    }
+    else if ( codepoint == 0xF5 ) /*o tilde*/
+    {
+        return 0b10;
     }
     return 0;
 }
@@ -336,7 +345,8 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
         af_reverse_character_map_entry_compare
     );
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#if 0
+/*#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ*/
     hb_font_t *hb_font = globals->hb_font;
     hb_face_t *hb_face = hb_font_get_face( hb_font );
     hb_set_t  *feature_indicies = hb_set_create();
@@ -350,8 +360,6 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
         feature_indicies
     );
     hb_codepoint_t feature_index = HB_SET_VALUE_INVALID;
-
-    FT_UInt added_entries = 0;
     while ( hb_set_next(feature_indicies, &feature_index) )
     {
         hb_codepoint_t output_glyph_index;
@@ -366,6 +374,20 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
                                             glyphs_output);
         /*Don't consider anything involving context.  Just do the
           simple cases*/
+        FT_TRACE4(("num inputs: %d\n", hb_set_get_population( glyphs_input )));
+        FT_TRACE4(("num outputs: %d\n", hb_set_get_population( glyphs_output )));
+        FT_TRACE4(("num before: %d\n", hb_set_get_population( glyphs_before )));
+        FT_TRACE4(("num after: %d\n", hb_set_get_population( glyphs_after )));
+        hb_codepoint_t input = HB_SET_VALUE_INVALID;
+        while ( hb_set_next( glyphs_input, &input ) )
+        {
+            FT_TRACE4(("input: %d\n", input));
+        }
+        hb_codepoint_t output = HB_SET_VALUE_INVALID;
+        while ( hb_set_next( glyphs_output, &output ) )
+        {
+            FT_TRACE4(("output: %d\n", output));
+        }
         if ( hb_set_get_population( glyphs_before ) > 0 ||
              hb_set_get_population( glyphs_after ) > 0 )
         {
@@ -378,17 +400,21 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
 
         hb_codepoint_t input_glyph_index = HB_SET_VALUE_INVALID;
         const AF_AdjustmentDatabaseEntry* input_entry = NULL;
-        FT_UInt32 input_codepoint;
+        FT_UInt32 input_codepoint = 0;
         while ( hb_set_next( glyphs_input, &input_glyph_index ) ) {
-            input_codepoint = af_reverse_character_map_lookup_( *map, input_glyph_index, oldlength );
-            if ( input_codepoint == 0 )
+            FT_TRACE4(("input glyph: %d\n", input_glyph_index));
+            FT_UInt32 inner_codepoint = af_reverse_character_map_lookup_( *map, input_glyph_index, oldlength );
+            if ( inner_codepoint == 0 )
             {
                 continue;
             }
-            const AF_AdjustmentDatabaseEntry* entry = af_adjustment_database_lookup( input_codepoint );
+            const AF_AdjustmentDatabaseEntry* entry = af_adjustment_database_lookup( inner_codepoint );
             if ( entry == NULL )
             {
                 continue;
+            }
+            if ( input_codepoint == 0 ) {
+                input_codepoint = inner_codepoint;
             }
 
             if ( input_entry == NULL )
@@ -404,6 +430,10 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
             }
         }
 
+        if ( input_codepoint == 0 )
+        {
+            continue;
+        }
 
         output_glyph_index = HB_SET_VALUE_INVALID;
         hb_set_next( glyphs_output, &output_glyph_index );

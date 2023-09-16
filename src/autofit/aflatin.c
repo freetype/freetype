@@ -2809,13 +2809,18 @@ af_remove_segments_containing_point(AF_GlyphHints hints, AF_Point point)
   {
     AF_Segment seg = &segments[i];
     FT_Bool remove = 0;
-    for ( AF_Point p = seg->first; p <= seg->last; p = p->next )
+    AF_Point p = seg->first;
+    while ( 1 )
     {
       if ( p == point )
       {
         remove = 1;
         break;
       }
+      if (p == seg->last) {
+        break;
+      }
+      p = p->next;
     }
 
     if ( remove )
@@ -2856,7 +2861,7 @@ af_latin_stretch_tildes_step_2( AF_GlyphHints hints,
                                 FT_Int glyph_index,
                                 AF_ReverseCharacterMap reverse_charmap )
 {
-  if (af_lookup_tilde_correction_type(reverse_charmap, glyph_index)) {
+  if (af_lookup_tilde_correction_type(reverse_charmap, glyph_index) & 1) {
     FT_Int highest_contour = af_find_highest_contour(hints);
     AF_Point first_point = hints->contours[highest_contour];
 
@@ -2872,18 +2877,17 @@ af_latin_stretch_tildes_step_2( AF_GlyphHints hints,
             && p->prev->flags & AF_FLAG_CONTROL
             && p->next->flags & AF_FLAG_CONTROL*/ 1 )
       {
+        FT_TRACE4(("%p", p));
         af_remove_segments_containing_point( hints, p );
       }
     } while ( p != first_point );
   }
-
 }
-
 void
 af_latin_stretch_tildes( AF_GlyphHints hints,
                          FT_Int glyph_index,
                          AF_ReverseCharacterMap reverse_charmap ) {
-  if ( af_lookup_tilde_correction_type( reverse_charmap, glyph_index ) ) {
+  if ( af_lookup_tilde_correction_type( reverse_charmap, glyph_index ) & 2 ) {
     FT_Int highest_contour = af_find_highest_contour( hints );
     AF_Point p = hints->contours[highest_contour];
     AF_Point first_point = p;
@@ -4116,7 +4120,7 @@ static void traceheight(FT_UInt num, AF_GlyphHints hints) {
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
-      /*af_latin_stretch_tildes( hints, glyph_index, metrics->root.reverse_charmap );*/
+      af_latin_stretch_tildes( hints, glyph_index, metrics->root.reverse_charmap );
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
                                               axis->width_count,
