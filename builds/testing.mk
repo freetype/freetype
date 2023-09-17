@@ -12,6 +12,7 @@ BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BASELINE_INFO = $(BASELINE_DIR)info.txt
 BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
+HTMLCREATOR_SRC = $(FTBENCH_DIR)/src/tohtml.py
 HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
@@ -82,6 +83,11 @@ $(FTBENCH_BIN): $(FTBENCH_OBJ)
 	@$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
 	@echo "Built."
 
+.PHONY: copy-html-script
+copy-html-script:
+	@cp $(HTMLCREATOR_SRC) $(OBJ_DIR)
+	@echo "Copied tohtml.py to $(OBJ_DIR)"
+
 # Create a baseline
 .PHONY: baseline
 baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
@@ -104,7 +110,7 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 
 # Benchmark and compare to baseline
 .PHONY: benchmark
-benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
+benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR) copy-html-script
 	@$(RM) -f $(BENCHMARK) $(HTMLFILE)
 	@echo "Creating benchmark..."
 	@echo "$(FTBENCH_FLAG)" > $(BENCHMARK_INFO)
@@ -127,5 +133,5 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR)
 clean-benchmark:
 	@echo "Cleaning..."
 	@$(RM) $(FTBENCH_BIN) $(FTBENCH_OBJ)
-	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE)
+	@$(RM) -rf $(BASELINE_DIR) $(BENCHMARK_DIR) $(HTMLFILE) $(HTMLCREATOR)
 	@echo "Cleaned"
