@@ -39,7 +39,7 @@ FONT_COUNT = 5
 
 WARNING_SAME_COMMIT = "Warning: Baseline and Benchmark have the same commit ID!"
 INFO_1 = "* Average time for single iteration. Smaller values are better."
-INFO_2 = "* If a value in the 'Iterations' column is given as '*x* | *y*', values *x* and *y* give the number of iterations in the baseline and the benchmark test, respectively."
+INFO_2 = "* If a value in the 'Iterations' column is given as '<i>x | y</i>', values <i>x</i> and <i>y</i> give the number of iterations in the baseline and the benchmark test, respectively."
 
   
 
@@ -189,7 +189,7 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
         
         n_display = f"{n_baseline:.0f} | {n_benchmark:.0f}" if n_baseline != n_benchmark else int(n_baseline)
         
-        diff = ((baseline - benchmark) / baseline) * 100
+        diff = ((baseline - benchmark) / baseline) * 100 if not (baseline - benchmark) == 0 else 0
 
         # Calculate for total row
         total_baseline += baseline
@@ -210,7 +210,7 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
    
         
 
-    total_diff = ((total_baseline - total_benchmark) / total_baseline) * 100
+    total_diff = ((total_baseline - total_benchmark) / total_baseline) * 100 if not (total_baseline - total_benchmark) == 0 else 0
     total_n_display = f"{total_n_baseline} | {total_n_benchmark}" if total_n_baseline != total_n_benchmark else str(total_n_baseline)
     
     write_to_html(
@@ -270,7 +270,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
 
                 percentage_diff = (
                     (baseline_value - benchmark_value) / baseline_value
-                ) * 100
+                ) * 100 if not (baseline_value - benchmark_value) == 0 else 0
 
                 baseline_n = baseline_match.group(3)
                 benchmark_n = benchmark_match.group(3)

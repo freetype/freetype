@@ -121,7 +121,7 @@ baseline: $(FTBENCH_BIN) $(BASELINE_DIR)
 	for font in $${fonts[@]}; do \
 		step=$$((step+1)); \
 		percent=$$((step * 100 / total_fonts)); \
-		printf "\rProcessing %d%%..." $$percent; \
+		printf "\nProcessing %d%%..." $$percent; \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BASELINE_DIR)$$(basename $$font .ttf).txt; \
 	done
 	@echo "Baseline created."
@@ -141,7 +141,7 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR) copy-html-script
 	for font in $${fonts[@]}; do \
 		step=$$((step+1)); \
 		percent=$$((step * 100 / total_fonts)); \
-		printf "\rProcessing %d%%..." $$percent; \
+		printf "\nProcessing %d%%..." $$percent; \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BENCHMARK_DIR)$$(basename $$font .ttf).txt; \
 	done
 	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
