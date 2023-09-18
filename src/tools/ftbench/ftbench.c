@@ -281,14 +281,14 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
     double medians[NUM_CHUNKS];
 
     // Cache
-    if (test->cache_first) { 
-      test->bench(face, test->user_data);  
+    if (test->cache_first) {
+      test->bench(face, test->user_data);
     }
 
     // Warmup
     TIMER_START(&timer);
-    for(int i = 0; i<warmup; i++)    
-        test->bench(face, test->user_data);  
+    for(int i = 0; i<warmup; i++)
+        test->bench(face, test->user_data);
     TIMER_STOP(&timer);
 
     printf("  %-25s ", test->title);
@@ -299,22 +299,22 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
         TIMER_START(&timer);
 
         // Execute a chunk of iterations
-        for (n = 0, done = 0; n < CHUNK_SIZE; n++) {  
+        for (n = 0, done = 0; n < CHUNK_SIZE; n++) {
             done += test->bench(face, test->user_data);
         }
         TIMER_STOP(&timer);
         medians[chunk] = TIMER_GET(&timer);
-        
-        
+
+
         total_time += medians[chunk];
         total_done += done;
 
          // Check max_time for each iteration, break if exceeded
           if (total_time > 1E6 * max_time)
               break;
-          
+
     }
-   
+
     qsort(medians, NUM_CHUNKS, sizeof(double), compare);
     double final_median;
     if (NUM_CHUNKS % 2 == 0) {
@@ -322,7 +322,7 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
     } else {
         final_median = medians[NUM_CHUNKS / 2];
     }
-    
+
     printf("%10.1f microseconds %10d done\n", final_median/CHUNK_SIZE, total_done);
 }
 
@@ -512,7 +512,7 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
         continue;
 
       FT_Glyph_Get_CBox( glyph, FT_GLYPH_BBOX_PIXELS, &bbox );
- 
+
       FT_Done_Glyph( glyph );
       done++;
     }
@@ -1307,9 +1307,9 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
         if ( warmup_iter < 0 )
           warmup_iter = -warmup_iter;
         break;
-       
-  
-      
+
+
+
         /* break; */
 
       default:

@@ -6,7 +6,6 @@ FTBENCH_BIN = $(OBJ_DIR)/bench$E
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
 
-
 # Define objects.
 BASELINE_DIR = $(OBJ_DIR)/baseline/
 BENCHMARK_DIR = $(OBJ_DIR)/benchmark/
@@ -17,8 +16,7 @@ HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
 # Define flags by default
-FTBENCH_FLAG ?= -c 1000 -w 100
-
+FTBENCH_FLAG ?= -c 100 -w 10
 
 # Define test fonts all in the fonts folder.
 BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
@@ -26,7 +24,7 @@ BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
 
 
 FT_INCLUDES := $(OBJ_BUILD) \
-                 $(INCLUDES) 
+                 $(INCLUDES)
 
 COMPILE = $(CC) $(ANSIFLAGS) \
                   $(INCLUDES:%=$I%) \
@@ -49,7 +47,7 @@ ifeq ($(PLATFORM),unix)
 	# link the FreeType library.
     LINK_CMD    = $(LIBTOOL) --mode=link $(CCraw) \
                   $(subst /,$(COMPILER_SEP),$(LDFLAGS))
-    LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) 
+    LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE))
 else
     LINK_CMD = $(CC) $(subst /,$(COMPILER_SEP),$(LDFLAGS))
     ifeq ($(PLATFORM),unixdev)
@@ -90,12 +88,12 @@ $(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
 # Create ftbench object
-$(FTBENCH_OBJ): $(FTBENCH_SRC) 
+$(FTBENCH_OBJ): $(FTBENCH_SRC)
 	@$(COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<) $(EXTRAFLAGS)
 	@echo "Object created."
 
 # Build ftbench
-$(FTBENCH_BIN): $(FTBENCH_OBJ) 
+$(FTBENCH_BIN): $(FTBENCH_OBJ)
 	@echo "Linking ftbench..."
 	@$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
 	@echo "Built."
