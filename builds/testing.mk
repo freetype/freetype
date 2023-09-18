@@ -1,20 +1,29 @@
-# Variables
+# Define a few important variables.
 FTBENCH_DIR = $(TOP_DIR)/src/tools/ftbench
 FTBENCH_SRC = $(FTBENCH_DIR)/ftbench.c
 FTBENCH_OBJ = $(OBJ_DIR)/bench.$(SO)
 FTBENCH_BIN = $(OBJ_DIR)/bench$E
-FTBENCH_FLAG ?= -c 1000 -w 100
 INCLUDES = $(TOP_DIR)/include
 FONTS = $(wildcard $(FTBENCH_DIR)/fonts/*.ttf)
+
+
+# Define objects.
 BASELINE_DIR = $(OBJ_DIR)/baseline/
 BENCHMARK_DIR = $(OBJ_DIR)/benchmark/
-BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
-BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
 BASELINE_INFO = $(BASELINE_DIR)info.txt
 BENCHMARK_INFO = $(BENCHMARK_DIR)info.txt
 HTMLCREATOR_SRC = $(FTBENCH_DIR)/src/tohtml.py
 HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
+
+# Define flags by default
+FTBENCH_FLAG ?= -c 1000 -w 100
+
+
+# Define test fonts all in the fonts folder.
+BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
+BENCHMARK = $(addprefix $(BENCHMARK_DIR), $(notdir $(FONTS:.ttf=.txt)))
+
 
 FT_INCLUDES := $(OBJ_BUILD) \
                  $(INCLUDES) 
@@ -23,12 +32,9 @@ COMPILE = $(CC) $(ANSIFLAGS) \
                   $(INCLUDES:%=$I%) \
                   $(CFLAGS)
 
-ifeq ($(PLATFORM),unix)
-    ifdef DEVEL_DIR
-      PLATFORM := unixdev
-    endif
-endif
-
+# Enable C99 for gcc to avoid warnings.
+# Note that clang++ aborts with an error if we use `-std=C99',
+# so check for `++' in $(CC) also.
 ifneq ($(findstring -pedantic,$(COMPILE)),)
     ifeq ($(findstring ++,$(CC)),)
       COMPILE += -std=c99
@@ -38,12 +44,17 @@ endif
 FTLIB := $(LIB_DIR)/$(LIBRARY).$A
 
 ifeq ($(PLATFORM),unix)
+	# `LDFLAGS` comes from the `configure` script (via FreeType's
+	# `builds/unix/unix-cc.mk`), holding all linker flags necessary to
+	# link the FreeType library.
     LINK_CMD    = $(LIBTOOL) --mode=link $(CCraw) \
                   $(subst /,$(COMPILER_SEP),$(LDFLAGS))
     LINK_LIBS   = $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) 
 else
     LINK_CMD = $(CC) $(subst /,$(COMPILER_SEP),$(LDFLAGS))
     ifeq ($(PLATFORM),unixdev)
+		# For the pure `make` call (without using `configure`) we have to add
+		# all needed libraries manually.
       LINK_LIBS := $(subst /,$(COMPILER_SEP),$(FTLIB) $(EFENCE)) \
                    -lm -lrt -lz -lbz2 -lpthread
       LINK_LIBS += $(shell pkg-config --libs libpng)
@@ -55,10 +66,15 @@ else
     endif
 endif
 
+# Only on Windows we might fall back on GDI+ for PNG saving
 ifeq ($(OS),Windows_NT)
     LINK_LIBS += -lgdiplus
 endif
 
+####################################################################
+#
+# POSIX TERMIOS: Do not define if you use OLD U*ix like 4.2BSD.
+#
 ifeq ($(PLATFORM),unix)
     EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
 endif
@@ -73,6 +89,7 @@ INCLUDES := $(subst /,$(COMPILER_SEP),$(FT_INCLUDES))
 $(BASELINE_DIR) $(BENCHMARK_DIR):
 	@mkdir -p $@
 
+# Create ftbench object
 $(FTBENCH_OBJ): $(FTBENCH_SRC) 
 	@$(COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<) $(EXTRAFLAGS)
 	@echo "Object created."
@@ -83,6 +100,7 @@ $(FTBENCH_BIN): $(FTBENCH_OBJ)
 	@$(LINK_CMD) $T$(subst /,$(COMPILER_SEP),$@ $<) $(LINK_LIBS)
 	@echo "Built."
 
+# Copy tohtml.py into objs folder
 .PHONY: copy-html-script
 copy-html-script:
 	@cp $(HTMLCREATOR_SRC) $(OBJ_DIR)

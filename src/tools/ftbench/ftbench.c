@@ -259,7 +259,8 @@
 #define TIMER_GET( timer )    ( timer )->total
 #define TIMER_RESET( timer )  ( timer )->total = 0
 
-#define CHUNK_SIZE 50
+#define ITER 1000
+#define CHUNK_SIZE 100
 
 int compare(const void* a, const void* b) {
     if (*(double*)a > *(double*)b) return 1;
@@ -273,7 +274,10 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
     double total_time = 0.0;
     btimer_t timer;
 
-    int NUM_CHUNKS = max_iter / CHUNK_SIZE;
+    if(max_iter == 0)
+      max_iter = ITER;
+
+    int NUM_CHUNKS = max_iter / CHUNK_SIZE; // split the total iterations into chunks to remove the outliers.
     double medians[NUM_CHUNKS];
 
     // Cache
@@ -961,7 +965,6 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
                 ps_hinting_engine_names[ps_hinting_engines[0]],
                 ps_hinting_engine_names[ps_hinting_engines[1]] );
 
-    // TODO: add here -w option
     fprintf( stderr,
       "\n"
       "ftbench: run FreeType benchmarks\n"
@@ -1000,6 +1003,7 @@ static void benchmark(FT_Face face, btest_t* test, int max_iter, double max_time
              FACE_SIZE );
     fprintf( stderr,
       "  -t T      Use at most T seconds per bench (default is %.0f).\n"
+       "  -w N      Use N iterations for warming up before each test\n"
       "\n"
       "  -b tests  Perform chosen tests (default is all):\n",
              BENCH_TIME );

@@ -1,4 +1,5 @@
 #!/bin/bash
+# This tool is to subset fonts.
 
 # Define the Unicode range
 unicodes="U+0021-007E"
