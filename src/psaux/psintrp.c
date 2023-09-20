@@ -2276,22 +2276,7 @@
 
                     arg = cf2_stack_popFixed( opStack );
                     if ( arg > 0 )
-                    {
-                      /* initial guess based on the most significant bit */
-                      FT_Fixed  root = 1 << ( ( 17 + FT_MSB( arg ) ) >> 1 );
-                      FT_Fixed  new_root;
-
-
-                      /* Babylonian method */
-                      for (;;)
-                      {
-                        new_root = ( root + FT_DivFix( arg, root ) + 1 ) >> 1;
-                        if ( new_root == root )
-                          break;
-                        root = new_root;
-                      }
-                      arg = new_root;
-                    }
+                      arg = (CF2_F16Dot16)FT_SqrtFixed( arg );
                     else
                       arg = 0;
 

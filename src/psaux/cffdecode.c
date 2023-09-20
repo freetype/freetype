@@ -1753,22 +1753,9 @@
 
           /* without upper limit the loop below might not finish */
           if ( args[0] > 0x7FFFFFFFL )
-            args[0] = 0xB504F3L;    /* sqrt( 32768.0 ) */
+            args[0] = 0xB504F4L;    /* sqrt( 32768.0044 ) */
           else if ( args[0] > 0 )
-          {
-            FT_Fixed  root = 1 << ( ( 17 + FT_MSB( args[0] ) ) >> 1 );
-            FT_Fixed  new_root;
-
-
-            for (;;)
-            {
-              new_root = ( root + FT_DivFix( args[0], root ) + 1 ) >> 1;
-              if ( new_root == root )
-                break;
-              root = new_root;
-            }
-            args[0] = new_root;
-          }
+            args[0] = (FT_Fixed)FT_SqrtFixed( args[0] );
           else
             args[0] = 0;
           args++;
