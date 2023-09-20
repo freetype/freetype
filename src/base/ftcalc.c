@@ -913,38 +913,71 @@
   }
 
 
-#if 0
-
   /* documentation is in ftcalc.h */
 
-  /* Algorithm and code by Christophe Meessen (1993) */ 
-  /* with overflow fixed.                            */
   FT_BASE_DEF( FT_UInt32 )
   FT_SqrtFixed( FT_UInt32  v )
   {
-    FT_UInt32  r = v >> 1;
-    FT_UInt32  q = ( v & 1 ) << 15;
-    FT_UInt32  b = 0x20000000;
-    FT_UInt32  t;
+    if ( v == 0 )
+      return 0;
 
+#ifndef FT_INT64
 
-    do
+    /* Algorithm by Christophe Meessen (1993) with overflow fixed and    */
+    /* rounding added.  Any unsigned fixed 16.16 argument is acceptable. */
+    /* However, this algorithm is slower than the Babylonian method with */
+    /* a good initial guess. We only use it for large 32-bit values when */
+    /* 64-bit computations are not desirable.                            */
+    else if ( v > 0x10000U )
     {
-      t = q + b;
-      if ( r >= t )
+      FT_UInt32  r = v >> 1;
+      FT_UInt32  q = ( v & 1 ) << 15;
+      FT_UInt32  b = 0x20000000;
+      FT_UInt32  t;
+
+
+      do
       {
-        r -= t;
-        q  = t + b;  /* equivalent to q += 2*b */
+        t = q + b;
+        if ( r >= t )
+        {
+          r -= t;
+          q  = t + b;  /* equivalent to q += 2*b */
+        }
+        r <<= 1;
+        b >>= 1;
       }
-      r <<= 1;
-      b >>= 1;
+      while ( b > 0x10 );  /* exactly 25 cycles */
+
+      return ( q + 0x40 ) >> 7;
     }
-    while ( b > 0x20 );
+    else
+    {
+      FT_UInt32  r = ( v << 16 ) - 1;
 
-    return q >> 7;
+#else /* FT_INT64 */
+
+    else
+    {
+      FT_UInt64  r = ( (FT_UInt64)v << 16 ) - 1;
+
+#endif /* FT_INT64 */
+
+      FT_UInt32  q = 1 << ( ( 17 + FT_MSB( v ) ) >> 1 );
+      FT_UInt32  t;
+
+
+      /* Babylonian method with rounded-up division */
+      do
+      {
+        t = q;
+        q = ( t + (FT_UInt32)( r / t ) + 1 ) >> 1;
+      }
+      while ( q != t );  /* less than 6 cycles */
+
+      return q;
+    }
   }
-
-#endif /* 0 */
 
 
   /* documentation is in ftcalc.h */

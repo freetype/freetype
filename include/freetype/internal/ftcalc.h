@@ -489,8 +489,6 @@ FT_BEGIN_HEADER
             FT_Fixed  y );
 
 
-#if 0
-
   /**************************************************************************
    *
    * @function:
@@ -507,12 +505,11 @@ FT_BEGIN_HEADER
    *   The result of 'sqrt(x)'.
    *
    * @note:
-   *   This function is not very fast.
+   *   This function is slow and should be avoided.  Consider `FT_Hypot` or
+   *   `FT_Vector_NormLen' instead.
    */
   FT_BASE( FT_UInt32 )
   FT_SqrtFixed( FT_UInt32  x );
-
-#endif /* 0 */
 
 
 #define INT_TO_F26DOT6( x )    ( (FT_Long)(x) * 64  )    /* << 6  */
