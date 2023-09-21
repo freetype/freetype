@@ -304,7 +304,7 @@
     }
 
     if ( done )
-      printf( "%10.3f us/op %10d done\n",
+      printf( "%10.3f microseconds %10d done\n",
               TIMER_GET( &timer ) / (double)done, done );
     else
       printf( "no error-free calls\n" );

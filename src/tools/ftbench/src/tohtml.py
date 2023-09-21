@@ -30,10 +30,10 @@ CSS_STYLE = """
     }
   </style>
 """
-
-BASELINE_DIR = "baseline"
-BENCHMARK_DIR = "benchmark"
-BENCHMARK_HTML = "benchmark.html"
+OBJ_DIR = sys.argv[1]
+BASELINE_DIR = os.path.join(OBJ_DIR, "baseline")
+BENCHMARK_DIR = os.path.join(OBJ_DIR, "benchmark")
+BENCHMARK_HTML = os.path.join(OBJ_DIR, "benchmark.html")
 
 FONT_COUNT = 5
 
@@ -268,6 +268,7 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
             baseline_match = re.match(
                 r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line
             )
+
             benchmark_match = re.match(
                 r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", benchmark_line
             )

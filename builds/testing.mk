@@ -16,7 +16,7 @@ HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
 # Define flags, create default values in case of not inputted by user.
-FTBENCH_FLAG ?= -c 1000 -w 100
+FTBENCH_FLAG ?=
 
 # Define all test fonts in the fonts folder.
 BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
@@ -157,7 +157,7 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR) copy-html-script
 		printf "\nProcessing %d%%..." $$percent; \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BENCHMARK_DIR)$$(basename $$font .ttf).txt; \
 	done
-	@$(PYTHON) $(HTMLCREATOR)
+	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
 	@echo "Benchmark results created in file: $(HTMLFILE)"
 
 ####################################################################
