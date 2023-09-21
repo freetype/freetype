@@ -455,6 +455,12 @@ FT_BEGIN_HEADER
 
 #define FT_MSB( x )  FT_MSB_i386( x )
 
+#elif defined( __SunOS_5_11 )
+
+#include <string.h>
+
+#define FT_MSB( x )  ( fls( x ) - 1 )
+
 #elif defined( __DECC ) || defined( __DECCXX )
 
 #include <builtins.h>
