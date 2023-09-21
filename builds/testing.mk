@@ -157,7 +157,7 @@ benchmark: $(FTBENCH_BIN) $(BENCHMARK_DIR) copy-html-script
 		printf "\nProcessing %d%%..." $$percent; \
 		$(FTBENCH_BIN) $(FTBENCH_FLAG) "$$font" > $(BENCHMARK_DIR)$$(basename $$font .ttf).txt; \
 	done
-	@$(PYTHON) $(HTMLCREATOR) $(OBJ_DIR)
+	@$(PYTHON) $(HTMLCREATOR)
 	@echo "Benchmark results created in file: $(HTMLFILE)"
 
 ####################################################################

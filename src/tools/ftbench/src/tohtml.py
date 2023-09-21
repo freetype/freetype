@@ -30,10 +30,10 @@ CSS_STYLE = """
     }
   </style>
 """
-OBJ_DIR = sys.argv[1]
-BASELINE_DIR = os.path.join(OBJ_DIR, "baseline")
-BENCHMARK_DIR = os.path.join(OBJ_DIR, "benchmark")
-BENCHMARK_HTML = os.path.join(OBJ_DIR, "benchmark.html")
+
+BASELINE_DIR = "baseline"
+BENCHMARK_DIR = "benchmark"
+BENCHMARK_HTML = "benchmark.html"
 
 FONT_COUNT = 5
 
