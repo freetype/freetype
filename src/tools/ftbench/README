@@ -1,0 +1,45 @@
+ftbench
+========
+
+ftbench is a program designed to run FreeType benchmarks. It accepts various options and a font name to run specific tests on font rendering operations.
+
+Each test may involve tasks such as:
+
+. Initializing the library
+. Opening the font file
+. Loading and optionally rendering each glyph
+. Comparing results with cached versions (if available)
+. Configuring specific charmap indices, load flags, etc.
+
+Usage is time-limited or can be explicitly set to use a maximum number of iterations per test.
+
+
+Command line options
+--------------------
+
+-C      Compare with cached version (if available).
+-c N    Use at most N iterations for each test (0 means time-limited).
+-e E    Set specific charmap index E.
+-f L    Use hex number L as load flags (see FT_LOAD_XXX'). -H NAME  Use PS hinting engine NAME (default is adobe').
+-I VER  Use TT interpreter version VER (default is version 40).
+-i I-J  Forward or reverse range of glyph indices to use.
+-l N    Set LCD filter to N (default is 0: none).
+-m M    Set maximum cache size to M KiByte (default is 1024).
+-p      Preload font file in memory.
+-r N    Set render mode to N (default is 0: normal).
+-s S    Use S ppem as face size (default is 10ppem).
+-t T    Use at most T seconds per bench (default is 2).
+-w N    Use N iterations for warming up before each test.
+
+-b      tests Perform chosen tests (default is all).
+-v      Show version.
+
+Compilation
+-----------
+
+make baseline   To create a baseline for your benchmarks, use the `make baseline` command. This will compile the ftbench.c and create a set of baseline measurements in the objs/baseline/ directory.
+
+make benchmark  To run the benchmarks, use the `make benchmark` command. The results will be stored in the objs/benchmark/ directory. It will copy tohtml.py script to objs/ and generate a html file.
+
+make clean-benchmark    To remove all generated benchmark files and clean the objs directory, use the `make clean-benchmark` command.
+
