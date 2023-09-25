@@ -16,7 +16,7 @@ HTMLCREATOR = $(OBJ_DIR)/tohtml.py
 HTMLFILE = $(OBJ_DIR)/benchmark.html
 
 # Define flags, create default values in case of not inputted by user.
-FTBENCH_FLAG ?=
+FTBENCH_FLAG ?= -c 1000 -w 100
 
 # Define all test fonts in the fonts folder.
 BASELINE = $(addprefix $(BASELINE_DIR), $(notdir $(FONTS:.ttf=.txt)))
