@@ -383,7 +383,7 @@
         continue;
 
             if ( !FT_Render_Glyph( face->glyph, render_mode ) )
-        done++;
+              done++;
           }
 
     return done;
@@ -404,9 +404,9 @@
       if ( FT_Load_Glyph( face, (FT_UInt)i, load_flags ) )
         continue;
 
-            FT_GlyphSlot_Embolden( face->glyph );
+      FT_GlyphSlot_Embolden( face->glyph );
       done++;
-          }
+    }
 
     return done;
   }
@@ -437,7 +437,7 @@
            FT_Get_Glyph( face->glyph, &glyph )            )
         continue;
 
-            FT_Glyph_Stroke( &glyph, stroker, 1 );
+      FT_Glyph_Stroke( &glyph, stroker, 1 );
 
       FT_Done_Glyph( glyph );
       done++;
@@ -465,12 +465,12 @@
       if ( FT_Load_Glyph( face, (FT_UInt)i, load_flags ) )
         continue;
 
-            if ( !FT_Get_Glyph( face->glyph, &glyph ) )
+      if ( !FT_Get_Glyph( face->glyph, &glyph ) )
       {
         FT_Done_Glyph( glyph );
         done++;
       }
-          }
+    }
 
     return done;
   }
@@ -496,7 +496,7 @@
       if ( FT_Get_Glyph( face->glyph, &glyph ) )
         continue;
 
-            FT_Glyph_Get_CBox( glyph, FT_GLYPH_BBOX_PIXELS, &bbox );
+      FT_Glyph_Get_CBox( glyph, FT_GLYPH_BBOX_PIXELS, &bbox );
 
       FT_Done_Glyph( glyph );
       done++;
@@ -522,7 +522,7 @@
       if ( FT_Load_Glyph( face, (FT_UInt)i, load_flags ) )
         continue;
 
-            FT_Outline_Get_BBox( &face->glyph->outline, &bbox );
+      FT_Outline_Get_BBox( &face->glyph->outline, &bbox );
 
       done++;
     }
@@ -639,7 +639,7 @@
     while ( idx != 0 )
       charcode = FT_Get_Next_Char( face, charcode, &idx );
 
-        return done;
+    return done;
   }
 
 
@@ -656,7 +656,7 @@
     if ( !get_face( &bench_face ) )
       FT_Done_Face( bench_face );
 
-        return 1;
+    return 1;
   }
 
 
