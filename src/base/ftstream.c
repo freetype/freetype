@@ -830,7 +830,7 @@
         goto Exit;
       }
 
-      /* now, compute the signed value is necessary */
+      /* now, compute the signed value if necessary */
       if ( fields->value & FT_FRAME_OP_SIGNED )
         value = (FT_ULong)( (FT_Int32)( value << sign_shift ) >> sign_shift );
 

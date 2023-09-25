@@ -2313,7 +2313,7 @@
        *
        * 1) we have a `tricky' font that heavily relies on the interpreter to
        *    render glyphs correctly, for example DFKai-SB, or
-       * 2) FT_RENDER_MODE_MONO (i.e, monochome rendering) is requested.
+       * 2) FT_RENDER_MODE_MONO (i.e, monochrome rendering) is requested.
        *
        * In those cases, backward compatibility needs to be turned off to get
        * correct rendering.  The rendering is then completely up to the
