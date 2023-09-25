@@ -2804,7 +2804,6 @@ af_remove_segments_containing_point(AF_GlyphHints hints, AF_Point point)
 {
   AF_AxisHints axis = &hints->axis[AF_DIMENSION_VERT];
   AF_Segment segments = axis->segments;
-  AF_Segment segment_limit = FT_OFFSET( segments, axis->num_segments );
   for ( FT_Int i = 0; i < axis->num_segments; i++ )
   {
     AF_Segment seg = &segments[i];
