@@ -51,7 +51,8 @@ def main():
         write_to_html(html_file, "<h1>Freetype Benchmark Results</h1>\n")
 
         baseline_info = parse_info_file(os.path.join(BASELINE_DIR, "info.txt"))
-        benchmark_info = parse_info_file(os.path.join(BENCHMARK_DIR, "info.txt"))
+        benchmark_info = parse_info_file(
+            os.path.join(BENCHMARK_DIR, "info.txt"))
 
         if baseline_info[1].strip() == benchmark_info[1].strip():
             write_to_html(
@@ -67,8 +68,10 @@ def main():
         # Generate results tables
         for filename in os.listdir(BASELINE_DIR):
             if filename.endswith(".txt") and not filename == "info.txt":
-                baseline_results = read_file(os.path.join(BASELINE_DIR, filename))
-                benchmark_results = read_file(os.path.join(BENCHMARK_DIR, filename))
+                baseline_results = read_file(
+                    os.path.join(BASELINE_DIR, filename))
+                benchmark_results = read_file(
+                    os.path.join(BENCHMARK_DIR, filename))
 
                 generate_results_table(
                     html_file, baseline_results, benchmark_results, filename
@@ -101,8 +104,8 @@ def generate_info_table(html_file, baseline_info, benchmark_info):
     write_to_html(html_file, "<h2>Info</h2>\n")
     write_to_html(html_file, '<table border="1">\n')
     write_to_html(
-        html_file, "<tr><th>Info</th><th>Baseline</th><th>Benchmark</th></tr>\n"
-    )
+        html_file,
+        "<tr><th>Info</th><th>Baseline</th><th>Benchmark</th></tr>\n")
     info_list = ["Parameters", "Commit ID", "Commit Date", "Branch"]
     for info, baseline_line, benchmark_line in zip(
         info_list, baseline_info, benchmark_info
@@ -145,14 +148,17 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
     for filename in os.listdir(baseline_dir):
         if filename.endswith(".txt") and not filename == "info.txt":
             baseline_results = read_file(os.path.join(baseline_dir, filename))
-            benchmark_results = read_file(os.path.join(benchmark_dir, filename))
+            benchmark_results = read_file(
+                os.path.join(benchmark_dir, filename))
 
             for baseline_line, benchmark_line in zip(
                 baseline_results, benchmark_results
             ):
                 if baseline_line.startswith("Total time:"):
-                    baseline_match = re.match(r"Total time: (\d+)s", baseline_line)
-                    benchmark_match = re.match(r"Total time: (\d+)s", benchmark_line)
+                    baseline_match = re.match(
+                        r"Total time: (\d+)s", baseline_line)
+                    benchmark_match = re.match(
+                        r"Total time: (\d+)s", benchmark_line)
 
                     if baseline_match and benchmark_match:
                         total_time += int(baseline_match.group(1))
@@ -160,8 +166,7 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
 
                 if baseline_line.startswith("  "):
                     baseline_match = re.match(
-                        r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line
-                    )
+                        r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line)
                     benchmark_match = re.match(
                         r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s",
                         benchmark_line,
@@ -235,7 +240,11 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
     write_to_html(html_file, "</table>\n")
 
 
-def generate_results_table(html_file, baseline_results, benchmark_results, filename):
+def generate_results_table(
+        html_file,
+        baseline_results,
+        benchmark_results,
+        filename):
     """Prepare results table for html"""
     fontname = [
         line.split("/")[-1].strip("'")[:-2]
@@ -255,7 +264,8 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
 
     total_n = total_time = 0
 
-    for baseline_line, benchmark_line in zip(baseline_results, benchmark_results):
+    for baseline_line, benchmark_line in zip(
+            baseline_results, benchmark_results):
         if baseline_line.startswith("Total time:"):
             baseline_match = re.match(r"Total time: (\d+)s", baseline_line)
             benchmark_match = re.match(r"Total time: (\d+)s", benchmark_line)
@@ -266,12 +276,12 @@ def generate_results_table(html_file, baseline_results, benchmark_results, filen
 
         if baseline_line.startswith("  "):
             baseline_match = re.match(
-                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line
-            )
+                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s",
+                baseline_line)
 
             benchmark_match = re.match(
-                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", benchmark_line
-            )
+                r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s",
+                benchmark_line)
 
             if baseline_match and benchmark_match:
                 baseline_value = float(baseline_match.group(2))
