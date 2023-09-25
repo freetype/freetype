@@ -271,7 +271,7 @@
              double    max_time,
              double    warmup )
   {
-    int       n, done;
+    int       n, w, done;
     btimer_t  timer;
 
 
@@ -281,15 +281,20 @@
       test->bench( face, test->user_data );
     }
 
+
     TIMER_START(&timer);
-    for(int i = 0; i<warmup; i++)
+
+    for(  w = 0;  w < warmup; w++ )
         test->bench(face, test->user_data);
+
     TIMER_STOP(&timer);
+
 
     printf( "  %-25s ", test->title );
     fflush( stdout );
 
     TIMER_RESET( &timer );
+
 
     for ( n = 0, done = 0; !max_iter || n < max_iter; n++ )
     {
@@ -302,6 +307,7 @@
       if ( TIMER_GET( &timer ) > 1E6 * max_time )
         break;
     }
+
 
     if ( done )
       printf( "%10.3f microseconds %10d done\n",
@@ -1295,8 +1301,7 @@
         warmup_iter = atoi( optarg );
         if ( warmup_iter < 0 )
           warmup_iter = -warmup_iter;
-        break;
-
+      break;
 
 
         /* break; */
@@ -1387,8 +1392,9 @@
     if ( max_iter )
       printf( "number of iterations for each test: at most %d\n",
               max_iter );
-    printf( "number of iterations as warmup in all tests: %d\n",
-              warmup_iter );
+    printf( "\n"
+            "number of iterations as warmup in all tests: %d\n",
+            warmup_iter );
 
     printf( "\n"
             "executing tests:\n" );
@@ -1575,3 +1581,4 @@
 
 
 /* End */
+  
