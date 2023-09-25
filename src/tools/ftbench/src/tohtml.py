@@ -39,7 +39,9 @@ FONT_COUNT = 5
 
 WARNING_SAME_COMMIT = "Warning: Baseline and Benchmark have the same commit ID!"
 INFO_1 = "* Average time for single iteration. Smaller values are better."
-INFO_2 = "* If a value in the 'Iterations' column is given as '<i>x | y</i>', values <i>x</i> and <i>y</i> give the number of iterations in the baseline and the benchmark test, respectively."
+INFO_2 = "* If a value in the 'Iterations' column is given as '<i>x | y</i>',\
+    values <i>x</i> and <i>y</i> give the number of iterations in the baseline \
+        and the benchmark test, respectively."
 
 
 def main():
@@ -112,7 +114,8 @@ def generate_info_table(html_file, baseline_info, benchmark_info):
     ):
         write_to_html(
             html_file,
-            f'<tr><td class="col1">{info}</td><td>{baseline_line.strip()}</td><td>{benchmark_line.strip()}</td></tr>\n'
+            f'<tr><td class="col1">{info}</td><td>{baseline_line.strip()}</td>\
+                <td>{benchmark_line.strip()}</td></tr>\n'
         )
     write_to_html(html_file, "</table><br/>")
     write_to_html(html_file, f"<p>{INFO_1}</p>")
@@ -124,7 +127,10 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
 
     # This dictionary will store aggregated results.
     test_results = {
-        test: {"baseline": 0, "benchmark": 0, "n_baseline": 0, "n_benchmark": 0}
+        test: {"baseline": 0,
+               "benchmark": 0,
+               "n_baseline": 0,
+               "n_benchmark": 0}
         for test in [
             "Load",
             "Load_Advances (Normal)",
@@ -166,11 +172,11 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
 
                 if baseline_line.startswith("  "):
                     baseline_match = re.match(
-                        r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s", baseline_line)
+                        r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s",
+                        baseline_line)
                     benchmark_match = re.match(
                         r"\s+(.*?)\s+(\d+\.\d+)\s+microseconds\s+(\d+)\s",
-                        benchmark_line,
-                    )
+                        benchmark_line)
 
                     if baseline_match and benchmark_match:
                         test = baseline_match.group(1).strip()
@@ -229,12 +235,14 @@ def generate_total_results_table(html_file, baseline_dir, benchmark_dir):
             html_file,
             f'<tr><td class="col1">{test}</td><td>{n_display}</td>\
             <td class="{baseline_color}">{baseline:.1f}</td>\
-            <td class="{benchmark_color}">{benchmark:.1f}</td><td>{diff:.1f}</td></tr>\n',
+            <td class="{benchmark_color}">{benchmark:.1f}</td>\
+                <td>{diff:.1f}</td></tr>\n',
         )
 
     write_to_html(
         html_file,
-        f'<tr><td class="col1">Total duration for all tests:</td><td class="col1" colspan="4">{total_time:.0f} s</td>',
+        f'<tr><td class="col1">Total duration for all tests:</td>\
+            <td class="col1" colspan="4">{total_time:.0f} s</td>',
     )
 
     write_to_html(html_file, "</table>\n")
@@ -257,9 +265,9 @@ def generate_results_table(
     write_to_html(
         html_file,
         f'<tr><th>Test</th><th>Iterations</th>\
-        <th>* <a href="{ os.path.join("./baseline/", filename[:-4])}.txt">Baseline</a> (&#181;s)</th>\
-        <th>* <a href="{ os.path.join("./benchmark/", filename[:-4])}.txt">Benchmark</a> (&#181;s)</th>\
-        <th>Difference (%)</th></tr>\n'
+            <th>* <a href="{ os.path.join("./baseline/", filename[:-4])}.txt">Baseline</a> (&#181;s)</th>\
+            <th>* <a href="{ os.path.join("./benchmark/", filename[:-4])}.txt">Benchmark</a> (&#181;s)</th>\
+            <th>Difference (%)</th></tr>\n'
     )
 
     total_n = total_time = 0
@@ -315,13 +323,17 @@ def generate_results_table(
 
                 write_to_html(
                     html_file,
-                    f'<tr><td class="col1">{baseline_match.group(1)}</td><td>{n}</td>\
-                    <td class="{baseline_color}">{baseline_value:.1f}</td><td class="{benchmark_color}">{benchmark_value:.1f}</td><td>{percentage_diff:.1f}</td></tr>\n',
+                    f'<tr><td class="col1">{baseline_match.group(1)}</td>\
+                        <td>{n}</td>\
+                        <td class="{baseline_color}">{baseline_value:.1f}</td>\
+                        <td class="{benchmark_color}">{benchmark_value:.1f}</td>\
+                        <td>{percentage_diff:.1f}</td></tr>\n',
                 )
 
     write_to_html(
         html_file,
-        f'<tr><td class="col1">Total duration for the font:</td><td class="col1" colspan="4">{total_time:.0f} s</td></table>\n',
+        f'<tr><td class="col1">Total duration for the font:</td>\
+            <td class="col1" colspan="4">{total_time:.0f} s</td></table>\n',
     )
 
 
