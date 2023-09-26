@@ -516,9 +516,6 @@ FT_BEGIN_HEADER
               FT_INVALID_TOO_SHORT;                         \
           FT_END_STMNT
 
-#define GXV_USHORT_TO_SHORT( _us )                                    \
-          ( ( 0x8000U < ( _us ) ) ? ( ( _us ) - 0x8000U ) : ( _us ) )
-
 #define GXV_STATETABLE_HEADER_SIZE  ( 2 + 2 + 2 + 2 )
 #define GXV_STATEHEADER_SIZE        GXV_STATETABLE_HEADER_SIZE
 
