@@ -223,7 +223,7 @@ af_reverse_character_map_lookup_( AF_ReverseCharacterMap map, FT_Int glyph_index
     }
     /* Binary search for reverse character map entry */
     FT_Int low = 0;
-    FT_Int high = map->length - 1;
+    FT_Int high = length - 1;
     while ( high >= low )
     {
         FT_Int mid = ( high + low ) / 2;
@@ -283,6 +283,13 @@ af_reverse_character_map_entry_compare( const void *a, const void *b ) {
 }
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+/*Recursive algorithm to find all glyphs that a codepoint could turn into from the GSUB table.
+buffer: a buffer containing only the input codepoint
+feature_tag_pool: the current list of features under consideration
+current_features: the current list of features being applied
+num_features: length of current_features
+result: the set of glyphs in the answer
+*/
 FT_LOCAL_DEF( FT_Error )
 af_all_glyph_variants_helper( hb_font_t *font,
                               hb_buffer_t *buffer,
@@ -291,6 +298,8 @@ af_all_glyph_variants_helper( hb_font_t *font,
                               FT_UInt32 num_features,
                               hb_set_t* result )
 {
+    /*get the list of glyphs that are created by only transforming based on the
+    features in current features*/
     hb_set_t *baseline_glyphs = hb_set_create();
     if ( !hb_set_allocation_successful( baseline_glyphs ) )
     {
@@ -302,7 +311,13 @@ af_all_glyph_variants_helper( hb_font_t *font,
                                  current_features,
                                  num_features,
                                  baseline_glyphs );
+    if ( !hb_set_allocation_successful( baseline_glyphs ) )
+    {
+        return FT_Err_Out_Of_Memory;
+    }
 
+    /*Add these baseline glyphs to the results.  The baseline glyphs
+    will contain at minimum the glyph specified by CMAP*/
     hb_set_union( result, baseline_glyphs );
     if ( !hb_set_allocation_successful( result ) )
     {
@@ -313,26 +328,27 @@ af_all_glyph_variants_helper( hb_font_t *font,
         return FT_Err_Ok;
     }
 
-    /*set the feature to apply to the entire input buffer*/
+    /*setup to try adding different features to current_features
+    to see if any of them have an effect of the glyphs we get from
+    hb_ot_shape_glyphs_closure*/
     current_features[num_features].start = HB_FEATURE_GLOBAL_START;
     current_features[num_features].end = HB_FEATURE_GLOBAL_END;
     current_features[num_features].value = 1; /*set the feature to enabled*/
     /*quote from docs about value attribute:
     0 disables the feature, non-zero (usually 1) enables the feature. For features implemented as lookup type 3 (like 'salt') the value is a one based index into the alternates.
-    this does not handle these lookup type 3 cases fully*/
+    this algorithm does not handle these lookup type 3 cases fully*/
 
-    /*feature tag will be determined by trying all feature tags, looking for anything that affects the result of the lookup*/
     hb_set_t *new_glyphs = hb_set_create();
     if ( !hb_set_allocation_successful( new_glyphs ) )
     {
         return FT_Err_Out_Of_Memory;
     }
+
     hb_tag_t feature_tag = HB_SET_VALUE_INVALID;
     while ( hb_set_next( feature_tag_pool, &feature_tag ) )
     {
         hb_set_clear( new_glyphs );
         current_features[num_features].tag = feature_tag;
-        FT_TRACE4(("P3. num: %d\n", num_features));
         hb_ot_shape_glyphs_closure ( font,
                                      buffer,
                                      current_features,
@@ -343,12 +359,13 @@ af_all_glyph_variants_helper( hb_font_t *font,
             return FT_Err_Out_Of_Memory;
         }
 
-        hb_set_subtract( new_glyphs, baseline_glyphs );
-        /*glyphs now contains all glyphs that were added to the*/
-        /*closure as a result of adding this feature*/
-        /*If this is not a subset of result, this feature is relevant*/
-        /*and we should recurse*/
-        if ( !hb_set_is_subset( new_glyphs, result ) )
+        hb_set_subtract( new_glyphs, result );
+        /*new_glyphs now contains all glyphs that appeared in the result
+        of hb_ot_shape_glyphs_closure that haven't already been accounted for in the result.
+        If this contains any glyphs, we also need to try this feature
+        in combination will other features by recursing
+        */
+        if ( hb_set_get_population( new_glyphs ) != 0 )
         {
             /*remove this feature from the feature pool so that
             the later recursion won't try it*/
@@ -386,12 +403,15 @@ af_all_glyph_variants( FT_Face face,
     FT_Memory memory = face->memory;
     FT_Error error;
     hb_face_t *hb_face = hb_font_get_face( hb_font );
+
+    /*The set of all feature tags in the font*/
     hb_set_t  *feature_tags = hb_set_create();
     if ( !hb_set_allocation_successful( feature_tags ) )
     {
         return FT_Err_Out_Of_Memory;
     }
 
+    /*populate feature_tags using the output of hb_ot_layout_table_get_feature_tags*/
     FT_Bool feature_list_done = 0;
     unsigned int start_offset = 0;
     while ( !feature_list_done ) {
@@ -417,6 +437,7 @@ af_all_glyph_variants( FT_Face face,
         }
     }
 
+    /*make a buffer only consisting of the given codepoint*/
     hb_buffer_t *codepoint_buffer = hb_buffer_create();
     if ( !hb_buffer_allocation_successful( codepoint_buffer ) )
     {
@@ -430,12 +451,15 @@ af_all_glyph_variants( FT_Face face,
                              HB_DIRECTION_LTR);
     hb_buffer_add( codepoint_buffer, codepoint, 0 );
 
+    /*The array of features that will be used by the recursive part
+    it will have at most as many entries as there are features, so
+    make the length = length of feature_tags*/
     hb_feature_t *feature_buffer;
-    if ( FT_NEW_ARRAY( feature_buffer, hb_set_get_population( feature_tags ) ) ) {
+    if ( FT_NEW_ARRAY( feature_buffer, hb_set_get_population( feature_tags ) ) )
+    {
         return error;
     }
 
-    /*hb_codepoint_t and hb_tag_t are both uint32_t, so we can put feature tags inside hb_set*/
     error = af_all_glyph_variants_helper( hb_font,
                                           codepoint_buffer,
                                           feature_tags,
@@ -446,7 +470,7 @@ af_all_glyph_variants( FT_Face face,
     hb_set_destroy( feature_tags );
     hb_buffer_destroy( codepoint_buffer );
     FT_FREE( feature_buffer );
-    return FT_Err_Ok;
+    return error;
 }
 #endif /*FT_CONFIG_OPTION_USE_HARFBUZZ*/
 
@@ -492,21 +516,18 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
         goto harfbuzz_path_Exit;
     }
 
-
-    /*
-    af_all_glyph_variants( FT_Face face,
-                       hb_font_t *hb_font,
-                       FT_UInt32 codepoint,
-                       hb_set_t* result )*/
-
+    /*find alll glyph variants of the codepoints, then make an entry from
+    the glyph to the codepoint for each one*/
     for ( FT_Long i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
     {
         FT_UInt32 codepoint = adjustment_database[i].codepoint;
+
         error = af_all_glyph_variants( face,
                                        hb_font,
                                        codepoint,
                                        result_set );
-        if ( error ) {
+        if ( error )
+        {
             goto harfbuzz_path_Exit;
         }
 
@@ -518,14 +539,13 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
                 goto harfbuzz_path_Exit;
             }
 
+            FT_Long insert_point = ( *map )->length;
             ( *map )->length++;
-            ( *map )->entries[i].glyph_index = glyph;
-            ( *map )->entries[i].codepoint = codepoint;
-
+            ( *map )->entries[insert_point].glyph_index = glyph;
+            ( *map )->entries[insert_point].codepoint = codepoint;
         }
 
         hb_set_clear( result_set );
-
     }
 harfbuzz_path_Exit:
     hb_set_destroy( result_set );
@@ -566,11 +586,6 @@ harfbuzz_path_Exit:
         sizeof( AF_ReverseMapEntry ),
         af_reverse_character_map_entry_compare
     );
-
-    for ( FT_Long i = 0; i < ( *map )->length; i++ )
-    {
-        FT_TRACE4(("char: %c, glyph: %d\n", ( *map )->entries[i].codepoint, ( *map )->entries[i].glyph_index ) );
-    }
 
     FT_TRACE4(( "    reverse character map built successfully"\
                 " with %d entries\n", (*map)->length ));
