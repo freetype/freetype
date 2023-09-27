@@ -21,7 +21,7 @@
 FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
 adjustment_database[] =
 {
-    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* !
+    {0x21,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* ! */
     {0x69,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* i */
     {0x6A,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /* j */
     {0xA1,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP}, /*Inverted Exclamation Mark*/
@@ -298,13 +298,18 @@ af_all_glyph_variants_helper( hb_font_t *font,
                               FT_UInt32 num_features,
                               hb_set_t* result )
 {
+    FT_Error error;
     /*get the list of glyphs that are created by only transforming based on the
     features in current features*/
-    hb_set_t *baseline_glyphs = hb_set_create();
+    hb_set_t *baseline_glyphs = NULL, *new_glyphs = NULL;
+    baseline_glyphs = hb_set_create();
     if ( !hb_set_allocation_successful( baseline_glyphs ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
+
+
 
     hb_ot_shape_glyphs_closure ( font,
                                  buffer,
@@ -313,7 +318,8 @@ af_all_glyph_variants_helper( hb_font_t *font,
                                  baseline_glyphs );
     if ( !hb_set_allocation_successful( baseline_glyphs ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
 
     /*Add these baseline glyphs to the results.  The baseline glyphs
@@ -321,11 +327,13 @@ af_all_glyph_variants_helper( hb_font_t *font,
     hb_set_union( result, baseline_glyphs );
     if ( !hb_set_allocation_successful( result ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
     if ( hb_set_get_population( feature_tag_pool ) == 0 )
     {
-        return FT_Err_Ok;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
 
     /*setup to try adding different features to current_features
@@ -338,10 +346,11 @@ af_all_glyph_variants_helper( hb_font_t *font,
     0 disables the feature, non-zero (usually 1) enables the feature. For features implemented as lookup type 3 (like 'salt') the value is a one based index into the alternates.
     this algorithm does not handle these lookup type 3 cases fully*/
 
-    hb_set_t *new_glyphs = hb_set_create();
+    new_glyphs = hb_set_create();
     if ( !hb_set_allocation_successful( new_glyphs ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
 
     hb_tag_t feature_tag = HB_SET_VALUE_INVALID;
@@ -356,7 +365,8 @@ af_all_glyph_variants_helper( hb_font_t *font,
                                      new_glyphs );
         if ( !hb_set_allocation_successful( new_glyphs ) )
         {
-            return FT_Err_Out_Of_Memory;
+            error = FT_Err_Out_Of_Memory;
+            goto Exit;
         }
 
         hb_set_subtract( new_glyphs, result );
@@ -370,16 +380,17 @@ af_all_glyph_variants_helper( hb_font_t *font,
             /*remove this feature from the feature pool so that
             the later recursion won't try it*/
             hb_set_del( feature_tag_pool, feature_tag );
-            FT_Error error = af_all_glyph_variants_helper( font,
-                                                           buffer,
-                                                           feature_tag_pool,
-                                                           current_features,
-                                                           num_features + 1,
-                                                           result );
+            error = af_all_glyph_variants_helper( font,
+                                                  buffer,
+                                                  feature_tag_pool,
+                                                  current_features,
+                                                  num_features + 1,
+                                                  result );
             if ( error )
             {
-                return error;
+                goto Exit;
             }
+
             /*add back the feature we removed*/
             hb_set_add( feature_tag_pool, feature_tag );
             if ( !hb_set_allocation_successful( feature_tag_pool ) ) {
@@ -388,7 +399,7 @@ af_all_glyph_variants_helper( hb_font_t *font,
         } /* if( !hb_set_is_subset( glyphs, result ) ) */
 
     } /*while ( hb_set_next( feature_tag_pool, &feature_tag ) )*/
-
+Exit:
     hb_set_destroy( baseline_glyphs );
     hb_set_destroy( new_glyphs );
     return FT_Err_Ok;
