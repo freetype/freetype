@@ -1045,6 +1045,7 @@ FT_BEGIN_HEADER
   typedef struct FT_PreLineRec_
   {
     int x1, x2, y1, y2;
+    int ismove;
     FT_PreLine next;
   } FT_PreLineRec;
 
