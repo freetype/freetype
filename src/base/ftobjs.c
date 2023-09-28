@@ -2634,10 +2634,10 @@
 
 
       FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
-            pl->x1 = v_start.x/64;
-            pl->y1 = v_start.y/64;
-            pl->x2 = v_start.x/64;
-            pl->y2 = v_start.y/64;
+            pl->x1 = v_start.x;
+            pl->y1 = v_start.y;
+            pl->x2 = v_start.x;
+            pl->y2 = v_start.y;
             pl->next = NULL;
             pl->ismove = 1;
 
@@ -2674,8 +2674,8 @@
             FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
             pl->x1 = ptr->x2;
             pl->y1 = ptr->y2;
-            pl->x2 = vec.x/64;
-            pl->y2 = vec.y/64;
+            pl->x2 = vec.x;
+            pl->y2 = vec.y;
             pl->next = NULL;
             pl->ismove = 0;
             ptr->next = pl;
@@ -2696,8 +2696,8 @@
       FT_PreLine pl2  = malloc(sizeof(FT_PreLineRec));
       pl2->x1 = ptr->x2;
       pl2->y1 = ptr->y2;
-      pl2->x2 = v_start.x/64;
-      pl2->y2 = v_start.y/64;
+      pl2->x2 = v_start.x;
+      pl2->y2 = v_start.y;
       pl2->next = NULL;
       pl->ismove = 0;
       ptr->next = pl2;

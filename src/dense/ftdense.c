@@ -439,10 +439,10 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
   FT_Error error = dense_move_to(&point1, worker);
   while (pl!=NULL)
   {
-    point1.x = pl->x1/4;
-    point1.y = pl->y1/4;
-    point2.x = pl->x2/4;
-    point2.y = pl->y2/4;
+    point1.x = pl->x1;
+    point1.y = pl->y1;
+    point2.x = pl->x2;
+    point2.y = pl->y2;
 
     if(pl->ismove){
       dense_move_to(&point2, worker);
