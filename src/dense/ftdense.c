@@ -85,16 +85,6 @@ dense_line_to( const FT_Vector* to, dense_worker* worker )
   return 0;
 }
 
-static int
-dense_line_to2( const FT_Vector* from, const FT_Vector* to, dense_worker* worker )
-{
-  dense_move_to( from, worker );
-  dense_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
-  dense_move_to( to, worker );
-  return 0;
-}
-
-
 void
 dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
 {
@@ -447,7 +437,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
     if(pl->ismove){
       dense_move_to(&point2, worker);
     }else{
-    dense_line_to2(&point1, &point2, worker);
+    dense_line_to(&point2, worker);
     }
     pl= pl->next;
   }

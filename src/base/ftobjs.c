@@ -2626,6 +2626,11 @@
         tags--;
       }
 
+      if (((*slot)->glyph_index == 37))
+      {
+        printf("moveit\n");
+      }
+      
       FT_TRACE5(( "  move to (%.2f, %.2f)\n",
                   (double)v_start.x / 64, (double)v_start.y / 64 ));
      // error = func_interface->move_to( &v_start, user );
@@ -2645,6 +2650,7 @@
                 ptr = (*slot)->prelines = pl;
             }else{
             ptr->next = pl;
+            ptr = ptr->next;
 
             }
       
@@ -2671,14 +2677,14 @@
             if((*slot)->glyph_index == 37)
               printf( "  line to (%.2f, %.2f)\n",
                         (double)vec.x / 64, (double)vec.y / 64 );
-            FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
-            pl->x1 = ptr->x2;
-            pl->y1 = ptr->y2;
-            pl->x2 = vec.x;
-            pl->y2 = vec.y;
-            pl->next = NULL;
-            pl->ismove = 0;
-            ptr->next = pl;
+            FT_PreLine pl3  = malloc(sizeof(FT_PreLineRec));
+            pl3->x1 = ptr->x2;
+            pl3->y1 = ptr->y2;
+            pl3->x2 = vec.x;
+            pl3->y2 = vec.y;
+            pl3->next = NULL;
+            pl3->ismove = 0;
+            ptr->next = pl3;
             ptr = ptr->next;
             continue;
           }
@@ -2699,7 +2705,7 @@
       pl2->x2 = v_start.x;
       pl2->y2 = v_start.y;
       pl2->next = NULL;
-      pl->ismove = 0;
+      pl2->ismove = 0;
       ptr->next = pl2;
       ptr = ptr->next;
       
