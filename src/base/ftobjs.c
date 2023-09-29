@@ -2573,8 +2573,8 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
   The division by four is omitted to save time.
   */
   //FT_PreLine ptr = (*slot)->prelines;
-  if((*slot)->glyph_index == 38)
-  printf("conic from %d, %d to %d, %d via %d, %d\n", from->x, from->y, to->x, to->y, control->x, control->y);
+  //if((*slot)->glyph_index == 38)
+  //printf("conic from %d, %d to %d, %d via %d, %d\n", from->x, from->y, to->x, to->y, control->x, control->y);
   FT_Vector aP0 = { from->x , from->y};
   FT_Vector aP1 = { control->x, control->y };
   FT_Vector aP2 = { to->x, to->y };
@@ -2725,10 +2725,10 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
         tags--;
       }
 
-      if (((*slot)->glyph_index == 37))
-      {
-        printf("moveit\n");
-      }
+      // if (((*slot)->glyph_index == 37))
+      // {
+      //   printf("moveit\n");
+      // }
       
       FT_TRACE5(( "  move to (%.2f, %.2f)\n",
                   (double)v_start.x / 64, (double)v_start.y / 64 ));
@@ -2773,9 +2773,9 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
             FT_TRACE5(( "  line to (%.2f, %.2f)\n",
                         (double)vec.x / 64, (double)vec.y / 64 ));
             //error = func_interface->line_to( &vec, user );
-            if((*slot)->glyph_index == 37)
-              printf( "  line to (%.2f, %.2f)\n",
-                        (double)vec.x / 64, (double)vec.y / 64 );
+            //if((*slot)->glyph_index == 37)
+             // printf( "  line to (%.2f, %.2f)\n",
+                        //(double)vec.x / 64, (double)vec.y / 64 );
             FT_PreLine pl3  = malloc(sizeof(FT_PreLineRec));
             pl3->x1 = ptr->x2;
             pl3->y1 = ptr->y2;
@@ -2865,9 +2865,9 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
       // FT_TRACE5(( "  line to (%.2f, %.2f)\n",
       //             (double)v_start.x / 64, (double)v_start.y / 64 ));
       // error = func_interface->line_to( &v_start, user );
-      if((*slot)->glyph_index == 37)
-        printf( "  line to (%.2f, %.2f)\n",
-                        (double)v_start.x / 64, (double)v_start.y / 64 );
+      //if((*slot)->glyph_index == 37)
+        //printf( "  line to (%.2f, %.2f)\n",
+                    //    (double)v_start.x / 64, (double)v_start.y / 64 );
       FT_PreLine pl2  = malloc(sizeof(FT_PreLineRec));
       pl2->x1 = ptr->x2;
       pl2->y1 = ptr->y2;
@@ -3139,7 +3139,8 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
 
       face->garray = (FT_GlyphSlot*)malloc(
           face->driver->clazz->slot_object_size * face->num_glyphs );
-      error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
+      //error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
+      error           = FT_Set_Pixel_Sizes( face, 0, 500);
       // int glyph_index = FT_Get_Char_Index( face, 'A' );
       // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
 

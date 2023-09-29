@@ -88,7 +88,7 @@ dense_line_to( const FT_Vector* to, dense_worker* worker )
 void
 dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
 {
-  printf("Line from %d, %d to %d, %d\n", worker->prev_x, worker->prev_y, tox, toy);
+  //printf("Line from %d, %d to %d, %d\n", worker->prev_x, worker->prev_y, tox, toy);
 
   FT26D6 fx = worker->prev_x>>2;
   FT26D6 fy = worker->prev_y>>2;
@@ -521,7 +521,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   FT_Bitmap*  target_map = params->target;
   FT_PreLine pl = params->prelines;
-  printf("%d\n", pl->next->x1);
+  //printf("%d\n", pl->next->x1);
 
   dense_worker worker[1];
 
