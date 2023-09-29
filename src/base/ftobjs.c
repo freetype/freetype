@@ -72,6 +72,13 @@
 #define MD5_Update   FT_MD5_Update
 #define MD5_Final    FT_MD5_Final
 
+#define PIXEL_BITS 8
+
+#define ONE_PIXEL  ( 1 << PIXEL_BITS )
+#define TRUNC( x ) (int)( ( x ) >> PIXEL_BITS )
+
+#define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
+#define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
 #undef  HAVE_OPENSSL
 
 #include "md5.c"
@@ -2784,6 +2791,8 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
         case FT_CURVE_TAG_CONIC:  /* consume conic arcs */
           // v_control.x = SCALED( point->x );
           // v_control.y = SCALED( point->y );
+          v_control.x =  point->x ;
+          v_control.y = point->y ;
 
         Do_Conic:
           if ( point < limit )

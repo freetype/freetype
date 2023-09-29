@@ -162,8 +162,20 @@
     }
 
     /* translate outline to render it into the bitmap */
-    if ( x_shift || y_shift )
+    if ( x_shift || y_shift ){
       FT_Outline_Translate( outline, x_shift, y_shift );
+      FT_PreLine pl = slot->prelines;
+      while (pl!=NULL)
+      {
+        pl->x1 += x_shift;
+        pl->y1 += y_shift;
+        pl->x2 += x_shift;
+        pl->y2 += y_shift;
+
+        pl = pl->next;
+      }
+      
+    }
 
     /* set up parameters */
     params.target = bitmap;
