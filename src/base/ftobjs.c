@@ -2917,10 +2917,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
     FT_UNUSED( test_mac_fonts );
 #endif
 
-    if (args->flags & FT_OPEN_PRELOAD)
-    {
-      FT_TRACE0(("Requested Preload\n"));
-    }
+
     
     /* only use lower 31 bits together with sign bit */
     if ( face_index > 0 )
