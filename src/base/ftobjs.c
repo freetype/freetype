@@ -579,6 +579,7 @@
   {
     /* free bitmap if needed */
     ft_glyphslot_free_bitmap( slot );
+    
 
     /* clear all public fields in the glyph slot */
     slot->glyph_index = 0;
@@ -1179,6 +1180,8 @@
         ft_glyphslot_preset_bitmap( slot, mode, NULL );
       
     }
+
+
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_TRACE5(( "FT_Load_Glyph: index %d, flags 0x%x\n",
@@ -2645,7 +2648,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
 }
 
 
-  static FT_Error ft_decompose_outline(FT_GlyphSlot* slot){
+  FT_Error ft_decompose_outline(FT_GlyphSlot* slot){
     FT_Vector   v_last;
     FT_Vector   v_control;
     FT_Vector   v_start;
@@ -3138,7 +3141,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
       face->garray = (FT_GlyphSlot*)malloc(
           face->driver->clazz->slot_object_size * face->num_glyphs );
       //error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
-      error           = FT_Set_Pixel_Sizes( face, 0, 500);
+      error           = FT_Set_Pixel_Sizes( face, 0, 100);
       // int glyph_index = FT_Get_Char_Index( face, 'A' );
       // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
 
@@ -3150,6 +3153,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
 
         FT_ALLOC(face->garray[gindex], clazz->slot_object_size);
         face->garray[gindex]->face = face;
+        face->garray[gindex]->prel_shifted = 0;
         face->garray[gindex]->glyph_index = gindex;
         ft_glyphslot_init(face->garray[gindex]);
         face->garray[gindex]->next = NULL;

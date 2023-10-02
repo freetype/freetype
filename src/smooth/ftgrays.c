@@ -1921,7 +1921,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   static int
   gray_convert_glyph_inner( RAS_ARG_
-                            int  continued )
+                            int  continued , FT_PreLine pl)
   {
     volatile int  error;
 
@@ -1930,7 +1930,28 @@ typedef ptrdiff_t  FT_PtrDist;
     {
       if ( continued )
         FT_Trace_Disable();
-      error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
+      //error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
+        FT_Vector point1 = {pl->x1, pl->y1};
+
+        FT_Vector point2 = {100, 100};
+
+      error = gray_move_to(&point1, worker);
+      while (pl!=NULL)
+      {
+        point1.x = pl->x1;
+        point1.y = pl->y1;
+        point2.x = pl->x2;
+        point2.y = pl->y2;
+
+        if(pl->ismove){
+          gray_move_to(&point2, worker);
+        }else{
+        gray_line_to(&point2, worker);
+        }
+        pl= pl->next;
+      }
+
+
       if ( continued )
         FT_Trace_Enable();
 
@@ -1953,7 +1974,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_convert_glyph( RAS_ARG )
+  gray_convert_glyph( RAS_ARG , FT_PreLine pl)
   {
     const TCoord  yMin = ras.min_ey;
     const TCoord  yMax = ras.max_ey;
@@ -2015,7 +2036,7 @@ typedef ptrdiff_t  FT_PtrDist;
         ras.max_ey    = band[0];
         ras.count_ey  = width;
 
-        error     = gray_convert_glyph_inner( RAS_VAR_ continued );
+        error     = gray_convert_glyph_inner( RAS_VAR_ continued, pl );
         continued = 1;
 
         if ( !error )
@@ -2132,7 +2153,7 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
       return Smooth_Err_Ok;
 
-    return gray_convert_glyph( RAS_VAR );
+    return gray_convert_glyph( RAS_VAR, params->prelines );
   }
 
 

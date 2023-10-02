@@ -2298,6 +2298,7 @@ FT_BEGIN_HEADER
 
     void*             other;
     FT_PreLine        prelines;
+    int               prel_shifted;
 
     FT_Slot_Internal  internal;
 

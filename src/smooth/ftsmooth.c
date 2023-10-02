@@ -501,8 +501,20 @@
     }
 
     /* translate outline to render it into the bitmap */
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, x_shift, y_shift );
+    if ( (x_shift || y_shift) && !slot->prel_shifted){
+      //FT_Outline_Translate( outline, x_shift, y_shift );
+      FT_PreLine pl = slot->prelines;
+      while (pl!=NULL)
+      {
+        pl->x1 += x_shift;
+        pl->y1 += y_shift;
+        pl->x2 += x_shift;
+        pl->y2 += y_shift;
+
+        pl = pl->next;
+      }
+      slot->prel_shifted = 1;
+    }
 
     if ( mode == FT_RENDER_MODE_NORMAL ||
          mode == FT_RENDER_MODE_LIGHT  )
@@ -517,6 +529,8 @@
         params.target = bitmap;
         params.source = outline;
         params.flags  = FT_RASTER_FLAG_AA;
+        params.prelines = slot->prelines;
+
 
         error = render->raster_render( render->raster, &params );
       }
@@ -568,8 +582,9 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, -x_shift, -y_shift );
+    // if ( x_shift || y_shift ){
+    //   FT_Outline_Translate( outline, -x_shift, -y_shift );
+    // }
 
     return error;
   }
