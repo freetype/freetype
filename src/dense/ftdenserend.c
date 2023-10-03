@@ -162,8 +162,8 @@
     }
 
     /* translate outline to render it into the bitmap */
-    if ( x_shift || y_shift ){
-      FT_Outline_Translate( outline, x_shift, y_shift );
+    if ( (x_shift || y_shift)&&!slot->prel_shifted ){
+      //FT_Outline_Translate( outline, x_shift, y_shift );
       FT_PreLine pl = slot->prelines;
       while (pl!=NULL)
       {
@@ -174,6 +174,7 @@
 
         pl = pl->next;
       }
+      slot->prel_shifted = 1;
       
     }
 
@@ -198,8 +199,8 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, -x_shift, -y_shift );
+    // if ( x_shift || y_shift )
+    //   FT_Outline_Translate( outline, -x_shift, -y_shift );
 
     return error;
   }
