@@ -454,6 +454,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
 
 __m128i offset = _mm_setzero_si128();
   __m128i mask   = _mm_set1_epi32( 0x0c080400 );
+  __m128i nzero = _mm_castps_si128(_mm_set1_ps(-0.0));
 
   for (int i = 0; i < worker->m_h*worker->m_w; i += 4)
   {
@@ -463,18 +464,31 @@ __m128i offset = _mm_setzero_si128();
 
     x = _mm_add_epi32( x, _mm_slli_si128( x, 4 ) );
 
-    x = _mm_add_epi32(
-        x, _mm_castps_si128( _mm_shuffle_ps( _mm_setzero_ps(),
-                                             _mm_castsi128_ps( x ), 0x40 ) ) );
+    // x = _mm_add_epi32(
+    //     x, _mm_castps_si128( _mm_shuffle_ps( _mm_setzero_ps(),
+    //                                          _mm_castsi128_ps( x ), 0x40 ) ) );
+    x = _mm_add_epi32(x, _mm_slli_si128(x,8));
 
     // add the prefsum of previous 4 floats to all current floats
     x = _mm_add_epi32( x, offset );
+
+
+
+    // __m128 y = _mm_mul_ps(_mm_castsi128_ps(x), _mm_set1_ps(255.9));
+
+    // y = _mm_andnot_ps(_mm_castsi128_ps(nzero), y);
+
+    // __m128i z = _mm_cvttps_epi32(y);
+    // z = _mm_packus_epi16(_mm_packs_epi32(z, nzero), nzero);
+
+    // *((int*)dest+i) = _mm_extract_epi16(z, 0);
+
 
     // take absolute value
     __m128i y = _mm_abs_epi32( x );  // fabs(x)
 
     // cap max value to 1
-    y = _mm_min_epi32( y, _mm_set1_epi32( 4080 ) );
+    y = _mm_min_epi32( y, _mm_set1_epi32( 4094 ) );
 
     // reduce to 255
     y = _mm_srli_epi32( y, 4 );
@@ -488,6 +502,7 @@ __m128i offset = _mm_setzero_si128();
     offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
                                                _mm_castsi128_ps( x ),
                                                _MM_SHUFFLE( 3, 3, 3, 3 ) ) );
+    //offset = _mm_set1_epi32(_mm_extract_epi32(x, 3));
   }
 
 #else /* FT_SSE4_1 */
