@@ -902,7 +902,20 @@
 
 
   /* documentation is in freetype.h */
+  FT_EXPORT_DEF( FT_Error )
+  FT_Refresh_Glyph( FT_Face   face,
+                 FT_UInt   glyph_index)
 
+  {
+    //ft_glyphslot_free_bitmap( face->garray[glyph_index] );
+    face->garray[glyph_index]->format = FT_GLYPH_FORMAT_OUTLINE;
+
+    // face->garray[glyph_index]->bitmap.width      = 0;
+    // face->garray[glyph_index]->bitmap.rows       = 0;
+    // face->garray[glyph_index]->bitmap.pitch      = 0;
+    // face->garray[glyph_index]->bitmap.pixel_mode = 0;
+
+  }
   FT_EXPORT_DEF( FT_Error )
   FT_Load_Glyph( FT_Face   face,
                  FT_UInt   glyph_index,
@@ -3141,7 +3154,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
       face->garray = (FT_GlyphSlot*)malloc(
           face->driver->clazz->slot_object_size * face->num_glyphs );
       //error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
-      error           = FT_Set_Pixel_Sizes( face, 0, 100);
+      error           = FT_Set_Pixel_Sizes( face, 0, 50);
       // int glyph_index = FT_Get_Char_Index( face, 'A' );
       // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
 

@@ -3248,6 +3248,10 @@ FT_BEGIN_HEADER
                  FT_UInt   glyph_index,
                  FT_Int32  load_flags );
 
+  FT_EXPORT( FT_Error )
+  FT_Refresh_Glyph( FT_Face   face,
+                 FT_UInt   glyph_index);
+
 
   /**************************************************************************
    *
