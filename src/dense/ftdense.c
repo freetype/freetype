@@ -443,8 +443,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
   }
   // point.x = 100;
   // point.y = 100;
-  // dense_move_to(&point, worker);
-  
+  // dense_move_to(&point, worker);  
   // Render into bitmap
   const FT20D12* source = worker->m_a;
   unsigned char* dest     = target->buffer;
@@ -460,6 +459,7 @@ __m128i offset = _mm_setzero_si128();
   {
     // load 4 floats from source
 
+    //printf("%d\n", source[i]);
     __m128i x = _mm_load_si128( (__m128i*)&source[i] );
 
     x = _mm_add_epi32( x, _mm_slli_si128( x, 4 ) );
@@ -481,27 +481,40 @@ __m128i offset = _mm_setzero_si128();
     // __m128i z = _mm_cvttps_epi32(y);
     // z = _mm_packus_epi16(_mm_packs_epi32(z, nzero), nzero);
 
-    // *((int*)dest+i) = _mm_extract_epi16(z, 0);
+    
+
+    // int yu = ;
+    // *((int*)dest+i) = yu;
 
 
     // take absolute value
-    __m128i y = _mm_abs_epi32( x );  // fabs(x)
+    //__m128i y = _mm_abs_epi32( x );  // fabs(x)
+
 
     // cap max value to 1
-    y = _mm_min_epi32( y, _mm_set1_epi32( 4094 ) );
+    //y = _mm_min_epi32( _mm_srli_epi32( y, 4 ), _mm_set1_epi32( 255 ) );
+    __m128i y = _mm_abs_epi32(_mm_srai_epi32(  x , 4 ));
 
     // reduce to 255
-    y = _mm_srli_epi32( y, 4 );
+    // y = 
 
-    // shuffle
-    y = _mm_shuffle_epi8( y, mask );
+    // // shuffle
+     //y = _mm_shuffle_epi8( y, mask );
+    
+     y = _mm_packus_epi16(_mm_packs_epi32(y, nzero), nzero);
+    //__m128i z = _mm_packus_epi16(_mm_packs_epi32(z, nzero), nzero);
 
-    _mm_store_ss( (float*)&dest[i], _mm_castsi128_ps(y) );
+    // int* ptr = (int*)&dest[i];
+    *(int*)&dest[i] =  *(int*)&y;
+    //*(int*)&dest[i] =  _mm_extract_epi32(y, 0);
+
+    //_mm_store_ss( (float*)&dest[i], _mm_castsi128_ps(y) );
 
     // store the current prefix sum in offset
-    offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
-                                               _mm_castsi128_ps( x ),
-                                               _MM_SHUFFLE( 3, 3, 3, 3 ) ) );
+    // offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
+    //                                            _mm_castsi128_ps( x ),
+    //                                            _MM_SHUFFLE( 3, 3, 3, 3 ) ) );
+    offset = _mm_shuffle_epi32(x,_MM_SHUFFLE( 3, 3, 3, 3 ) );
     //offset = _mm_set1_epi32(_mm_extract_epi32(x, 3));
   }
 
@@ -566,7 +579,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   worker->m_w = target_map->pitch;
   worker->m_h = target_map->rows;
 
-  int size = worker->m_w * worker->m_h + 4;
+  int size = (worker->m_w * worker->m_h + 3) & ~3;
 
   worker->m_a      = malloc( sizeof( FT20D12 ) * size );
   worker->m_a_size = size;
