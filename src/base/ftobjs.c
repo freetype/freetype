@@ -3154,7 +3154,7 @@ int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector
       face->garray = (FT_GlyphSlot*)malloc(
           face->driver->clazz->slot_object_size * face->num_glyphs );
       //error           = FT_Set_Char_Size( face, 0, 160 * 64, 300, 300 );
-      error           = FT_Set_Pixel_Sizes( face, 0, 100);
+      error           = FT_Set_Pixel_Sizes( face, 0, 500);
       // int glyph_index = FT_Get_Char_Index( face, 'A' );
       // error           = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_HINTING );
 

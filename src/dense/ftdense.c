@@ -80,25 +80,35 @@ dense_move_to( const FT_Vector* to, dense_worker* worker )
 static int
 dense_line_to( const FT_Vector* to, dense_worker* worker )
 {
-  dense_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
+  dense_render_line( worker, worker->prev_x, worker->prev_y, UPSCALE( to->x ), UPSCALE( to->y ) );
   dense_move_to( to, worker );
   return 0;
 }
 
 void
-dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
+dense_render_line( dense_worker* worker, FT_Pos fromx, FT_Pos fromy, FT_Pos tox, FT_Pos toy )
+{
+  return;
+}
+
+
+void
+dense_render_line2( dense_worker* worker, FT_PreLine pl )
 {
   //printf("Line from %d, %d to %d, %d\n", worker->prev_x, worker->prev_y, tox, toy);
 
-  FT26D6 fx = worker->prev_x>>2;
-  FT26D6 fy = worker->prev_y>>2;
+  // FT26D6 fx = worker->prev_x>>2;
+  // FT26D6 fy = worker->prev_y>>2;
+
+  FT26D6 fx = UPSCALE(pl->x1)>>2;
+  FT26D6 fy = UPSCALE(pl->y1)>>2;
 
   FT26D6 from_x = fx;
   FT26D6 from_y = fy;
 
 
-  FT26D6 tx = tox>>2;
-  FT26D6 ty = toy>>2;
+  FT26D6 tx = UPSCALE(pl->x2)>>2;
+  FT26D6 ty = UPSCALE(pl->y2)>>2;
 
   if ( fy == ty )
     return;
@@ -342,7 +352,7 @@ dense_render_cubic( dense_worker* worker,
 
   if ( devsq < 0.333f )
   {
-    dense_render_line( worker, aP3.x, aP3.y );
+    dense_render_line( worker, worker->prev_x, worker->prev_y, aP3.x, aP3.y );
     return;
   }
 
@@ -357,7 +367,7 @@ dense_render_cubic( dense_worker* worker,
     FT_Vector a    = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
     FT_Vector b    = Lerp( t, Lerp( t, aP1, aP2 ), Lerp( t, aP2, aP3 ) );
     FT_Vector next = Lerp( t, a, b );
-    dense_render_line( worker, next.x, next.y );
+    dense_render_line( worker, worker->prev_x, worker->prev_y, next.x, next.y );
     worker->prev_x = next.x;
     worker->prev_y = next.y;
     p              = next;
@@ -423,22 +433,17 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
 {
  // FT_Error error = FT_Outline_Decompose( &( worker->outline ),
  //                                        &dense_decompose_funcs, worker );
-  FT_Vector point1 = {pl->x1, pl->y1};
-  FT_Vector point2 = {100, 100};
+  // FT_Vector point1 = {pl->x1, pl->y1};
 
-  FT_Error error = dense_move_to(&point1, worker);
+  FT_Error error = 0;
   while (pl!=NULL)
   {
-    point1.x = pl->x1;
-    point1.y = pl->y1;
-    point2.x = pl->x2;
-    point2.y = pl->y2;
+    dense_render_line2(worker, pl);
 
-    if(pl->ismove){
-      dense_move_to(&point2, worker);
-    }else{
-    dense_line_to(&point2, worker);
-    }
+
+    // worker->prev_x = UPSCALE(pl->x2);
+    // worker->prev_y = UPSCALE(pl->y2);
+    //dense_line_to(&point2, worker);
     pl= pl->next;
   }
   // point.x = 100;
@@ -493,7 +498,8 @@ __m128i offset = _mm_setzero_si128();
 
     // cap max value to 1
     //y = _mm_min_epi32( _mm_srli_epi32( y, 4 ), _mm_set1_epi32( 255 ) );
-    __m128i y = _mm_abs_epi32(_mm_srai_epi32(  x , 4 ));
+    //__m128i y = _mm_abs_epi32(_mm_srai_epi32(  x , 4 ));
+    __m128i y = _mm_srli_epi32( _mm_abs_epi32( x) , 4 );
 
     // reduce to 255
     // y = 
@@ -505,7 +511,8 @@ __m128i offset = _mm_setzero_si128();
     //__m128i z = _mm_packus_epi16(_mm_packs_epi32(z, nzero), nzero);
 
     // int* ptr = (int*)&dest[i];
-    *(int*)&dest[i] =  *(int*)&y;
+    _mm_storeu_si32(&dest[i], y);
+    //*(int*)&dest[i] =  *(int*)&y;
     //*(int*)&dest[i] =  _mm_extract_epi32(y, 0);
 
     //_mm_store_ss( (float*)&dest[i], _mm_castsi128_ps(y) );
@@ -527,7 +534,7 @@ __m128i offset = _mm_setzero_si128();
     value += *source++;
 
     if(value > 0){
-      int n = value >>4;
+      int n = value >>4;_Pos fromx, FT_Pos fromy, FT_Pos tox, FT_Pos toy
 
       if(n>255)n=255;
       *dest = (unsigned char)n;

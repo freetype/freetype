@@ -43,7 +43,7 @@ extern "C"
     FT_Outline outline;
   } dense_worker;
 
-  void dense_render_line( dense_worker* worker, FT_Pos to_x, FT_Pos to_y );
+  void dense_render_line( dense_worker* worker, FT_Pos from_x, FT_Pos from_y, FT_Pos to_x, FT_Pos to_y );
   void dense_render_quadratic( dense_worker* worker,
                                FT_Vector* control,
                                FT_Vector* to );
