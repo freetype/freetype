@@ -140,7 +140,7 @@
 
 
     /* allocate new one */
-    if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
+    if ( FT_ALLOC_MULT( bitmap->buffer,1, bitmap->rows* bitmap->pitch +16) ) // +16 is for alignment for SIMD
       goto Exit;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
