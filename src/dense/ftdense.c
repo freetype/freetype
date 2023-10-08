@@ -467,6 +467,7 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
 
   __m128i offset = _mm_setzero_si128();
   __m128i nzero = _mm_castps_si128(_mm_set1_ps(-0.0));
+  
 
   for (int i = 0; i < worker->m_h*worker->m_w; i += 4)
   {
@@ -482,13 +483,15 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl
     x = _mm_add_epi32( x, offset );
 
     __m128i y = _mm_srli_epi32( _mm_abs_epi32( x) , 4 );
-     y = _mm_packs_epi32(y, nzero);
-     y = _mm_packus_epi16(y, nzero);
+     y = _mm_packus_epi16(_mm_packs_epi32(y, nzero), nzero);
 
     // int* ptr = (int*)&dest[i];
     _mm_storeu_si32(&dest[i], y);
 
     offset = _mm_shuffle_epi32(x,_MM_SHUFFLE( 3, 3, 3, 3 ) );
+
+
+
   }
 
 #elif FT_NEON
