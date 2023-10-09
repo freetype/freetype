@@ -922,7 +922,7 @@
     /* The validity test for `glyph_index' is performed by the */
     /* font drivers.                                           */
 
-    slot = face->glyph;
+    slot = face->glyph_array[glyph_index];
     ft_glyphslot_clear( slot );
 
     driver  = face->driver;
@@ -1628,6 +1628,27 @@
     args.stream   = NULL;
 
     return ft_open_face_internal( library, &args, face_index, aface, 1 );
+  }
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face2( FT_Library   library,
+                const char*  pathname,
+                FT_Long      face_index,
+                FT_Face     *aface,
+                FT_UInt      size)
+  {
+    FT_Open_Args  args;
+
+     /* test for valid `library' and `aface' delayed to `FT_Open_Face' */
+     if ( !pathname )
+       return FT_THROW( Invalid_Argument );
+
+     args.flags    = FT_OPEN_PATHNAME;
+     args.size     = size;
+     args.pathname = (char*)pathname;
+     args.stream   = NULL;
+
+     return ft_open_face_internal( library, &args, face_index, aface, 1 );
   }
 
 #endif

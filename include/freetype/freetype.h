@@ -2534,6 +2534,10 @@ FT_BEGIN_HEADER
    *   params ::
    *     Extra parameters passed to the font driver when opening a new face.
    *
+   *   size ::
+   *     Size at which the glyphs will be rendered. Use same value as
+   *     @FT_Set_Pixel_Sizes
+   *
    * @note:
    *   The stream type is determined by the contents of `flags`:
    *
@@ -2571,6 +2575,7 @@ FT_BEGIN_HEADER
     FT_Module       driver;
     FT_Int          num_params;
     FT_Parameter*   params;
+    FT_UInt         size;
 
   } FT_Open_Args;
 
