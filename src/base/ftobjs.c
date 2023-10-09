@@ -1625,6 +1625,7 @@
       return FT_THROW( Invalid_Argument );
 
     args.flags    = FT_OPEN_PATHNAME;
+    args.size     = 0;
     args.pathname = (char*)pathname;
     args.stream   = NULL;
 
@@ -3077,6 +3078,33 @@ FT_Error ft_decompose_outline(FT_GlyphSlot* slot){
           goto Fail;
 
         face->size = size;
+      }
+      if ( args->size > 0 )
+      {
+        face->glyph_array = (FT_GlyphSlot*)malloc(
+            face->driver->clazz->slot_object_size * face->num_glyphs );
+        error = FT_Set_Pixel_Sizes( face, 0, args->size );
+
+        for ( int gindex = 0; gindex < face->num_glyphs; gindex++ )
+        {
+          driver                = face->driver;
+          FT_Driver_Class clazz = driver->clazz;
+          memory                = driver->root.memory;
+
+          FT_ALLOC( face->glyph_array[gindex], clazz->slot_object_size );
+          
+          face->glyph_array[gindex]->face         = face;
+          face->glyph_array[gindex]->prel_shifted = 0;
+          face->glyph_array[gindex]->glyph_index  = gindex;
+          ft_glyphslot_init( face->glyph_array[gindex] );
+
+          face->glyph_array[gindex]->next = NULL;
+          *face->glyph                    = *face->glyph_array[gindex];
+
+          FT_Load_Glyph( face, gindex, FT_LOAD_NO_HINTING );
+
+          ft_decompose_outline( &face->glyph_array[gindex] );
+        }
       }
     }
 
