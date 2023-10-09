@@ -2573,6 +2573,54 @@ FT_BEGIN_HEADER
                FT_Face     *aface );
 
 
+/**************************************************************************
+   *
+   * @function:
+   *   FT_New_Face2
+   *
+   * @description:
+   *   Call @FT_Open_Face to open a font by its pathname with given flags.
+   *
+   * @inout:
+   *   library ::
+   *     A handle to the library resource.
+   *
+   * @input:
+   *   pathname ::
+   *     A path to the font file.
+   *
+   *   face_index ::
+   *     See @FT_Open_Face for a detailed description of this parameter.
+   *
+   *   size ::
+   *     Size at which glyphs will be rendered, Use the same value as @FT_Set_Pixel_Sizes
+   *
+   * @output:
+   *   aface ::
+   *     A handle to a new face object.  If `face_index` is greater than or
+   *     equal to zero, it must be non-`NULL`.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   The `pathname` string should be recognizable as such by a standard
+   *   `fopen` call on your system; in particular, this means that `pathname`
+   *   must not contain null bytes.  If that is not sufficient to address all
+   *   file name possibilities (for example, to handle wide character file
+   *   names on Windows in UTF-16 encoding) you might use @FT_Open_Face to
+   *   pass a memory array or a stream object instead.
+   *
+   *   Use @FT_Done_Face to destroy the created @FT_Face object (along with
+   *   its slot and sizes).
+   */
+  FT_EXPORT( FT_Error )
+  FT_New_Face2( FT_Library   library,
+               const char*  filepathname,
+               FT_Long      face_index,
+               FT_Face     *aface,
+               FT_UInt      size);
+
   /**************************************************************************
    *
    * @function:
