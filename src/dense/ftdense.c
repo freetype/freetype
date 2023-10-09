@@ -94,6 +94,165 @@ dense_line_to( const FT_Vector* to, dense_worker* worker )
 }
 
 void
+dense_render_line2( dense_worker* worker, FT_PreLine pl )
+{
+
+  FT26D6 fx = UPSCALE(pl->x1)>>2;
+  FT26D6 fy = UPSCALE(pl->y1)>>2;
+
+  FT26D6 from_x = fx;
+  FT26D6 from_y = fy;
+
+
+  FT26D6 tx = UPSCALE(pl->x2)>>2;
+  FT26D6 ty = UPSCALE(pl->y2)>>2;
+
+  if ( fy == ty )
+    return;
+
+  FT26D6 to_x = tx;
+  FT26D6 to_y = ty;
+
+  int dir = 1;
+  if ( from_y >= to_y )
+  {
+    dir = -1;
+    FT_SWAP(from_x, to_x);
+    FT_SWAP(from_y, to_y);
+  }
+
+  // Clip to the height.
+  if ( from_y >= worker->m_h<<6 || to_y <= 0 )
+    return;
+
+  FT26D6 deltax,deltay;
+  deltax = to_x - from_x;
+  deltay = to_y - from_y;
+
+    FT_UDIVPREP(from_x != to_x, deltax);
+
+    FT_UDIVPREP(from_y != to_y, deltay);
+
+  if ( from_y < 0 )
+  {
+    from_x -= from_y * deltax/deltay;
+    from_y = 0;
+  }
+
+  if ( to_y > worker->m_h<<6 )
+  {
+    to_x -= (( to_y - worker->m_h<<6 ) * deltax/deltay);
+    to_y = worker->m_h<<6;
+  }
+
+
+  if(deltax == 0){
+    FT26D6 x       = from_x;
+    int   x0i    = x>>6;
+    FT26D6 x0floor = x0i<<6;
+
+    // y-coordinate of first pixel of line
+    int    y0      = from_y>>6;
+
+    // y-coordinate of last pixel of line
+    int    y_limit = (to_y + 0x3f)>>6;
+    FT20D12* m_a   = worker->m_a;
+
+
+
+    for ( int y = y0; y < y_limit; y++ )
+    {
+      int linestart = y * worker->m_w;
+
+     FT26D6 dy   = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
+
+      m_a[linestart + x0i] += dir*dy*(64 - x + x0floor);
+      m_a[linestart + ( x0i + 1 )] += dir*dy*(x-x0floor);
+
+    }
+  }
+  else
+  {
+    int    x       = from_x;
+    int    y0      = from_y>>6;
+    int    y_limit = (to_y + 0x3f)>>6;
+
+    FT20D12* m_a     = worker->m_a;
+
+    for ( int y = y0; y < y_limit; y++ )
+    {
+      int   linestart = y * worker->m_w;
+      FT26D6 dy        = FT_MIN( (y + 1)<<6, to_y ) - FT_MAX( y<<6, from_y );
+      FT26D6 xnext     = x + FT_UDIV((dy*deltax), deltay);
+      FT26D6 d         = dy * dir;
+
+      FT26D6 x0, x1;
+      if ( x < xnext )
+      {
+        x0 = x;
+        x1 = xnext;
+      }
+      else
+      {
+        x0 = xnext;
+        x1 = x;
+      }
+
+
+      int   x0i    = x0>>6;
+      FT26D6 x0floor = x0i<<6;
+
+
+      int   x1i    = (x1+0x3f)>>6;
+      FT26D6 x1ceil =  x1i <<6;
+
+      if ( x1i <= x0i + 1 )
+      {
+        FT26D6 xmf = ( ( x + xnext )>>1) - x0floor;
+        m_a[linestart + x0i] += d * ((1<<6) - xmf);
+        m_a[linestart + ( x0i + 1 )] += d * xmf;
+      }
+      else
+      {
+
+        FT26D6 oneOverS = x1 - x0;
+
+        FT_UDIVPREP(x1 != x0, oneOverS);
+
+        FT26D6 x0f = x0 - x0floor;
+
+
+        FT26D6 oneMinusX0f = (1<<6) - x0f;
+        FT26D6 a0 = FT_UDIV(((oneMinusX0f * oneMinusX0f) >> 1), oneOverS);
+        FT26D6 x1f = x1 - x1ceil + (1<<6);
+        FT26D6 am =  FT_UDIV(((x1f * x1f) >> 1) , oneOverS);
+
+        m_a[linestart + x0i] += d * a0;
+
+        if ( x1i == x0i + 2 )
+          m_a[linestart + ( x0i + 1 )] += d * ( (1<<6) - a0 - am );
+        else
+        {
+          FT26D6 a1 =  FT_UDIV((((1<<6) + (1<<5) - x0f) << 6) , oneOverS);
+          m_a[linestart + ( x0i + 1 )] += d * ( a1 - a0 );
+
+          FT26D6 dTimesS =  FT_UDIV((d << 12) , oneOverS);
+
+          for ( FT26D6 xi = x0i + 2; xi < x1i - 1; xi++ )
+            m_a[linestart + xi] += dTimesS;
+
+          FT26D6 a2 = a1 +  FT_UDIV((( x1i - x0i - 3 )<<12),oneOverS);
+          m_a[linestart + ( x1i - 1 )] += d * ( (1<<6) - a2 - am );
+        }
+        m_a[linestart + x1i] += d * am;
+      }
+      x = xnext;
+    }
+  }
+}
+
+
+void
 dense_render_line( dense_worker* worker, FT_Pos tox, FT_Pos toy )
 {
 
@@ -426,10 +585,16 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
 )
 
 static int
-dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
+dense_render_glyph( dense_worker* worker, const FT_Bitmap* target, FT_PreLine pl )
 {
-  FT_Error error = FT_Outline_Decompose( &( worker->outline ),
-                                         &dense_decompose_funcs, worker );
+  FT_Error error = 0;
+
+  while (pl != NULL)
+  {
+    dense_render_line2(worker, pl);
+    pl = pl->next;
+  }
+
   // Render into bitmap
   const FT20D12* source = worker->m_a;
   unsigned char* dest     = target->buffer;
@@ -516,6 +681,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   FT_Bitmap*  target_map = params->target;
+  FT_PreLine pl = params->prelines;
 
   dense_worker worker[1];
 
@@ -542,7 +708,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   worker->m_w = target_map->pitch;
   worker->m_h = target_map->rows;
 
-  int size = worker->m_w * worker->m_h + 4;
+  int size = (worker->m_w * worker->m_h + 3) & ~3;
 
   worker->m_a      = malloc( sizeof( FT20D12 ) * size );
   worker->m_a_size = size;
@@ -557,7 +723,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   // Invert the pitch to account for different +ve y-axis direction in dense array
   // (maybe temporary solution)
   target_map->pitch *= -1;
-  return dense_render_glyph( worker, target_map );
+  return dense_render_glyph( worker, target_map, pl );
 }
 
 FT_DEFINE_RASTER_FUNCS(

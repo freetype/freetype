@@ -139,7 +139,8 @@
 
 
     /* allocate new one */
-    if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
+    // ARM NEON crashes if memory is not aligned
+    if ( FT_ALLOC_MULT( bitmap->buffer, 1,bitmap->rows*bitmap->pitch + 16 ) )
       goto Exit;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
@@ -161,12 +162,25 @@
     }
 
     /* translate outline to render it into the bitmap */
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, x_shift, y_shift );
+    if ( (x_shift || y_shift) && !slot->prel_shifted){
+      //FT_Outline_Translate( outline, x_shift, y_shift );
+      FT_PreLine pl = slot->prelines;
+      while (pl!=NULL)
+      {
+        pl->x1 += x_shift;
+        pl->y1 += y_shift;
+        pl->x2 += x_shift;
+        pl->y2 += y_shift;
+
+        pl = pl->next;
+      }
+      slot->prel_shifted = 1;
+    }
 
     /* set up parameters */
     params.target = bitmap;
     params.source = outline;
+    params.prelines = slot->prelines;
 
     /* render the outline */
     error =
@@ -184,8 +198,8 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, -x_shift, -y_shift );
+    // if ( x_shift || y_shift )
+    //   FT_Outline_Translate( outline, -x_shift, -y_shift );
 
     return error;
   }
