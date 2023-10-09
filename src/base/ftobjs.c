@@ -42,6 +42,7 @@
 #include <freetype/internal/services/svkern.h>
 #include <freetype/internal/services/svtteng.h>
 
+#include <math.h>
 #include <freetype/ftdriver.h>
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
@@ -2547,6 +2548,306 @@
     return ft_open_face_internal( library, args, face_index, aface, 1 );
   }
 
+
+static FT_Vector
+Lerp( float T, FT_Vector P0, FT_Vector P1 )
+{
+  FT_Vector p;
+  p.x = P0.x + T * ( P1.x - P0.x );
+  p.y = P0.y + T * ( P1.y - P0.y );
+  return p;
+}
+
+int conic_to2(FT_GlyphSlot* slot, FT_Vector *control, FT_Vector *from, FT_Vector *to, FT_PreLine *ptr)
+{
+  /*
+  Calculate devsq as the square of four times the
+  distance from the control point to the midpoint of the curve.
+  This is the place at which the curve is furthest from the
+  line joining the control points.
+
+  4 x point on curve = p0 + 2p1 + p2
+  4 x midpoint = 4p1
+
+  The division by four is omitted to save time.
+  */
+  FT_Vector aP0 = { from->x , from->y};
+  FT_Vector aP1 = { control->x, control->y };
+  FT_Vector aP2 = { to->x, to->y };
+
+  float devx  = aP0.x - aP1.x - aP1.x + aP2.x;
+  float devy  = aP0.y - aP1.y - aP1.y + aP2.y;
+  float devsq = devx * devx + devy * devy;
+
+  if ( devsq < 0.333f )
+  {
+    FT_PreLine pl3       = malloc(sizeof(FT_PreLineRec));
+            pl3->x1      = (*ptr)->x2;
+            pl3->y1      = (*ptr)->y2;
+            pl3->x2      = aP2.x;
+            pl3->y2      = aP2.y;
+            pl3->next    = NULL;
+            (*ptr)->next = pl3;
+            *ptr         = (*ptr)->next;
+    return 0;
+  }
+
+  /*
+  According to Raph Levien, the reason for the subdivision by n (instead of
+  recursive division by the Casteljau system) is that "I expect the flatness
+  computation to be semi-expensive (it's done once rather than on each potential
+  subdivision) and also because you'll often get fewer subdivisions. Taking a
+  circular arc as a simplifying assumption, where I get n, a recursive approach
+  would get 2^ceil(lg n), which, if I haven't made any horrible mistakes, is
+  expected to be 33% more in the limit".
+  */
+
+  const float tol = 3.0f;
+  int         n   = (int)floor( sqrt( sqrt( tol * devsq ) ) )/8;
+  FT_Vector p      = aP0;
+  float     nrecip = 1.0f / ( n + 1.0f );
+  float     t      = 0.0f;
+  for ( int i = 0; i < n; i++ )
+  {
+    t += nrecip;
+    FT_Vector next = Lerp( t, Lerp( t, aP0, aP1 ), Lerp( t, aP1, aP2 ) );
+    FT_PreLine pl4  = malloc(sizeof(FT_PreLineRec));
+            pl4->x1       = (*ptr)->x2;
+            pl4->y1       = (*ptr)->y2;
+            pl4->x2       = next.x;
+            pl4->y2       = next.y;
+            pl4->next     = NULL;
+            (*ptr)->next  = pl4;
+            *ptr          = (*ptr)->next;
+            p              = next;
+  }
+
+  FT_PreLine pl5          = malloc(sizeof(FT_PreLineRec));
+            pl5->x1       = (*ptr)->x2;
+            pl5->y1       = (*ptr)->y2;
+            pl5->x2       = aP2.x;
+            pl5->y2       = aP2.y;
+            pl5->next     = NULL;
+            (*ptr)->next  = pl5;
+            *ptr          = (*ptr)->next;
+  return 0;
+}
+
+/**
+ * Convert the outline data of slot to prelines
+*/
+FT_Error ft_decompose_outline(FT_GlyphSlot* slot){
+  FT_Vector   v_last;
+  FT_Vector   v_control;
+  FT_Vector   v_start;
+
+  FT_Vector*  point;
+  FT_Vector*  limit;
+  char*       tags;
+
+  FT_Error    error;
+
+  FT_Int   n;         /* index of contour in outline     */
+  FT_Int   first;     /* index of first point in contour */
+  FT_Int   last;      /* index of last point in contour  */
+
+  FT_Int   tag;       /* current point's state           */
+
+  FT_Int   shift;
+  FT_Pos   delta;
+
+  FT_Outline* outline = &(*slot)->outline;
+
+  if ( !outline )
+    return FT_THROW( Invalid_Outline );
+  
+  last = -1;
+  FT_PreLine ptr = (*slot)->prelines;
+
+  for ( n = 0; n < outline->n_contours; n++ )
+  {
+    FT_TRACE5(( "ft_decompose_outline: Contour %d\n", n ));
+
+    first = last + 1;
+    last  = outline->contours[n];
+    if ( last < first ){
+      FT_TRACE5(( "Invalid Outline"));
+      break;
+    }
+    limit = outline->points + last;
+
+    v_start   = outline->points[first];
+
+
+    v_last   = outline->points[last];
+
+    v_control = v_start;
+
+    point = outline->points + first;
+    tags  = outline->tags   + first;
+    tag   = FT_CURVE_TAG( tags[0] );
+
+    /* A contour cannot start with a cubic control point! */
+    if ( tag == FT_CURVE_TAG_CUBIC )
+    {
+      FT_TRACE5(( "Invalid Outline"));
+      break;
+    }
+    /* check first point to determine origin */
+    if ( tag == FT_CURVE_TAG_CONIC )
+    {
+      /* first point is conic control.  Yes, this happens. */
+      if ( FT_CURVE_TAG( outline->tags[last] ) == FT_CURVE_TAG_ON )
+      {
+        /* start at last point if it is on the curve */
+        v_start = v_last;
+        limit--;
+      }
+      else
+      {
+        /* if both first and last points are conic,         */
+        /* start at their middle and record its position    */
+        /* for closure                                      */
+        v_start.x = ( v_start.x + v_last.x ) / 2;
+        v_start.y = ( v_start.y + v_last.y ) / 2;
+
+      /* v_last = v_start; */
+      }
+      point--;
+      tags--;
+    }
+    
+    FT_TRACE5(( "  move to (%.2f, %.2f)\n",
+                (double)v_start.x / 64, (double)v_start.y / 64 ));
+
+
+    FT_PreLine pl  = malloc(sizeof(FT_PreLineRec));
+          pl->x1 = v_start.x;
+          pl->y1 = v_start.y;
+          pl->x2 = v_start.x;
+          pl->y2 = v_start.y;
+          pl->next = NULL;
+
+          if ( ( *slot )->prelines == NULL )
+          {
+            ptr = ( *slot )->prelines = pl;
+          }
+          else
+          {
+            ptr->next = pl;
+            ptr       = ptr->next;
+          }
+
+    while ( point < limit )
+    {
+      point++;
+      tags++;
+
+      tag = FT_CURVE_TAG( tags[0] );
+      switch ( tag )
+      {
+      case FT_CURVE_TAG_ON:  /* emit a single line_to */
+        {
+          FT_Vector  vec;
+
+
+          vec.x = point->x;
+          vec.y = point->y;
+
+          FT_TRACE5(( "  line to (%.2f, %.2f)\n",
+                      (double)vec.x / 64, (double)vec.y / 64 ));
+
+          FT_PreLine pl3  = malloc(sizeof(FT_PreLineRec));
+          pl3->x1 = ptr->x2;
+          pl3->y1 = ptr->y2;
+          pl3->x2 = vec.x;
+          pl3->y2 = vec.y;
+          pl3->next = NULL;
+          ptr->next = pl3;
+          ptr = ptr->next;
+          continue;
+        }
+      
+      case FT_CURVE_TAG_CONIC:  /* consume conic arcs */
+        v_control.x =  point->x ;
+        v_control.y = point->y ;
+
+      Do_Conic:
+        if ( point < limit )
+        {
+          FT_Vector  vec;
+          FT_Vector  v_middle;
+
+
+          point++;
+          tags++;
+          tag = FT_CURVE_TAG( tags[0] );
+
+          vec.x = point->x;
+          vec.y = point->y;
+
+          if ( tag == FT_CURVE_TAG_ON )
+          {
+            FT_TRACE5(( "  conic to (%.2f, %.2f)"
+                        " with control (%.2f, %.2f)\n",
+                        (double)vec.x / 64,
+                        (double)vec.y / 64,
+                        (double)v_control.x / 64,
+                        (double)v_control.y / 64 ));
+            FT_Vector vex0 = {ptr->x2, ptr->y2};
+            error = conic_to2(slot, &v_control, &vex0,&vec , &ptr);
+ 
+            continue;
+          }
+
+          if ( tag != FT_CURVE_TAG_CONIC )
+          {
+            FT_TRACE5( ( "Invalid Outline" ) );
+            break;
+          }
+          v_middle.x = ( v_control.x + vec.x ) / 2;
+          v_middle.y = ( v_control.y + vec.y ) / 2;
+
+          FT_TRACE5(( "  conic to (%.2f, %.2f)"
+                      " with control (%.2f, %.2f)\n",
+                      (double)v_middle.x / 64,
+                      (double)v_middle.y / 64,
+                      (double)v_control.x / 64,
+                      (double)v_control.y / 64 ));
+          FT_Vector vex = {ptr->x2, ptr->y2};
+          error = conic_to2(slot, &v_control, &vex,&v_middle, &ptr);
+
+          v_control = vec;
+          goto Do_Conic;
+        }
+
+        FT_TRACE5(( "  conic to (%.2f, %.2f)"
+                    " with control (%.2f, %.2f)\n",
+                    (double)v_start.x / 64,
+                    (double)v_start.y / 64,
+                    (double)v_control.x / 64,
+                    (double)v_control.y / 64 ));
+        FT_Vector vex2 = {ptr->x2, ptr->y2};
+        error = conic_to2( slot, &v_control, &vex2, &v_start, &ptr );
+      }
+    }
+
+    /* close the contour with a line segment */
+    FT_TRACE5(( "  line to (%.2f, %.2f)\n",
+                 (double)v_start.x / 64, (double)v_start.y / 64 ));
+    FT_PreLine pl2  = malloc(sizeof(FT_PreLineRec));
+    pl2->x1 = ptr->x2;
+    pl2->y1 = ptr->y2;
+    pl2->x2 = v_start.x;
+    pl2->y2 = v_start.y;
+    pl2->next = NULL;
+    ptr->next = pl2;
+    ptr = ptr->next;
+    
+  }
+
+  return 0;
+}
 
   static FT_Error
   ft_open_face_internal( FT_Library           library,
