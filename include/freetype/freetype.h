@@ -1283,6 +1283,44 @@ FT_BEGIN_HEADER
   } FT_FaceRec;
 
 
+
+  /**************************************************************************
+   *
+   * @type:
+   *   FT_PreLine
+   *
+   * @description:
+   *   A handle to FT_PreLineRec_ containing coordinates of start and end
+   *   points for a line.
+   *
+   */
+  typedef struct FT_PreLineRec_* FT_PreLine;
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   FT_PreLineRec
+   *
+   * @description:
+   *   Linkedlist containing lines to be drawn for a glyph.
+   *
+   * @fields:
+   *   x1, y1 ::
+   *     Coordinates of line start point.
+   *
+   *   y1, y2 ::
+   *     Coordinates of line end point.
+   *
+   *   next ::
+   *     The next PreLine for current glyph
+   *
+   */
+  typedef struct FT_PreLineRec_
+  {
+    int x1, x2, y1, y2;
+    FT_PreLine next;
+  } FT_PreLineRec;
+
   /**************************************************************************
    *
    * @enum:
