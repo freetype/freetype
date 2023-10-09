@@ -1276,6 +1276,7 @@ FT_BEGIN_HEADER
     FT_ListRec        sizes_list;
 
     FT_Generic        autohint;   /* face-specific auto-hinter data */
+    FT_GlyphSlot*      glyph_array;
     void*             extensions; /* unused                         */
 
     FT_Face_Internal  internal;
@@ -2209,6 +2210,12 @@ FT_BEGIN_HEADER
    *   other ::
    *     Reserved.
    *
+   *   prelines ::
+   *     Linkedlist containing lines to be drawn for the glyph
+   *
+   *   prel_shifted ::
+   *     If the points in preline have been adjustted according to target bitmap
+   *
    *   lsb_delta ::
    *     The difference between hinted and unhinted left side bearing while
    *     auto-hinting is active.  Zero otherwise.
@@ -2326,6 +2333,8 @@ FT_BEGIN_HEADER
     FT_Pos            rsb_delta;
 
     void*             other;
+    FT_PreLine        prelines;
+    int               prel_shifted;
 
     FT_Slot_Internal  internal;
 

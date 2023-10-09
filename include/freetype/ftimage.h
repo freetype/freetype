@@ -1030,6 +1030,9 @@ FT_BEGIN_HEADER
    *     An optional span clipping box expressed in _integer_ pixels
    *     (not in 26.6 fixed-point units).
    *
+   *   prelines ::
+   *     Pointer of type FT_PreLine, containing line data for a glyph
+   *
    * @note:
    *   The @FT_RASTER_FLAG_AA bit flag must be set in the `flags` to
    *   generate an anti-aliased glyph bitmap, otherwise a monochrome bitmap
@@ -1059,6 +1062,7 @@ FT_BEGIN_HEADER
     FT_Raster_BitSet_Func   bit_set;      /* unused */
     void*                   user;
     FT_BBox                 clip_box;
+    void*                   prelines;
 
   } FT_Raster_Params;
 
