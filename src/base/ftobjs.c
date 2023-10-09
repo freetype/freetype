@@ -893,6 +893,14 @@
 
 
   /* documentation is in freetype.h */
+  FT_EXPORT_DEF( FT_Error )
+  FT_Refresh_Glyph( FT_Face   face,
+                 FT_UInt   glyph_index)
+
+  {
+    ft_glyphslot_free_bitmap( face->glyph_array[glyph_index] );
+    face->glyph_array[glyph_index]->format = FT_GLYPH_FORMAT_OUTLINE;
+  }
 
   FT_EXPORT_DEF( FT_Error )
   FT_Load_Glyph( FT_Face   face,

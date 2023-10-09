@@ -3323,6 +3323,31 @@ FT_BEGIN_HEADER
                  FT_UInt   glyph_index,
                  FT_Int32  load_flags );
 
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Refresh_Glyph
+   *
+   * @description:
+   *   Prepare the glyph at glyph_index for rendering. Resets the glyph
+   *   if it has already been rendered
+   *
+   * @inout:
+   *   face ::
+   *     A handle to the target face object where the glyph is loaded.
+   *
+   * @input:
+   *   glyph_index ::
+   *     The index of the glyph in the font file.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   */
+  FT_EXPORT( FT_Error )
+  FT_Refresh_Glyph( FT_Face   face,
+                    FT_UInt   glyph_index);
+
 
   /**************************************************************************
    *
