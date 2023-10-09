@@ -16,15 +16,25 @@
     defined( __x86_64__ )                        || \
     defined( _M_AMD64 )                          || \
     ( defined( _M_IX86_FP ) && _M_IX86_FP >= 2 )
-#  define FT_SSE4_1 1
+  #define FT_SSE4_1 1
 #else
-#  define FT_SSE4_1 0
+  #define FT_SSE4_1 0
+#endif
+
+#if defined(__ARM_NEON)
+  #define FT_NEON 1
+#else
+  #define FT_NEON 0
 #endif
 
 
 #if FT_SSE4_1
 
-    #include <immintrin.h>
+  #include <immintrin.h>
+
+#elif FT_NEON
+
+  #include <arm_neon.h>
 
 #endif
 
@@ -427,8 +437,8 @@ dense_render_glyph( dense_worker* worker, const FT_Bitmap* target )
 
 #if FT_SSE4_1
 
-__m128i offset = _mm_setzero_si128();
-  __m128i mask   = _mm_set1_epi32( 0x0c080400 );
+  __m128i offset = _mm_setzero_si128();
+  __m128i nzero = _mm_castps_si128(_mm_set1_ps(-0.0));
 
   for (int i = 0; i < worker->m_h*worker->m_w; i += 4)
   {
@@ -438,34 +448,45 @@ __m128i offset = _mm_setzero_si128();
 
     x = _mm_add_epi32( x, _mm_slli_si128( x, 4 ) );
 
-    x = _mm_add_epi32(
-        x, _mm_castps_si128( _mm_shuffle_ps( _mm_setzero_ps(),
-                                             _mm_castsi128_ps( x ), 0x40 ) ) );
+    x = _mm_add_epi32( x, _mm_slli_si128( x, 8 ) );
 
-    // add the prefsum of previous 4 floats to all current floats
+    // add the prefix sum of previous 4 ints to all ints
     x = _mm_add_epi32( x, offset );
 
     // take absolute value
-    __m128i y = _mm_abs_epi32( x );  // fabs(x)
-
-    // cap max value to 1
-    y = _mm_min_epi32( y, _mm_set1_epi32( 4080 ) );
-
-    // reduce to 255
-    y = _mm_srli_epi32( y, 4 );
-
-    // shuffle
-    y = _mm_shuffle_epi8( y, mask );
-
-    _mm_store_ss( (float*)&dest[i], _mm_castsi128_ps(y) );
+    __m128i y = _mm_srli_epi32( _mm_abs_epi32( x) , 4 );
+    y = _mm_packus_epi16(_mm_packs_epi32(y, nzero), nzero);
+    _mm_storeu_si32(&dest[i], y);
 
     // store the current prefix sum in offset
-    offset = _mm_castps_si128( _mm_shuffle_ps( _mm_castsi128_ps( x ),
-                                               _mm_castsi128_ps( x ),
-                                               _MM_SHUFFLE( 3, 3, 3, 3 ) ) );
+    offset = _mm_shuffle_epi32(x,_MM_SHUFFLE( 3, 3, 3, 3 ) );
   }
+#elif FT_NEON
+  int32x4_t offset = vdupq_n_s32(0);
+  int32x4_t nzero =  vreinterpretq_s32_f32(vdupq_n_f32(-0.0));
 
-#else /* FT_SSE4_1 */
+  for (int i = 0; i < worker->m_h*worker->m_w; i += 4)
+  {
+    // load 4 floats from source
+
+    int32x4_t x = vld1q_s32( (int32_t*)&source[i] );
+
+    x = vaddq_s32( x, vreinterpretq_s32_s8(vextq_s8(vdupq_n_s8(0), vreinterpretq_s8_s32( x), 12) ));
+
+    x = vaddq_s32(x, vreinterpretq_s32_s8(vextq_s8(vdupq_n_s8(0), vreinterpretq_s8_s32(x), 8)));
+
+    // add the prefsum of previous 4 floats to all current floats
+    x = vaddq_s32( x, offset );
+
+    int32x4_t y = vshrq_n_s32( vabsq_s32( x) , 4 );
+    y = vreinterpretq_s32_s16(vcombine_s16(vqmovn_s32(y), vqmovn_s32(nzero)));
+    y = vreinterpretq_s32_u8(vcombine_u8(vqmovun_s16(vreinterpretq_s16_s32(y)), vqmovun_s16(vreinterpretq_s16_s32(nzero))));
+
+    vst1q_s32(&dest[i], y);
+
+    offset = vdupq_laneq_s32(x,3 );
+  }
+#else
 
   FT20D12 value = 0;
 
@@ -484,7 +505,7 @@ __m128i offset = _mm_setzero_si128();
     dest++;
   }
 
-#endif /* FT_SSE4_1 */
+#endif /* FT_SSE4_1 || FT_NEON */
 
   free(worker->m_a);
   return error;
