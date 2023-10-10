@@ -2011,9 +2011,20 @@ typedef ptrdiff_t  FT_PtrDist;
     int  continued = 0;
 
 
-    size = gray_taxi( RAS_VAR ) +
-           height * sizeof ( PCell ) / sizeof ( TCell ) +
-           9;  /* empirical extra for local extrema */
+    size = gray_taxi( RAS_VAR );
+
+    /* taxicab perimeters in excess of 20 CBox perimeters are */
+    /* not drawn unless in direct mode with possible clipping */
+    if ( !ras.render_span                                     &&
+         size > 20 * 2 * ( ras.max_ex - ras.min_ex + height ) )
+    {
+      FT_TRACE5(( "Blanking on taxi:cbox = %.2lf\n",
+                  0.5 * size / ( ras.max_ex - ras.min_ex + height ) ));
+      return FT_THROW( Ok );
+    }
+
+    size += height * sizeof ( PCell ) / sizeof ( TCell ) +
+            9;  /* empirical extra for local extrema */
 
     if ( FT_QNEW_ARRAY( buffer, size ) )
       return error;
