@@ -1486,139 +1486,6 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
-  static void
-  gray_sweep( RAS_ARG )
-  {
-    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
-                                                                 : INT_MIN;
-    int  coverage;
-    int  y;
-
-
-    for ( y = ras.min_ey; y < ras.max_ey; y++ )
-    {
-      PCell   cell  = ras.ycells[y - ras.min_ey];
-      TCoord  x     = ras.min_ex;
-      TArea   cover = 0;
-
-      unsigned char*  line = ras.target.origin - ras.target.pitch * y;
-
-
-      for ( ; cell != ras.cell_null; cell = cell->next )
-      {
-        TArea  area;
-
-
-        if ( cover != 0 && cell->x > x )
-        {
-          FT_FILL_RULE( coverage, cover, fill );
-          FT_GRAY_SET( line + x, coverage, cell->x - x );
-        }
-
-        cover += (TArea)cell->cover * ( ONE_PIXEL * 2 );
-        area   = cover - cell->area;
-
-        if ( area != 0 && cell->x >= ras.min_ex )
-        {
-          FT_FILL_RULE( coverage, area, fill );
-          line[cell->x] = (unsigned char)coverage;
-        }
-
-        x = cell->x + 1;
-      }
-
-      if ( cover != 0 )  /* only if cropped */
-      {
-        FT_FILL_RULE( coverage, cover, fill );
-        FT_GRAY_SET( line + x, coverage, ras.max_ex - x );
-      }
-    }
-  }
-
-
-  static void
-  gray_sweep_direct( RAS_ARG )
-  {
-    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
-                                                                 : INT_MIN;
-    int  coverage;
-    int  y;
-
-    FT_Span  span[FT_MAX_GRAY_SPANS];
-    int      n = 0;
-
-
-    for ( y = ras.min_ey; y < ras.max_ey; y++ )
-    {
-      PCell   cell  = ras.ycells[y - ras.min_ey];
-      TCoord  x     = ras.min_ex;
-      TArea   cover = 0;
-
-
-      for ( ; cell != ras.cell_null; cell = cell->next )
-      {
-        TArea  area;
-
-
-        if ( cover != 0 && cell->x > x )
-        {
-          FT_FILL_RULE( coverage, cover, fill );
-
-          span[n].coverage = (unsigned char)coverage;
-          span[n].x        = (short)x;
-          span[n].len      = (unsigned short)( cell->x - x );
-
-          if ( ++n == FT_MAX_GRAY_SPANS )
-          {
-            /* flush the span buffer and reset the count */
-            ras.render_span( y, n, span, ras.render_span_data );
-            n = 0;
-          }
-        }
-
-        cover += (TArea)cell->cover * ( ONE_PIXEL * 2 );
-        area   = cover - cell->area;
-
-        if ( area != 0 && cell->x >= ras.min_ex )
-        {
-          FT_FILL_RULE( coverage, area, fill );
-
-          span[n].coverage = (unsigned char)coverage;
-          span[n].x        = (short)cell->x;
-          span[n].len      = 1;
-
-          if ( ++n == FT_MAX_GRAY_SPANS )
-          {
-            /* flush the span buffer and reset the count */
-            ras.render_span( y, n, span, ras.render_span_data );
-            n = 0;
-          }
-        }
-
-        x = cell->x + 1;
-      }
-
-      if ( cover != 0 )  /* only if cropped */
-      {
-        FT_FILL_RULE( coverage, cover, fill );
-
-        span[n].coverage = (unsigned char)coverage;
-        span[n].x        = (short)x;
-        span[n].len      = (unsigned short)( ras.max_ex - x );
-
-        ++n;
-      }
-
-      if ( n )
-      {
-        /* flush the span buffer and reset the count */
-        ras.render_span( y, n, span, ras.render_span_data );
-        n = 0;
-      }
-    }
-  }
-
-
 #ifdef STANDALONE_
 
   /**************************************************************************
@@ -1934,7 +1801,7 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( continued )
         FT_Trace_Enable();
 
-      FT_TRACE7(( "band [%d..%d]: %td cell%s remaining/\n",
+      FT_TRACE7(( "band [%d..%d]: %td cell%s remaining\n",
                   ras.min_ey,
                   ras.max_ey,
                   ras.cell_null - ras.cell_free,
@@ -1949,6 +1816,139 @@ typedef ptrdiff_t  FT_PtrDist;
     }
 
     return error;
+  }
+
+
+  static void
+  gray_sweep( RAS_ARG )
+  {
+    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
+                                                                 : INT_MIN;
+    int  coverage;
+    int  y;
+
+
+    for ( y = ras.min_ey; y < ras.max_ey; y++ )
+    {
+      PCell   cell  = ras.ycells[y - ras.min_ey];
+      TCoord  x     = ras.min_ex;
+      TArea   cover = 0;
+
+      unsigned char*  line = ras.target.origin - ras.target.pitch * y;
+
+
+      for ( ; cell != ras.cell_null; cell = cell->next )
+      {
+        TArea  area;
+
+
+        if ( cover != 0 && cell->x > x )
+        {
+          FT_FILL_RULE( coverage, cover, fill );
+          FT_GRAY_SET( line + x, coverage, cell->x - x );
+        }
+
+        cover += (TArea)cell->cover * ( ONE_PIXEL * 2 );
+        area   = cover - cell->area;
+
+        if ( area != 0 && cell->x >= ras.min_ex )
+        {
+          FT_FILL_RULE( coverage, area, fill );
+          line[cell->x] = (unsigned char)coverage;
+        }
+
+        x = cell->x + 1;
+      }
+
+      if ( cover != 0 )  /* only if cropped */
+      {
+        FT_FILL_RULE( coverage, cover, fill );
+        FT_GRAY_SET( line + x, coverage, ras.max_ex - x );
+      }
+    }
+  }
+
+
+  static void
+  gray_sweep_direct( RAS_ARG )
+  {
+    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
+                                                                 : INT_MIN;
+    int  coverage;
+    int  y;
+
+    FT_Span  span[FT_MAX_GRAY_SPANS];
+    int      n = 0;
+
+
+    for ( y = ras.min_ey; y < ras.max_ey; y++ )
+    {
+      PCell   cell  = ras.ycells[y - ras.min_ey];
+      TCoord  x     = ras.min_ex;
+      TArea   cover = 0;
+
+
+      for ( ; cell != ras.cell_null; cell = cell->next )
+      {
+        TArea  area;
+
+
+        if ( cover != 0 && cell->x > x )
+        {
+          FT_FILL_RULE( coverage, cover, fill );
+
+          span[n].coverage = (unsigned char)coverage;
+          span[n].x        = (short)x;
+          span[n].len      = (unsigned short)( cell->x - x );
+
+          if ( ++n == FT_MAX_GRAY_SPANS )
+          {
+            /* flush the span buffer and reset the count */
+            ras.render_span( y, n, span, ras.render_span_data );
+            n = 0;
+          }
+        }
+
+        cover += (TArea)cell->cover * ( ONE_PIXEL * 2 );
+        area   = cover - cell->area;
+
+        if ( area != 0 && cell->x >= ras.min_ex )
+        {
+          FT_FILL_RULE( coverage, area, fill );
+
+          span[n].coverage = (unsigned char)coverage;
+          span[n].x        = (short)cell->x;
+          span[n].len      = 1;
+
+          if ( ++n == FT_MAX_GRAY_SPANS )
+          {
+            /* flush the span buffer and reset the count */
+            ras.render_span( y, n, span, ras.render_span_data );
+            n = 0;
+          }
+        }
+
+        x = cell->x + 1;
+      }
+
+      if ( cover != 0 )  /* only if cropped */
+      {
+        FT_FILL_RULE( coverage, cover, fill );
+
+        span[n].coverage = (unsigned char)coverage;
+        span[n].x        = (short)x;
+        span[n].len      = (unsigned short)( ras.max_ex - x );
+
+        ++n;
+      }
+
+      if ( n )
+      {
+        /* flush the span buffer and reset the count */
+        ras.render_span( y, n, span, ras.render_span_data );
+        n = 0;
+      }
+    }
   }
 
 
