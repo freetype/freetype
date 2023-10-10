@@ -1953,6 +1953,44 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
+  /*
+   * The taxicab perimeter of the entire outline is used to estimate
+   * the necessary memory pool or the job size in general.  Clipping
+   * is ignored because it might hurt the performance.
+   */
+  static long
+  gray_taxi( RAS_ARG )
+  {
+    FT_Outline*  outline = &ras.outline;
+    short        c, p, first, last;
+    FT_Vector    d, v;
+    FT_Pos       taxi;
+
+
+    taxi = 0;
+    last = -1;
+    for ( c = 0; c < outline->n_contours; c++ )
+    {
+      first = last + 1;
+      last = outline->contours[c];
+
+      d = outline->points[last];
+      for ( p = first; p <= last; p++ )
+      {
+        v    = outline->points[p];
+        d.x -= v.x;
+        d.y -= v.y;
+
+        taxi += FT_ABS( d.x ) + FT_ABS( d.y );
+
+        d = v;
+      }
+    }
+
+    return taxi >> 6;
+  }
+
+
   static int
   gray_convert_glyph( RAS_ARG )
   {
@@ -1964,7 +2002,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
     TCell*   buffer;
     size_t   height = (size_t)( yMax - yMin );
-    size_t   n = FT_MAX_GRAY_POOL / 8;
+    size_t   n;
+    long     size;
     TCoord   y;
     TCoord   bands[32];  /* enough to accommodate bisections */
     TCoord*  band;
@@ -1972,11 +2011,18 @@ typedef ptrdiff_t  FT_PtrDist;
     int  continued = 0;
 
 
-    if ( FT_QNEW_ARRAY( buffer, FT_MAX_GRAY_POOL ) )
+    size = gray_taxi( RAS_VAR ) +
+           height * sizeof ( PCell ) / sizeof ( TCell ) +
+           9;  /* empirical extra for local extrema */
+
+    if ( FT_QNEW_ARRAY( buffer, size ) )
       return error;
 
+    FT_TRACE7(( "Allocated %ld cells (%ld bytes)\n",
+                size, size * sizeof ( TCell ) ));
+
     /* Initialize the null cell at the end of the poll. */
-    ras.cell_null        = buffer + FT_MAX_GRAY_POOL - 1;
+    ras.cell_null        = buffer + size - 1;
     ras.cell_null->x     = CELL_MAX_X_VALUE;
     ras.cell_null->area  = 0;
     ras.cell_null->cover = 0;
@@ -1984,13 +2030,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* set up vertical bands */
     ras.ycells     = (PCell*)buffer;
-
-    if ( height > n )
-    {
-      /* two divisions rounded up */
-      n       = ( height + n - 1 ) / n;
-      height  = ( height + n - 1 ) / n;
-    }
 
     for ( y = yMin; y < yMax; )
     {
