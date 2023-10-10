@@ -490,6 +490,7 @@ typedef ptrdiff_t  FT_PtrDist;
   typedef struct  gray_TWorker_
   {
     ft_jmp_buf  jump_buffer;
+    FT_Memory   memory;
 
     TCoord  min_ex, max_ex;  /* min and max integer pixel coordinates */
     TCoord  min_ey, max_ey;
@@ -1958,7 +1959,10 @@ typedef ptrdiff_t  FT_PtrDist;
     const TCoord  yMin = ras.min_ey;
     const TCoord  yMax = ras.max_ey;
 
-    TCell    buffer[FT_MAX_GRAY_POOL];
+    FT_Error   error = FT_THROW( Ok );
+    FT_Memory  memory = ras.memory;
+
+    TCell*   buffer;
     size_t   height = (size_t)( yMax - yMin );
     size_t   n = FT_MAX_GRAY_POOL / 8;
     TCoord   y;
@@ -1967,6 +1971,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
     int  continued = 0;
 
+
+    if ( FT_QNEW_ARRAY( buffer, FT_MAX_GRAY_POOL ) )
+      return error;
 
     /* Initialize the null cell at the end of the poll. */
     ras.cell_null        = buffer + FT_MAX_GRAY_POOL - 1;
@@ -1999,7 +2006,6 @@ typedef ptrdiff_t  FT_PtrDist;
       {
         TCoord  width = band[0] - band[1];
         TCoord  w;
-        int     error;
 
 
         for ( w = 0; w < width; ++w )
@@ -2028,7 +2034,7 @@ typedef ptrdiff_t  FT_PtrDist;
           continue;
         }
         else if ( error != Smooth_Err_Raster_Overflow )
-          return error;
+          goto Exit;
 
         /* render pool overflow; we will reduce the render band by half */
         width >>= 1;
@@ -2037,7 +2043,8 @@ typedef ptrdiff_t  FT_PtrDist;
         if ( width == 0 )
         {
           FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
-          return FT_THROW( Raster_Overflow );
+          error = FT_THROW( Raster_Overflow );
+          goto Exit;
         }
 
         band++;
@@ -2046,7 +2053,9 @@ typedef ptrdiff_t  FT_PtrDist;
       } while ( band >= bands );
     }
 
-    return Smooth_Err_Ok;
+  Exit:
+    FT_FREE( buffer );
+    return error;
   }
 
 
@@ -2131,6 +2140,8 @@ typedef ptrdiff_t  FT_PtrDist;
     /* exit if nothing to do */
     if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
       return Smooth_Err_Ok;
+
+    ras.memory = (FT_Memory)((gray_PRaster)raster)->memory;
 
     return gray_convert_glyph( RAS_VAR );
   }
