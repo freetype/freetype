@@ -469,10 +469,8 @@ typedef ptrdiff_t  FT_PtrDist;
   } TPixmap;
 
   /* maximum number of gray cells in the buffer */
-#if FT_RENDER_POOL_SIZE > 2048
+#if defined( FT_GRAY_POOL_SIZE ) && FT_GRAY_POOL_SIZE > 2048
 #define FT_MAX_GRAY_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( TCell ) )
-#else
-#define FT_MAX_GRAY_POOL  ( 2048 / sizeof ( TCell ) )
 #endif
 
   /* FT_Span buffer size for direct rendering only */
@@ -2025,6 +2023,16 @@ typedef ptrdiff_t  FT_PtrDist;
 
     size += height * sizeof ( PCell ) / sizeof ( TCell ) +
             9;  /* empirical extra for local extrema */
+
+#ifdef FT_MAX_GRAY_POOL
+    if ( size > FT_MAX_GRAY_POOL )
+    {
+      /* both divisions rounded up */
+      n      = ( size + FT_MAX_GRAY_POOL - 1 ) / FT_MAX_GRAY_POOL;
+      height = ( height + n - 1 ) / n;
+      size   = FT_MAX_GRAY_POOL;
+    }
+#endif
 
     if ( FT_QNEW_ARRAY( buffer, size ) )
       return error;
