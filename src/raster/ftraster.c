@@ -1996,16 +1996,18 @@
       if ( Decompose_Curve( RAS_VARS first, last, flipped ) )
         return FAILURE;
 
+      /* Note that ras.gProfile can stay nil if the contour was */
+      /* too small to be drawn or degenerate.                   */
+      if ( !ras.gProfile )
+        continue;
+
       /* we must now check whether the extreme arcs join or not */
       if ( FRAC( ras.lastY ) == 0 &&
            ras.lastY >= ras.minY  &&
            ras.lastY <= ras.maxY  )
-        if ( ras.gProfile                        &&
-             ( ras.gProfile->flags & Flow_Up ) ==
+        if ( ( ras.gProfile->flags & Flow_Up ) ==
                ( ras.cProfile->flags & Flow_Up ) )
           ras.top--;
-        /* Note that ras.gProfile can be nil if the contour was too small */
-        /* to be drawn.                                                   */
 
       lastProfile = ras.cProfile;
       if ( ras.top != ras.cProfile->offset &&
@@ -2017,8 +2019,7 @@
         return FAILURE;
 
       /* close the `next profile in contour' linked list */
-      if ( ras.gProfile )
-        lastProfile->next = ras.gProfile;
+      lastProfile->next = ras.gProfile;
     }
 
     if ( Finalize_Profile_Table( RAS_VAR ) )
