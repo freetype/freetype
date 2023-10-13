@@ -634,8 +634,8 @@
     ras.cProfile->start  = 0;
     ras.cProfile->height = 0;
     ras.cProfile->offset = ras.top;
-    ras.cProfile->link   = (PProfile)0;
-    ras.cProfile->next   = (PProfile)0;
+    ras.cProfile->link   = NULL;
+    ras.cProfile->next   = NULL;
     ras.cProfile->flags  = ras.dropOutControl;
 
     switch ( aState )
@@ -704,9 +704,6 @@
 
     if ( h > 0 )
     {
-      PProfile  oldProfile;
-
-
       FT_TRACE7(( "  ending profile %p, start = %ld, height = %ld\n",
                   (void *)ras.cProfile, ras.cProfile->start, h ));
 
@@ -719,15 +716,14 @@
           ras.cProfile->flags |= Overshoot_Bottom;
       }
 
-      oldProfile   = ras.cProfile;
-      ras.cProfile = (PProfile)ras.top;
+      ras.cProfile->next = (PProfile)ras.top;
+      ras.cProfile       = (PProfile)ras.top;
 
       ras.top += AlignProfileSize;
 
-      ras.cProfile->height = 0;
       ras.cProfile->offset = ras.top;
+      ras.cProfile->height = 0;
 
-      oldProfile->next = ras.cProfile;
       ras.num_Profs++;
     }
 
@@ -1979,11 +1975,8 @@
 
     ras.maxBuff  = ras.sizeBuff - AlignProfileSize;
 
-    ras.numTurns = 0;
-
-    ras.cProfile         = (PProfile)ras.top;
-    ras.cProfile->offset = ras.top;
-    ras.num_Profs        = 0;
+    ras.numTurns  = 0;
+    ras.num_Profs = 0;
 
     last = -1;
     for ( i = 0; i < ras.outline.n_contours; i++ )
@@ -3048,8 +3041,9 @@
       }
       else
       {
-        FT_TRACE6(( "band [%d..%d]: %td bytes remaining\n",
-                    y_min, y_max, (char*)ras.maxBuff - (char*)ras.top ));
+        FT_TRACE6(( "band [%d..%d]: %hd profiles; %td bytes remaining\n",
+                    y_min, y_max, ras.num_Profs,
+                    (char*)ras.maxBuff - (char*)ras.top ));
 
         if ( ras.fProfile )
           if ( Draw_Sweep( RAS_VAR ) )
