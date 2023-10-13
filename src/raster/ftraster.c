@@ -618,9 +618,8 @@
   New_Profile( RAS_ARGS TStates  aState,
                         Bool     overshoot )
   {
-    if ( !ras.fProfile )
+    if ( !ras.cProfile || ras.cProfile->height )
     {
-      ras.fProfile  = (PProfile)ras.top;
       ras.cProfile  = (PProfile)ras.top;
       ras.top      += AlignProfileSize;
 
@@ -717,20 +716,8 @@
           ras.cProfile->flags |= Overshoot_Bottom;
       }
 
+      /* premature, the last profile in the controur must loop */
       ras.cProfile->next = (PProfile)ras.top;
-      ras.cProfile       = (PProfile)ras.top;
-
-      ras.top += AlignProfileSize;
-
-      if ( ras.top >= ras.maxBuff )
-      {
-        FT_TRACE1(( "overflow in End_Profile\n" ));
-        ras.error = FT_THROW( Raster_Overflow );
-        return FAILURE;
-      }
-
-      ras.cProfile->offset = ras.top;
-      ras.cProfile->height = 0;
 
       ras.num_Profs++;
     }
@@ -1971,6 +1958,7 @@
 
 
     ras.fProfile = NULL;
+    ras.cProfile = NULL;
     ras.joint    = FALSE;
     ras.fresh    = FALSE;
 
@@ -1983,7 +1971,6 @@
     last = -1;
     for ( i = 0; i < ras.outline.n_contours; i++ )
     {
-      PProfile  lastProfile;
       Bool      o;
 
 
@@ -2009,7 +1996,6 @@
                ( ras.cProfile->flags & Flow_Up ) )
           ras.top--;
 
-      lastProfile = ras.cProfile;
       if ( ras.top != ras.cProfile->offset &&
            ( ras.cProfile->flags & Flow_Up ) )
         o = IS_TOP_OVERSHOOT( ras.lastY );
@@ -2018,8 +2004,11 @@
       if ( End_Profile( RAS_VARS o ) )
         return FAILURE;
 
-      /* close the `next profile in contour' linked list */
-      lastProfile->next = ras.gProfile;
+      /* loop the last profile in the contour */
+      ras.cProfile->next = ras.gProfile;
+
+      if ( !ras.fProfile )
+        ras.fProfile = ras.gProfile;
     }
 
     if ( Finalize_Profile_Table( RAS_VAR ) )
