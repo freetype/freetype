@@ -620,15 +620,16 @@
   {
     if ( !ras.fProfile )
     {
+      ras.fProfile  = (PProfile)ras.top;
       ras.cProfile  = (PProfile)ras.top;
-      ras.fProfile  = ras.cProfile;
       ras.top      += AlignProfileSize;
-    }
 
-    if ( ras.top >= ras.maxBuff )
-    {
-      ras.error = FT_THROW( Raster_Overflow );
-      return FAILURE;
+      if ( ras.top >= ras.maxBuff )
+      {
+        FT_TRACE1(( "overflow in New_Profile\n" ));
+        ras.error = FT_THROW( Raster_Overflow );
+        return FAILURE;
+      }
     }
 
     ras.cProfile->start  = 0;
@@ -721,17 +722,17 @@
 
       ras.top += AlignProfileSize;
 
+      if ( ras.top >= ras.maxBuff )
+      {
+        FT_TRACE1(( "overflow in End_Profile\n" ));
+        ras.error = FT_THROW( Raster_Overflow );
+        return FAILURE;
+      }
+
       ras.cProfile->offset = ras.top;
       ras.cProfile->height = 0;
 
       ras.num_Profs++;
-    }
-
-    if ( ras.top >= ras.maxBuff )
-    {
-      FT_TRACE1(( "overflow in End_Profile\n" ));
-      ras.error = FT_THROW( Raster_Overflow );
-      return FAILURE;
     }
 
     ras.joint = FALSE;
@@ -1973,7 +1974,8 @@
     ras.joint    = FALSE;
     ras.fresh    = FALSE;
 
-    ras.maxBuff  = ras.sizeBuff - AlignProfileSize;
+    ras.top      = ras.buff;
+    ras.maxBuff  = ras.sizeBuff;
 
     ras.numTurns  = 0;
     ras.num_Profs = 0;
@@ -3016,8 +3018,6 @@
     {
       ras.minY = (Long)y_min * ras.precision;
       ras.maxY = (Long)y_max * ras.precision;
-
-      ras.top = ras.buff;
 
       ras.error = Raster_Err_Ok;
 
