@@ -441,8 +441,7 @@
           (Bool)( x - FLOOR( x ) >= ras.precision_half )
 
   /* Smart dropout rounding to find which pixel is closer to span ends. */
-  /* To mimick Windows, symmetric cases break down indepenently of the  */
-  /* precision.                                                         */
+  /* To mimic Windows, symmetric cases do not depend on the precision.  */
 #define SMART( p, q )  FLOOR( ( (p) + (q) + ras.precision * 63 / 64 ) >> 1 )
 
 #if FT_RENDER_POOL_SIZE > 2048
@@ -586,8 +585,6 @@
       ras.precision_jitter = 2;
     }
 
-    FT_TRACE6(( "Set_High_Precision(%s)\n", High ? "true" : "false" ));
-
     ras.precision       = 1 << ras.precision_bits;
     ras.precision_half  = ras.precision >> 1;
     ras.precision_scale = ras.precision >> Pixel_Bits;
@@ -716,7 +713,7 @@
           ras.cProfile->flags |= Overshoot_Bottom;
       }
 
-      /* premature, the last profile in the controur must loop */
+      /* premature, the last profile in the contour must loop */
       ras.cProfile->next = (PProfile)ras.top;
 
       ras.num_Profs++;
@@ -2198,12 +2195,10 @@
     FT_UNUSED( right );
 
 
-    /* in high-precision mode, we need 12 digits after the comma to */
-    /* represent multiples of 1/(1<<12) = 1/4096                    */
-    FT_TRACE7(( "  y=%d x=[% .12f;% .12f]",
+    FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
                 y,
-                (double)x1 / (double)ras.precision,
-                (double)x2 / (double)ras.precision ));
+                ras.precision_bits, (double)x1 / (double)ras.precision,
+                ras.precision_bits, (double)x2 / (double)ras.precision ));
 
     /* Drop-out control */
 
@@ -2275,10 +2270,10 @@
     Short  c1, f1;
 
 
-    FT_TRACE7(( "  y=%d x=[% .12f;% .12f]",
+    FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
                 y,
-                (double)x1 / (double)ras.precision,
-                (double)x2 / (double)ras.precision ));
+                ras.precision_bits, (double)x1 / (double)ras.precision,
+                ras.precision_bits, (double)x2 / (double)ras.precision ));
 
     /* Drop-out control */
 
@@ -2458,10 +2453,10 @@
     FT_UNUSED( right );
 
 
-    FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
+    FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
                 y,
-                (double)x1 / (double)ras.precision,
-                (double)x2 / (double)ras.precision ));
+                ras.precision_bits, (double)x1 / (double)ras.precision,
+                ras.precision_bits, (double)x2 / (double)ras.precision ));
 
     /* We should not need this procedure but the vertical sweep   */
     /* mishandles horizontal lines through pixel centers.  So we  */
@@ -2529,10 +2524,10 @@
     Byte   f1;
 
 
-    FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
+    FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
                 y,
-                (double)x1 / (double)ras.precision,
-                (double)x2 / (double)ras.precision ));
+                ras.precision_bits, (double)x1 / (double)ras.precision,
+                ras.precision_bits, (double)x2 / (double)ras.precision ));
 
     /* During the horizontal sweep, we only take care of drop-outs */
 
@@ -3004,6 +2999,10 @@
     Int  band_stack[32];  /* enough to bisect 32-bit int bands */
 
 
+    FT_TRACE6(( "%s pass [%d..%d]\n",
+                flipped ? "Horizontal" : "Vertical",
+                y_min, y_max ));
+
     while ( 1 )
     {
       ras.minY = (Long)y_min * ras.precision;
@@ -3084,9 +3083,10 @@
         ras.dropOutControl += 1;
     }
 
-    /* Vertical Sweep */
-    FT_TRACE6(( "Vertical pass (ftraster)\n" ));
+    FT_TRACE6(( "BW Raster: precision 1/%d, dropout mode %d\n",
+                ras.precision, ras.dropOutControl ));
 
+    /* Vertical Sweep */
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
     ras.Proc_Sweep_Span = Vertical_Sweep_Span;
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
@@ -3105,8 +3105,6 @@
     /* Horizontal Sweep */
     if ( !( ras.outline.flags & FT_OUTLINE_SINGLE_PASS ) )
     {
-      FT_TRACE6(( "Horizontal pass (ftraster)\n" ));
-
       ras.Proc_Sweep_Init = Horizontal_Sweep_Init;
       ras.Proc_Sweep_Span = Horizontal_Sweep_Span;
       ras.Proc_Sweep_Drop = Horizontal_Sweep_Drop;
