@@ -27,12 +27,13 @@ typedef struct AF_AdjustmentDatabaseEntry_
 {
   FT_UInt32 codepoint;
   AF_VerticalSeparationAdjustmentType vertical_separation_adjustment_type;
+  FT_Bool apply_tilde;
 } AF_AdjustmentDatabaseEntry;
 
 FT_LOCAL(AF_VerticalSeparationAdjustmentType)
 af_lookup_vertical_seperation_type( AF_ReverseCharacterMap map, FT_Int glyph_index );
 
-FT_LOCAL( FT_Int )
+FT_LOCAL( FT_Bool )
 af_lookup_tilde_correction_type( AF_ReverseCharacterMap map, FT_Int glyph_index );
 
 FT_LOCAL( FT_UInt32 )
