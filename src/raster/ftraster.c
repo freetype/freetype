@@ -594,6 +594,62 @@
   /**************************************************************************
    *
    * @Function:
+   *   Insert_Y_Turn
+   *
+   * @Description:
+   *   Insert a salient into the sorted list placed on top of the render
+   *   pool.
+   *
+   * @Input:
+   *   New y scanline position.
+   *
+   * @Return:
+   *   SUCCESS on success.  FAILURE in case of overflow.
+   */
+  static Bool
+  Insert_Y_Turn( RAS_ARGS Int  y )
+  {
+    PLong  y_turns;
+    Int    n;
+
+
+    n       = ras.numTurns - 1;
+    y_turns = ras.sizeBuff - ras.numTurns;
+
+    /* look for first y value that is <= */
+    while ( n >= 0 && y < y_turns[n] )
+      n--;
+
+    /* if it is <, simply insert it, ignore if == */
+    if ( n >= 0 && y > y_turns[n] )
+      do
+      {
+        Int  y2 = (Int)y_turns[n];
+
+
+        y_turns[n] = y;
+        y = y2;
+      } while ( --n >= 0 );
+
+    if ( n < 0 )
+    {
+      ras.maxBuff--;
+      if ( ras.maxBuff <= ras.top )
+      {
+        ras.error = FT_THROW( Raster_Overflow );
+        return FAILURE;
+      }
+      ras.numTurns++;
+      ras.sizeBuff[-ras.numTurns] = y;
+    }
+
+    return SUCCESS;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
    *   New_Profile
    *
    * @Description:
@@ -687,10 +743,10 @@
   static Bool
   End_Profile( RAS_ARGS Bool  overshoot )
   {
-    Long  h;
+    PProfile  p = ras.cProfile;
+    Long      h = (Long)( ras.top - p->offset );
+    Int       bottom, top;
 
-
-    h = (Long)( ras.top - ras.cProfile->offset );
 
     if ( h < 0 )
     {
@@ -701,20 +757,39 @@
 
     if ( h > 0 )
     {
-      FT_TRACE7(( "  ending profile %p, start = %ld, height = %ld\n",
-                  (void *)ras.cProfile, ras.cProfile->start, h ));
+      FT_TRACE7(( "  ending profile %p, start = %2ld, height = %+3ld\n",
+                  (void *)p, p->start, p->flags & Flow_Up ? h : -h ));
 
-      ras.cProfile->height = h;
       if ( overshoot )
       {
-        if ( ras.cProfile->flags & Flow_Up )
-          ras.cProfile->flags |= Overshoot_Top;
+        if ( p->flags & Flow_Up )
+          p->flags |= Overshoot_Top;
         else
-          ras.cProfile->flags |= Overshoot_Bottom;
+          p->flags |= Overshoot_Bottom;
       }
 
-      /* premature, the last profile in the contour must loop */
-      ras.cProfile->next = (PProfile)ras.top;
+      p->height = h;
+
+      if ( p->flags & Flow_Up )
+      {
+        bottom = (Int)p->start;
+        top    = (Int)( p->start + h - 1 );
+      }
+      else
+      {
+        bottom     = (Int)( p->start - h + 1 );
+        top        = (Int)p->start;
+        p->start   = bottom;
+        p->offset += h - 1;
+      }
+
+      if ( Insert_Y_Turn( RAS_VARS bottom )  ||
+           Insert_Y_Turn( RAS_VARS top + 1 ) )
+        return FAILURE;
+
+      /* preliminary values to be finalized */
+      p->link = (PProfile)ras.top;
+      p->next = ras.gProfile;
 
       ras.num_Profs++;
     }
@@ -728,116 +803,32 @@
   /**************************************************************************
    *
    * @Function:
-   *   Insert_Y_Turn
-   *
-   * @Description:
-   *   Insert a salient into the sorted list placed on top of the render
-   *   pool.
-   *
-   * @Input:
-   *   New y scanline position.
-   *
-   * @Return:
-   *   SUCCESS on success.  FAILURE in case of overflow.
-   */
-  static Bool
-  Insert_Y_Turn( RAS_ARGS Int  y )
-  {
-    PLong  y_turns;
-    Int    n;
-
-
-    n       = ras.numTurns - 1;
-    y_turns = ras.sizeBuff - ras.numTurns;
-
-    /* look for first y value that is <= */
-    while ( n >= 0 && y < y_turns[n] )
-      n--;
-
-    /* if it is <, simply insert it, ignore if == */
-    if ( n >= 0 && y > y_turns[n] )
-      do
-      {
-        Int  y2 = (Int)y_turns[n];
-
-
-        y_turns[n] = y;
-        y = y2;
-      } while ( --n >= 0 );
-
-    if ( n < 0 )
-    {
-      ras.maxBuff--;
-      if ( ras.maxBuff <= ras.top )
-      {
-        ras.error = FT_THROW( Raster_Overflow );
-        return FAILURE;
-      }
-      ras.numTurns++;
-      ras.sizeBuff[-ras.numTurns] = y;
-    }
-
-    return SUCCESS;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
    *   Finalize_Profile_Table
    *
    * @Description:
    *   Adjust all links in the profiles list.
-   *
-   * @Return:
-   *   SUCCESS on success.  FAILURE in case of overflow.
    */
-  static Bool
+  static void
   Finalize_Profile_Table( RAS_ARG )
   {
-    UShort    n;
-    PProfile  p;
+    UShort    n = ras.num_Profs;
+    PProfile  p = ras.fProfile;
+    PProfile  q;
 
 
-    n = ras.num_Profs;
-    p = ras.fProfile;
-
-    if ( n > 1 && p )
+    while ( --n )
     {
-      do
-      {
-        Int  bottom, top;
+      q = p->link;
 
+      /* fix the contour loop */
+      if ( q->next == p->next )
+        p->next = q;
 
-        if ( n > 1 )
-          p->link = (PProfile)( p->offset + p->height );
-        else
-          p->link = NULL;
-
-        if ( p->flags & Flow_Up )
-        {
-          bottom = (Int)p->start;
-          top    = (Int)( p->start + p->height - 1 );
-        }
-        else
-        {
-          bottom     = (Int)( p->start - p->height + 1 );
-          top        = (Int)p->start;
-          p->start   = bottom;
-          p->offset += p->height - 1;
-        }
-
-        if ( Insert_Y_Turn( RAS_VARS bottom )  ||
-             Insert_Y_Turn( RAS_VARS top + 1 ) )
-          return FAILURE;
-
-        p = p->link;
-      } while ( --n );
+      p = q;
     }
-    else
-      ras.fProfile = NULL;
 
-    return SUCCESS;
+    /* null-terminate */
+    p->link = NULL;
   }
 
 
@@ -2001,17 +1992,14 @@
       if ( End_Profile( RAS_VARS o ) )
         return FAILURE;
 
-      /* loop the last profile in the contour */
-      ras.cProfile->next = ras.gProfile;
-
-      if ( !ras.fProfile )
+      if ( !ras.fProfile && ras.num_Profs )
         ras.fProfile = ras.gProfile;
     }
 
-    if ( Finalize_Profile_Table( RAS_VAR ) )
-      return FAILURE;
+    if ( ras.num_Profs )
+      Finalize_Profile_Table( RAS_VAR );
 
-    return (Bool)( ras.top < ras.maxBuff ? SUCCESS : FAILURE );
+    return SUCCESS;
   }
 
 
