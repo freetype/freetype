@@ -115,12 +115,12 @@
    *   a change of direction is detected in the outline, a new profile is
    *   generated until the end of the outline.
    *
-   *   Note that when all profiles have been generated, the function
-   *   Finalize_Profile_Table() is used to record, for each profile, its
-   *   bottom-most scanline as well as the scanline above its upmost
-   *   boundary.  These positions are called `y-turns' because they (sort
-   *   of) correspond to local extrema.  They are stored in a sorted list
-   *   built from the top of the render pool as a downwards stack:
+   *   Note that, for all generated profiles, the function End_Profile()
+   *   is used to record their bottom-most scanline as well as the
+   *   scanline above its upmost boundary.  These positions are called
+   *   `y-turns' because they (sort of) correspond to local extrema.
+   *   They are stored in a sorted list built from the top of the render
+   *   pool as a downwards stack:
    *
    *     _ _ _______________________________________
    *                           |                    |
@@ -136,7 +136,7 @@
    *   optimize performance (see technical note on the sweep below).
    *
    *   Of course, the raster detects whether the two stacks collide and
-   *   handles the situation properly.
+   *   handles the situation by bisecting the job and restarting.
    *
    */
 
@@ -1984,11 +1984,9 @@
                ( ras.cProfile->flags & Flow_Up ) )
           ras.top--;
 
-      if ( ras.top != ras.cProfile->offset &&
-           ( ras.cProfile->flags & Flow_Up ) )
-        o = IS_TOP_OVERSHOOT( ras.lastY );
-      else
-        o = IS_BOTTOM_OVERSHOOT( ras.lastY );
+      o = ras.cProfile->flags & Flow_Up ? IS_TOP_OVERSHOOT( ras.lastY )
+                                        : IS_BOTTOM_OVERSHOOT( ras.lastY );
+
       if ( End_Profile( RAS_VARS o ) )
         return FAILURE;
 
