@@ -682,13 +682,11 @@
         ras.error = FT_THROW( Raster_Overflow );
         return FAILURE;
       }
+
+      ras.cProfile->height = 0;
+      ras.cProfile->offset = ras.top;
     }
 
-    ras.cProfile->start  = 0;
-    ras.cProfile->height = 0;
-    ras.cProfile->offset = ras.top;
-    ras.cProfile->link   = NULL;
-    ras.cProfile->next   = NULL;
     ras.cProfile->flags  = ras.dropOutControl;
 
     switch ( aState )
@@ -713,9 +711,6 @@
       return FAILURE;
     }
 
-    if ( !ras.gProfile )
-      ras.gProfile = ras.cProfile;
-
     ras.state = aState;
     ras.fresh = TRUE;
     ras.joint = FALSE;
@@ -730,7 +725,7 @@
    *   End_Profile
    *
    * @Description:
-   *   Finalize the current profile.
+   *   Finalize the current profile and record y-turns.
    *
    * @Input:
    *   overshoot ::
@@ -787,9 +782,12 @@
            Insert_Y_Turn( RAS_VARS top + 1 ) )
         return FAILURE;
 
+      if ( !ras.gProfile )
+        ras.gProfile = p;
+
       /* preliminary values to be finalized */
-      p->link = (PProfile)ras.top;
       p->next = ras.gProfile;
+      p->link = (PProfile)ras.top;
 
       ras.num_Profs++;
     }
@@ -816,6 +814,7 @@
     PProfile  q;
 
 
+    /* there should be at least two profiles, up and down */
     while ( --n )
     {
       q = p->link;
@@ -1990,11 +1989,11 @@
       if ( End_Profile( RAS_VARS o ) )
         return FAILURE;
 
-      if ( !ras.fProfile && ras.num_Profs )
+      if ( !ras.fProfile )
         ras.fProfile = ras.gProfile;
     }
 
-    if ( ras.num_Profs )
+    if ( ras.fProfile )
       Finalize_Profile_Table( RAS_VAR );
 
     return SUCCESS;
