@@ -609,29 +609,16 @@
   static Bool
   Insert_Y_Turn( RAS_ARGS Int  y )
   {
-    PLong  y_turns;
-    Int    n;
+    Int    n       = ras.numTurns;
+    PLong  y_turns = ras.maxBuff;
 
-
-    n       = ras.numTurns - 1;
-    y_turns = ras.sizeBuff - ras.numTurns;
 
     /* look for first y value that is <= */
-    while ( n >= 0 && y < y_turns[n] )
-      n--;
+    while ( n-- && y < y_turns[n] )
+      ;
 
     /* if it is <, simply insert it, ignore if == */
-    if ( n >= 0 && y > y_turns[n] )
-      do
-      {
-        Int  y2 = (Int)y_turns[n];
-
-
-        y_turns[n] = y;
-        y = y2;
-      } while ( --n >= 0 );
-
-    if ( n < 0 )
+    if ( n < 0 || y > y_turns[n] )
     {
       ras.maxBuff--;
       if ( ras.maxBuff <= ras.top )
@@ -639,8 +626,17 @@
         ras.error = FT_THROW( Raster_Overflow );
         return FAILURE;
       }
+
+      do
+      {
+        Int  y2 = (Int)y_turns[n];
+
+
+        y_turns[n] = y;
+        y = y2;
+      } while ( n-- >= 0 );
+
       ras.numTurns++;
-      ras.sizeBuff[-ras.numTurns] = y;
     }
 
     return SUCCESS;
