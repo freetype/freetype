@@ -305,16 +305,6 @@
   typedef unsigned char   Byte, *PByte;
   typedef char            Bool;
 
-
-  typedef union  Alignment_
-  {
-    Long    l;
-    void*   p;
-    void  (*f)(void);
-
-  } Alignment, *PAlignment;
-
-
   typedef struct  TPoint_
   {
     Long  x;
@@ -345,29 +335,26 @@
 
   struct  TProfile_
   {
-    FT_F26Dot6  X;           /* current coordinate during sweep          */
     PProfile    link;        /* link to next profile (various purposes)  */
+    PProfile    next;        /* next profile in same contour, used       */
+                             /* during drop-out control                  */
     PLong       offset;      /* start of profile's data in render pool   */
+    Long        height;      /* profile's height in scanlines            */
+    Long        start;       /* profile's starting scanline              */
     UShort      flags;       /* Bit 0-2: drop-out mode                   */
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
                              /* Bit 5: is bottom profile?                */
-    Long        height;      /* profile's height in scanlines            */
-    Long        start;       /* profile's starting scanline              */
 
     Int         countL;      /* number of lines to step before this      */
                              /* profile becomes drawable                 */
-
-    PProfile    next;        /* next profile in same contour, used       */
-                             /* during drop-out control                  */
+    FT_F26Dot6  X;           /* current coordinate during sweep          */
+    Long        x[1];        /* actually variable array of scanline      */
+                             /* intersections with `height` elements     */
   };
 
   typedef PProfile   TProfileList;
   typedef PProfile*  PProfileList;
-
-
-#define AlignProfileSize \
-  ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( Long ) )
 
 
 #undef RAS_ARG
@@ -670,7 +657,7 @@
     if ( !ras.cProfile || ras.cProfile->height )
     {
       ras.cProfile  = (PProfile)ras.top;
-      ras.top      += AlignProfileSize;
+      ras.top       = ras.cProfile->x;
 
       if ( ras.top >= ras.maxBuff )
       {
