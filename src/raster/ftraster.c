@@ -338,9 +338,9 @@
     PProfile    link;        /* link to next profile (various purposes)  */
     PProfile    next;        /* next profile in same contour, used       */
                              /* during drop-out control                  */
-    PLong       offset;      /* start of profile's data in render pool   */
-    Long        height;      /* profile's height in scanlines            */
-    Long        start;       /* profile's starting scanline              */
+    Int         offset;      /* bottom or currently scanned array index  */
+    Int         height;      /* profile's height in scanlines            */
+    Int         start;       /* profile's starting scanline              */
     UShort      flags;       /* Bit 0-2: drop-out mode                   */
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
@@ -667,7 +667,6 @@
       }
 
       ras.cProfile->height = 0;
-      ras.cProfile->offset = ras.top;
     }
 
     ras.cProfile->flags  = ras.dropOutControl;
@@ -722,7 +721,7 @@
   End_Profile( RAS_ARGS Bool  overshoot )
   {
     PProfile  p = ras.cProfile;
-    Long      h = (Long)( ras.top - p->offset );
+    Int       h = (Int)( ras.top - p->x );
     Int       bottom, top;
 
 
@@ -735,7 +734,7 @@
 
     if ( h > 0 )
     {
-      FT_TRACE7(( "  ending profile %p, start = %2ld, height = %+3ld\n",
+      FT_TRACE7(( "  ending profile %p, start = %2d, height = %+3d\n",
                   (void *)p, p->start, p->flags & Flow_Up ? h : -h ));
 
       if ( overshoot )
@@ -750,19 +749,20 @@
 
       if ( p->flags & Flow_Up )
       {
-        bottom = (Int)p->start;
-        top    = (Int)( p->start + h - 1 );
+        bottom    = p->start;
+        top       = bottom + h;
+        p->offset = 0;
       }
       else
       {
-        bottom     = (Int)( p->start - h + 1 );
-        top        = (Int)p->start;
-        p->start   = bottom;
-        p->offset += h - 1;
+        top       = p->start + 1;
+        bottom    = top - h;
+        p->start  = bottom;
+        p->offset = h - 1;
       }
 
-      if ( Insert_Y_Turn( RAS_VARS bottom )  ||
-           Insert_Y_Turn( RAS_VARS top + 1 ) )
+      if ( Insert_Y_Turn( RAS_VARS bottom ) ||
+           Insert_Y_Turn( RAS_VARS top )    )
         return FAILURE;
 
       if ( !ras.gProfile )
@@ -1181,7 +1181,7 @@
 
     if ( ras.fresh )
     {
-      ras.cProfile->start = TRUNC( e0 );
+      ras.cProfile->start = (Int)TRUNC( e0 );
       ras.fresh = FALSE;
     }
 
@@ -2074,7 +2074,7 @@
     current = *list;
     while ( current )
     {
-      current->X       = *current->offset;
+      current->X       = current->x[current->offset];
       current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
       current->height--;
       current = current->link;
