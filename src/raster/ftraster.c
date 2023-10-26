@@ -394,11 +394,11 @@
 
   /* prototypes used for sweep function dispatch */
   typedef void
-  Function_Sweep_Init( RAS_ARGS Short  min,
-                                Short  max );
+  Function_Sweep_Init( RAS_ARGS Int  min,
+                                Int  max );
 
   typedef void
-  Function_Sweep_Span( RAS_ARGS Short       y,
+  Function_Sweep_Span( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
                                 FT_F26Dot6  x2,
                                 PProfile    left,
@@ -941,7 +941,7 @@
                     Long  maxy )
   {
     Long   Dx, Dy;
-    Int    e1, e2, f1, f2, size;     /* XXX: is `Short' sufficient? */
+    Int    e1, e2, f1, f2, size;
     Long   Ix, Rx, Ax;
 
     PLong  top;
@@ -1136,7 +1136,6 @@
                       Long       maxy )
   {
     Long   y1, y2, e, e2, e0;
-    Short  f1;
 
     TPoint*  start_arc;
 
@@ -1162,10 +1161,9 @@
     else
     {
       e  = CEILING( y1 );
-      f1 = (Short)( FRAC( y1 ) );
       e0 = e;
 
-      if ( f1 == 0 )
+      if ( FRAC( y1 ) == 0 )
       {
         if ( ras.joint )
         {
@@ -2124,8 +2122,8 @@
    */
 
   static void
-  Vertical_Sweep_Init( RAS_ARGS Short  min,
-                                Short  max )
+  Vertical_Sweep_Init( RAS_ARGS Int  min,
+                                Int  max )
   {
     FT_UNUSED( max );
 
@@ -2135,7 +2133,7 @@
 
 
   static void
-  Vertical_Sweep_Span( RAS_ARGS Short       y,
+  Vertical_Sweep_Span( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
                                 FT_F26Dot6  x2,
                                 PProfile    left,
@@ -2174,8 +2172,7 @@
     {
       Byte*  target;
 
-      Int   c1, c2;
-      Byte  f1, f2;
+      Int   c1, f1, c2, f2;
 
 
       if ( e1 < 0 )
@@ -2185,11 +2182,11 @@
 
       FT_TRACE7(( " -> x=[%ld;%ld]", e1, e2 ));
 
-      c1 = (Short)( e1 >> 3 );
-      c2 = (Short)( e2 >> 3 );
+      c1 = (Int)( e1 >> 3 );
+      c2 = (Int)( e2 >> 3 );
 
-      f1 = (Byte)  ( 0xFF >> ( e1 & 7 ) );
-      f2 = (Byte) ~( 0x7F >> ( e2 & 7 ) );
+      f1 =  0xFF >> ( e1 & 7 );
+      f2 = ~0x7F >> ( e2 & 7 );
 
       target = ras.bLine + c1;
       c2 -= c1;
@@ -2215,14 +2212,14 @@
 
 
   static void
-  Vertical_Sweep_Drop( RAS_ARGS Short       y,
+  Vertical_Sweep_Drop( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
                                 FT_F26Dot6  x2,
                                 PProfile    left,
                                 PProfile    right )
   {
-    Long   e1, e2, pxl;
-    Short  c1, f1;
+    Long  e1, e2, pxl;
+    Int   c1, f1;
 
 
     FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
@@ -2340,8 +2337,8 @@
 
         e1 = TRUNC( e1 );
 
-        c1 = (Short)( e1 >> 3 );
-        f1 = (Short)( e1 &  7 );
+        c1 = (Int)( e1 >> 3 );
+        f1 = (Int)( e1 &  7 );
 
         if ( e1 >= 0 && e1 < ras.bWidth     &&
              ras.bLine[c1] & ( 0x80 >> f1 ) )
@@ -2357,10 +2354,10 @@
     {
       FT_TRACE7(( " -> x=%ld", e1 ));
 
-      c1 = (Short)( e1 >> 3 );
-      f1 = (Short)( e1 & 7 );
+      c1 = (Int)( e1 >> 3 );
+      f1 = (Int)( e1 &  7 );
 
-      ras.bLine[c1] |= (char)( 0x80 >> f1 );
+      ras.bLine[c1] |= 0x80 >> f1;
     }
 
   Exit:
@@ -2385,8 +2382,8 @@
    */
 
   static void
-  Horizontal_Sweep_Init( RAS_ARGS Short  min,
-                                  Short  max )
+  Horizontal_Sweep_Init( RAS_ARGS Int  min,
+                                  Int  max )
   {
     /* nothing, really */
     FT_UNUSED_RASTER;
@@ -2396,7 +2393,7 @@
 
 
   static void
-  Horizontal_Sweep_Span( RAS_ARGS Short       y,
+  Horizontal_Sweep_Span( RAS_ARGS Int         y,
                                   FT_F26Dot6  x1,
                                   FT_F26Dot6  x2,
                                   PProfile    left,
@@ -2427,12 +2424,12 @@
 
       if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
       {
-        Byte   f1;
+        Int    f1;
         PByte  bits;
 
 
         bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
-        f1   = (Byte)( 0x80 >> ( y & 7 ) );
+        f1   = 0x80 >> ( y & 7 );
 
         FT_TRACE7(( bits[0] & f1 ? " redundant"
                                  : " -> y=%ld edge", e1 ));
@@ -2449,12 +2446,12 @@
 
       if ( e2 >= 0 && (ULong)e2 < ras.target.rows )
       {
-        Byte   f1;
+        Int    f1;
         PByte  bits;
 
 
         bits = ras.bOrigin + ( y >> 3 ) - e2 * ras.target.pitch;
-        f1   = (Byte)( 0x80 >> ( y & 7 ) );
+        f1   = 0x80 >> ( y & 7 );
 
         FT_TRACE7(( bits[0] & f1 ? " redundant"
                                  : " -> y=%ld edge", e2 ));
@@ -2468,7 +2465,7 @@
 
 
   static void
-  Horizontal_Sweep_Drop( RAS_ARGS Short       y,
+  Horizontal_Sweep_Drop( RAS_ARGS Int         y,
                                   FT_F26Dot6  x1,
                                   FT_F26Dot6  x2,
                                   PProfile    left,
@@ -2476,7 +2473,7 @@
   {
     Long   e1, e2, pxl;
     PByte  bits;
-    Byte   f1;
+    Int    f1;
 
 
     FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
@@ -2559,7 +2556,7 @@
         e1 = TRUNC( e1 );
 
         bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
-        f1   = (Byte)( 0x80 >> ( y & 7 ) );
+        f1   = 0x80 >> ( y & 7 );
 
         if ( e1 >= 0                     &&
              (ULong)e1 < ras.target.rows &&
@@ -2577,7 +2574,7 @@
       FT_TRACE7(( " -> y=%ld", e1 ));
 
       bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
-      f1    = (Byte)( 0x80 >> ( y & 7 ) );
+      f1    = 0x80 >> ( y & 7 );
 
       bits[0] |= f1;
     }
@@ -2607,11 +2604,10 @@
   static Bool
   Draw_Sweep( RAS_ARG )
   {
-    Short         y, y_change, y_height;
+    Int           min_Y, max_Y, top, bottom, dropouts;
+    Int           y, y_change, y_height;
 
     PProfile      P, Q, P_Left, P_Right;
-
-    Short         min_Y, max_Y, top, bottom, dropouts;
 
     Long          x1, x2, xs, e1, e2;
 
@@ -2623,15 +2619,15 @@
     /* first, compute min and max Y */
 
     P     = ras.fProfile;
-    max_Y = (Short)TRUNC( ras.minY );
-    min_Y = (Short)TRUNC( ras.maxY );
+    max_Y = (Int)TRUNC( ras.minY );
+    min_Y = (Int)TRUNC( ras.maxY );
 
     while ( P )
     {
       Q = P->link;
 
-      bottom = (Short)P->start;
-      top    = (Short)( P->start + P->height - 1 );
+      bottom = P->start;
+      top    = P->start + P->height - 1;
 
       if ( min_Y > bottom )
         min_Y = bottom;
@@ -2694,8 +2690,8 @@
       Sort( &draw_left );
       Sort( &draw_right );
 
-      y_change = (Short)ras.sizeBuff[-ras.numTurns--];
-      y_height = (Short)( y_change - y );
+      y_change = (Int)ras.sizeBuff[-ras.numTurns--];
+      y_height = y_change - y;
 
       while ( y < y_change )
       {
