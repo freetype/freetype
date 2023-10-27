@@ -55,7 +55,7 @@ adjustment_database[] =
     {0xEC,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
     {0xED,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
     {0xEE,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
-    {0xF1,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 1}, /*n with tilde*/
+    {0xF1,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0}, /*n with tilde*/
     {0xF2,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
     {0xF3,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
     {0xF4,  AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP, 0},
@@ -446,16 +446,31 @@ af_all_glyph_variants( FT_Face face,
     hb_face_t *hb_face = hb_font_get_face( hb_font );
 
     /*The set of all feature tags in the font*/
-    hb_set_t  *feature_tags = hb_set_create();
+    hb_set_t *feature_tags = hb_set_create();
+    hb_set_t *type_3_lookup_indicies = hb_set_create();
+    hb_buffer_t *codepoint_buffer = hb_buffer_create();
+    hb_codepoint_t *type_3_alternate_glyphs_buffer;
     if ( !hb_set_allocation_successful( feature_tags ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+    }
+    if ( !hb_buffer_allocation_successful( codepoint_buffer ) )
+    {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+    }
+    if ( !hb_set_allocation_successful ( type_3_lookup_indicies ) )
+    {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
 
     /*populate feature_tags using the output of hb_ot_layout_table_get_feature_tags*/
     FT_Bool feature_list_done = 0;
     unsigned int start_offset = 0;
-    while ( !feature_list_done ) {
+    while ( !feature_list_done )
+    {
         unsigned int feature_count = 20;
         hb_tag_t tags[20];
         hb_ot_layout_table_get_feature_tags ( hb_face,
@@ -474,31 +489,28 @@ af_all_glyph_variants( FT_Face face,
         }
         if ( !hb_set_allocation_successful( feature_tags ) )
         {
-            return FT_Err_Out_Of_Memory;
+            error = FT_Err_Out_Of_Memory;
+            goto Exit;
         }
     }
 
     /*make a buffer only consisting of the given codepoint*/
-    hb_buffer_t *codepoint_buffer = hb_buffer_create();
-    if ( !hb_buffer_allocation_successful( codepoint_buffer ) )
-    {
-        return FT_Err_Out_Of_Memory;
-    }
     if ( !hb_buffer_pre_allocate( codepoint_buffer, 1 ) )
     {
-        return FT_Err_Out_Of_Memory;
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
     }
-    hb_buffer_set_direction (codepoint_buffer,
-                             HB_DIRECTION_LTR);
+    hb_buffer_set_direction ( codepoint_buffer,
+                              HB_DIRECTION_LTR );
     hb_buffer_add( codepoint_buffer, codepoint, 0 );
 
     /*The array of features that will be used by the recursive part
     it will have at most as many entries as there are features, so
     make the length = length of feature_tags*/
     hb_feature_t *feature_buffer;
-    if ( FT_NEW_ARRAY( feature_buffer, hb_set_get_population( feature_tags ) ) )
+    if (( error = FT_NEW_ARRAY( feature_buffer, hb_set_get_population( feature_tags ) ) ))
     {
-        return error;
+        goto Exit;
     }
 
     error = af_all_glyph_variants_helper( hb_font,
@@ -507,10 +519,72 @@ af_all_glyph_variants( FT_Face face,
                                           feature_buffer,
                                           0,
                                           result );
+    if ( error )
+    {
+        goto Exit;
+    }
 
+    /*
+    Add the alternative glyph forms that come from features using
+    type 3 lookups.
+    This file from gtk was very useful in figuring out my approach:
+    https://github.com/val-verde/gtk/blob/212e85e92628eda9f9650e5cc8d88c44062642ae/gtk/gtkfontchooserwidget.c#L2085
+    */
+    /*list of features containing type 3 lookups:*/
+    hb_tag_t feature_list[] = {
+        HB_TAG('s','a','l','t'),
+        HB_TAG('s','w','s','h'),
+        HB_TAG('n','a','l','t'),
+        HB_TAG_NONE
+    };
+
+
+    hb_ot_layout_collect_lookups ( hb_face,
+                                   HB_OT_TAG_GSUB,
+                                   NULL,
+                                   NULL,
+                                   feature_list,
+                                   type_3_lookup_indicies);
+
+    if ( !hb_set_allocation_successful( type_3_lookup_indicies ) )
+    {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+    }
+
+    if (( error = FT_NEW_ARRAY( type_3_alternate_glyphs_buffer, 100 ) ))
+    {
+        goto Exit;
+    }
+    hb_codepoint_t lookup_index = HB_SET_VALUE_INVALID;
+    FT_UInt base_glyph_index = FT_Get_Char_Index( face, codepoint );
+    if ( base_glyph_index != 0 ) {
+        while ( hb_set_next( type_3_lookup_indicies, &lookup_index ) )
+        {
+            unsigned alternate_count = 100;
+
+            hb_ot_layout_lookup_get_glyph_alternates
+                                        ( hb_face,
+                                          lookup_index,
+                                          base_glyph_index,
+                                          0,
+                                          &alternate_count,
+                                          type_3_alternate_glyphs_buffer );
+
+            for ( unsigned i = 0; i < alternate_count; i++ )
+            {
+                hb_set_add( result, type_3_alternate_glyphs_buffer[i] );
+            }
+        }
+    }
+
+
+
+Exit:
     hb_set_destroy( feature_tags );
     hb_buffer_destroy( codepoint_buffer );
     FT_FREE( feature_buffer );
+    FT_FREE( type_3_alternate_glyphs_buffer );
     return error;
 }
 #endif /*FT_CONFIG_OPTION_USE_HARFBUZZ*/
@@ -528,7 +602,8 @@ af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals global
     FT_Error error;
     /* backup face->charmap because find_unicode_charmap sets it */
     FT_CharMap old_charmap = face->charmap;
-    if ( ( error = find_unicode_charmap( face ) ) ) {
+    if ( ( error = find_unicode_charmap( face ) ) )
+    {
         *map = NULL;
         goto Exit;
     }
