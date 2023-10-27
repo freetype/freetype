@@ -2880,6 +2880,14 @@ af_latin_remove_tilde_points_from_edges( AF_GlyphHints hints,
     }
   } while ( p != first_point );
 }
+/*
+The tilde unflatenning algorithm sometimes goes too far and makes an
+unusually high tilde, where decreasing the ppem will increase the height
+instead of a steady decrease in height as less pixels are used.
+
+The n tilde on times new roman with forced autofitting on,
+16.5-18 ppem font size exhibits this behaviour.
+*/
 void
 af_latin_stretch_tildes( AF_GlyphHints hints,
                          FT_Int glyph_index )

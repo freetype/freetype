@@ -13,10 +13,12 @@
     #include <hb-ot.h>
 #endif
 
-/*TODO: find out whether capital u/U with accent entries are needed*/
-/*the accent won't merge with the rest of the glyph because the accent mark is sitting above empty space*/
 /*
   All entries in this list must be sorted by unicode codepoint ascending
+  The table entries are 3 numbers consisting of:
+  - unicode codepoint.  THESE MUST BE LISTED IN ASCENDING ORDER
+  - the vertical adjustment type.  One of the entries in AF_VerticalSeparationAdjustmentType
+  - 0 if the topmost contour is a tilde and should be prevented from flattening.
 */
 FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
 adjustment_database[] =
