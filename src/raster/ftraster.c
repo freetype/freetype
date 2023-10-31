@@ -2609,8 +2609,6 @@
 
     PProfile      P, Q, P_Left, P_Right;
 
-    Long          x1, x2, xs, e1, e2;
-
     TProfileList  waiting    = ras.fProfile;
     TProfileList  draw_left  = NULL;
     TProfileList  draw_right = NULL;
@@ -2683,8 +2681,10 @@
 
         while ( P_Left && P_Right )
         {
-          x1 = P_Left ->X;
-          x2 = P_Right->X;
+          Long  x1 = P_Left ->X;
+          Long  x2 = P_Right->X;
+          Long  xs;
+
 
           if ( x1 > x2 )
           {
@@ -2693,36 +2693,24 @@
             x2 = xs;
           }
 
-          e1 = FLOOR( x1 );
-          e2 = CEILING( x2 );
-
-          if ( x2 - x1 <= ras.precision &&
-               e1 != x1 && e2 != x2     )
+          /* if bottom ceiling exceeds top floor, it is a drop-out */
+          if ( CEILING( x1 ) > FLOOR( x2 ) )
           {
-            if ( e1 > e2 || e2 == e1 + ras.precision )
+            Int  dropOutControl = P_Left->flags & 7;
+
+
+            if ( dropOutControl != 2 )
             {
-              Int  dropOutControl = P_Left->flags & 7;
+              P_Left ->X = x1;
+              P_Right->X = x2;
 
-
-              if ( dropOutControl != 2 )
-              {
-                /* a drop-out was detected */
-
-                P_Left ->X = x1;
-                P_Right->X = x2;
-
-                /* mark profile for drop-out processing */
-                P_Left->countL = 1;
-                dropouts++;
-              }
-
-              goto Skip_To_Next;
+              /* mark profile for drop-out processing */
+              P_Left->countL = 1;
+              dropouts++;
             }
           }
-
-          ras.Proc_Sweep_Span( RAS_VARS y, x1, x2, P_Left, P_Right );
-
-        Skip_To_Next:
+          else
+            ras.Proc_Sweep_Span( RAS_VARS y, x1, x2, P_Left, P_Right );
 
           P_Left  = P_Left->link;
           P_Right = P_Right->link;
