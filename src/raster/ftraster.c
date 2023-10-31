@@ -2604,67 +2604,46 @@
   static Bool
   Draw_Sweep( RAS_ARG )
   {
-    Int           min_Y, max_Y, top, bottom, dropouts;
+    Int           min_Y, max_Y, dropouts;
     Int           y, y_change, y_height;
 
     PProfile      P, Q, P_Left, P_Right;
 
     Long          x1, x2, xs, e1, e2;
 
-    TProfileList  waiting    = NULL;
+    TProfileList  waiting    = ras.fProfile;
     TProfileList  draw_left  = NULL;
     TProfileList  draw_right = NULL;
 
 
-    /* first, compute min and max Y */
+    /* use y_turns to set the drawing range */
 
-    P     = ras.fProfile;
-    max_Y = (Int)TRUNC( ras.minY );
-    min_Y = (Int)TRUNC( ras.maxY );
-
-    while ( P )
-    {
-      Q = P->link;
-
-      bottom = P->start;
-      top    = P->start + P->height - 1;
-
-      if ( min_Y > bottom )
-        min_Y = bottom;
-      if ( max_Y < top )
-        max_Y = top;
-
-      P->X = 0;
-      InsNew( &waiting, P );
-
-      P = Q;
-    }
+    min_Y = (Int)ras.maxBuff[0];
+    max_Y = (Int)ras.sizeBuff[-1] - 1;
 
     /* now initialize the sweep */
 
     ras.Proc_Sweep_Init( RAS_VARS min_Y, max_Y );
 
-    /* then compute the distance of each profile from min_Y */
+    /* set the activation countdowns and the initial positions */
 
     P = waiting;
-
     while ( P )
     {
       P->countL = P->start - min_Y;
+      P->X      = P->x[P->offset];
+
       P = P->link;
     }
 
-    /* let's go */
+    /* let's go, iterating through y_turns */
 
     y        = min_Y;
     y_height = 0;
 
-    if ( ras.sizeBuff[-ras.numTurns] == min_Y )
-      ras.numTurns--;
-
-    while ( ras.numTurns > 0 )
+    while ( ++ras.maxBuff < ras.sizeBuff )
     {
-      /* check waiting list for new activations */
+      /* check waiting list for new profile activations */
 
       P = waiting;
 
@@ -2690,7 +2669,7 @@
       Sort( &draw_left );
       Sort( &draw_right );
 
-      y_change = (Int)ras.sizeBuff[-ras.numTurns--];
+      y_change = (Int)*ras.maxBuff;
       y_height = y_change - y;
 
       while ( y < y_change )
@@ -2768,7 +2747,7 @@
         }
       }
 
-      /* now finalize the profiles that need it */
+      /* remove exhausted profiles */
 
       P = draw_left;
       while ( P )
@@ -2787,13 +2766,6 @@
           DelOld( &draw_right, P );
         P = Q;
       }
-    }
-
-    /* for gray-scaling, flush the bitmap scanline cache */
-    while ( y <= max_Y )
-    {
-      ras.Proc_Sweep_Step( RAS_VAR );
-      y++;
     }
 
     return SUCCESS;
