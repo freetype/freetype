@@ -406,6 +406,12 @@ extern void*  af_debug_hints_;
 
   typedef struct AF_FaceGlobalsRec_*  AF_FaceGlobals;
 
+  /*stores a mapping from glyphs to unicode codepoints
+  see afadjust.c for details */
+  struct AF_ReverseCharacterMap_;
+
+  typedef struct AF_ReverseCharacterMap_ *AF_ReverseCharacterMap;
+
   /* This is the main structure that combines everything.  Autofit modules */
   /* specific to writing systems derive their structures from it, for      */
   /* example `AF_LatinMetrics'.                                            */

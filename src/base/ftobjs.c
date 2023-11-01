@@ -1358,22 +1358,7 @@
                       driver );
   }
 
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   find_unicode_charmap
-   *
-   * @Description:
-   *   This function finds a Unicode charmap, if there is one.
-   *   And if there is more than one, it tries to favour the more
-   *   extensive one, i.e., one that supports UCS-4 against those which
-   *   are limited to the BMP (said UCS-2 encoding.)
-   *
-   *   This function is called from open_face() (just below), and also
-   *   from FT_Select_Charmap( ..., FT_ENCODING_UNICODE ).
-   */
-  static FT_Error
+  FT_Error
   find_unicode_charmap( FT_Face  face )
   {
     FT_CharMap*  first;
