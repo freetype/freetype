@@ -1124,7 +1124,8 @@
                       Long       miny,
                       Long       maxy )
   {
-    Long   y1, y2, e, e2, e0;
+    Long  y1, y2, e, e2, e0, dy;
+    Long  dx, x2;
 
     TPoint*  start_arc;
 
@@ -1189,19 +1190,25 @@
       ras.joint = FALSE;
 
       y2 = arc[0].y;
+      x2 = arc[0].x;
 
       if ( y2 > e )
       {
-        y1 = arc[degree].y;
-        if ( y2 - y1 >= ras.precision_step )
+        dy = y2 - arc[degree].y;
+        dx = x2 - arc[degree].x;
+
+
+        /* split condition should be invariant of direction */
+        if (  dy > ras.precision_step ||
+              dx > ras.precision_step ||
+             -dx > ras.precision_step )
         {
           splitter( arc );
           arc += degree;
         }
         else
         {
-          *top++ = arc[degree].x + FMulDiv( arc[0].x - arc[degree].x,
-                                            e - y1, y2 - y1 );
+          *top++ = x2 - FMulDiv( y2 - e, dx, dy );
           arc -= degree;
           e   += ras.precision;
         }
@@ -1211,7 +1218,7 @@
         if ( y2 == e )
         {
           ras.joint  = TRUE;
-          *top++     = arc[0].x;
+          *top++     = x2;
 
           e += ras.precision;
         }
