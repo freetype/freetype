@@ -22,7 +22,7 @@
 #include "afglobal.h"
 #include "aflatin.h"
 #include "aferrors.h"
-
+#include "afadjust.h"
 
   /**************************************************************************
    *
@@ -1155,6 +1155,8 @@
       af_latin_metrics_check_digits( metrics, face );
     }
 
+    af_reverse_character_map_new( &metrics->root.reverse_charmap, metrics->root.globals );
+
   Exit:
     face->charmap = oldmap;
     return error;
@@ -1484,6 +1486,11 @@
     }
   }
 
+  FT_CALLBACK_DEF( void )
+  af_latin_metrics_done( AF_StyleMetrics metrics_ ) {
+    AF_LatinMetrics metrics = (AF_LatinMetrics)metrics_;
+    af_reverse_character_map_done( metrics->root.reverse_charmap, metrics->root.globals->face->memory );
+  }
 
   /* Scale global values in both directions. */
 
@@ -2737,6 +2744,303 @@
     return width;
   }
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  afadjust
+
+static void
+af_move_contour_vertically( AF_Point contour,
+                            FT_Int movement )
+{
+  AF_Point point = contour;
+  AF_Point first_point = point;
+  if ( point != NULL )
+  {
+    do
+    {
+      point->y += movement;
+      point = point->next;
+    } while ( point != first_point );
+  }
+}
+
+static FT_Int
+af_find_highest_contour( AF_GlyphHints hints ) {
+  FT_Int highest_contour = -1;
+  FT_Pos highest_min_y = 0;
+  FT_Pos current_min_y = 0;
+
+  for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+  {
+    AF_Point point = hints->contours[contour];
+    AF_Point first_point = point;
+    if ( point == NULL )
+    {
+      continue;
+    }
+    current_min_y = point->y;
+
+    do
+    {
+      if ( point->y < current_min_y )
+      {
+        current_min_y = point->y;
+      }
+      point = point->next;
+    } while ( point != first_point );
+
+    if ( highest_contour == -1 || current_min_y > highest_min_y )
+    {
+      highest_min_y = current_min_y;
+      highest_contour = contour;
+    }
+  }
+
+  return highest_contour;
+}
+
+/*True if the given contour overlaps horizontally with the bounding box
+  Of all other contours combined.
+  This is a helper for af_glyph_hints_apply_vertical_separation_adjustments */
+FT_Bool
+af_check_contour_horizontal_overlap( AF_GlyphHints hints,
+                                     FT_Int contour_index )
+{
+  FT_Pos contour_max_x = -32000;
+  FT_Pos contour_min_x = 32000;
+  FT_Pos others_max_x = -32000;
+  FT_Pos others_min_x = 32000;
+
+  for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+  {
+    AF_Point first_point = hints->contours[contour];
+    AF_Point p = first_point;
+
+    do
+    {
+      p = p->next;
+      if ( contour == contour_index )
+      {
+        if ( p->x < contour_min_x )
+        {
+          contour_min_x = p->x;
+        }
+        if ( p->x > contour_max_x )
+        {
+          contour_max_x = p->x;
+        }
+      }
+      else /* ( contour != contour_index ) */
+      {
+        if ( p->x < others_min_x )
+        {
+          others_min_x = p->x;
+        }
+        if ( p->x > others_max_x )
+        {
+          others_max_x = p->x;
+        }
+      }
+    }
+    while (p != first_point);
+  }
+
+  FT_Bool horizontal_overlap =
+    (others_min_x <= contour_max_x && contour_max_x <= others_max_x) ||
+    (others_min_x <= contour_min_x && contour_min_x <= others_max_x) ||
+    (contour_max_x >= others_max_x && contour_min_x <= others_min_x);
+
+  return horizontal_overlap;
+}
+
+void
+af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
+                                                      AF_Dimension dim,
+                                                      FT_Int glyph_index,
+                                                      AF_ReverseCharacterMap reverse_charmap )
+{
+  FT_TRACE4(("Enter af_glyph_hints_apply_vertical_separation_adjustments\n"));
+  if ( dim != AF_DIMENSION_VERT )
+  {
+    return;
+  }
+
+  if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP
+       && hints->num_contours >= 2 )
+  {
+    FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: Applying vertical adjustment: AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP\n" ));
+
+    /* Figure out which contout is the higher one by finding the one */
+    /* with the highest minimum y value */
+
+    FT_Int highest_contour = -1;
+    FT_Pos highest_min_y = 0;
+    FT_Pos current_min_y = 0;
+
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL )
+      {
+        continue;
+      }
+      current_min_y = point->y;
+
+      do
+      {
+        if ( point->y < current_min_y )
+        {
+          current_min_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( highest_contour == -1 || current_min_y > highest_min_y )
+      {
+        highest_min_y = current_min_y;
+        highest_contour = contour;
+      }
+    }
+
+    /* check for a horizontal overtap between the top contour and the rest */
+    /* if there is no overlap, do not adjust. */
+
+    FT_Bool horizontal_overlap = af_check_contour_horizontal_overlap( hints, highest_contour );
+    if (!horizontal_overlap) {
+      FT_TRACE4(( "    Top contour does not horizontally overlap with other contours.  Skipping adjustment.\n" ));
+      return;
+    }
+
+    /* If there are any contours that have a maximum y coordinate */
+    /* greater or equal to the minimum y coordinate of the previously found highest*/
+    /* contour, bump the high contour up until the distance is one pixel */
+
+    FT_Int adjustment_amount = 0;
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
+      if ( contour == highest_contour )
+      {
+        continue;
+      }
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL )
+      {
+        continue;
+      }
+      FT_Pos max_y = point->y;
+
+      do
+      {
+        if ( point->y > max_y )
+        {
+          max_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( max_y >= highest_min_y - 64 )
+      {
+        adjustment_amount = 64 - ( highest_min_y - max_y );
+      }
+    }
+
+    if ( adjustment_amount > 64 )
+    {
+      FT_TRACE4(( "    Calculated adjustment amount %d was more than threshold of 64.  Not adjusting\n", adjustment_amount ));
+    }
+    else if ( adjustment_amount > 0 )
+    {
+      FT_TRACE4(( "    Pushing top contour %d units up\n", adjustment_amount ));
+      af_move_contour_vertically(hints->contours[highest_contour], adjustment_amount);
+    }
+  } else if ( af_lookup_vertical_seperation_type( reverse_charmap, glyph_index ) == AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN
+       && hints->num_contours >= 2 )
+  {
+    FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: Applying vertical adjustment: AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN\n" ));
+
+    /*Find lowest contour*/
+    FT_Int lowest_contour = -1;
+    FT_Pos lowest_max_y = 0;
+    FT_Pos current_max_y = 0;
+
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL )
+      {
+        continue;
+      }
+      current_max_y = point->y;
+
+      do
+      {
+        if ( point->y > current_max_y )
+        {
+          current_max_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( lowest_contour == -1 || current_max_y < lowest_max_y )
+      {
+        lowest_max_y = current_max_y;
+        lowest_contour = contour;
+      }
+    }
+
+    FT_Int adjustment_amount = 0;
+    for ( FT_Int contour = 0; contour < hints->num_contours; contour++ )
+    {
+      if ( contour == lowest_contour )
+      {
+        continue;
+      }
+      AF_Point point = hints->contours[contour];
+      AF_Point first_point = point;
+      if ( point == NULL )
+      {
+        continue;
+      }
+      FT_Pos min_y = point->y;
+
+      do
+      {
+        if ( point->y < min_y )
+        {
+          min_y = point->y;
+        }
+        point = point->next;
+      } while ( point != first_point );
+
+      if ( min_y <= lowest_max_y - 64 )
+      {
+        adjustment_amount = 64 - ( min_y - lowest_max_y );
+      }
+
+      if ( adjustment_amount > 64 )
+      {
+        FT_TRACE4(( "    Calculated adjustment amount %d was more than threshold of 64.  Not adjusting\n", adjustment_amount ));
+      }
+      else if ( adjustment_amount > 0 )
+      {
+        FT_TRACE4(( "    Pushing bottom contour %d units down\n", adjustment_amount ));
+        af_move_contour_vertically(hints->contours[lowest_contour], -adjustment_amount);
+      }
+    }
+  }
+  else
+  {
+    FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments: No vertical adjustment needed\n" ));
+  }
+
+  FT_TRACE4(("Exit af_glyph_hints_apply_vertical_separation_adjustments\n"));
+}
+
+#undef  FT_COMPONENT
+#define FT_COMPONENT  aflatin
+
 
   /* Compute the snapped width of a given stem, ignoring very thin ones. */
   /* There is a lot of voodoo in this function; changing the hard-coded  */
@@ -3605,6 +3909,7 @@
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
+        af_glyph_hints_apply_vertical_separation_adjustments(hints, (AF_Dimension) dim, glyph_index, metrics->root.reverse_charmap);
       }
     }
 
@@ -3633,7 +3938,7 @@
 
     (AF_WritingSystem_InitMetricsFunc) af_latin_metrics_init,        /* style_metrics_init    */
     (AF_WritingSystem_ScaleMetricsFunc)af_latin_metrics_scale,       /* style_metrics_scale   */
-    (AF_WritingSystem_DoneMetricsFunc) NULL,                         /* style_metrics_done    */
+    (AF_WritingSystem_DoneMetricsFunc) af_latin_metrics_done,                         /* style_metrics_done    */
     (AF_WritingSystem_GetStdWidthsFunc)af_latin_get_standard_widths, /* style_metrics_getstdw */
 
     (AF_WritingSystem_InitHintsFunc)   af_latin_hints_init,          /* style_hints_init      */

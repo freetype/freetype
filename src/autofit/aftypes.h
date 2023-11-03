@@ -423,6 +423,7 @@ extern void*  af_debug_hints_;
     FT_Bool         digits_have_same_width;
 
     AF_FaceGlobals  globals;    /* to access properties */
+    AF_ReverseCharacterMap  reverse_charmap;
 
   } AF_StyleMetricsRec;
 

@@ -242,7 +242,10 @@ af_reverse_character_map_lookup_( AF_ReverseCharacterMap map, FT_Int glyph_index
 FT_LOCAL_DEF( FT_UInt32 )
 af_reverse_character_map_lookup( AF_ReverseCharacterMap map, FT_Int glyph_index )
 {
-    return af_reverse_character_map_lookup_( map, glyph_index, map->length );
+  if ( map == NULL ) {
+    return 0;
+  }
+  return af_reverse_character_map_lookup_( map, glyph_index, map->length );
 }
 
 /*prepare to add one more entry to the reverse character map
@@ -271,6 +274,7 @@ af_reverse_character_map_expand( AF_ReverseCharacterMap map, FT_Long *capacity, 
 FT_LOCAL_DEF( FT_Error )
 af_reverse_character_map_new( AF_ReverseCharacterMap *map, AF_FaceGlobals globals )
 {
+    *map = NULL;
     FT_Face face = globals->face;
     FT_Memory memory = face->memory;
     /* Search for a unicode charmap */
@@ -344,6 +348,7 @@ Exit:
             FT_FREE( ( *map )->entries );
         }
         FT_FREE( *map );
+        *map = NULL;
         return error;
     }
 
@@ -352,6 +357,9 @@ Exit:
 
 FT_LOCAL_DEF( FT_Error )
 af_reverse_character_map_done( AF_ReverseCharacterMap map, FT_Memory memory ) {
-    FT_FREE( map->entries );
+    if ( map != NULL ) {
+      FT_FREE( map->entries );
+    }
+    FT_FREE( map );
     return FT_Err_Ok;
 }
