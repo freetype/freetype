@@ -2798,6 +2798,221 @@ af_find_highest_contour( AF_GlyphHints hints ) {
   return highest_contour;
 }
 
+static void
+af_remove_segments_containing_point(AF_GlyphHints hints, AF_Point point)
+{
+  AF_AxisHints axis = &hints->axis[AF_DIMENSION_VERT];
+  AF_Segment segments = axis->segments;
+  for ( FT_Int i = 0; i < axis->num_segments; i++ )
+  {
+    AF_Segment seg = &segments[i];
+    FT_Bool remove = 0;
+    AF_Point p = seg->first;
+    while ( 1 )
+    {
+      if ( p == point )
+      {
+        remove = 1;
+        break;
+      }
+      if (p == seg->last) {
+        break;
+      }
+      p = p->next;
+    }
+
+    if ( remove )
+    {
+      /* first, check the first and last fields of the edge */
+      AF_Edge edge = seg->edge;
+      if ( edge->first == seg && edge->last == seg )
+      {
+        /* The edge only consists of the segment to be removed.  remove the edge*/
+          *edge = axis->edges[--axis->num_edges];
+      }
+      else
+      {
+        if ( edge->first == seg )
+        {
+          edge->first = seg->edge_next;
+        }
+        if ( edge->last == seg )
+        {
+          edge->last = edge->first;
+          while ( edge->last->edge_next != seg )
+          {
+            edge->last = edge->last->edge_next;
+          }
+        }
+      }
+
+      /* Now, delete the segment */
+      *seg = axis->segments[--axis->num_segments];
+
+      i--; /* we have to check the new segment at this position */
+    }
+  }
+}
+
+/*remove all segments containing points on the tilde contour*/
+static void
+af_latin_remove_tilde_points_from_edges( AF_GlyphHints hints,
+                                         FT_Int glyph_index )
+{
+  FT_Int highest_contour = af_find_highest_contour(hints);
+  AF_Point first_point = hints->contours[highest_contour];
+
+  /* search for any curve tips that are on a y extrema, and delete any
+    segments that contain this point.*/
+  AF_Point p = first_point;
+
+  do
+  {
+    p = p->next;
+    if ( /*!(p->flags & AF_FLAG_CONTROL)
+          && p->prev->y == p->y && p->next->y == p->y
+          && p->prev->flags & AF_FLAG_CONTROL
+          && p->next->flags & AF_FLAG_CONTROL*/ 1 )
+    {
+      FT_TRACE4(("%p", p));
+      af_remove_segments_containing_point( hints, p );
+    }
+  } while ( p != first_point );
+}
+
+/*
+The tilde unflattening algorithm sometimes goes too far and makes an
+unusually high tilde, where decreasing the ppem will increase the height
+instead of a steady decrease in height as less pixels are used.
+
+The n tilde on times new roman with forced autofitting on,
+16.5-18 ppem font size exhibits this behaviour.
+*/
+void
+af_latin_stretch_tildes( AF_GlyphHints hints,
+                         FT_Int glyph_index )
+{
+  FT_Int highest_contour = af_find_highest_contour( hints );
+  AF_Point p = hints->contours[highest_contour];
+  AF_Point first_point = p;
+
+  FT_Pos min_y, max_y;
+  min_y = max_y = p->y;
+
+  FT_Short min_fy, max_fy;
+  min_fy = max_fy = p->fy;
+
+  do
+  {
+    p = p->next;
+    if ( p->y < min_y )
+    {
+      min_y = p->y;
+    }
+    if ( p->y > max_y )
+    {
+      max_y = p->y;
+    }
+
+    if ( p->fy < min_fy )
+    {
+      min_fy = p->fy;
+    }
+
+    if ( p->fy > max_fy )
+    {
+      max_fy = p->fy;
+    }
+
+  }
+  while ( p != first_point );
+
+  FT_Pos min_measurement = 32000;
+  FT_UInt measurements_taken = 0;
+
+  do
+  {
+    p = p->next;
+    if ( !(p->flags & AF_FLAG_CONTROL)
+          && p->prev->y == p->y && p->next->y == p->y
+          && p->y != min_y && p->y != max_y
+          && p->prev->flags & AF_FLAG_CONTROL
+          && p->next->flags & AF_FLAG_CONTROL )
+    {
+      /* This point could be a candidate.  Find the next and previous on-curve */
+      /* points, and make sure they are both either above or below the point, */
+      /* Then make the measurement */
+      AF_Point prevOn = p->prev;
+      AF_Point nextOn = p->next;
+      while ( prevOn->flags & AF_FLAG_CONTROL )
+      {
+        prevOn = prevOn->prev;
+      }
+      while ( nextOn->flags & AF_FLAG_CONTROL )
+      {
+        nextOn = nextOn->next;
+      }
+      FT_Pos measurement;
+      if ( nextOn->y > p->y && prevOn->y > p->y )
+      {
+        measurement = p->y - min_y;
+      }
+      else if ( nextOn->y < p->y && prevOn->y < p->y )
+      {
+        measurement = max_y - p->y;
+      }
+      else
+      {
+        continue;
+      }
+
+      if (measurement < min_measurement)
+      {
+        min_measurement = measurement;
+      }
+      measurements_taken++;
+    }
+
+  }
+  while ( p != first_point );
+
+  FT_Pos height = max_y - min_y;
+
+  FT_Pos target_height = min_measurement + 64;
+  if ( height >= target_height )
+  {
+    return;
+  }
+
+  p = first_point;
+  do
+  {
+    p = p->next;
+    p->y = ((p->y - min_y) * target_height / height) + min_y;
+    p->fy = ((p->fy - min_fy) * target_height / height) + min_fy;
+    p->oy = p->y;
+    if ( !(p->flags & AF_FLAG_CONTROL) )
+      p->flags |= AF_FLAG_TOUCH_Y;
+  }
+  while ( p != first_point );
+
+  FT_Pos new_min_y, new_max_y;
+  new_min_y = new_max_y = first_point->y;
+  p = first_point;
+  do {
+    p = p->next;
+    if ( p->y < new_min_y )
+    {
+      new_min_y = p->y;
+    }
+    if ( p->y > new_max_y )
+    {
+      new_max_y = p->y;
+    }
+  }
+  while ( p != first_point );
+}
+
 /*True if the given contour overlaps horizontally with the bounding box
   Of all other contours combined.
   This is a helper for af_glyph_hints_apply_vertical_separation_adjustments */
@@ -3886,11 +4101,18 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
+      FT_Bool is_tilde = af_lookup_tilde_correction_type( metrics->root.reverse_charmap, glyph_index );
+      if ( is_tilde ) {
+        af_latin_stretch_tildes( hints, glyph_index );
+      }
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
+      if ( is_tilde ) {
+        af_latin_remove_tilde_points_from_edges( hints, glyph_index );
+      }
       if ( error )
         goto Exit;
 
