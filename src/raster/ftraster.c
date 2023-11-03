@@ -448,7 +448,6 @@
     Int         precision_half;
     Int         precision_scale;
     Int         precision_step;
-    Int         precision_jitter;
 
     PLong       buff;               /* The profiles buffer                 */
     PLong       sizeBuff;           /* Render pool size                    */
@@ -549,27 +548,17 @@
      *
      *   256 / (1 << 12) = 0.0625 pixels.
      *
-     * `precision_jitter' is an epsilon threshold used in
-     * `Vertical_Sweep_Span' to deal with small imperfections in the Bezier
-     * decomposition (after all, we are working with approximations only);
-     * it avoids switching on additional pixels which would cause artifacts
-     * otherwise.
-     *
-     * The value of `precision_jitter' has been determined heuristically.
-     *
      */
 
     if ( High )
     {
       ras.precision_bits   = 12;
       ras.precision_step   = 256;
-      ras.precision_jitter = 30;
     }
     else
     {
       ras.precision_bits   = 6;
       ras.precision_step   = 32;
-      ras.precision_jitter = 2;
     }
 
     ras.precision       = 1 << ras.precision_bits;
@@ -2139,9 +2128,7 @@
                                 PProfile    left,
                                 PProfile    right )
   {
-    Long  e1, e2;
-
-    Int  dropOutControl = left->flags & 7;
+    Int  e1, e2;
 
     FT_UNUSED( y );
     FT_UNUSED( left );
@@ -2153,20 +2140,8 @@
                 ras.precision_bits, (double)x1 / (double)ras.precision,
                 ras.precision_bits, (double)x2 / (double)ras.precision ));
 
-    /* Drop-out control */
-
-    e1 = CEILING( x1 );
-    e2 = FLOOR( x2 );
-
-    /* take care of the special case where both the left */
-    /* and right contour lie exactly on pixel centers    */
-    if ( dropOutControl != 2                             &&
-         x2 - x1 - ras.precision <= ras.precision_jitter &&
-         e1 != x1 && e2 != x2                            )
-      e2 = e1;
-
-    e1 = TRUNC( e1 );
-    e2 = TRUNC( e2 );
+    e1 = (Int)TRUNC( CEILING( x1 ) );
+    e2 = (Int)TRUNC( FLOOR( x2 ) );
 
     if ( e2 >= 0 && e1 < ras.bWidth )
     {
@@ -2180,10 +2155,10 @@
       if ( e2 >= ras.bWidth )
         e2 = ras.bWidth - 1;
 
-      FT_TRACE7(( " -> x=[%ld;%ld]", e1, e2 ));
+      FT_TRACE7(( " -> x=[%d;%d]", e1, e2 ));
 
-      c1 = (Int)( e1 >> 3 );
-      c2 = (Int)( e2 >> 3 );
+      c1 = e1 >> 3;
+      c2 = e2 >> 3;
 
       f1 =  0xFF >> ( e1 & 7 );
       f2 = ~0x7F >> ( e2 & 7 );
