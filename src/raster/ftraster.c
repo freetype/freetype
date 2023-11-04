@@ -340,14 +340,13 @@
                              /* during drop-out control                  */
     Int         offset;      /* bottom or currently scanned array index  */
     Int         height;      /* profile's height in scanlines            */
-    Int         start;       /* profile's starting scanline              */
+    Int         start;       /* profile's starting scanline, also use    */
+                             /* as activation counter                    */
     UShort      flags;       /* Bit 0-2: drop-out mode                   */
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
                              /* Bit 5: is bottom profile?                */
 
-    Int         countL;      /* number of lines to step before this      */
-                             /* profile becomes drawable                 */
     FT_F26Dot6  X;           /* current coordinate during sweep          */
     Long        x[1];        /* actually variable array of scanline      */
                              /* intersections with `height` elements     */
@@ -2176,6 +2175,8 @@
     Long  e1, e2, pxl;
     Int   c1, f1;
 
+    FT_UNUSED( y );
+
 
     FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
                 y,
@@ -2257,14 +2258,14 @@
 
           /* upper stub test */
           if ( left->next == right                &&
-               left->height <= 0                  &&
+               left->height == 1                  &&
                !( left->flags & Overshoot_Top   &&
                   x2 - x1 >= ras.precision_half ) )
             goto Exit;
 
           /* lower stub test */
           if ( right->next == left                 &&
-               left->start == y                    &&
+               left->offset == 0                   &&
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
             goto Exit;
@@ -2475,14 +2476,14 @@
 
           /* rightmost stub test */
           if ( left->next == right                &&
-               left->height <= 0                  &&
+               left->height == 1                  &&
                !( left->flags & Overshoot_Top   &&
                   x2 - x1 >= ras.precision_half ) )
             goto Exit;
 
           /* leftmost stub test */
           if ( right->next == left                 &&
-               left->start == y                    &&
+               left->offset == 0                   &&
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
             goto Exit;
@@ -2583,7 +2584,7 @@
     P = waiting;
     while ( P )
     {
-      P->countL = P->start - min_Y;
+      P->start -= min_Y;
       P->X      = P->x[P->offset];
 
       P = P->link;
@@ -2602,8 +2603,8 @@
       while ( *Q )
       {
         P = *Q;
-        P->countL -= y_height;
-        if ( P->countL == 0 )
+        P->start -= y_height;
+        if ( P->start == 0 )
         {
           *Q = P->link;  /* remove */
 
@@ -2654,7 +2655,7 @@
               P_Right->X = x2;
 
               /* mark profile for drop-out processing */
-              P_Left->countL = 1;
+              P_Left->start = -1;
               dropouts++;
             }
           }
@@ -2690,9 +2691,9 @@
 
     while ( P_Left && P_Right )
     {
-      if ( P_Left->countL )
+      if ( P_Left->start )
       {
-        P_Left->countL = 0;
+        P_Left->start = 0;
 #if 0
         dropouts--;  /* -- this is useful when debugging only */
 #endif
