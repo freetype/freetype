@@ -2019,39 +2019,6 @@
 
   /**************************************************************************
    *
-   * DelOld
-   *
-   *   Removes an old profile from a linked list.
-   */
-  static void
-  DelOld( PProfileList    list,
-          const PProfile  profile )
-  {
-    PProfile  *old, current;
-
-
-    old     = list;
-    current = *old;
-
-    while ( current )
-    {
-      if ( current == profile )
-      {
-        *old = current->link;
-        return;
-      }
-
-      old     = &current->link;
-      current = *old;
-    }
-
-    /* we should never get there, unless the profile was not part of */
-    /* the list.                                                     */
-  }
-
-
-  /**************************************************************************
-   *
    * Sort
    *
    *   Sorts a trace list.  In 95%, the list is already sorted.  We need
@@ -2589,7 +2556,7 @@
     Int           min_Y, max_Y, dropouts;
     Int           y, y_change, y_height;
 
-    PProfile      P, Q, P_Left, P_Right;
+    PProfile      *Q, P, P_Left, P_Right;
 
     TProfileList  waiting    = ras.fProfile;
     TProfileList  draw_left  = NULL;
@@ -2625,23 +2592,22 @@
     {
       /* check waiting list for new profile activations */
 
-      P = waiting;
-
-      while ( P )
+      Q = &waiting;
+      while ( *Q )
       {
-        Q = P->link;
+        P = *Q;
         P->countL -= y_height;
         if ( P->countL == 0 )
         {
-          DelOld( &waiting, P );
+          *Q = P->link;  /* remove */
 
           if ( P->flags & Flow_Up )
             InsNew( &draw_left,  P );
           else
             InsNew( &draw_right, P );
         }
-
-        P = Q;
+        else
+          Q = &P->link;
       }
 
       /* sort the drawing lists */
@@ -2719,22 +2685,24 @@
 
       /* remove exhausted profiles */
 
-      P = draw_left;
-      while ( P )
+      Q = &draw_left;
+      while ( *Q )
       {
-        Q = P->link;
+        P = *Q;
         if ( P->height == 0 )
-          DelOld( &draw_left, P );
-        P = Q;
+          *Q = P->link;
+        else
+          Q = &P->link;
       }
 
-      P = draw_right;
-      while ( P )
+      Q = &draw_right;
+      while ( *Q )
       {
-        Q = P->link;
+        P = *Q;
         if ( P->height == 0 )
-          DelOld( &draw_right, P );
-        P = Q;
+          *Q = P->link;
+        else
+          Q = &P->link;
       }
     }
 
