@@ -2019,26 +2019,32 @@
 
   /**************************************************************************
    *
-   * Sort
+   * Increment
    *
-   *   Sorts a trace list.  In 95%, the list is already sorted.  We need
-   *   an algorithm which is fast in this case.  Bubble sort is enough
-   *   and simple.
+   *   Advances all profile in the list to the next scanline.  It also
+   *   sorts the trace list in the unlikely case of profile crossing.
+   *   In 95%, the list is already sorted.  We need an algorithm which
+   *   is fast in this case.  Bubble sort is enough and simple.
    */
   static void
-  Sort( PProfileList  list )
+  Increment( PProfileList  list )
   {
     PProfile  *old, current, next;
 
 
-    /* First, set the new X coordinate of each profile */
-    current = *list;
-    while ( current )
+    /* First, set the new X coordinates and remove exhausted profiles */
+    old = list;
+    while ( *old )
     {
-      current->X       = current->x[current->offset];
-      current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
-      current->height--;
-      current = current->link;
+      current = *old;
+      if ( --current->height )
+      {        
+        current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
+        current->X       = current->x[current->offset];
+        old = &current->link;
+      }
+      else
+        *old = current->link;  /* remove */
     }
 
     /* Then sort them */
@@ -2610,15 +2616,10 @@
           Q = &P->link;
       }
 
-      /* sort the drawing lists */
-
-      Sort( &draw_left );
-      Sort( &draw_right );
-
       y_change = (Int)*ras.maxBuff;
       y_height = y_change - y;
 
-      while ( y < y_change )
+      do
       {
         /* let's trace */
 
@@ -2674,36 +2675,10 @@
 
         ras.Proc_Sweep_Step( RAS_VAR );
 
-        y++;
-
-        if ( y < y_change )
-        {
-          Sort( &draw_left  );
-          Sort( &draw_right );
-        }
+        Increment( &draw_left  );
+        Increment( &draw_right );
       }
-
-      /* remove exhausted profiles */
-
-      Q = &draw_left;
-      while ( *Q )
-      {
-        P = *Q;
-        if ( P->height == 0 )
-          *Q = P->link;
-        else
-          Q = &P->link;
-      }
-
-      Q = &draw_right;
-      while ( *Q )
-      {
-        P = *Q;
-        if ( P->height == 0 )
-          *Q = P->link;
-        else
-          Q = &P->link;
-      }
+      while ( ++y < y_change );
     }
 
     return SUCCESS;
