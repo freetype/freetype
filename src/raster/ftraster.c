@@ -459,10 +459,6 @@
 
     Byte        dropOutControl;     /* current drop_out control method     */
 
-    UShort      bWidth;             /* target bitmap width                 */
-    PByte       bOrigin;            /* target bitmap bottom-left origin    */
-    PByte       bLine;              /* target bitmap current line          */
-
     Long        lastX, lastY;
     Long        minY, maxY;
 
@@ -480,8 +476,13 @@
 
     TStates     state;              /* rendering state                     */
 
-    FT_Bitmap   target;             /* description of target bit/pixmap    */
     FT_Outline  outline;
+
+    Int         bTop;               /* target bitmap max line  index       */
+    Int         bRight;             /* target bitmap rightmost index       */
+    Int         bPitch;             /* target bitmap pitch                 */
+    PByte       bOrigin;            /* target bitmap bottom-left origin    */
+    PByte       bLine;              /* target bitmap current line          */
 
     /* dispatch variables */
 
@@ -2084,7 +2085,7 @@
     FT_UNUSED( max );
 
 
-    ras.bLine = ras.bOrigin - min * ras.target.pitch;
+    ras.bLine = ras.bOrigin - min * ras.bPitch;
   }
 
 
@@ -2110,7 +2111,7 @@
     e1 = (Int)TRUNC( CEILING( x1 ) );
     e2 = (Int)TRUNC( FLOOR( x2 ) );
 
-    if ( e2 >= 0 && e1 < ras.bWidth )
+    if ( e2 >= 0 && e1 <= ras.bRight )
     {
       Byte*  target;
 
@@ -2119,8 +2120,8 @@
 
       if ( e1 < 0 )
         e1 = 0;
-      if ( e2 >= ras.bWidth )
-        e2 = ras.bWidth - 1;
+      if ( e2 > ras.bRight )
+        e2 = ras.bRight;
 
       FT_TRACE7(( " -> x=[%d;%d]", e1, e2 ));
 
@@ -2273,7 +2274,7 @@
         /* bounding box instead                                           */
         if ( pxl < 0 )
           pxl = e1;
-        else if ( TRUNC( pxl ) >= ras.bWidth )
+        else if ( TRUNC( pxl ) > ras.bRight )
           pxl = e2;
 
         /* check that the other pixel isn't set */
@@ -2284,7 +2285,7 @@
         c1 = (Int)( e1 >> 3 );
         f1 = (Int)( e1 &  7 );
 
-        if ( e1 >= 0 && e1 < ras.bWidth     &&
+        if ( e1 >= 0 && e1 <= ras.bRight    &&
              ras.bLine[c1] & ( 0x80 >> f1 ) )
           goto Exit;
       }
@@ -2294,7 +2295,7 @@
 
     e1 = TRUNC( pxl );
 
-    if ( e1 >= 0 && e1 < ras.bWidth )
+    if ( e1 >= 0 && e1 <= ras.bRight )
     {
       FT_TRACE7(( " -> x=%ld", e1 ));
 
@@ -2312,7 +2313,7 @@
   static void
   Vertical_Sweep_Step( RAS_ARG )
   {
-    ras.bLine -= ras.target.pitch;
+    ras.bLine -= ras.bPitch;
   }
 
 
@@ -2366,13 +2367,13 @@
     {
       e1 = TRUNC( e1 );
 
-      if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
+      if ( e1 >= 0 && e1 <= ras.bTop )
       {
         Int    f1;
         PByte  bits;
 
 
-        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
+        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
         f1   = 0x80 >> ( y & 7 );
 
         FT_TRACE7(( bits[0] & f1 ? " redundant"
@@ -2388,13 +2389,13 @@
     {
       e2 = TRUNC( e2 );
 
-      if ( e2 >= 0 && (ULong)e2 < ras.target.rows )
+      if ( e2 >= 0 && e2 <= ras.bTop )
       {
         Int    f1;
         PByte  bits;
 
 
-        bits = ras.bOrigin + ( y >> 3 ) - e2 * ras.target.pitch;
+        bits = ras.bOrigin + ( y >> 3 ) - e2 * ras.bPitch;
         f1   = 0x80 >> ( y & 7 );
 
         FT_TRACE7(( bits[0] & f1 ? " redundant"
@@ -2491,7 +2492,7 @@
         /* bounding box instead                                           */
         if ( pxl < 0 )
           pxl = e1;
-        else if ( (ULong)( TRUNC( pxl ) ) >= ras.target.rows )
+        else if ( TRUNC( pxl ) > ras.bTop )
           pxl = e2;
 
         /* check that the other pixel isn't set */
@@ -2499,12 +2500,11 @@
 
         e1 = TRUNC( e1 );
 
-        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
+        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
         f1   = 0x80 >> ( y & 7 );
 
-        if ( e1 >= 0                     &&
-             (ULong)e1 < ras.target.rows &&
-             *bits & f1                  )
+        if ( e1 >= 0 && e1 <= ras.bTop &&
+             *bits & f1                )
           goto Exit;
       }
       else
@@ -2513,11 +2513,11 @@
 
     e1 = TRUNC( pxl );
 
-    if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
+    if ( e1 >= 0 && e1 <= ras.bTop )
     {
       FT_TRACE7(( " -> y=%ld", e1 ));
 
-      bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
+      bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
       f1    = 0x80 >> ( y & 7 );
 
       bits[0] |= f1;
@@ -2910,7 +2910,7 @@
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
     ras.Proc_Sweep_Step = Vertical_Sweep_Step;
 
-    error = Render_Single_Pass( RAS_VARS 0, 0, (Int)ras.target.rows - 1 );
+    error = Render_Single_Pass( RAS_VARS 0, 0, ras.bTop );
     if ( error )
       return error;
 
@@ -2922,7 +2922,7 @@
       ras.Proc_Sweep_Drop = Horizontal_Sweep_Drop;
       ras.Proc_Sweep_Step = Horizontal_Sweep_Step;
 
-      error = Render_Single_Pass( RAS_VARS 1, 0, (Int)ras.target.width - 1 );
+      error = Render_Single_Pass( RAS_VARS 1, 0, ras.bRight );
       if ( error )
         return error;
     }
@@ -3067,13 +3067,14 @@
       return FT_THROW( Invalid_Argument );
 
     ras.outline = *outline;
-    ras.target  = *target_map;
 
-    ras.bWidth  = (UShort)ras.target.width;
-    ras.bOrigin = (Byte*)ras.target.buffer;
+    ras.bTop    =   (Int)target_map->rows - 1;
+    ras.bRight  =   (Int)target_map->width - 1;
+    ras.bPitch  =   (Int)target_map->pitch;
+    ras.bOrigin = (PByte)target_map->buffer;
 
-    if ( ras.target.pitch > 0 )
-      ras.bOrigin += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
+    if ( ras.bPitch > 0 )
+      ras.bOrigin += ras.bTop * ras.bPitch;
 
     return Render_Glyph( RAS_VAR );
   }
