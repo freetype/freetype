@@ -2891,7 +2891,11 @@
   Render_Glyph( RAS_ARG )
   {
     FT_Error  error;
+    Long      buffer[FT_MAX_BLACK_POOL];
 
+
+    ras.buff     = buffer;
+    ras.sizeBuff = (&buffer)[1]; /* Points to right after buffer. */
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
                                  FT_OUTLINE_HIGH_PRECISION );
@@ -2917,12 +2921,6 @@
     ras.Proc_Sweep_Span = Vertical_Sweep_Span;
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
     ras.Proc_Sweep_Step = Vertical_Sweep_Step;
-
-    ras.bWidth  = (UShort)ras.target.width;
-    ras.bOrigin = (Byte*)ras.target.buffer;
-
-    if ( ras.target.pitch > 0 )
-      ras.bOrigin += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
     error = Render_Single_Pass( RAS_VARS 0, 0, (Int)ras.target.rows - 1 );
     if ( error )
@@ -3047,8 +3045,6 @@
     black_TWorker  worker[1];
 #endif
 
-    Long  buffer[FT_MAX_BLACK_POOL];
-
 
     if ( !raster )
       return FT_THROW( Raster_Uninitialized );
@@ -3085,8 +3081,11 @@
     ras.outline = *outline;
     ras.target  = *target_map;
 
-    ras.buff     = buffer;
-    ras.sizeBuff = (&buffer)[1]; /* Points to right after buffer. */
+    ras.bWidth  = (UShort)ras.target.width;
+    ras.bOrigin = (Byte*)ras.target.buffer;
+
+    if ( ras.target.pitch > 0 )
+      ras.bOrigin += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
     return Render_Glyph( RAS_VAR );
   }
