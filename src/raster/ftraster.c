@@ -1123,7 +1123,7 @@
                       Long       miny,
                       Long       maxy )
   {
-    Long  y1, y2, e, e2, e0, dy;
+    Long  y1, y2, e, e2, dy;
     Long  dx, x2;
 
     TPoint*  start_arc;
@@ -1138,38 +1138,26 @@
     if ( y2 < miny || y1 > maxy )
       goto Fin;
 
-    e2 = FLOOR( y2 );
-
-    if ( e2 > maxy )
-      e2 = maxy;
-
-    e0 = miny;
-
-    if ( y1 < miny )
-      e = miny;
-    else
-    {
-      e  = CEILING( y1 );
-      e0 = e;
-
-      if ( FRAC( y1 ) == 0 )
-      {
-        if ( ras.joint )
-        {
-          top--;
-          ras.joint = FALSE;
-        }
-
-        *top++ = arc[degree].x;
-
-        e += ras.precision;
-      }
-    }
+    e2 = y2 > maxy ? maxy : FLOOR( y2 );
+    e  = y1 < miny ? miny : CEILING( y1 );
 
     if ( ras.fresh )
     {
-      ras.cProfile->start = (Int)TRUNC( e0 );
+      ras.cProfile->start = (Int)TRUNC( e );
       ras.fresh = FALSE;
+    }
+
+    if ( y1 == e )
+    {
+      if ( ras.joint )
+      {
+        top--;
+        ras.joint = FALSE;
+      }
+
+      *top++ = arc[degree].x;
+
+      e += ras.precision;
     }
 
     if ( e2 < e )
