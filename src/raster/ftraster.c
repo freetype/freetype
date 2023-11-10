@@ -1151,22 +1151,19 @@
     if ( y1 == e )
     {
       if ( ras.joint )
-      {
         top--;
-        ras.joint = FALSE;
-      }
 
       *top++ = arc[degree].x;
-
-      e += ras.precision;
+      e     += ras.precision;
     }
+
+    ras.joint = (Bool)( y2 == e2 );
 
     if ( e2 < e )
       goto Fin;
 
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
-      ras.top   = top;
       ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
@@ -1175,8 +1172,6 @@
 
     do
     {
-      ras.joint = FALSE;
-
       y2 = arc[0].y;
       x2 = arc[0].x;
 
@@ -1184,7 +1179,6 @@
       {
         dy = y2 - arc[degree].y;
         dx = x2 - arc[degree].x;
-
 
         /* split condition should be invariant of direction */
         if (  dy > ras.precision_step ||
@@ -1197,22 +1191,21 @@
         else
         {
           *top++ = x2 - FMulDiv( y2 - e, dx, dy );
+          e     += ras.precision;
           arc -= degree;
-          e   += ras.precision;
         }
       }
       else
       {
         if ( y2 == e )
         {
-          ras.joint  = TRUE;
-          *top++     = x2;
-
-          e += ras.precision;
+          *top++ = x2;
+          e     += ras.precision;
         }
-        arc -= degree;
+        arc   -= degree;
       }
-    } while ( arc >= start_arc && e <= e2 );
+    }
+    while ( e <= e2 );
 
   Fin:
     ras.top  = top;
