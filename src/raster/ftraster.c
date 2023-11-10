@@ -764,8 +764,6 @@
       ras.num_Profs++;
     }
 
-    ras.joint = FALSE;
-
     return SUCCESS;
   }
 
@@ -1904,8 +1902,6 @@
 
     ras.fProfile = NULL;
     ras.cProfile = NULL;
-    ras.joint    = FALSE;
-    ras.fresh    = FALSE;
 
     ras.top      = ras.buff;
     ras.maxBuff  = ras.sizeBuff;
