@@ -942,6 +942,9 @@
     e2 = y2 > maxy ? maxy : FLOOR( y2 );
     e  = y1 < miny ? miny : CEILING( y1 );
 
+    if ( e2 < e )  /* between scanlines */
+      goto Fin;
+
     if ( ras.fresh )
     {
       ras.cProfile->start = (Int)TRUNC( e );
@@ -952,9 +955,6 @@
       top--;
 
     ras.joint = (Bool)( y2 == e2 );
-
-    if ( e2 < e )
-      goto Fin;
 
     size = (Int)TRUNC( e2 - e ) + 1;
 
@@ -1105,8 +1105,6 @@
     Long  y1, y2, e, e2, dy;
     Long  dx, x2;
 
-    TPoint*  start_arc;
-
     PLong top;
 
 
@@ -1119,6 +1117,9 @@
 
     e2 = y2 > maxy ? maxy : FLOOR( y2 );
     e  = y1 < miny ? miny : CEILING( y1 );
+
+    if ( e2 < e )  /* between scanlines */
+      goto Fin;
 
     if ( ras.fresh )
     {
@@ -1137,18 +1138,13 @@
 
     ras.joint = (Bool)( y2 == e2 );
 
-    if ( e2 < e )
-      goto Fin;
-
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
       ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
-    start_arc = arc;
-
-    do
+    while ( e <= e2 )
     {
       y2 = arc[0].y;
       x2 = arc[0].x;
@@ -1183,7 +1179,6 @@
         arc   -= degree;
       }
     }
-    while ( e <= e2 );
 
   Fin:
     ras.top  = top;
