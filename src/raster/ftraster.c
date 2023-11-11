@@ -927,107 +927,87 @@
                     Long  miny,
                     Long  maxy )
   {
-    Long   Dx, Dy;
-    Int    e1, e2, f1, f2, size;
-    Long   Ix, Rx, Ax;
+    Long  e, e2, Dx, Dy;
+    Long  Ix, Rx, Ax;
+    Int   size;
 
-    PLong  top;
+    PLong top;
 
 
-    Dx = x2 - x1;
-    Dy = y2 - y1;
+    top = ras.top;
 
-    if ( Dy <= 0 || y2 < miny || y1 > maxy )
-      return SUCCESS;
+    if ( y2 == y1 || y2 < miny || y1 > maxy )
+      goto Fin;
 
-    if ( y1 < miny )
-    {
-      /* Take care: miny-y1 can be a very large value; we use     */
-      /*            a slow MulDiv function to avoid clipping bugs */
-      x1 += SMulDiv( Dx, miny - y1, Dy );
-      e1  = (Int)TRUNC( miny );
-      f1  = 0;
-    }
-    else
-    {
-      e1 = (Int)TRUNC( y1 );
-      f1 = (Int)FRAC( y1 );
-    }
-
-    if ( y2 > maxy )
-    {
-      /* x2 += FMulDiv( Dx, maxy - y2, Dy );  UNNECESSARY */
-      e2  = (Int)TRUNC( maxy );
-      f2  = 0;
-    }
-    else
-    {
-      e2 = (Int)TRUNC( y2 );
-      f2 = (Int)FRAC( y2 );
-    }
-
-    if ( f1 > 0 )
-    {
-      if ( e1 == e2 )
-        return SUCCESS;
-      else
-      {
-        x1 += SMulDiv( Dx, ras.precision - f1, Dy );
-        e1 += 1;
-      }
-    }
-    else
-      if ( ras.joint )
-      {
-        ras.top--;
-        ras.joint = FALSE;
-      }
-
-    ras.joint = (char)( f2 == 0 );
+    e2 = y2 > maxy ? maxy : FLOOR( y2 );
+    e  = y1 < miny ? miny : CEILING( y1 );
 
     if ( ras.fresh )
     {
-      ras.cProfile->start = e1;
-      ras.fresh           = FALSE;
+      ras.cProfile->start = (Int)TRUNC( e );
+      ras.fresh = FALSE;
     }
 
-    size = e2 - e1 + 1;
-    if ( ras.top + size >= ras.maxBuff )
+    if ( y1 == e && ras.joint )
+      top--;
+
+    ras.joint = (Bool)( y2 == e2 );
+
+    if ( e2 < e )
+      goto Fin;
+
+    size = (Int)TRUNC( e2 - e ) + 1;
+
+    if ( top + size >= ras.maxBuff )
     {
       ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
-    if ( Dx > 0 )
+    Dx = x2 - x1;
+    Dy = y2 - y1;
+
+    if ( Dx == 0 )  /* very easy */
     {
-      Ix = SMulDiv_No_Round( ras.precision, Dx, Dy );
-      Rx = ( ras.precision * Dx ) % Dy;
+      do
+        *top++ = x1;
+      while ( --size );
+      goto Fin;
+    }
+
+    Ix     = SMulDiv_No_Round( e - y1, Dx, Dy );
+    x1    += Ix;
+    *top++ = x1;
+
+    if ( --size )
+    {
+      Ax = Dx * ( e - y1 )    - Dy * Ix;  /* remainder */
+      Ix = FMulDiv( ras.precision, Dx, Dy );
+      Rx = Dx * ras.precision - Dy * Ix;  /* remainder */
       Dx = 1;
-    }
-    else
-    {
-      Ix = -SMulDiv_No_Round( ras.precision, -Dx, Dy );
-      Rx = ( ras.precision * -Dx ) % Dy;
-      Dx = -1;
-    }
 
-    Ax  = -Dy;
-    top = ras.top;
-
-    while ( size > 0 )
-    {
-      *top++ = x1;
-
-      x1 += Ix;
-      Ax += Rx;
-      if ( Ax >= 0 )
+      if ( x2 < x1 )
       {
-        Ax -= Dy;
-        x1 += Dx;
+        Ax = -Ax;
+        Rx = -Rx;
+        Dx = -Dx;
       }
-      size--;
+
+      do
+      {
+        x1 += Ix;
+        Ax += Rx;
+        if ( Ax >= Dy )
+        {
+          Ax -= Dy;
+          x1 += Dx;
+        }
+        *top++ = x1;
+      }
+      while ( --size );
     }
 
+  Fin:
     ras.top = top;
     return SUCCESS;
   }
