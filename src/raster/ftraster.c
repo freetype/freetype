@@ -466,9 +466,6 @@
 
     Bool        fresh;              /* signals a fresh new profile which   */
                                     /* `start' field must be completed     */
-    Bool        joint;              /* signals that the last arc ended     */
-                                    /* exactly on a scanline.  Allows      */
-                                    /* removal of doublets                 */
     PProfile    cProfile;           /* current profile                     */
     PProfile    fProfile;           /* head of linked list of profiles     */
     PProfile    gProfile;           /* contour's first profile in case     */
@@ -684,7 +681,6 @@
 
     ras.state = aState;
     ras.fresh = TRUE;
-    ras.joint = FALSE;
 
     return SUCCESS;
   }
@@ -950,11 +946,8 @@
       ras.cProfile->start = (Int)TRUNC( e );
       ras.fresh = FALSE;
     }
-
-    if ( y1 == e && ras.joint )
+    else if ( y1 == e )
       top--;
-
-    ras.joint = (Bool)( y2 == e2 );
 
     size = (Int)TRUNC( e2 - e ) + 1;
 
@@ -1126,17 +1119,14 @@
       ras.cProfile->start = (Int)TRUNC( e );
       ras.fresh = FALSE;
     }
+    else if ( y1 == e )
+      top--;
 
     if ( y1 == e )
     {
-      if ( ras.joint )
-        top--;
-
       *top++ = arc[degree].x;
       e     += ras.precision;
     }
-
-    ras.joint = (Bool)( y2 == e2 );
 
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
