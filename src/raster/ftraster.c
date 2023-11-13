@@ -455,17 +455,14 @@
 
     FT_Error    error;
 
-    Int         numTurns;           /* number of Y-turns in outline        */
-
     Byte        dropOutControl;     /* current drop_out control method     */
 
     Long        lastX, lastY;
     Long        minY, maxY;
 
     UShort      num_Profs;          /* current number of profiles          */
+    Int         numTurns;           /* number of Y-turns in outline        */
 
-    Bool        fresh;              /* signals a fresh new profile which   */
-                                    /* `start' field must be completed     */
     PProfile    cProfile;           /* current profile                     */
     PProfile    fProfile;           /* head of linked list of profiles     */
     PProfile    gProfile;           /* contour's first profile in case     */
@@ -640,6 +637,9 @@
   New_Profile( RAS_ARGS TStates  aState,
                         Bool     overshoot )
   {
+    Long  e;
+
+
     if ( !ras.cProfile || ras.cProfile->height )
     {
       ras.cProfile  = (PProfile)ras.top;
@@ -664,13 +664,14 @@
       if ( overshoot )
         ras.cProfile->flags |= Overshoot_Bottom;
 
-      FT_TRACE7(( "  new ascending profile = %p\n", (void *)ras.cProfile ));
+      e = CEILING( ras.lastY );
       break;
 
     case Descending_State:
       if ( overshoot )
         ras.cProfile->flags |= Overshoot_Top;
-      FT_TRACE7(( "  new descending profile = %p\n", (void *)ras.cProfile ));
+
+      e = FLOOR( ras.lastY );
       break;
 
     default:
@@ -679,8 +680,20 @@
       return FAILURE;
     }
 
+    if ( e > ras.maxY )
+      e = ras.maxY;
+    if ( e < ras.minY )
+      e = ras.minY;
+    ras.cProfile->start = (Int)TRUNC( e );
+
+    FT_TRACE7(( "  new %s profile = %p, start = %d\n",
+                aState == Ascending_State ? "ascending" : "descending",
+                (void *)ras.cProfile, ras.cProfile->start ));
+
+    if ( ras.lastY == e )
+      *ras.top++ = ras.lastX;
+
     ras.state = aState;
-    ras.fresh = TRUE;
 
     return SUCCESS;
   }
@@ -927,29 +940,23 @@
     Long  Ix, Rx, Ax;
     Int   size;
 
-    PLong top;
+    PLong  top;
 
-
-    top = ras.top;
 
     if ( y2 == y1 || y2 < miny || y1 > maxy )
-      goto Fin;
+      return SUCCESS;
 
     e2 = y2 > maxy ? maxy : FLOOR( y2 );
     e  = y1 < miny ? miny : CEILING( y1 );
 
-    if ( e2 < e )  /* between scanlines */
-      goto Fin;
+    if ( y1 == e )
+      e += ras.precision;
 
-    if ( ras.fresh )
-    {
-      ras.cProfile->start = (Int)TRUNC( e );
-      ras.fresh = FALSE;
-    }
-    else if ( y1 == e )
-      top--;
+    if ( e2 < e )  /* nothing to do */
+      return SUCCESS;
 
     size = (Int)TRUNC( e2 - e ) + 1;
+    top  = ras.top;
 
     if ( top + size >= ras.maxBuff )
     {
@@ -1045,17 +1052,7 @@
                       Long  miny,
                       Long  maxy )
   {
-    Bool  result, fresh;
-
-
-    fresh  = ras.fresh;
-
-    result = Line_Up( RAS_VARS x1, -y1, x2, -y2, -maxy, -miny );
-
-    if ( fresh && !ras.fresh )
-      ras.cProfile->start = -ras.cProfile->start;
-
-    return result;
+    return Line_Up( RAS_VARS x1, -y1, x2, -y2, -maxy, -miny );
   }
 
 
@@ -1098,35 +1095,25 @@
     Long  y1, y2, e, e2, dy;
     Long  dx, x2;
 
-    PLong top;
+    PLong  top;
 
 
     y1  = arc[degree].y;
     y2  = arc[0].y;
-    top = ras.top;
 
     if ( y2 < miny || y1 > maxy )
-      goto Fin;
+      return SUCCESS;
 
     e2 = y2 > maxy ? maxy : FLOOR( y2 );
     e  = y1 < miny ? miny : CEILING( y1 );
 
-    if ( e2 < e )  /* between scanlines */
-      goto Fin;
-
-    if ( ras.fresh )
-    {
-      ras.cProfile->start = (Int)TRUNC( e );
-      ras.fresh = FALSE;
-    }
-    else if ( y1 == e )
-      top--;
-
     if ( y1 == e )
-    {
-      *top++ = arc[degree].x;
-      e     += ras.precision;
-    }
+      e += ras.precision;
+
+    if ( e2 < e )  /* nothing to do */
+      return SUCCESS;
+
+    top = ras.top;
 
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
@@ -1134,7 +1121,7 @@
       return FAILURE;
     }
 
-    while ( e <= e2 )
+    do
     {
       y2 = arc[0].y;
       x2 = arc[0].x;
@@ -1169,9 +1156,9 @@
         arc   -= degree;
       }
     }
+    while ( e <= e2 );
 
-  Fin:
-    ras.top  = top;
+    ras.top = top;
     return SUCCESS;
   }
 
@@ -1208,7 +1195,7 @@
                         Long       miny,
                         Long       maxy )
   {
-    Bool     result, fresh;
+    Bool  result;
 
 
     arc[0].y = -arc[0].y;
@@ -1217,12 +1204,7 @@
     if ( degree > 2 )
       arc[3].y = -arc[3].y;
 
-    fresh = ras.fresh;
-
     result = Bezier_Up( RAS_VARS degree, arc, splitter, -maxy, -miny );
-
-    if ( fresh && !ras.fresh )
-      ras.cProfile->start = -ras.cProfile->start;
 
     arc[0].y = -arc[0].y;
     return result;
@@ -1437,12 +1419,12 @@
                                      ras.minY, ras.maxY ) )
             goto Fail;
         arc -= 2;
+
+        ras.lastX = x3;
+        ras.lastY = y3;
       }
 
     } while ( arc >= arcs );
-
-    ras.lastX = x3;
-    ras.lastY = y3;
 
     return SUCCESS;
 
@@ -1584,12 +1566,12 @@
                                      ras.minY, ras.maxY ) )
             goto Fail;
         arc -= 3;
+
+        ras.lastX = x4;
+        ras.lastY = y4;
       }
 
     } while ( arc >= arcs );
-
-    ras.lastX = x4;
-    ras.lastY = y4;
 
     return SUCCESS;
 
