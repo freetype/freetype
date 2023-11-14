@@ -1384,6 +1384,9 @@
       {
         /* this arc is flat, ignore it and pop it from the Bezier stack */
         arc -= 2;
+
+        ras.lastX = x3;
+        ras.lastY = y3;
       }
       else
       {
@@ -1532,6 +1535,9 @@
       {
         /* this arc is flat, ignore it and pop it from the Bezier stack */
         arc -= 3;
+
+        ras.lastX = x4;
+        ras.lastY = y4;
       }
       else
       {
