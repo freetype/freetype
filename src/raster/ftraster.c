@@ -634,8 +634,7 @@
    *  profile.
    */
   static Bool
-  New_Profile( RAS_ARGS TStates  aState,
-                        Bool     overshoot )
+  New_Profile( RAS_ARGS TStates  aState )
   {
     Long  e;
 
@@ -661,14 +660,14 @@
     {
     case Ascending_State:
       ras.cProfile->flags |= Flow_Up;
-      if ( overshoot )
+      if ( IS_BOTTOM_OVERSHOOT( ras.lastY ) )
         ras.cProfile->flags |= Overshoot_Bottom;
 
       e = CEILING( ras.lastY );
       break;
 
     case Descending_State:
-      if ( overshoot )
+      if ( IS_TOP_OVERSHOOT( ras.lastY ) )
         ras.cProfile->flags |= Overshoot_Top;
 
       e = FLOOR( ras.lastY );
@@ -716,7 +715,7 @@
    *   SUCCESS on success.  FAILURE in case of overflow or incoherency.
    */
   static Bool
-  End_Profile( RAS_ARGS Bool  overshoot )
+  End_Profile( RAS_ARG )
   {
     PProfile  p = ras.cProfile;
     Int       h = (Int)( ras.top - p->x );
@@ -735,11 +734,14 @@
       FT_TRACE7(( "  ending profile %p, start = %2d, height = %+3d\n",
                   (void *)p, p->start, p->flags & Flow_Up ? h : -h ));
 
-      if ( overshoot )
+      if ( p->flags & Flow_Up )
       {
-        if ( p->flags & Flow_Up )
+        if ( IS_TOP_OVERSHOOT( ras.lastY ) )
           p->flags |= Overshoot_Top;
-        else
+      }
+      else
+      {
+        if ( IS_BOTTOM_OVERSHOOT( ras.lastY ) )
           p->flags |= Overshoot_Bottom;
       }
 
@@ -1243,25 +1245,21 @@
     case Unknown_State:
       if ( y > ras.lastY )
       {
-        if ( New_Profile( RAS_VARS Ascending_State,
-                                   IS_BOTTOM_OVERSHOOT( ras.lastY ) ) )
+        if ( New_Profile( RAS_VARS Ascending_State ) )
           return FAILURE;
       }
-      else
+      else if ( y < ras.lastY )
       {
-        if ( y < ras.lastY )
-          if ( New_Profile( RAS_VARS Descending_State,
-                                     IS_TOP_OVERSHOOT( ras.lastY ) ) )
-            return FAILURE;
+        if ( New_Profile( RAS_VARS Descending_State ) )
+          return FAILURE;
       }
       break;
 
     case Ascending_State:
       if ( y < ras.lastY )
       {
-        if ( End_Profile( RAS_VARS IS_TOP_OVERSHOOT( ras.lastY ) ) ||
-             New_Profile( RAS_VARS Descending_State,
-                                   IS_TOP_OVERSHOOT( ras.lastY ) ) )
+        if ( End_Profile( RAS_VAR )                   ||
+             New_Profile( RAS_VARS Descending_State ) )
           return FAILURE;
       }
       break;
@@ -1269,9 +1267,8 @@
     case Descending_State:
       if ( y > ras.lastY )
       {
-        if ( End_Profile( RAS_VARS IS_BOTTOM_OVERSHOOT( ras.lastY ) ) ||
-             New_Profile( RAS_VARS Ascending_State,
-                                   IS_BOTTOM_OVERSHOOT( ras.lastY ) ) )
+        if ( End_Profile( RAS_VAR )                  ||
+             New_Profile( RAS_VARS Ascending_State ) )
           return FAILURE;
       }
       break;
@@ -1395,18 +1392,13 @@
         state_bez = y1 < y3 ? Ascending_State : Descending_State;
         if ( ras.state != state_bez )
         {
-          Bool  o = ( state_bez == Ascending_State )
-                      ? IS_BOTTOM_OVERSHOOT( y1 )
-                      : IS_TOP_OVERSHOOT( y1 );
-
-
           /* finalize current profile if any */
           if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VARS o )  )
+               End_Profile( RAS_VAR )     )
             goto Fail;
 
           /* create a new profile */
-          if ( New_Profile( RAS_VARS state_bez, o ) )
+          if ( New_Profile( RAS_VARS state_bez ) )
             goto Fail;
         }
 
@@ -1541,22 +1533,17 @@
       }
       else
       {
-        state_bez = ( y1 <= y4 ) ? Ascending_State : Descending_State;
+        state_bez = y1 < y4 ? Ascending_State : Descending_State;
 
         /* detect a change of direction */
         if ( ras.state != state_bez )
         {
-          Bool  o = ( state_bez == Ascending_State )
-                      ? IS_BOTTOM_OVERSHOOT( y1 )
-                      : IS_TOP_OVERSHOOT( y1 );
-
-
           /* finalize current profile if any */
           if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VARS o )  )
+               End_Profile( RAS_VAR )     )
             goto Fail;
 
-          if ( New_Profile( RAS_VARS state_bez, o ) )
+          if ( New_Profile( RAS_VARS state_bez ) )
             goto Fail;
         }
 
@@ -1865,9 +1852,6 @@
     last = -1;
     for ( i = 0; i < ras.outline.n_contours; i++ )
     {
-      Bool      o;
-
-
       ras.state    = Unknown_State;
       ras.gProfile = NULL;
 
@@ -1890,10 +1874,7 @@
                ( ras.cProfile->flags & Flow_Up ) )
           ras.top--;
 
-      o = ras.cProfile->flags & Flow_Up ? IS_TOP_OVERSHOOT( ras.lastY )
-                                        : IS_BOTTOM_OVERSHOOT( ras.lastY );
-
-      if ( End_Profile( RAS_VARS o ) )
+      if ( End_Profile( RAS_VAR ) )
         return FAILURE;
 
       if ( !ras.fProfile )
