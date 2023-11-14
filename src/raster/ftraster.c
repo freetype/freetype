@@ -945,7 +945,7 @@
     PLong  top;
 
 
-    if ( y2 == y1 || y2 < miny || y1 > maxy )
+    if ( y2 < miny || y1 > maxy )
       return SUCCESS;
 
     e2 = y2 > maxy ? maxy : FLOOR( y2 );
@@ -1238,69 +1238,50 @@
   Line_To( RAS_ARGS Long  x,
                     Long  y )
   {
+    TStates  state;
+
+
+    if ( y == ras.lastY )
+      goto Fin;
+
     /* First, detect a change of direction */
 
-    switch ( ras.state )
+    state = ras.lastY < y ? Ascending_State : Descending_State;
+
+    if ( ras.state != state )
     {
-    case Unknown_State:
-      if ( y > ras.lastY )
-      {
-        if ( New_Profile( RAS_VARS Ascending_State ) )
-          return FAILURE;
-      }
-      else if ( y < ras.lastY )
-      {
-        if ( New_Profile( RAS_VARS Descending_State ) )
-          return FAILURE;
-      }
-      break;
+      /* finalize current profile if any */
+      if ( ras.state != Unknown_State &&
+           End_Profile( RAS_VAR )     )
+        goto Fail;
 
-    case Ascending_State:
-      if ( y < ras.lastY )
-      {
-        if ( End_Profile( RAS_VAR )                   ||
-             New_Profile( RAS_VARS Descending_State ) )
-          return FAILURE;
-      }
-      break;
-
-    case Descending_State:
-      if ( y > ras.lastY )
-      {
-        if ( End_Profile( RAS_VAR )                  ||
-             New_Profile( RAS_VARS Ascending_State ) )
-          return FAILURE;
-      }
-      break;
-
-    default:
-      ;
+      /* create a new profile */
+      if ( New_Profile( RAS_VARS state ) )
+        goto Fail;
     }
 
     /* Then compute the lines */
 
-    switch ( ras.state )
+    if ( state == Ascending_State )
     {
-    case Ascending_State:
       if ( Line_Up( RAS_VARS ras.lastX, ras.lastY,
                              x, y, ras.minY, ras.maxY ) )
-        return FAILURE;
-      break;
-
-    case Descending_State:
+        goto Fail;
+    }
+    else
+    {
       if ( Line_Down( RAS_VARS ras.lastX, ras.lastY,
                                x, y, ras.minY, ras.maxY ) )
-        return FAILURE;
-      break;
-
-    default:
-      ;
+        goto Fail;
     }
 
+  Fin:
     ras.lastX = x;
     ras.lastY = y;
-
     return SUCCESS;
+
+  Fail:
+    return FAILURE;
   }
 
 
@@ -1949,7 +1930,7 @@
     {
       current = *old;
       if ( --current->height )
-      {        
+      {
         current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
         current->X       = current->x[current->offset];
         old = &current->link;
