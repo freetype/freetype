@@ -1978,17 +1978,14 @@
     if ( !current )
       return;
 
-    next = current->link;
-
-    while ( next )
+    while ( current->link )
     {
+      next = current->link;
+
       if ( current->X <= next->X )
       {
         old     = &current->link;
-        current = *old;
-
-        if ( !current )
-          return;
+        current = next;
       }
       else
       {
@@ -1996,11 +1993,10 @@
         current->link = next->link;
         next->link    = current;
 
+        /* Restarting */
         old     = list;
         current = *old;
       }
-
-      next = current->link;
     }
   }
 
