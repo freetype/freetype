@@ -625,10 +625,6 @@
    *   aState ::
    *     The state/orientation of the new profile.
    *
-   *   overshoot ::
-   *     Whether the profile's unrounded start position
-   *     differs by at least a half pixel.
-   *
    * @Return:
    *  SUCCESS on success.  FAILURE in case of overflow or of incoherent
    *  profile.
@@ -705,11 +701,6 @@
    *
    * @Description:
    *   Finalize the current profile and record y-turns.
-   *
-   * @Input:
-   *   overshoot ::
-   *     Whether the profile's unrounded end position differs
-   *     by at least a half pixel.
    *
    * @Return:
    *   SUCCESS on success.  FAILURE in case of overflow or incoherency.
@@ -1588,6 +1579,11 @@
    *
    * @Return:
    *   SUCCESS on success, FAILURE on error.
+   *
+   * @Note:
+   *   Unlike FT_Outline_Decompose(), this function handles the scanmode
+   *   dropout tags in the individual contours.  Therefore, it cannot be
+   *   replaced.
    */
   static Bool
   Decompose_Curve( RAS_ARGS Int  first,
