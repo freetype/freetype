@@ -752,6 +752,8 @@
         p->offset = h - 1;
       }
 
+      p->X = p->x[p->offset];
+
       if ( Insert_Y_Turn( RAS_VARS bottom ) ||
            Insert_Y_Turn( RAS_VARS top )    )
         return FAILURE;
@@ -2463,21 +2465,10 @@
 
     ras.Proc_Sweep_Init( RAS_VARS min_Y, max_Y );
 
-    /* set the activation countdowns and the initial positions */
-
-    P = waiting;
-    while ( P )
-    {
-      P->start -= min_Y;
-      P->X      = P->x[P->offset];
-
-      P = P->link;
-    }
-
     /* let's go, iterating through y_turns */
 
     y        = min_Y;
-    y_height = 0;
+    y_height = min_Y;
 
     while ( ++ras.maxBuff < ras.sizeBuff )
     {
