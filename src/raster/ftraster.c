@@ -347,6 +347,7 @@
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
                              /* Bit 5: is bottom profile?                */
+                             /* Bit 6: dropout detected                  */
 
     FT_F26Dot6  X;           /* current coordinate during sweep          */
     Long        x[1];        /* actually variable array of scanline      */
@@ -726,34 +727,29 @@
       FT_TRACE7(( "  ending profile %p, start = %2d, height = %+3d\n",
                   (void *)p, p->start, p->flags & Flow_Up ? h : -h ));
 
+      p->height = h;
+
       if ( p->flags & Flow_Up )
       {
         if ( IS_TOP_OVERSHOOT( ras.lastY ) )
           p->flags |= Overshoot_Top;
+
+        bottom    = p->start;
+        top       = bottom + h;
+        p->offset = 0;
+        p->X      = p->x[0];
       }
       else
       {
         if ( IS_BOTTOM_OVERSHOOT( ras.lastY ) )
           p->flags |= Overshoot_Bottom;
-      }
 
-      p->height = h;
-
-      if ( p->flags & Flow_Up )
-      {
-        bottom    = p->start;
-        top       = bottom + h;
-        p->offset = 0;
-      }
-      else
-      {
         top       = p->start + 1;
         bottom    = top - h;
         p->start  = bottom;
         p->offset = h - 1;
+        p->X      = p->x[h - 1];
       }
-
-      p->X = p->x[p->offset];
 
       if ( Insert_Y_Turn( RAS_VARS bottom ) ||
            Insert_Y_Turn( RAS_VARS top )    )
@@ -1881,7 +1877,7 @@
    *
    * InsNew
    *
-   *   Inserts a new profile in a linked list.
+   *   Inserts a new profile in a linked list, sorted by coordinate.
    */
   static void
   InsNew( PProfileList  list,
@@ -1895,10 +1891,8 @@
     current = *old;
     x       = profile->X;
 
-    while ( current )
+    while ( current && current->X < x )
     {
-      if ( x < current->X )
-        break;
       old     = &current->link;
       current = *old;
     }
