@@ -317,6 +317,7 @@
 #define Flow_Up           0x08U
 #define Overshoot_Top     0x10U
 #define Overshoot_Bottom  0x20U
+#define Dropout           0x40U
 
 
   /* States of each line, arc, and profile */
@@ -2447,7 +2448,7 @@
   Draw_Sweep( RAS_ARG )
   {
     Int           min_Y, max_Y, dropouts;
-    Int           y, y_change, y_height;
+    Int           y, y_turn;
 
     PProfile      *Q, P, P_Left, P_Right;
 
@@ -2465,12 +2466,9 @@
 
     ras.Proc_Sweep_Init( RAS_VARS min_Y, max_Y );
 
-    /* let's go, iterating through y_turns */
+    /* let's go */
 
-    y        = min_Y;
-    y_height = min_Y;
-
-    while ( ++ras.maxBuff < ras.sizeBuff )
+    for ( y = min_Y; y <= max_Y; )
     {
       /* check waiting list for new profile activations */
 
@@ -2478,8 +2476,7 @@
       while ( *Q )
       {
         P = *Q;
-        P->start -= y_height;
-        if ( P->start == 0 )
+        if ( P->start == y )
         {
           *Q = P->link;  /* remove */
 
@@ -2492,8 +2489,7 @@
           Q = &P->link;
       }
 
-      y_change = (Int)*ras.maxBuff;
-      y_height = y_change - y;
+      y_turn = (Int)*++ras.maxBuff;
 
       do
       {
@@ -2530,7 +2526,7 @@
               P_Right->X = x2;
 
               /* mark profile for drop-out processing */
-              P_Left->start = -1;
+              P_Left->flags |= Dropout;
               dropouts++;
             }
           }
@@ -2554,7 +2550,7 @@
         Increment( &draw_left  );
         Increment( &draw_right );
       }
-      while ( ++y < y_change );
+      while ( ++y < y_turn );
     }
 
     return SUCCESS;
@@ -2566,9 +2562,9 @@
 
     while ( P_Left && P_Right )
     {
-      if ( P_Left->start )
+      if ( P_Left->flags & Dropout )
       {
-        P_Left->start = 0;
+        P_Left->flags &= ~Dropout;
 #if 0
         dropouts--;  /* -- this is useful when debugging only */
 #endif
