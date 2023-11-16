@@ -1,3 +1,19 @@
+CHANGES BETWEEN 2.13.2 and 2.13.3 (202Y-Mmm-DD)
+
+  I. IMPORTANT BUG FIXES
+
+  - Excessive stack allocation in the autohinter has been fixed.
+
+
+  II. MISCELLANEOUS
+
+  - The B/W rasterizer  has  received a major upkeep  that resulted in
+    large performance improvement.  The rendering speed  has increased
+    and even doubled for very complex glyphs.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.13.1 and 2.13.2 (2023-Aug-25)
 
   I. MISCELLANEOUS
