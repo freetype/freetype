@@ -116,8 +116,8 @@
    *   generated until the end of the outline.
    *
    *   Note that, for all generated profiles, the function End_Profile()
-   *   is used to record their bottom-most scanline as well as the
-   *   scanline above its upmost boundary.  These positions are called
+   *   is used to record all their bottom-most scanlines as well as the
+   *   scanline above their upmost boundary.  These positions are called
    *   `y-turns' because they (sort of) correspond to local extrema.
    *   They are stored in a sorted list built from the top of the render
    *   pool as a downwards stack:
@@ -579,11 +579,16 @@
    *   SUCCESS on success.  FAILURE in case of overflow.
    */
   static Bool
-  Insert_Y_Turn( RAS_ARGS Int  y )
+  Insert_Y_Turns( RAS_ARGS Int  y,
+                           Int  top )
   {
     Int    n       = ras.numTurns;
     PLong  y_turns = ras.maxBuff;
 
+
+    /* update top value */
+    if ( n == 0 || top > y_turns[n] )
+      y_turns[n] = top;
 
     /* look for first y value that is <= */
     while ( n-- && y < y_turns[n] )
@@ -751,8 +756,7 @@
         p->X      = p->x[h - 1];
       }
 
-      if ( Insert_Y_Turn( RAS_VARS bottom ) ||
-           Insert_Y_Turn( RAS_VARS top )    )
+      if ( Insert_Y_Turns( RAS_VARS bottom, top ) )
         return FAILURE;
 
       if ( !ras.gProfile )
@@ -1820,7 +1824,7 @@
     ras.cProfile = NULL;
 
     ras.top      = ras.buff;
-    ras.maxBuff  = ras.sizeBuff;
+    ras.maxBuff  = ras.sizeBuff - 1;  /* top reserve */
 
     ras.numTurns  = 0;
     ras.num_Profs = 0;
