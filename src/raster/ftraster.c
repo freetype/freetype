@@ -2232,7 +2232,7 @@
    *
    */
 
-  static Bool
+  static void
   Draw_Sweep( RAS_ARG )
   {
     Int           min_Y, max_Y, dropouts;
@@ -2424,8 +2424,6 @@
       }
       while ( ++y < y_turn );
     }
-
-    return SUCCESS;
   }
 
 
@@ -2578,8 +2576,7 @@
                     (char*)ras.maxBuff - (char*)ras.top ));
 
         if ( ras.fProfile )
-          if ( Draw_Sweep( RAS_VAR ) )
-             return ras.error;
+          Draw_Sweep( RAS_VAR );
 
         if ( --band_top < 0 )
           break;
