@@ -401,9 +401,7 @@
   typedef void
   Function_Sweep_Span( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
-                                FT_F26Dot6  x2,
-                                PProfile    left,
-                                PProfile    right );
+                                FT_F26Dot6  x2 );
 
   typedef void
   Function_Sweep_Step( RAS_ARG );
@@ -1989,15 +1987,11 @@
   static void
   Vertical_Sweep_Span( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
-                                FT_F26Dot6  x2,
-                                PProfile    left,
-                                PProfile    right )
+                                FT_F26Dot6  x2 )
   {
     Int  e1, e2;
 
     FT_UNUSED( y );
-    FT_UNUSED( left );
-    FT_UNUSED( right );
 
 
     FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
@@ -2054,137 +2048,38 @@
   static void
   Vertical_Sweep_Drop( RAS_ARGS Int         y,
                                 FT_F26Dot6  x1,
-                                FT_F26Dot6  x2,
-                                PProfile    left,
-                                PProfile    right )
+                                FT_F26Dot6  x2 )
   {
-    Long  e1, e2, pxl;
-    Int   c1, f1;
+    Int  e1 = (Int)TRUNC( x1 );
+    Int  e2 = (Int)TRUNC( x2 );
+    Int  c1, f1;
 
     FT_UNUSED( y );
 
 
-    FT_TRACE7(( "  y=%d x=[% .*f;% .*f]",
-                y,
-                ras.precision_bits, (double)x1 / (double)ras.precision,
-                ras.precision_bits, (double)x2 / (double)ras.precision ));
+    /* undocumented but confirmed: If the drop-out would result in a  */
+    /* pixel outside of the bounding box, use the pixel inside of the */
+    /* bounding box instead                                           */
+    if ( e1 < 0 || e1 > ras.bRight )
+      e1 = e2;
 
-    /* Drop-out control */
-
-    /*   e2            x2                    x1           e1   */
-    /*                                                         */
-    /*                 ^                     |                 */
-    /*                 |                     |                 */
-    /*   +-------------+---------------------+------------+    */
-    /*                 |                     |                 */
-    /*                 |                     v                 */
-    /*                                                         */
-    /* pixel         contour              contour       pixel  */
-    /* center                                           center */
-
-    /* drop-out mode   scan conversion rules (OpenType specs)  */
-    /* ------------------------------------------------------- */
-    /*  bit 0          exclude stubs if set                    */
-    /*  bit 1          ignore drop-outs if set                 */
-    /*  bit 2          smart rounding if set                   */
-
-    e1  = CEILING( x1 );
-    e2  = FLOOR  ( x2 );
-    pxl = e1;
-
-    if ( e1 > e2 )
+    /* otherwise check that the other pixel isn't set */
+    else if ( e2 >=0 && e2 <= ras.bRight )
     {
-      Int  dropOutControl = left->flags & 7;
+      c1 = (Int)( e2 >> 3 );
+      f1 = (Int)( e2 &  7 );
 
-
-      if ( e1 == e2 + ras.precision )
-      {
-          /* Drop-out Control Rules #4 and #6 */
-
-          /* The specification neither provides an exact definition */
-          /* of a `stub' nor gives exact rules to exclude them.     */
-          /*                                                        */
-          /* Here the constraints we use to recognize a stub.       */
-          /*                                                        */
-          /*  upper stub:                                           */
-          /*                                                        */
-          /*   - P_Left and P_Right are in the same contour         */
-          /*   - P_Right is the successor of P_Left in that contour */
-          /*   - y is the top of P_Left and P_Right                 */
-          /*                                                        */
-          /*  lower stub:                                           */
-          /*                                                        */
-          /*   - P_Left and P_Right are in the same contour         */
-          /*   - P_Left is the successor of P_Right in that contour */
-          /*   - y is the bottom of P_Left                          */
-          /*                                                        */
-          /* We draw a stub if the following constraints are met.   */
-          /*                                                        */
-          /*   - for an upper or lower stub, there is top or bottom */
-          /*     overshoot, respectively                            */
-          /*   - the covered interval is greater or equal to a half */
-          /*     pixel                                              */
-
-        if ( dropOutControl & 1 )
-        {
-          /* rightmost stub test */
-          if ( left->next == right                &&
-               left->height == 1                  &&
-               !( left->flags & Overshoot_Top   &&
-                  x2 - x1 >= ras.precision_half ) )
-            goto Exit;
-
-          /* leftmost stub test */
-          if ( right->next == left                 &&
-               left->offset == 0                   &&
-               !( left->flags & Overshoot_Bottom &&
-                  x2 - x1 >= ras.precision_half  ) )
-            goto Exit;
-        }
-
-        if ( dropOutControl & 4 )
-          pxl = SMART( x1, x2 );
-        else
-          pxl = e2;
-
-        /* undocumented but confirmed: If the drop-out would result in a  */
-        /* pixel outside of the bounding box, use the pixel inside of the */
-        /* bounding box instead                                           */
-        if ( pxl < 0 )
-          pxl = e1;
-        else if ( TRUNC( pxl ) > ras.bRight )
-          pxl = e2;
-
-        /* check that the other pixel isn't set */
-        e1 = ( pxl == e1 ) ? e2 : e1;
-
-        e1 = TRUNC( e1 );
-
-        c1 = (Int)( e1 >> 3 );
-        f1 = (Int)( e1 &  7 );
-
-        if ( e1 >= 0 && e1 <= ras.bRight    &&
-             ras.bLine[c1] & ( 0x80 >> f1 ) )
-          goto Exit;
-      }
-      else
-        goto Exit;
+      if ( ras.bLine[c1] & ( 0x80 >> f1 ) )
+        return;
     }
-
-    e1 = TRUNC( pxl );
 
     if ( e1 >= 0 && e1 <= ras.bRight )
     {
-      FT_TRACE7(( " -> x=%ld", e1 ));
-
       c1 = (Int)( e1 >> 3 );
       f1 = (Int)( e1 &  7 );
 
       ras.bLine[c1] |= 0x80 >> f1;
     }
-
-  Exit:
-    FT_TRACE7(( " dropout=%d\n", left->flags & 7 ));
   }
 
 
@@ -2218,14 +2113,9 @@
   static void
   Horizontal_Sweep_Span( RAS_ARGS Int         y,
                                   FT_F26Dot6  x1,
-                                  FT_F26Dot6  x2,
-                                  PProfile    left,
-                                  PProfile    right )
+                                  FT_F26Dot6  x2 )
   {
     Long  e1, e2;
-
-    FT_UNUSED( left );
-    FT_UNUSED( right );
 
 
     FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
@@ -2290,103 +2180,37 @@
   static void
   Horizontal_Sweep_Drop( RAS_ARGS Int         y,
                                   FT_F26Dot6  x1,
-                                  FT_F26Dot6  x2,
-                                  PProfile    left,
-                                  PProfile    right )
+                                  FT_F26Dot6  x2 )
   {
-    Long   e1, e2, pxl;
+    Int    e1 = (Int)TRUNC( x1 );
+    Int    e2 = (Int)TRUNC( x2 );
     PByte  bits;
     Int    f1;
 
 
-    FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
-                y,
-                ras.precision_bits, (double)x1 / (double)ras.precision,
-                ras.precision_bits, (double)x2 / (double)ras.precision ));
+    /* undocumented but confirmed: If the drop-out would result in a  */
+    /* pixel outside of the bounding box, use the pixel inside of the */
+    /* bounding box instead                                           */
+    if ( e1 < 0 || e1 > ras.bTop )
+      e1 = e2;
 
-    /* During the horizontal sweep, we only take care of drop-outs */
-
-    /* e1     +       <-- pixel center */
-    /*        |                        */
-    /* x1  ---+-->    <-- contour      */
-    /*        |                        */
-    /*        |                        */
-    /* x2  <--+---    <-- contour      */
-    /*        |                        */
-    /*        |                        */
-    /* e2     +       <-- pixel center */
-
-    e1  = CEILING( x1 );
-    e2  = FLOOR  ( x2 );
-    pxl = e1;
-
-    if ( e1 > e2 )
+    /* otherwise check that the other pixel isn't set */
+    else if ( e2 >=0 && e2 <= ras.bTop )
     {
-      Int  dropOutControl = left->flags & 7;
+      bits = ras.bOrigin + ( y >> 3 ) - e2 * ras.bPitch;
+      f1   = 0x80 >> ( y & 7 );
 
-
-      if ( e1 == e2 + ras.precision )
-      {
-        if ( dropOutControl & 1 )
-        {
-          /* rightmost stub test */
-          if ( left->next == right                &&
-               left->height == 1                  &&
-               !( left->flags & Overshoot_Top   &&
-                  x2 - x1 >= ras.precision_half ) )
-            goto Exit;
-
-          /* leftmost stub test */
-          if ( right->next == left                 &&
-               left->offset == 0                   &&
-               !( left->flags & Overshoot_Bottom &&
-                  x2 - x1 >= ras.precision_half  ) )
-            goto Exit;
-        }
-
-        if ( dropOutControl & 4 )
-          pxl = SMART( x1, x2 );
-        else
-          pxl = e2;
-
-        /* undocumented but confirmed: If the drop-out would result in a  */
-        /* pixel outside of the bounding box, use the pixel inside of the */
-        /* bounding box instead                                           */
-        if ( pxl < 0 )
-          pxl = e1;
-        else if ( TRUNC( pxl ) > ras.bTop )
-          pxl = e2;
-
-        /* check that the other pixel isn't set */
-        e1 = ( pxl == e1 ) ? e2 : e1;
-
-        e1 = TRUNC( e1 );
-
-        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
-        f1   = 0x80 >> ( y & 7 );
-
-        if ( e1 >= 0 && e1 <= ras.bTop &&
-             *bits & f1                )
-          goto Exit;
-      }
-      else
-        goto Exit;
+      if ( *bits & f1 )
+        return;
     }
-
-    e1 = TRUNC( pxl );
 
     if ( e1 >= 0 && e1 <= ras.bTop )
     {
-      FT_TRACE7(( " -> y=%ld", e1 ));
-
       bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
       f1    = 0x80 >> ( y & 7 );
 
-      bits[0] |= f1;
+      *bits |= f1;
     }
-
-  Exit:
-    FT_TRACE7(( " dropout=%d\n", left->flags & 7 ));
   }
 
 
@@ -2477,37 +2301,120 @@
             x2 = xs;
           }
 
-          /* if bottom ceiling exceeds top floor, it is a drop-out */
-          if ( CEILING( x1 ) > FLOOR( x2 ) )
+          if ( CEILING( x1 ) <= FLOOR( x2 ) )
+            ras.Proc_Sweep_Span( RAS_VARS y, x1, x2 );
+
+          /* otherwise, bottom ceiling > top floor, it is a drop-out */
+          else
           {
             Int  dropOutControl = P_Left->flags & 7;
 
 
+            /* Drop-out control */
+
+            /*   e2            x2                    x1           e1   */
+            /*                                                         */
+            /*                 ^                     |                 */
+            /*                 |                     |                 */
+            /*   +-------------+---------------------+------------+    */
+            /*                 |                     |                 */
+            /*                 |                     v                 */
+            /*                                                         */
+            /* pixel         contour              contour       pixel  */
+            /* center                                           center */
+
+            /* drop-out mode   scan conversion rules (OpenType specs)  */
+            /* ------------------------------------------------------- */
+            /*  bit 0          exclude stubs if set                    */
+            /*  bit 1          ignore drop-outs if set                 */
+            /*  bit 2          smart rounding if set                   */
+
             if ( dropOutControl & 2 )
               goto Next_Pair;
 
-            P_Left ->X = x1;
-            P_Right->X = x2;
+            /* The specification neither provides an exact definition */
+            /* of a `stub' nor gives exact rules to exclude them.     */
+            /*                                                        */
+            /* Here the constraints we use to recognize a stub.       */
+            /*                                                        */
+            /*  upper stub:                                           */
+            /*                                                        */
+            /*   - P_Left and P_Right are in the same contour         */
+            /*   - P_Right is the successor of P_Left in that contour */
+            /*   - y is the top of P_Left and P_Right                 */
+            /*                                                        */
+            /*  lower stub:                                           */
+            /*                                                        */
+            /*   - P_Left and P_Right are in the same contour         */
+            /*   - P_Left is the successor of P_Right in that contour */
+            /*   - y is the bottom of P_Left                          */
+            /*                                                        */
+            /* We draw a stub if the following constraints are met.   */
+            /*                                                        */
+            /*   - for an upper or lower stub, there is top or bottom */
+            /*     overshoot, respectively                            */
+            /*   - the covered interval is greater or equal to a half */
+            /*     pixel                                              */
+
+            if ( dropOutControl & 1 )
+            {
+              /* rightmost stub test */
+              if ( P_Left->next == P_Right            &&
+                   P_Left->height == 1                &&
+                   !( P_Left->flags & Overshoot_Top   &&
+                      x2 - x1 >= ras.precision_half   ) )
+                goto Next_Pair;
+
+              /* leftmost stub test */
+              if ( P_Right->next == P_Left             &&
+                   P_Left->offset == 0                 &&
+                   !( P_Left->flags & Overshoot_Bottom &&
+                      x2 - x1 >= ras.precision_half    ) )
+                goto Next_Pair;
+            }
+
+            /* select the pixel to set and the other pixel */
+            if ( dropOutControl & 4 )
+            {
+              x2 = SMART( x1, x2 );
+              x1 = x1 > x2 ? x2 + ras.precision : x2 - ras.precision;
+            }
+            else
+            {
+              x2 = FLOOR  ( x2 );
+              x1 = CEILING( x1 );
+            }
+
+            P_Left ->X = x2;
+            P_Right->X = x1;
 
             /* mark profile for drop-out processing */
             P_Left->flags |= Dropout;
             dropouts++;
           }
-          else
-            ras.Proc_Sweep_Span( RAS_VARS y, x1, x2, P_Left, P_Right );
 
         Next_Pair:
           P_Left  = P_Left->link;
           P_Right = P_Right->link;
         }
 
-        /* handle drop-outs _after_ the span drawing --       */
-        /* drop-out processing has been moved out of the loop */
-        /* for performance tuning                             */
-        if ( dropouts > 0 )
-          goto Scan_DropOuts;
+        /* handle drop-outs _after_ the span drawing */
+        P_Left  = draw_left;
+        P_Right = draw_right;
 
-      Next_Line:
+        while ( dropouts && P_Left && P_Right )
+        {
+          if ( P_Left->flags & Dropout )
+          {
+            ras.Proc_Sweep_Drop( RAS_VARS y, P_Left->X, P_Right->X );
+
+            P_Left->flags &= ~Dropout;
+            dropouts--;
+          }
+
+          P_Left  = P_Left->link;
+          P_Right = P_Right->link;
+        }
 
         ras.Proc_Sweep_Step( RAS_VAR );
 
@@ -2518,32 +2425,6 @@
     }
 
     return SUCCESS;
-
-  Scan_DropOuts:
-
-    P_Left  = draw_left;
-    P_Right = draw_right;
-
-    while ( P_Left && P_Right )
-    {
-      if ( P_Left->flags & Dropout )
-      {
-        P_Left->flags &= ~Dropout;
-#if 0
-        dropouts--;  /* -- this is useful when debugging only */
-#endif
-        ras.Proc_Sweep_Drop( RAS_VARS y,
-                                      P_Left->X,
-                                      P_Right->X,
-                                      P_Left,
-                                      P_Right );
-      }
-
-      P_Left  = P_Left->link;
-      P_Right = P_Right->link;
-    }
-
-    goto Next_Line;
   }
 
 
