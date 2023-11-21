@@ -2082,15 +2082,11 @@
     /* pixel         contour              contour       pixel  */
     /* center                                           center */
 
-    /* drop-out mode    scan conversion rules (as defined in OpenType) */
-    /* --------------------------------------------------------------- */
-    /*  0                1, 2, 3                                       */
-    /*  1                1, 2, 4                                       */
-    /*  2                1, 2                                          */
-    /*  3                same as mode 2                                */
-    /*  4                1, 2, 5                                       */
-    /*  5                1, 2, 6                                       */
-    /*  6, 7             same as mode 2                                */
+    /* drop-out mode   scan conversion rules (OpenType specs)  */
+    /* ------------------------------------------------------- */
+    /*  bit 0          exclude stubs if set                    */
+    /*  bit 1          ignore drop-outs if set                 */
+    /*  bit 2          smart rounding if set                   */
 
     e1  = CEILING( x1 );
     e2  = FLOOR  ( x2 );
@@ -2103,19 +2099,6 @@
 
       if ( e1 == e2 + ras.precision )
       {
-        switch ( dropOutControl )
-        {
-        case 0: /* simple drop-outs including stubs */
-          pxl = e2;
-          break;
-
-        case 4: /* smart drop-outs including stubs */
-          pxl = SMART( x1, x2 );
-          break;
-
-        case 1: /* simple drop-outs excluding stubs */
-        case 5: /* smart drop-outs excluding stubs  */
-
           /* Drop-out Control Rules #4 and #6 */
 
           /* The specification neither provides an exact definition */
@@ -2142,29 +2125,27 @@
           /*   - the covered interval is greater or equal to a half */
           /*     pixel                                              */
 
-          /* upper stub test */
+        if ( dropOutControl & 1 )
+        {
+          /* rightmost stub test */
           if ( left->next == right                &&
                left->height == 1                  &&
                !( left->flags & Overshoot_Top   &&
                   x2 - x1 >= ras.precision_half ) )
             goto Exit;
 
-          /* lower stub test */
+          /* leftmost stub test */
           if ( right->next == left                 &&
                left->offset == 0                   &&
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
             goto Exit;
-
-          if ( dropOutControl == 1 )
-            pxl = e2;
-          else
-            pxl = SMART( x1, x2 );
-          break;
-
-        default: /* modes 2, 3, 6, 7 */
-          goto Exit;  /* no drop-out control */
         }
+
+        if ( dropOutControl & 4 )
+          pxl = SMART( x1, x2 );
+        else
+          pxl = e2;
 
         /* undocumented but confirmed: If the drop-out would result in a  */
         /* pixel outside of the bounding box, use the pixel inside of the */
@@ -2346,20 +2327,8 @@
 
       if ( e1 == e2 + ras.precision )
       {
-        switch ( dropOutControl )
+        if ( dropOutControl & 1 )
         {
-        case 0: /* simple drop-outs including stubs */
-          pxl = e2;
-          break;
-
-        case 4: /* smart drop-outs including stubs */
-          pxl = SMART( x1, x2 );
-          break;
-
-        case 1: /* simple drop-outs excluding stubs */
-        case 5: /* smart drop-outs excluding stubs  */
-          /* see Vertical_Sweep_Drop for details */
-
           /* rightmost stub test */
           if ( left->next == right                &&
                left->height == 1                  &&
@@ -2373,16 +2342,12 @@
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
             goto Exit;
-
-          if ( dropOutControl == 1 )
-            pxl = e2;
-          else
-            pxl = SMART( x1, x2 );
-          break;
-
-        default: /* modes 2, 3, 6, 7 */
-          goto Exit;  /* no drop-out control */
         }
+
+        if ( dropOutControl & 4 )
+          pxl = SMART( x1, x2 );
+        else
+          pxl = e2;
 
         /* undocumented but confirmed: If the drop-out would result in a  */
         /* pixel outside of the bounding box, use the pixel inside of the */
@@ -2518,19 +2483,20 @@
             Int  dropOutControl = P_Left->flags & 7;
 
 
-            if ( dropOutControl != 2 )
-            {
-              P_Left ->X = x1;
-              P_Right->X = x2;
+            if ( dropOutControl & 2 )
+              goto Next_Pair;
 
-              /* mark profile for drop-out processing */
-              P_Left->flags |= Dropout;
-              dropouts++;
-            }
+            P_Left ->X = x1;
+            P_Right->X = x2;
+
+            /* mark profile for drop-out processing */
+            P_Left->flags |= Dropout;
+            dropouts++;
           }
           else
             ras.Proc_Sweep_Span( RAS_VARS y, x1, x2, P_Left, P_Right );
 
+        Next_Pair:
           P_Left  = P_Left->link;
           P_Right = P_Right->link;
         }
@@ -2769,18 +2735,16 @@
     Set_High_Precision( RAS_VARS ras.outline.flags &
                                  FT_OUTLINE_HIGH_PRECISION );
 
-    if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
-      ras.dropOutControl = 2;
-    else
-    {
-      if ( ras.outline.flags & FT_OUTLINE_SMART_DROPOUTS )
-        ras.dropOutControl = 4;
-      else
-        ras.dropOutControl = 0;
+    ras.dropOutControl = 0;
 
-      if ( !( ras.outline.flags & FT_OUTLINE_INCLUDE_STUBS ) )
-        ras.dropOutControl += 1;
-    }
+    if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
+      ras.dropOutControl |= 2;
+
+    if ( ras.outline.flags & FT_OUTLINE_SMART_DROPOUTS )
+      ras.dropOutControl |= 4;
+
+    if ( !( ras.outline.flags & FT_OUTLINE_INCLUDE_STUBS ) )
+      ras.dropOutControl |= 1;
 
     FT_TRACE6(( "BW Raster: precision 1/%d, dropout mode %d\n",
                 ras.precision, ras.dropOutControl ));
