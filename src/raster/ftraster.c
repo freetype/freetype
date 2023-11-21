@@ -1989,7 +1989,8 @@
                                 FT_F26Dot6  x1,
                                 FT_F26Dot6  x2 )
   {
-    Int  e1, e2;
+    Int  e1 = (Int)TRUNC( CEILING( x1 ) );
+    Int  e2 = (Int)TRUNC(   FLOOR( x2 ) );
 
     FT_UNUSED( y );
 
@@ -1999,12 +2000,9 @@
                 ras.precision_bits, (double)x1 / (double)ras.precision,
                 ras.precision_bits, (double)x2 / (double)ras.precision ));
 
-    e1 = (Int)TRUNC( CEILING( x1 ) );
-    e2 = (Int)TRUNC( FLOOR( x2 ) );
-
     if ( e2 >= 0 && e1 <= ras.bRight )
     {
-      Byte*  target;
+      PByte  target;
 
       Int   c1, f1, c2, f2;
 
@@ -2066,19 +2064,22 @@
     /* otherwise check that the other pixel isn't set */
     else if ( e2 >=0 && e2 <= ras.bRight )
     {
-      c1 = (Int)( e2 >> 3 );
-      f1 = (Int)( e2 &  7 );
+      c1 = e2 >> 3;
+      f1 = 0x80 >> ( e2 & 7 );
 
-      if ( ras.bLine[c1] & ( 0x80 >> f1 ) )
+      if ( ras.bLine[c1] & f1 )
         return;
     }
 
     if ( e1 >= 0 && e1 <= ras.bRight )
     {
-      c1 = (Int)( e1 >> 3 );
-      f1 = (Int)( e1 &  7 );
+      c1 = e1 >> 3;
+      f1 = 0x80 >> ( e1 & 7 );
 
-      ras.bLine[c1] |= 0x80 >> f1;
+      FT_TRACE7(( "  y=%d x=%d%s\n", y, e1,
+                  ras.bLine[c1] & f1 ? " redundant" : "" ));
+
+      ras.bLine[c1] |= f1;
     }
   }
 
@@ -2115,7 +2116,8 @@
                                   FT_F26Dot6  x1,
                                   FT_F26Dot6  x2 )
   {
-    Long  e1, e2;
+    Long  e1 = CEILING( x1 );
+    Long  e2 =   FLOOR( x2 );
 
 
     FT_TRACE7(( "  x=%d y=[% .*f;% .*f]",
@@ -2128,8 +2130,6 @@
     /* have to check perfectly aligned span edges here.           */
     /*                                                            */
     /* XXX: Can we handle horizontal lines better and drop this?  */
-
-    e1 = CEILING( x1 );
 
     if ( x1 == e1 )
     {
@@ -2150,8 +2150,6 @@
         bits[0] |= f1;
       }
     }
-
-    e2 = FLOOR  ( x2 );
 
     if ( x2 == e2 )
     {
@@ -2208,6 +2206,9 @@
     {
       bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.bPitch;
       f1    = 0x80 >> ( y & 7 );
+
+      FT_TRACE7(( "  x=%d y=%d%s\n", y, e1,
+                  *bits & f1 ? " redundant" : "" ));
 
       *bits |= f1;
     }
@@ -2402,7 +2403,7 @@
         P_Left  = draw_left;
         P_Right = draw_right;
 
-        while ( dropouts && P_Left && P_Right )
+        while ( dropouts )
         {
           if ( P_Left->flags & Dropout )
           {
