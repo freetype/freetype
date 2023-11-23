@@ -63,8 +63,7 @@
 #else /* !STANDALONE_ */
 
 #include "ftraster.h"
-#include <freetype/internal/ftcalc.h> /* for FT_MulDiv and FT_MulDiv_No_Round */
-#include <freetype/ftoutln.h>         /* for FT_Outline_Get_CBox              */
+#include <freetype/internal/ftcalc.h> /* for FT_MulDiv_No_Round */
 
 #endif /* !STANDALONE_ */
 
@@ -252,7 +251,6 @@
   /* On the other hand, SMulDiv means `Slow MulDiv', and is used typically */
   /* for clipping computations.  It simply uses the FT_MulDiv() function   */
   /* defined in `ftcalc.h'.                                                */
-#define SMulDiv           FT_MulDiv
 #define SMulDiv_No_Round  FT_MulDiv_No_Round
 
   /* The rasterizer is a very general purpose component; please leave */
@@ -1910,8 +1908,9 @@
    *
    *   Advances all profile in the list to the next scanline.  It also
    *   sorts the trace list in the unlikely case of profile crossing.
-   *   In 95%, the list is already sorted.  We need an algorithm which
-   *   is fast in this case.  Bubble sort is enough and simple.
+   *   The profiles are inserted in sorted order.  We might need a single
+   *   swap to fix it when profiles (contours) cross.
+   *   Bubble sort with immediate restart is good enough and simple.
    */
   static void
   Increment( PProfileList  list )
@@ -1934,7 +1933,7 @@
         *old = current->link;  /* remove */
     }
 
-    /* Then sort them */
+    /* Then make sure the list remains sorted */
     old     = list;
     current = *old;
 
@@ -1956,7 +1955,7 @@
         current->link = next->link;
         next->link    = current;
 
-        /* Restarting */
+        /* this is likely the only necessary swap -- restart */
         old     = list;
         current = *old;
       }
@@ -2248,7 +2247,7 @@
     /* use y_turns to set the drawing range */
 
     min_Y = (Int)ras.maxBuff[0];
-    max_Y = (Int)ras.sizeBuff[-1] - 1;
+    max_Y = (Int)ras.maxBuff[ras.numTurns] - 1;
 
     /* now initialize the sweep */
 
