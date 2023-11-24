@@ -1913,7 +1913,8 @@
    *   Bubble sort with immediate restart is good enough and simple.
    */
   static void
-  Increment( PProfileList  list )
+  Increment( PProfileList  list,
+             Int           flow )
   {
     PProfile  *old, current, next;
 
@@ -1925,7 +1926,7 @@
       current = *old;
       if ( --current->height )
       {
-        current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
+        current->offset += flow;
         current->X       = current->x[current->offset];
         old = &current->link;
       }
@@ -2267,6 +2268,8 @@
         {
           *Q = P->link;  /* remove */
 
+          /* each active list contains profiles with the same flow */
+          /* left and right are arbitrary, correspond to TrueType  */
           if ( P->flags & Flow_Up )
             InsNew( &draw_left,  P );
           else
@@ -2294,6 +2297,8 @@
           Long  xs;
 
 
+          /* TrueType should have x2 > x1, but can be opposite */
+          /* by mistake or in CFF/Type1, fix it then           */
           if ( x1 > x2 )
           {
             xs = x1;
@@ -2418,8 +2423,8 @@
 
         ras.Proc_Sweep_Step( RAS_VAR );
 
-        Increment( &draw_left  );
-        Increment( &draw_right );
+        Increment( &draw_left,   1 );
+        Increment( &draw_right, -1 );
       }
       while ( ++y < y_turn );
     }
