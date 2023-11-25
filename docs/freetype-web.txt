@@ -35,7 +35,7 @@ and the CI pipeline deploys the website at:
 Since the 'freetype.org' website uses Cloudflare caching, it will take
 a while for the changes to show up in 'freetype.org'.
 
-If you have access to the Cloudflare dashbouard you can purge the
+If you have access to the Cloudflare dashboard you can purge the
 cache from there; this will cause the cache to be fetched again
 resulting in the website being updated instantly.
 
