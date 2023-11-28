@@ -1342,7 +1342,7 @@
         ymax = y1;
       }
 
-      if ( y2 < ymin || y2 > ymax )
+      if ( y2 < FLOOR( ymin ) || y2 > CEILING( ymax ) )
       {
         /* this arc has no given direction, split it! */
         Split_Conic( arc );
@@ -1350,7 +1350,8 @@
       }
       else if ( y1 == y3 )
       {
-        /* this arc is flat, ignore it and pop it from the Bezier stack */
+        /* this arc is flat, advance position */
+        /* and pop it from the Bezier stack   */
         arc -= 2;
 
         ras.lastX = x3;
@@ -1488,7 +1489,7 @@
         ymax2 = y2;
       }
 
-      if ( ymin2 < ymin1 || ymax2 > ymax1 )
+      if ( ymin2 < FLOOR( ymin1 ) || ymax2 > CEILING( ymax1 ) )
       {
         /* this arc has no given direction, split it! */
         Split_Cubic( arc );
@@ -1496,7 +1497,8 @@
       }
       else if ( y1 == y4 )
       {
-        /* this arc is flat, ignore it and pop it from the Bezier stack */
+        /* this arc is flat, advance position */
+        /* and pop it from the Bezier stack   */
         arc -= 3;
 
         ras.lastX = x4;
