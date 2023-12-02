@@ -2365,16 +2365,16 @@
 
             if ( dropOutControl & 1 )
             {
-              /* rightmost stub test */
-              if ( P_Left->next == P_Right            &&
-                   P_Left->height == 1                &&
+              /* upper stub test */
+              if ( P_Left->height == 1                &&
+                   P_Left->next == P_Right            &&
                    !( P_Left->flags & Overshoot_Top   &&
                       x2 - x1 >= ras.precision_half   ) )
                 goto Next_Pair;
 
-              /* leftmost stub test */
-              if ( P_Right->next == P_Left             &&
-                   P_Left->offset == 0                 &&
+              /* lower stub test */
+              if ( P_Left->offset == 0                 &&
+                   P_Right->next == P_Left             &&
                    !( P_Left->flags & Overshoot_Bottom &&
                       x2 - x1 >= ras.precision_half    ) )
                 goto Next_Pair;
