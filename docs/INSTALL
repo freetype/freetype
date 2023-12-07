@@ -59,7 +59,7 @@ II. Normal installation and upgrades
 
       CMake   :: see `CMakeLists.txt` for more information
       Meson   :: see `meson.build` for more information
-      MSBuild :: see `builds/windows/vc2010/freetype.vcxproj`
+      MSBuild :: see `MSBuild.sln` for more information
       MMS     :: see `vms_make.com` and `docs/INSTALL.VMS`
 
 
