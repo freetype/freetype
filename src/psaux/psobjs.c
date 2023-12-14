@@ -2463,19 +2463,20 @@
 
     count = cpriv->num_blue_values = priv->num_blue_values;
     for ( n = 0; n < count; n++ )
-      cpriv->blue_values[n] = (FT_Pos)priv->blue_values[n];
+      cpriv->blue_values[n] = cf2_intToFixed( priv->blue_values[n] );
 
     count = cpriv->num_other_blues = priv->num_other_blues;
     for ( n = 0; n < count; n++ )
-      cpriv->other_blues[n] = (FT_Pos)priv->other_blues[n];
+      cpriv->other_blues[n] = cf2_intToFixed( priv->other_blues[n] );
 
     count = cpriv->num_family_blues = priv->num_family_blues;
     for ( n = 0; n < count; n++ )
-      cpriv->family_blues[n] = (FT_Pos)priv->family_blues[n];
+      cpriv->family_blues[n] = cf2_intToFixed( priv->family_blues[n] );
 
     count = cpriv->num_family_other_blues = priv->num_family_other_blues;
     for ( n = 0; n < count; n++ )
-      cpriv->family_other_blues[n] = (FT_Pos)priv->family_other_blues[n];
+      cpriv->family_other_blues[n] =
+        cf2_intToFixed( priv->family_other_blues[n] );
 
     cpriv->blue_scale = priv->blue_scale;
     cpriv->blue_shift = (FT_Pos)priv->blue_shift;

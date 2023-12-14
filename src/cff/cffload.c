@@ -1379,10 +1379,10 @@
       /* opcode in both CFF and CFF2 DICTs.  See `cff_parse_num' for    */
       /* decode of this, which rounds to an integer.                    */
       *subFont->blend_top++ = 255;
-      *subFont->blend_top++ = (FT_Byte)( sum >> 24 );
-      *subFont->blend_top++ = (FT_Byte)( sum >> 16 );
-      *subFont->blend_top++ = (FT_Byte)( sum >>  8 );
-      *subFont->blend_top++ = (FT_Byte)sum;
+      *subFont->blend_top++ = (FT_Byte)( (FT_UInt32)sum >> 24 );
+      *subFont->blend_top++ = (FT_Byte)( (FT_UInt32)sum >> 16 );
+      *subFont->blend_top++ = (FT_Byte)( (FT_UInt32)sum >>  8 );
+      *subFont->blend_top++ = (FT_Byte)( (FT_UInt32)sum );
     }
 
     /* leave only numBlends results on parser stack */
