@@ -429,6 +429,8 @@
     base  = cf2_stack_count( opStack ) - numOperands;
     delta = base + numBlends;
 
+    FT_TRACE6(( " (" ));
+
     for ( i = 0; i < numBlends; i++ )
     {
       const CF2_Fixed*  weight = &blend->BV[1];
@@ -443,9 +445,13 @@
                                     cf2_stack_getReal( opStack,
                                                        delta++ ) ) );
 
+      FT_TRACE6(( "%f ", (float) sum / 65536 ));
+
       /* store blended result  */
       cf2_stack_setReal( opStack, i + base, sum );
     }
+
+    FT_TRACE6(( "blended)\n" ));
 
     /* leave only `numBlends' results on stack */
     cf2_stack_pop( opStack, numOperands - numBlends );
@@ -735,7 +741,7 @@
           FT_UInt  numBlends;
 
 
-          FT_TRACE4(( " blend\n" ));
+          FT_TRACE4(( " blend" ));
 
           if ( !font->isCFF2 )
             break;    /* clear stack & ignore */
