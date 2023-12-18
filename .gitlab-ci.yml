@@ -74,7 +74,6 @@ variables:
         meson compile --verbose -C build
         $env:MESON_WINDOWS_TESTS"
 
-
 .build windows msbuild:
   extends: '.build windows common'
   variables:
@@ -90,8 +89,9 @@ variables:
                -p:UserDefines=FT_DEBUG_LOGGING
                MSBuild.sln"
 
+
 # Format of job names:
-# <OS> <Build-Tool> <Build-Params> <Architecture>
+# <OS> <Build-Tool> <Build-Params> <Architecture>:
 
 
 # Windows jobs.
@@ -120,6 +120,7 @@ windows msbuild vs2019 amd64:
   variables:
     ARCH: 'amd64'
     PLATFORM: 'x64'
+
 
 # Linux Jobs.
 #
