@@ -74,9 +74,24 @@ variables:
         meson compile --verbose -C build
         $env:MESON_WINDOWS_TESTS"
 
+.build windows msbuild:
+  extends: '.build windows common'
+  variables:
+    # Make sure any failure in PowerShell scripts is fatal.
+    ErrorActionPreference: 'Stop'
+    WarningPreference: 'Stop'
+  script:
+    - git submodule update --init --recursive
+    - cmd.exe /C "C:\BuildTools\Common7\Tools\VsDevCmd.bat -host_arch=amd64 -arch=$env:ARCH &&
+      MSBuild.exe -clp:ForceConsoleColor -t:Rebuild
+               -p:Configuration=Debug
+               -p:Platform=$env:PLATFORM
+               -p:UserDefines=FT_DEBUG_LOGGING
+               MSBuild.sln"
+
 
 # Format of job names:
-# <OS> <Build-Tool> <Build-Params> <Architecture>
+# <OS> <Build-Tool> <Build-Params> <Architecture>:
 
 
 # Windows jobs.
@@ -99,6 +114,13 @@ windows meson vs2019 amd64 uwp:
     ARCH: 'amd64'
     VS_UWP: '-app_platform=UWP'
     MESON_ARGS_UWP: '--cross-file uwp-crossfile.meson -Dc_winlibs="windowsapp.lib"'
+
+windows msbuild vs2019 amd64:
+  extends: '.build windows msbuild'
+  variables:
+    ARCH: 'amd64'
+    PLATFORM: 'x64'
+
 
 # Linux Jobs.
 #
