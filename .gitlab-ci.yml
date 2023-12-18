@@ -84,7 +84,7 @@ variables:
   script:
     - git submodule update --init --recursive
     - cmd.exe /C "C:\BuildTools\Common7\Tools\VsDevCmd.bat -host_arch=amd64 -arch=$env:ARCH &&
-      MSBUILD.exe -t:Rebuild
+      MSBuild.exe -clp:ForceConsoleColor -t:Rebuild
                -p:Configuration=Debug
                -p:Platform=$env:PLATFORM
                -p:UserDefines=FT_DEBUG_LOGGING
@@ -120,6 +120,7 @@ windows msbuild vs2019 amd64:
   variables:
     ARCH: 'amd64'
     PLATFORM: 'x64'
+
 # Linux Jobs.
 #
 # Jobs with "libs" in the name force-enable libraries.
