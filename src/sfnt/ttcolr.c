@@ -1269,6 +1269,7 @@
   static FT_Bool
   find_base_glyph_v1_record( FT_Byte *           base_glyph_begin,
                              FT_UInt             num_base_glyph,
+                             FT_Byte *           end_colr,
                              FT_UInt             glyph_id,
                              BaseGlyphV1Record  *record )
   {
@@ -1286,6 +1287,14 @@
        * in the array of `BaseGlyphV1Record`.
        */
       FT_Byte  *p = base_glyph_begin + 4 + mid * BASE_GLYPH_PAINT_RECORD_SIZE;
+
+
+      /* We need to be able to read 2 bytes (FT_NEXT_USHORT) for the glyph */
+      /* ID, then 4 bytes (FT_NEXT_ULONG) for the paint offset.  If that's */
+      /* not available before the end of the table, something's wrong with */
+      /* the font and we can't find a COLRv1 glyph.                        */
+      if ( p > end_colr - 2 - 4 )
+        return 0;
 
       FT_UShort  gid = FT_NEXT_USHORT( p );
 
@@ -1328,6 +1337,7 @@
 
     if ( !find_base_glyph_v1_record( colr->base_glyphs_v1,
                                      colr->num_base_glyphs_v1,
+                                     (FT_Byte*)colr->table + colr->table_size,
                                      base_glyph,
                                      &base_glyph_v1_record ) )
       return 0;
