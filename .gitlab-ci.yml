@@ -1,5 +1,11 @@
 # CI setup for FreeType.
 
+# https://gitlab.freedesktop.org/freedesktop/freedesktop/-/issues/540
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
+
 stages:
  - build
 
