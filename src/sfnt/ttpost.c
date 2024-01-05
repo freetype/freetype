@@ -436,13 +436,8 @@
 
     format = face->postscript.FormatType;
 
-    if ( format == 0x00010000L )
-    {
-      if ( idx < 258 )                    /* paranoid checking */
-        *PSname = MAC_NAME( idx );
-    }
-    else if ( format == 0x00020000L ||
-              format == 0x00025000L )
+    if ( format == 0x00020000L ||
+         format == 0x00025000L )
     {
       TT_Post_Names  names = &face->postscript_names;
 
@@ -465,6 +460,11 @@
           *PSname = (FT_String*)names->glyph_names[name_index - 258];
       }
     }
+
+    /* version 1.0 is only valid with 258 glyphs */
+    else if ( format == 0x00010000L              &&
+              face->max_profile.numGlyphs == 258 )
+      *PSname = MAC_NAME( idx );
 
     /* nothing to do for format == 0x00030000L */
 
