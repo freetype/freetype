@@ -2302,7 +2302,10 @@
                                       face_index_internal, aface );
       FT_FREE( data_offsets );
       if ( !error )
-        (*aface)->num_faces = count;
+      {
+        (*aface)->num_faces  = count;
+        (*aface)->face_index = face_index_internal;
+      }
     }
 
     return error;

@@ -812,6 +812,7 @@
     ResourceIndex  res_index;
     Handle         fond;
     short          num_faces_in_res;
+    FT_Long        count;
 
 
     if ( noErr != FT_FSPathMakeRes( pathname, &res_ref ) )
@@ -821,8 +822,10 @@
     if ( ResError() )
       return FT_THROW( Cannot_Open_Resource );
 
+    res_index        = 1;
     num_faces_in_res = 0;
-    for ( res_index = 1; ; res_index++ )
+    count            = face_index;
+    while ( count >= 0 )
     {
       short  num_faces_in_fond;
 
@@ -834,15 +837,21 @@
       num_faces_in_fond  = count_faces( fond, pathname );
       num_faces_in_res  += num_faces_in_fond;
 
-      if ( 0 <= face_index && face_index < num_faces_in_fond && error )
-        error = FT_New_Face_From_FOND( library, fond, face_index, aface );
+      if ( count < num_faces_in_fond )
+        error = FT_New_Face_From_FOND( library, fond, count, aface );
 
-      face_index -= num_faces_in_fond;
+      res_index++;
+      count -= num_faces_in_fond;
     }
 
     CloseResFile( res_ref );
+
     if ( !error && aface && *aface )
-      (*aface)->num_faces = num_faces_in_res;
+    {
+      (*aface)->num_faces  = num_faces_in_res;
+      (*aface)->face_index = face_index;
+    }
+
     return error;
   }
 
