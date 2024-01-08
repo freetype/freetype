@@ -1279,7 +1279,8 @@
 
     while ( min < max )
     {
-      FT_UInt  mid = min + ( max - min ) / 2;
+      FT_UInt    mid = min + ( max - min ) / 2;
+      FT_UShort  gid;
 
       /*
        * `base_glyph_begin` is the beginning of `BaseGlyphV1List`;
@@ -1296,8 +1297,7 @@
       if ( p > end_colr - 2 - 4 )
         return 0;
 
-      FT_UShort  gid = FT_NEXT_USHORT( p );
-
+      gid = FT_NEXT_USHORT( p );
 
       if ( gid < glyph_id )
         min = mid + 1;
