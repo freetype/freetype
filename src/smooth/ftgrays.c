@@ -997,49 +997,12 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif
 
   /*
-   * Benchmarking shows that using DDA to flatten the quadratic Bézier arcs
-   * is slightly faster in the following cases:
-   *
-   *   - When the host CPU is 64-bit.
-   *   - When SSE2 SIMD registers and instructions are available (even on
-   *     x86).
-   *
-   * For other cases, using binary splits is actually slightly faster.
+   * For now, the code that uses DDA to render conic curves requires
+   * `FT_Int64` to be defined.  See for example
+   *    https://gitlab.freedesktop.org/freetype/freetype/-/issues/1071.
    */
-#if ( defined( __SSE2__ )                          ||   \
-      defined( __x86_64__ )                        ||   \
-      defined( _M_AMD64 )                          ||   \
-      ( defined( _M_IX86_FP ) && _M_IX86_FP >= 2 ) ) && \
-    !defined( __VMS )
-#  define FT_SSE2 1
-#else
-#  define FT_SSE2 0
-#endif
 
-#if FT_SSE2                || \
-    defined( __aarch64__ ) || \
-    defined( _M_ARM64 )
-#  define BEZIER_USE_DDA  1
-#else
-#  define BEZIER_USE_DDA  0
-#endif
-
-  /*
-   * For now, the code that depends on `BEZIER_USE_DDA` requires `FT_Int64`
-   * to be defined.  If `FT_INT64` is not defined, meaning there is no
-   * 64-bit type available, disable it to avoid compilation errors.  See for
-   * example https://gitlab.freedesktop.org/freetype/freetype/-/issues/1071.
-   */
-#if !defined( FT_INT64 )
-#  undef BEZIER_USE_DDA
-#  define BEZIER_USE_DDA  0
-#endif
-
-#if BEZIER_USE_DDA
-
-#if FT_SSE2
-#  include <emmintrin.h>
-#endif
+#ifdef FT_INT64
 
 #define LEFT_SHIFT( a, b )  (FT_Int64)( (FT_UInt64)(a) << (b) )
 
@@ -1151,61 +1114,6 @@ typedef ptrdiff_t  FT_PtrDist;
      *             = (B << (33 - N)) + (A << (32 - 2*N))
      */
 
-#if FT_SSE2
-    /* Experience shows that for small counts, SSE2 is actually slower. */
-    if ( count > 4 )
-    {
-      union
-      {
-        struct { FT_Int64  ax, ay, bx, by; }  i;
-        struct { __m128i  a, b; }  vec;
-
-      } u;
-
-      union
-      {
-        struct { FT_Int32  px_lo, px_hi, py_lo, py_hi; }  i;
-        __m128i  vec;
-
-      } v;
-
-      __m128i  p, q, r;
-
-
-      u.i.ax = ax;
-      u.i.ay = ay;
-      u.i.bx = bx;
-      u.i.by = by;
-
-      q = _mm_load_si128( &u.vec.b );
-      r = _mm_load_si128( &u.vec.a );
-
-      q = _mm_slli_epi64( q, shift + 17);
-      r = _mm_slli_epi64( r, shift + shift );
-      q = _mm_add_epi64( q, r );
-      r = _mm_add_epi64( r, r );
-
-      v.i.px_lo = 0;
-      v.i.px_hi = p0.x;
-      v.i.py_lo = 0;
-      v.i.py_hi = p0.y;
-
-      p = _mm_load_si128( &v.vec );
-
-      do
-      {
-        p = _mm_add_epi64( p, q );
-        q = _mm_add_epi64( q, r );
-
-        _mm_store_si128( &v.vec, p );
-
-        gray_render_line( RAS_VAR_ v.i.px_hi, v.i.py_hi );
-      } while ( --count );
-
-      return;
-    }
-#endif  /* FT_SSE2 */
-
     rx = LEFT_SHIFT( ax, shift + shift );
     ry = LEFT_SHIFT( ay, shift + shift );
 
@@ -1230,7 +1138,7 @@ typedef ptrdiff_t  FT_PtrDist;
     } while ( --count );
   }
 
-#else  /* !BEZIER_USE_DDA */
+#else  /* !FT_INT64 */
 
   /*
    * Note that multiple attempts to speed up the function below
@@ -1324,7 +1232,7 @@ typedef ptrdiff_t  FT_PtrDist;
     } while ( --draw );
   }
 
-#endif  /* !BEZIER_USE_DDA */
+#endif  /* !FT_INT64 */
 
 
   /*
