@@ -1322,9 +1322,13 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_KERNING ::
    *     The face contains kerning information.  If set, the kerning distance
    *     can be retrieved using the function @FT_Get_Kerning.  Otherwise the
-   *     function always returns the vector (0,0).  Note that FreeType
-   *     doesn't handle kerning data from the SFNT 'GPOS' table (as present
-   *     in many OpenType fonts).
+   *     function always returns the vector (0,0).
+   *
+   *     Note that for TrueType fonts only, FreeType supports both the 'kern'
+   *     table and the basic, pair-wise kerning feature from the 'GPOS' table
+   *     (with `TT_CONFIG_OPTION_GPOS_KERNING` enabled), though FreeType does
+   *     not support the more advanced GPOS layout features; use a library
+   *     like HarfBuzz for those instead.
    *
    *   FT_FACE_FLAG_FAST_GLYPHS ::
    *     THIS FLAG IS DEPRECATED.  DO NOT USE OR TEST IT.
@@ -4058,9 +4062,26 @@ FT_BEGIN_HEADER
    *   out of the scope of this API function -- they can be implemented
    *   through format-specific interfaces.
    *
-   *   Kerning for OpenType fonts implemented in a 'GPOS' table is not
-   *   supported; use @FT_HAS_KERNING to find out whether a font has data
-   *   that can be extracted with `FT_Get_Kerning`.
+   *   Note that, for TrueType fonts only, this can extract data from both
+   *   the 'kern' table and the basic, pair-wise kerning feature from the
+   *   GPOS table (with `TT_CONFIG_OPTION_GPOS_KERNING` enabled), though
+   *   FreeType does not support the more advanced GPOS layout features; use
+   *   a library like HarfBuzz for those instead.  If a font has both a
+   *   'kern' table and kern features of a GPOS table, the 'kern' table will
+   *   be used.
+   *
+   *   Also note for right-to-left scripts, the functionality may differ for
+   *   fonts with GPOS tables vs. 'kern' tables.  For GPOS, right-to-left
+   *   fonts typically use both a placement offset and an advance for pair
+   *   positioning, which this API does not support, so it would output
+   *   kerning values of zero; though if the right-to-left font used only
+   *   advances in GPOS pair positioning, then this API could output kerning
+   *   values for it, but it would use `left_glyph` to mean the first glyph
+   *   for that case.  Whereas 'kern' tables are always advance-only and
+   *   always store the left glyph first.
+   *
+   *   Use @FT_HAS_KERNING to find out whether a font has data that can be
+   *   extracted with `FT_Get_Kerning`.
    */
   FT_EXPORT( FT_Error )
   FT_Get_Kerning( FT_Face     face,

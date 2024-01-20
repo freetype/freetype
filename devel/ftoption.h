@@ -757,6 +757,22 @@ FT_BEGIN_HEADER
 #endif
 
 
+  /**************************************************************************
+   *
+   * Option `TT_CONFIG_OPTION_GPOS_KERNING` enables a basic GPOS kerning
+   * implementation (for TrueType fonts only).  With this defined, FreeType
+   * is able to get kerning pair data from the GPOS 'kern' feature as well as
+   * legacy 'kern' tables; without this defined, FreeType will only be able
+   * to use legacy 'kern' tables.
+   *
+   * Note that FreeType does not support more advanced GPOS layout features;
+   * even the 'kern' feature implemented here doesn't handle more
+   * sophisticated kerning variants.  Use a higher-level library like
+   * HarfBuzz instead for that.
+   */
+#define TT_CONFIG_OPTION_GPOS_KERNING
+
+
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/

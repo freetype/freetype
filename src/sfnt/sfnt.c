@@ -29,6 +29,7 @@
 #include "ttcpal.c"
 #include "ttsvg.c"
 
+#include "ttgpos.c"
 #include "ttkern.c"
 #include "ttload.c"
 #include "ttmtx.c"
