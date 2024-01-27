@@ -280,9 +280,9 @@
     {
     case CLASS_DEF_TABLE_FORMAT_ARRAY:
       {
-        FT_UShort  start_glyph_id    = FT_PEEK_USHORT( class_def_table + 2 );
-        FT_UShort  glyph_count       = FT_PEEK_USHORT( class_def_table + 4 );
-        FT_Byte   *class_value_array = class_def_table + 6;
+        FT_UInt  start_glyph_id    = FT_PEEK_USHORT( class_def_table + 2 );
+        FT_UInt  glyph_count       = FT_PEEK_USHORT( class_def_table + 4 );
+        FT_Byte  *class_value_array = class_def_table + 6;
 
 
         if ( glyph >= start_glyph_id              &&
