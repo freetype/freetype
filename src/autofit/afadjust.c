@@ -182,4 +182,257 @@
   };
 
 
+  /* Helper function: get the adjustment database entry for a codepoint. */
+  static const AF_AdjustmentDatabaseEntry*
+  af_adjustment_database_lookup( FT_UInt32  codepoint )
+  {
+    /* Binary search for database entry */
+    FT_Int  low  = 0;
+    FT_Int  high = AF_ADJUSTMENT_DATABASE_LENGTH - 1;
+
+
+    while ( high >= low )
+    {
+      FT_Int     mid           = ( low + high ) / 2;
+      FT_UInt32  mid_codepoint = adjustment_database[mid].codepoint;
+
+
+      if ( mid_codepoint < codepoint )
+        low = mid + 1;
+      else if ( mid_codepoint > codepoint )
+        high = mid - 1;
+      else
+        return &adjustment_database[mid];
+    }
+
+    return NULL;
+  }
+
+
+  /* `qsort` compare function for reverse character map. */
+  FT_COMPARE_DEF( FT_Int )
+  af_reverse_character_map_entry_compare( const void  *a,
+                                          const void  *b )
+  {
+    const AF_ReverseMapEntry  entry_a = *((const AF_ReverseMapEntry *)a);
+    const AF_ReverseMapEntry  entry_b = *((const AF_ReverseMapEntry *)b);
+
+
+    return entry_a.glyph_index < entry_b.glyph_index
+           ? -1
+           : entry_a.glyph_index > entry_b.glyph_index
+               ? 1
+               : 0;
+  }
+
+
+  static FT_UInt32
+  af_reverse_character_map_lookup( AF_ReverseCharacterMap  map,
+                                   FT_Int                  glyph_index )
+  {
+    FT_Int   low, high;
+    FT_Long  length;
+
+
+    if ( !map )
+      return 0;
+
+    length = map->length;
+
+    /* Binary search for reverse character map entry. */
+    low  = 0;
+    high = length - 1;
+
+    while ( high >= low )
+    {
+      FT_Int  mid             = ( high + low ) / 2;
+      FT_Int  mid_glyph_index = map->entries[mid].glyph_index;
+
+
+      if ( glyph_index < mid_glyph_index )
+        high = mid - 1;
+      else if ( glyph_index > mid_glyph_index )
+        low = mid + 1;
+      else
+        return map->entries[mid].codepoint;
+    }
+
+    return 0;
+  }
+
+
+  FT_LOCAL_DEF( AF_VerticalSeparationAdjustmentType )
+  af_lookup_vertical_separation_type( AF_ReverseCharacterMap  map,
+                                      FT_Int                  glyph_index )
+  {
+    FT_UInt32  codepoint = af_reverse_character_map_lookup( map,
+                                                            glyph_index );
+
+    const AF_AdjustmentDatabaseEntry  *entry =
+      af_adjustment_database_lookup( codepoint );
+
+
+    if ( !entry )
+      return AF_VERTICAL_ADJUSTMENT_NONE;
+
+    return entry->vertical_separation_adjustment_type;
+  }
+
+
+  /* Return 1 if tilde correction should be applied to the topmost */
+  /* contour, else 0.                                              */
+  FT_LOCAL_DEF( FT_Bool )
+  af_lookup_tilde_correction_type( AF_ReverseCharacterMap  map,
+                                   FT_Int                  glyph_index )
+  {
+    FT_UInt32  codepoint = af_reverse_character_map_lookup( map,
+                                                            glyph_index );
+
+    const AF_AdjustmentDatabaseEntry  *entry =
+      af_adjustment_database_lookup( codepoint );
+
+
+    if ( !entry )
+      return 0;
+
+    return entry->apply_tilde;
+  }
+
+
+  /* Prepare to add one more entry to the reverse character map.   */
+  /* This is a helper function for `af_reverse_character_map_new`. */
+  static FT_Error
+  af_reverse_character_map_expand( AF_ReverseCharacterMap  map,
+                                   FT_Long                *capacity,
+                                   FT_Memory               memory )
+  {
+    FT_Error  error;
+
+
+    if ( map->length < *capacity )
+      return FT_Err_Ok;
+
+    if ( map->length == *capacity )
+    {
+      FT_Long  new_capacity = *capacity + *capacity / 2;
+
+
+      if ( FT_RENEW_ARRAY( map->entries, map->length, new_capacity ) )
+        return error;
+
+      *capacity = new_capacity;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  af_reverse_character_map_new( AF_ReverseCharacterMap  *map,
+                                AF_FaceGlobals           globals )
+  {
+    FT_Error  error;
+
+    FT_Face    face   = globals->face;
+    FT_Memory  memory = face->memory;
+
+    FT_CharMap  old_charmap;
+
+    FT_Long  capacity;
+
+
+    /* Search for a unicode charmap.           */
+    /* If there isn't one, create a blank map. */
+
+    FT_TRACE4(( "af_reverse_character_map_new:"
+                " building reverse character map\n" ));
+
+    /* Back up `face->charmap` because `find_unicode_charmap` sets it. */
+    old_charmap = face->charmap;
+
+    if ( ( error = find_unicode_charmap( face ) ) )
+      goto Exit;
+
+    *map = NULL;
+    if ( FT_NEW( *map ) )
+      goto Exit;
+
+    /* Start with a capacity of 10 entries. */
+    capacity         = 10;
+    ( *map )->length = 0;
+
+    if ( FT_NEW_ARRAY( ( *map )->entries, capacity ) )
+      goto Exit;
+
+    {
+      FT_UInt  i;
+#ifdef FT_DEBUG_LEVEL_TRACE
+      int  failed_lookups = 0;
+#endif
+
+
+      for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+      {
+        FT_UInt32  codepoint = adjustment_database[i].codepoint;
+        FT_Int     glyph     = FT_Get_Char_Index( face, codepoint );
+
+
+        if ( glyph == 0 )
+        {
+#ifdef FT_DEBUG_LEVEL_TRACE
+          failed_lookups++;
+#endif
+          continue;
+        }
+
+        error = af_reverse_character_map_expand( *map, &capacity, memory );
+        if ( error )
+          goto Exit;
+
+        ( *map )->length++;
+        ( *map )->entries[i].glyph_index = glyph;
+        ( *map )->entries[i].codepoint   = codepoint;
+      }
+    }
+
+    ft_qsort( ( *map )->entries,
+              ( *map )->length,
+              sizeof ( AF_ReverseMapEntry ),
+              af_reverse_character_map_entry_compare );
+
+    FT_TRACE4(( "    reverse character map built successfully"
+                " with %ld entries\n", (*map)->length ));
+
+  Exit:
+    face->charmap = old_charmap;
+
+    if ( error )
+    {
+      FT_TRACE4(( "    error while building reverse character map."
+                  " Using blank map.\n" ));
+
+      if ( *map )
+        FT_FREE( ( *map )->entries );
+
+      FT_FREE( *map );
+      *map = NULL;
+      return error;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  af_reverse_character_map_done( AF_ReverseCharacterMap  map,
+                                 FT_Memory               memory )
+  {
+    if ( map )
+      FT_FREE( map->entries );
+    FT_FREE( map );
+
+    return FT_Err_Ok;
+  }
+
+
 /* END */
