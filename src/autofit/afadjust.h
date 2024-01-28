@@ -58,6 +58,26 @@ FT_BEGIN_HEADER
   } AF_AdjustmentDatabaseEntry;
 
 
+  FT_LOCAL( AF_VerticalSeparationAdjustmentType )
+  af_lookup_vertical_separation_type( AF_ReverseCharacterMap  map,
+                                      FT_Int                  glyph_index );
+
+  FT_LOCAL( FT_Bool )
+  af_lookup_tilde_correction_type( AF_ReverseCharacterMap  map,
+                                   FT_Int                  glyph_index );
+
+  /* Allocate and populate the reverse character map, */
+  /* using the character map within the face.         */
+  FT_LOCAL( FT_Error )
+  af_reverse_character_map_new( AF_ReverseCharacterMap  *map,
+                                AF_FaceGlobals           globals );
+
+  /* Free the reverse character map. */
+  FT_LOCAL( FT_Error )
+  af_reverse_character_map_done( AF_ReverseCharacterMap  map,
+                                 FT_Memory               memory );
+
+
 FT_END_HEADER
 
 #endif /* AFADJUST_H_ */
