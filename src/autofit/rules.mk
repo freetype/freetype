@@ -28,7 +28,8 @@ AUTOF_COMPILE := $(CC) $(ANSIFLAGS)                              \
 
 # AUTOF driver sources (i.e., C files)
 #
-AUTOF_DRV_SRC := $(AUTOF_DIR)/afblue.c   \
+AUTOF_DRV_SRC := $(AUTOF_DIR)/afadjust.c \
+                 $(AUTOF_DIR)/afblue.c   \
                  $(AUTOF_DIR)/afcjk.c    \
                  $(AUTOF_DIR)/afdummy.c  \
                  $(AUTOF_DIR)/afglobal.c \
