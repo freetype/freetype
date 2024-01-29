@@ -2776,6 +2776,300 @@
   }
 
 
+  static FT_Int
+  af_find_highest_contour( AF_GlyphHints  hints )
+  {
+    FT_Int  highest_contour = -1;
+
+    FT_Pos  highest_min_y = 0;
+    FT_Pos  current_min_y = 0;
+
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      AF_Point  point       = hints->contours[contour];
+      AF_Point  first_point = point;
+
+
+      if ( !point )
+        continue;
+
+      current_min_y = point->y;
+
+      do
+      {
+        if ( point->y < current_min_y )
+          current_min_y = point->y;
+        point = point->next;
+
+      } while ( point != first_point );
+
+      if ( highest_contour == -1 || current_min_y > highest_min_y )
+      {
+        highest_min_y   = current_min_y;
+        highest_contour = contour;
+      }
+    }
+
+    return highest_contour;
+  }
+
+
+  static void
+  af_remove_segments_containing_point( AF_GlyphHints  hints,
+                                       AF_Point       point )
+  {
+    AF_AxisHints  axis     = &hints->axis[AF_DIMENSION_VERT];
+    AF_Segment    segments = axis->segments;
+
+    FT_UInt  i;
+
+
+    for ( i = 0; i < axis->num_segments; i++ )
+    {
+      AF_Segment  seg = &segments[i];
+      AF_Point    p   = seg->first;
+
+      FT_Bool  remove = 0;
+
+
+      while ( 1 )
+      {
+        if ( p == point )
+        {
+          remove = 1;
+          break;
+        }
+
+        if ( p == seg->last )
+          break;
+
+        p = p->next;
+      }
+
+      if ( remove )
+      {
+        /* First, check the first and last segment of the edge. */
+        AF_Edge  edge = seg->edge;
+
+
+        if ( edge->first == seg && edge->last == seg )
+        {
+          /* The edge only consists of the segment to be removed. */
+          /* Remove the edge.                                     */
+          *edge = axis->edges[--axis->num_edges];
+        }
+        else
+        {
+          if ( edge->first == seg )
+            edge->first = seg->edge_next;
+
+          if ( edge->last == seg )
+          {
+            edge->last = edge->first;
+
+            while ( edge->last->edge_next != seg )
+              edge->last = edge->last->edge_next;
+          }
+        }
+
+        /* Now, delete the segment. */
+        *seg = axis->segments[--axis->num_segments];
+
+        i--; /* We have to check the new segment at this position. */
+      }
+    }
+  }
+
+
+  /* Remove all segments containing points on the tilde contour. */
+  static void
+  af_latin_remove_tilde_points_from_edges( AF_GlyphHints  hints )
+  {
+    FT_Int    highest_contour = af_find_highest_contour( hints );
+    AF_Point  first_point     = hints->contours[highest_contour];
+
+    AF_Point  p = first_point;
+
+
+    do
+    {
+      p = p->next;
+      af_remove_segments_containing_point( hints, p );
+
+    } while ( p != first_point );
+  }
+
+
+  /*
+    The tilde-unflattening algorithm sometimes goes too far and makes an
+    unusually high tilde, where decreasing the ppem will increase the height
+    instead of a steady decrease in height as less pixels are used.
+
+    For example, the 'n tilde' glyph from 'Times New Roman', with forced
+    autofitting on, exhibits this behaviour in the font size range 16.5 to
+    18 ppem.
+  */
+  static void
+  af_latin_stretch_tildes( AF_GlyphHints  hints )
+  {
+    FT_Int    highest_contour = af_find_highest_contour( hints );
+    AF_Point  p               = hints->contours[highest_contour];
+
+    AF_Point  first_point = p;
+
+    FT_Pos    min_y, max_y;
+    FT_Short  min_fy, max_fy;
+
+    FT_Pos  min_measurement;
+
+    FT_Pos  height;
+    FT_Pos  target_height;
+
+
+    min_y  = max_y  = p->y;
+    min_fy = max_fy = p->fy;
+
+    do
+    {
+      p = p->next;
+
+      if ( p->y < min_y )
+        min_y = p->y;
+      if ( p->y > max_y )
+        max_y = p->y;
+
+      if ( p->fy < min_fy )
+        min_fy = p->fy;
+      if ( p->fy > max_fy )
+        max_fy = p->fy;
+
+    } while ( p != first_point );
+
+    min_measurement = 32000;
+    do
+    {
+      p = p->next;
+
+      if ( !( p->flags & AF_FLAG_CONTROL )          &&
+           p->prev->y == p->y && p->next->y == p->y &&
+           p->y != min_y && p->y != max_y           &&
+           p->prev->flags & AF_FLAG_CONTROL         &&
+           p->next->flags & AF_FLAG_CONTROL         )
+      {
+        /* This point could be a candidate.  Find the next and previous */
+        /* on-curve points, and make sure they are both either above or */
+        /* below the point, then make the measurement.                  */
+        AF_Point  prevOn = p->prev;
+        AF_Point  nextOn = p->next;
+
+        FT_Pos  measurement;
+
+
+        while ( prevOn->flags & AF_FLAG_CONTROL )
+          prevOn = prevOn->prev;
+        while ( nextOn->flags & AF_FLAG_CONTROL )
+          nextOn = nextOn->next;
+
+        if ( nextOn->y > p->y && prevOn->y > p->y )
+          measurement = p->y - min_y;
+        else if ( nextOn->y < p->y && prevOn->y < p->y )
+          measurement = max_y - p->y;
+        else
+          continue;
+
+        if ( measurement < min_measurement )
+          min_measurement = measurement;
+      }
+    } while ( p != first_point );
+
+    /* touch all points */
+    p = first_point;
+    do
+    {
+      p = p->next;
+      if ( !( p->flags & AF_FLAG_CONTROL ) )
+        p->flags |= AF_FLAG_TOUCH_Y;
+
+    } while ( p != first_point );
+
+    height        = max_y - min_y;
+    target_height = min_measurement + 64;
+
+    if ( height >= target_height )
+      return;
+
+    p = first_point;
+    do
+    {
+      p     = p->next;
+      p->y  = ( ( p->y - min_y ) * target_height / height ) + min_y;
+      p->fy = ( ( p->fy - min_fy ) * target_height / height ) + min_fy;
+      p->oy = p->y;
+
+    } while ( p != first_point );
+  }
+
+
+  /*
+    As part of `af_latin_stretch_tildes`, all points in the tilde are marked
+    as touched, so the existing grid fitting will leave the tilde misaligned
+    with the grid.
+
+    This function moves the tilde contour down to be grid-fitted.  We assume
+    that if moving the tilde down would cause it to touch or overlap another
+    countour, the vertical adjustment step will fix it.
+
+    Because the vertical adjustment step comes after all other grid-fitting
+    steps, the top edge of the contour under the tilde is usually aligned
+    with a horizontal grid line.  The vertical gap enforced by the vertical
+    adjustment is exactly one pixel, so if the top edge of the contour below
+    the tilde is on a grid line, the resulting tilde contour will also be
+    grid-aligned.
+
+    But in cases where the gap is already big enough so that the vertical
+    adjustment does nothing, this function ensures that even without the
+    intervention of the vertical adjustment step, the tilde will be
+    grid-aligned.
+  */
+  static void
+  af_latin_align_tildes( AF_GlyphHints  hints )
+  {
+    FT_Int  highest_contour = af_find_highest_contour( hints );
+
+    AF_Point  p           = hints->contours[highest_contour];
+    AF_Point  first_point = p;
+
+    FT_Pos  min_y, max_y;
+    FT_Pos  min_y_rounded;
+    FT_Pos  delta;
+
+
+    do
+    {
+      p = p->next;
+      if ( p->y < min_y )
+        min_y = p->y;
+      if ( p->y > max_y )
+        max_y = p->y;
+
+    } while ( p != first_point );
+
+    // mid_y = ( min_y + max_y ) / 2;
+    min_y_rounded = FT_PIX_ROUND( min_y );
+    delta         = min_y_rounded - min_y;
+
+    do
+    {
+      p     = p->next;
+      p->y += delta;
+
+    } while ( p != first_point );
+  }
+
+
   /* Return 1 if the given contour overlaps horizontally with the bounding */
   /* box of all other contours combined.  This is a helper for function    */
   /* `af_glyph_hints_apply_vertical_separation_adjustments`.               */
@@ -2933,6 +3227,9 @@
         if ( max_y >= highest_min_y - 64 )
           adjustment_amount = 64 - ( highest_min_y - max_y );
       }
+
+      FT_TRACE4(( "    Calculated adjustment amount: %d\n",
+                  adjustment_amount ));
 
       if ( adjustment_amount > 64 )
         FT_TRACE4(( "    Calculated adjustment amount %d"
@@ -3860,6 +4157,47 @@
   }
 
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+  /* Print the height of the topmost contour for debugging purposes. */
+  /* TODO: remove this once the tilde unflattening works.            */
+  static void
+  af_latin_trace_height( FT_UInt        num,
+                         AF_GlyphHints  hints )
+  {
+    AF_Point  p           = hints->contours[af_find_highest_contour(hints)];
+    AF_Point  first_point = p;
+
+    FT_Pos  min_y, max_y;
+
+
+    min_y = max_y = p->y;
+
+    do
+    {
+      p = p->next;
+      if ( !(p->flags & AF_FLAG_CONTROL) )
+      {
+        if ( p->y < min_y )
+          min_y = p->y;
+        if ( p->y > max_y )
+          max_y = p->y;
+      }
+
+    } while ( p != first_point );
+
+    FT_TRACE4(( "height %d: %ld\n", num, max_y - min_y ));
+  }
+#else
+  static void
+  af_latin_trace_height( FT_UInt        num,
+                         AF_GlyphHints  hints )
+  {
+    FT_UNUSED( num );
+    FT_UNUSED( hints );
+  }
+#endif
+
+
   /* Apply the complete hinting algorithm to a latin glyph. */
 
   static FT_Error
@@ -3894,11 +4232,26 @@
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
+      FT_Bool  is_tilde = af_lookup_tilde_correction_type(
+                            metrics->root.reverse_charmap, glyph_index );
+
+
+      if ( is_tilde )
+      {
+        af_latin_trace_height(0, hints );
+        af_latin_stretch_tildes( hints );
+        af_latin_align_tildes( hints );
+        af_latin_trace_height(1, hints );
+      }
+
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
+      if ( is_tilde )
+        af_latin_remove_tilde_points_from_edges( hints );
+
       if ( error )
         goto Exit;
 
@@ -3914,14 +4267,19 @@
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
         af_latin_hint_edges( hints, (AF_Dimension)dim );
+        af_latin_trace_height(2, hints );
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
+        af_latin_trace_height(3, hints );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
+        af_latin_trace_height(4, hints );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
+        af_latin_trace_height(5, hints );
         af_glyph_hints_apply_vertical_separation_adjustments(
           hints,
           (AF_Dimension)dim,
           glyph_index,
           metrics->root.reverse_charmap );
+        af_latin_trace_height(6, hints );
       }
     }
 
