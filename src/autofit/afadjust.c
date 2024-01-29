@@ -327,6 +327,349 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+
+  /*
+    Recursive algorithm to find all glyphs that a code point could turn into
+    from the 'GSUB' table.
+
+    buffer:           a buffer containing only the input code point
+    feature_tag_pool: the current list of features under consideration
+    current_features: the current list of features being applied
+    num_features:     length of current_features
+    result:           the set of glyphs that the input code point can map to
+
+    The algorithm works by running the `hb_ot_shape_glyphs_closure` function
+    on different lists of features to check which features map the glyph onto
+    something different.  This function returns the result of transforming a
+    glyph using a list of features as well as all intermediate forms if the
+    glyph was transformed multiple times.
+
+    With no features enabled, `hb_ot_shape_glyphs_closure` only returns the
+    glyph given by the cmap.  This character is the first to be placed into
+    the result set.
+
+    Next, the algorithm tests the same lookup enabling one feature at a time
+    and check whether any of those features change the result.
+
+    If any new glyph variants are found this way, they are added to the
+    result set and the algorithm recurses, trying that feature in combination
+    with every other feature to look for further glyph variants.
+
+    Example:
+
+      suppose we have the following features in the GSUB table:
+
+        f1: a -> b
+        f2: b -> c
+        f3: d -> e
+
+      The algorithm takes the following steps to find all variants of 'a'.
+
+      - Add 'a' to the result.
+      - Look up with feature list {f1}, yielding {a, b}.
+        => Add 'b' to the result list, recurse.
+        - Look up with feature list {f1, f2}, yielding {a, b, c}.
+          => Add 'c' to the result list, recurse.
+          - Look up with feature list {f1, f2, f3}, yielding {a, b, c}.
+            => No new glyphs.
+        - Look up with feature list {f1, f3}, yielding {a, b}.
+          => No new glyphs.
+      - Look up with feature list {f2}, yielding {a}.
+        => No new glyphs.
+      - Look up with feature list {f3}, yielding {a}.
+        => No new glyphs.
+  */
+  static FT_Error
+  af_all_glyph_variants_helper( hb_font_t     *font,
+                                hb_buffer_t   *buffer,
+                                hb_set_t      *feature_tag_pool,
+                                hb_feature_t  *current_features,
+                                FT_UInt32      num_features,
+                                hb_set_t*      result )
+  {
+    FT_Error  error;
+
+    hb_set_t  *baseline_glyphs = NULL;
+    hb_set_t  *new_glyphs      = NULL;
+
+    hb_tag_t  feature_tag;
+
+
+    /* Get the list of glyphs that are created by only transforming, */
+    /* based on the features in `current_features`.                  */
+    baseline_glyphs = hb_set_create();
+    if ( !hb_set_allocation_successful( baseline_glyphs ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    hb_ot_shape_glyphs_closure( font,
+                                buffer,
+                                current_features,
+                                num_features,
+                                baseline_glyphs );
+    if ( !hb_set_allocation_successful( baseline_glyphs ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    /* Add these baseline glyphs to the result.  The baseline glyph set */
+    /* contains at least the glyph specified by the cmap.               */
+    hb_set_union( result, baseline_glyphs );
+    if ( !hb_set_allocation_successful( result ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    if ( !hb_set_get_population( feature_tag_pool ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    /* Prepare for adding different features to `current_features` to     */
+    /* check whether any of them have an effect of the glyphs we get from */
+    /* `hb_ot_shape_glyphs_closure`.                                      */
+    current_features[num_features].start = HB_FEATURE_GLOBAL_START;
+    current_features[num_features].end   = HB_FEATURE_GLOBAL_END;
+    current_features[num_features].value = 1; /* enable the feature */
+
+    /*
+      Quote from the HarfBuzz documentation about the `value` attribute:
+
+        0 disables the feature, non-zero (usually 1) enables the feature.
+        For features implemented as lookup type 3 (like 'salt') the value is
+        a one-based index into the alternates.  This algorithm does not
+        handle these lookup type 3 cases fully.
+    */
+
+    new_glyphs = hb_set_create();
+    if ( !hb_set_allocation_successful( new_glyphs ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    feature_tag = HB_SET_VALUE_INVALID;
+
+    while ( hb_set_next( feature_tag_pool, &feature_tag ) )
+    {
+      hb_set_clear( new_glyphs );
+
+      current_features[num_features].tag = feature_tag;
+
+      hb_ot_shape_glyphs_closure ( font,
+                                   buffer,
+                                   current_features,
+                                   num_features + 1,
+                                   new_glyphs );
+      if ( !hb_set_allocation_successful( new_glyphs ) )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+      }
+
+      hb_set_subtract( new_glyphs, result );
+
+      /* `new_glyphs` now contains all glyphs that appeared in the result */
+      /* of `hb_ot_shape_glyphs_closure` that haven't already been        */
+      /* accounted for in the result.  If this contains any glyphs, we    */
+      /* also need to try this feature in combination with other features */
+      /* by recursing.                                                    */
+      if ( hb_set_get_population( new_glyphs ) != 0 )
+      {
+        /* Remove this feature from the feature pool temporarily so that */
+        /* a later recursion won't try it.                               */
+        hb_set_del( feature_tag_pool, feature_tag );
+
+        error = af_all_glyph_variants_helper( font,
+                                              buffer,
+                                              feature_tag_pool,
+                                              current_features,
+                                              num_features + 1,
+                                              result );
+        if ( error )
+          goto Exit;
+
+        /* Add back the feature we removed. */
+        hb_set_add( feature_tag_pool, feature_tag );
+        if ( !hb_set_allocation_successful( feature_tag_pool ) )
+          return FT_Err_Out_Of_Memory;
+      }
+    }
+
+  Exit:
+    hb_set_destroy( baseline_glyphs );
+    hb_set_destroy( new_glyphs );
+    return FT_Err_Ok;
+  }
+
+
+  static FT_Error
+  af_all_glyph_variants( FT_Face     face,
+                         hb_font_t  *hb_font,
+                         FT_UInt32   codepoint,
+                         hb_set_t*   result )
+  {
+    FT_Error  error;
+
+    FT_Memory   memory  = face->memory;
+    hb_face_t  *hb_face = hb_font_get_face( hb_font );
+
+    FT_Bool       feature_list_done;
+    unsigned int  start_offset;
+
+    /* The set of all feature tags in the font. */
+    hb_set_t        *feature_tags          = hb_set_create();
+    hb_set_t        *type_3_lookup_indices = hb_set_create();
+    hb_buffer_t     *codepoint_buffer      = hb_buffer_create();
+    hb_codepoint_t  *type_3_alternate_glyphs_buffer;
+
+    hb_feature_t  *feature_buffer;
+
+    /* List of features containing type 3 lookups. */
+    hb_tag_t  feature_list[] =
+    {
+      HB_TAG( 's', 'a', 'l', 't' ),
+      HB_TAG( 's', 'w', 's', 'h' ),
+      HB_TAG( 'n', 'a', 'l', 't' ),
+      HB_TAG_NONE
+    };
+
+    hb_codepoint_t  lookup_index;
+    FT_UInt         base_glyph_index;
+
+
+    if ( !hb_set_allocation_successful( feature_tags )           ||
+         !hb_buffer_allocation_successful( codepoint_buffer )    ||
+         !hb_set_allocation_successful ( type_3_lookup_indices ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+    /* Populate `feature_tags` using the output of */
+    /* `hb_ot_layout_table_get_feature_tags`.      */
+    feature_list_done = 0;
+    start_offset      = 0;
+
+    while ( !feature_list_done )
+    {
+      unsigned int  feature_count = 20;
+      hb_tag_t      tags[20];
+
+      unsigned int  i;
+
+
+      hb_ot_layout_table_get_feature_tags( hb_face,
+                                           HB_OT_TAG_GSUB,
+                                           start_offset,
+                                           &feature_count,
+                                           tags );
+      start_offset += 20;
+      if ( feature_count < 20 )
+        feature_list_done = 1;
+
+      for ( i = 0; i < feature_count; i++ )
+        hb_set_add( feature_tags, tags[i] );
+
+      if ( !hb_set_allocation_successful( feature_tags ) )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+      }
+    }
+
+    /* Make a buffer only consisting of the given code point. */
+    if ( !hb_buffer_pre_allocate( codepoint_buffer, 1 ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+    hb_buffer_set_direction( codepoint_buffer, HB_DIRECTION_LTR );
+    hb_buffer_add( codepoint_buffer, codepoint, 0 );
+
+    /* The array of features that is used by the recursive part has at */
+    /* most as many entries as there are features, so make the length  */
+    /* equal to the length of `feature_tags`.                          */
+    if ( ( error = FT_NEW_ARRAY( feature_buffer,
+                                 hb_set_get_population( feature_tags ) ) ) )
+      goto Exit;
+
+    error = af_all_glyph_variants_helper( hb_font,
+                                          codepoint_buffer,
+                                          feature_tags,
+                                          feature_buffer,
+                                          0,
+                                          result );
+    if ( error )
+      goto Exit;
+
+    /* Add the alternative glyph forms that come from features using
+       type 3 lookups.
+
+       This file from gtk was very useful in figuring out my approach:
+
+         https://gitlab.gnome.org/GNOME/gtk/-/blob/40f20fee3d8468749dfb233a6f95921c765c1163/gtk/gtkfontchooserwidget.c#L2100
+     */
+    hb_ot_layout_collect_lookups( hb_face,
+                                  HB_OT_TAG_GSUB,
+                                  NULL,
+                                  NULL,
+                                  feature_list,
+                                  type_3_lookup_indices );
+    if ( !hb_set_allocation_successful( type_3_lookup_indices ) )
+    {
+      error = FT_Err_Out_Of_Memory;
+      goto Exit;
+    }
+
+#define MAX_ALTERNATES  100  /* ad-hoc value */
+
+    if ( ( error = FT_NEW_ARRAY( type_3_alternate_glyphs_buffer,
+                                 MAX_ALTERNATES ) ) )
+      goto Exit;
+
+    lookup_index     = HB_SET_VALUE_INVALID;
+    base_glyph_index = FT_Get_Char_Index( face, codepoint );
+
+    if ( base_glyph_index )
+    {
+      while ( hb_set_next( type_3_lookup_indices, &lookup_index ) )
+      {
+        unsigned  alternate_count = MAX_ALTERNATES;
+        unsigned  i;
+
+
+        hb_ot_layout_lookup_get_glyph_alternates(
+          hb_face,
+          lookup_index,
+          base_glyph_index,
+          0,
+          &alternate_count,
+          type_3_alternate_glyphs_buffer );
+
+        for ( i = 0; i < alternate_count; i++ )
+          hb_set_add( result, type_3_alternate_glyphs_buffer[i] );
+      }
+    }
+
+  Exit:
+    hb_set_destroy( feature_tags );
+    hb_buffer_destroy( codepoint_buffer );
+    FT_FREE( feature_buffer );
+    FT_FREE( type_3_alternate_glyphs_buffer );
+
+    return error;
+  }
+
+#endif /*FT_CONFIG_OPTION_USE_HARFBUZZ*/
+
+
   FT_LOCAL_DEF( FT_Error )
   af_reverse_character_map_new( AF_ReverseCharacterMap  *map,
                                 AF_FaceGlobals           globals )
@@ -364,6 +707,66 @@
     if ( FT_NEW_ARRAY( ( *map )->entries, capacity ) )
       goto Exit;
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+
+    {
+      hb_font_t  *hb_font    = globals->hb_font;
+      hb_set_t   *result_set = hb_set_create();
+
+      FT_ULong  i;
+
+
+      if ( !hb_set_allocation_successful( result_set ) )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto harfbuzz_path_Exit;
+      }
+
+      /* Find all glyph variants of the code points, then make an entry */
+      /* from the glyph to the code point for each one.                 */
+      for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+      {
+        FT_UInt32  codepoint = adjustment_database[i].codepoint;
+
+        hb_codepoint_t  glyph;
+
+
+        error = af_all_glyph_variants( face,
+                                       hb_font,
+                                       codepoint,
+                                       result_set );
+        if ( error )
+          goto harfbuzz_path_Exit;
+
+        glyph = HB_SET_VALUE_INVALID;
+
+        while ( hb_set_next( result_set, &glyph ) )
+        {
+          FT_Long  insert_point;
+
+
+          error = af_reverse_character_map_expand( *map, &capacity, memory );
+          if ( error )
+            goto harfbuzz_path_Exit;
+
+          insert_point = ( *map )->length;
+
+          ( *map )->length++;
+          ( *map )->entries[insert_point].glyph_index = glyph;
+          ( *map )->entries[insert_point].codepoint   = codepoint;
+        }
+
+        hb_set_clear( result_set );
+      }
+
+    harfbuzz_path_Exit:
+      hb_set_destroy( result_set );
+      if ( error )
+        goto Exit;
+    }
+
+#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+
     {
       FT_UInt  i;
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -394,6 +797,8 @@
         ( *map )->entries[i].codepoint   = codepoint;
       }
     }
+
+#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     ft_qsort( ( *map )->entries,
               ( *map )->length,
