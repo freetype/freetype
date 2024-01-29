@@ -439,6 +439,8 @@ extern void*  af_debug_hints_;
 
     AF_FaceGlobals  globals;    /* to access properties */
 
+    AF_ReverseCharacterMap  reverse_charmap;
+
   } AF_StyleMetricsRec;
 
 
