@@ -8,6 +8,22 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
     flag  was always meant  to suppress the bitmap strikes in favor of
     outlines, not to ban them completely.
 
+  - The auto-hinter got new abilities.
+
+    . It can now better separate  diacritic glyphs from base glyphs at
+      small sizes  by artificially moving  diacritics up (or  down) if
+      necessary.
+
+    . Tilde accent  glyphs get vertically stretched at  small sizes so
+      that they don't degenerate to horizontal lines.
+
+    Both  features use  a database,  which currently  has entries  for
+    Unicode characters lower than U+0180.  FreeType needs to access or
+    construct a proper Unicode character map from a given font to make
+    this work.
+
+    This was Craig White's GSoC 2023 project.
+
 
   III. MISCELLANEOUS
 
@@ -15,7 +31,7 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
     modern 64-bit platforms  as  a result of better handling of fixed-
     point multiplication.
 
-  - The BDF driver now loads fonts 75% faster. 
+  - The BDF driver now loads fonts 75% faster.
 
 
 ======================================================================
