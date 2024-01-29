@@ -7,6 +7,21 @@ CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Mmm-DD)
     usage.   It  is  also  an  additional  means  to  protect  against
     malformed input.
 
+  - The auto-hinter got new abilities.
+
+    . It can now better separate accents from base characters at small
+      sizes by artificially moving accents up if necessary.
+
+    . Tilde characters get vertically stretched at small sizes so that
+      they don't degenerate to horizontal lines.
+
+    Both  features use  a database,  which currently  has entries  for
+    Unicode characters lower than U+0180.  FreeType needs to access or
+    construct a proper Unicode character map from a given font to make
+    this work.
+
+    This was Craig White's GSoC 2023 project.
+
 
   II. IMPORTANT BUG FIXES
 
