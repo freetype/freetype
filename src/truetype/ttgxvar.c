@@ -2142,7 +2142,7 @@
                                          innerIndex );
 
           /* Convert to 16.16 format before adding. */
-	  v += delta * 4;
+	  v += MUL_INT( delta, 4 );
 
 	  /* Clamp value range. */
 	  v = v >=  0x10000L ?  0x10000 : v;
