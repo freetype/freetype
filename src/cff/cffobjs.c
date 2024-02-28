@@ -694,8 +694,7 @@
         FT_UInt  instance_index = (FT_UInt)face_index >> 16;
 
 
-        if ( FT_HAS_MULTIPLE_MASTERS( cffface ) &&
-             instance_index > 0                 )
+        if ( FT_HAS_MULTIPLE_MASTERS( cffface ) )
         {
           error = FT_Set_Named_Instance( cffface, instance_index );
           if ( error )
