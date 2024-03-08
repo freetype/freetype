@@ -2976,8 +2976,18 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
   }
   while ( p != first_point );
 
-  FT_Pos height = max_y - min_y;
+  //touch all points
+  p = first_point;
+  do
+  {
+    p = p->next;
+    if ( !(p->flags & AF_FLAG_CONTROL) )
+      p->flags |= AF_FLAG_TOUCH_Y;
+  }
+  while ( p != first_point );
 
+
+  FT_Pos height = max_y - min_y;
   FT_Pos target_height = min_measurement + 64;
   if ( height >= target_height )
   {
@@ -2991,8 +3001,6 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
     p->y = ((p->y - min_y) * target_height / height) + min_y;
     p->fy = ((p->fy - min_fy) * target_height / height) + min_fy;
     p->oy = p->y;
-    if ( !(p->flags & AF_FLAG_CONTROL) )
-      p->flags |= AF_FLAG_TOUCH_Y;
   }
   while ( p != first_point );
 
@@ -3159,6 +3167,8 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
         adjustment_amount = 64 - ( highest_min_y - max_y );
       }
     }
+
+    FT_TRACE4(( "    Calculated adjustment amount %d\n", adjustment_amount ));
 
     if ( adjustment_amount > 64 )
     {
@@ -4066,6 +4076,33 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
 #endif
   }
 
+  /*Print the height of the topmost contour for debugging purposes.
+  TODO: remove this once the tilde unflattening works.*/
+  static void traceheight(FT_UInt num, AF_GlyphHints hints) {
+    AF_Point p = hints->contours[af_find_highest_contour(hints)];
+    AF_Point first_point = p;
+
+    FT_Pos min_y, max_y;
+    min_y = max_y = p->y;
+
+    do {
+      p = p->next;
+      if ( !(p->flags & AF_FLAG_CONTROL) ) {
+        if ( p->y < min_y ) {
+          min_y = p->y;
+        }
+        if ( p->y > max_y ) {
+          max_y = p->y;
+        }
+      }
+    } while ( p != first_point );
+
+    FT_Pos height = max_y - min_y;
+    FT_TRACE4(( "height %d: %d\n", num, height ));
+  }
+
+
+
 
   /* Apply the complete hinting algorithm to a latin glyph. */
 
@@ -4103,7 +4140,9 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
     {
       FT_Bool is_tilde = af_lookup_tilde_correction_type( metrics->root.reverse_charmap, glyph_index );
       if ( is_tilde ) {
+        traceheight(0, hints);
         af_latin_stretch_tildes( hints, glyph_index );
+        traceheight(1, hints);
       }
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
@@ -4128,10 +4167,15 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
         af_latin_hint_edges( hints, (AF_Dimension)dim );
+        traceheight(2, hints);
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
+        traceheight(3, hints);
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
+        traceheight(4, hints);
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
+        traceheight(5, hints);
         af_glyph_hints_apply_vertical_separation_adjustments(hints, (AF_Dimension) dim, glyph_index, metrics->root.reverse_charmap);
+        traceheight(6, hints);
       }
     }
 
