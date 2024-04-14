@@ -1907,23 +1907,24 @@ typedef ptrdiff_t  FT_PtrDist;
 
       do
       {
-        TCoord  width = band[0] - band[1];
-        TCoord  w;
+        TCoord  i;
         int     error;
 
 
-        for ( w = 0; w < width; ++w )
-          ras.ycells[w] = ras.cell_null;
+        ras.min_ey   = band[1];
+        ras.max_ey   = band[0];
 
-        /* memory management: skip ycells */
-        n = ( (size_t)width * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
-              sizeof ( TCell );
+        ras.count_ey = ras.max_ey - ras.min_ey;
+
+        /* memory management: zero out and skip ycells */
+        for ( i = 0; i < ras.count_ey; ++i )
+          ras.ycells[i] = ras.cell_null;
+
+        n = ( (size_t)ras.count_ey * sizeof ( PCell ) + sizeof ( TCell ) - 1 )
+              / sizeof ( TCell );
 
         ras.cell_free = buffer + n;
         ras.cell      = ras.cell_null;
-        ras.min_ey    = band[1];
-        ras.max_ey    = band[0];
-        ras.count_ey  = width;
 
         error     = gray_convert_glyph_inner( RAS_VAR_ continued );
         continued = 1;
@@ -1941,10 +1942,10 @@ typedef ptrdiff_t  FT_PtrDist;
           return error;
 
         /* render pool overflow; we will reduce the render band by half */
-        width >>= 1;
+        i = ( band[0] - band[1] ) >> 1;
 
         /* this should never happen even with tiny rendering pool */
-        if ( width == 0 )
+        if ( i == 0 )
         {
           FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
           return FT_THROW( Raster_Overflow );
@@ -1952,7 +1953,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
         band++;
         band[1]  = band[0];
-        band[0] += width;
+        band[0] += i;
       } while ( band >= bands );
     }
 
