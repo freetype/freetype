@@ -2889,8 +2889,7 @@ The n tilde on times new roman with forced autofitting on,
 16.5-18 ppem font size exhibits this behaviour.
 */
 void
-af_latin_stretch_tildes( AF_GlyphHints hints,
-                         FT_Int glyph_index )
+af_latin_stretch_tildes( AF_GlyphHints hints )
 {
   FT_Int highest_contour = af_find_highest_contour( hints );
   AF_Point p = hints->contours[highest_contour];
@@ -3017,6 +3016,59 @@ af_latin_stretch_tildes( AF_GlyphHints hints,
     {
       new_max_y = p->y;
     }
+  }
+  while ( p != first_point );
+}
+
+/*
+  As part of af_latin_stretch_tildes, all points in the tilde
+  are marked as touched, so the existing grid fitting will leave
+  the tilde misaligned with the grid.
+  This function moves the tilde contour down to be grid fitted.
+  We assume that if moving the tilde down would cause it to touch or
+  overlap another countour, the vertical adjustment step will fix it
+
+  Because the vertical adjustment step comes after all other grid fitting
+  steps, the top edge of the contour under the tilde is usually aligned with
+  a horizontal gridline. The vertical gap enforced by the vertical adjustment
+  is exactly one pixel, so if the top edge of the contour below the tilde is on a
+  gridline, the resulting tilde contour will also be grid aligned.
+
+  But in cases where the gap is already big enough so that the vertical
+  adjustment does nothing, this function ensures that even without the
+  intervention of the vertical adjustment step, the tilde will be
+  grid aligned.
+*/
+void
+af_latin_align_tildes( AF_GlyphHints hints ) {
+  FT_Int highest_contour = af_find_highest_contour( hints );
+  AF_Point p = hints->contours[highest_contour];
+  AF_Point first_point = p;
+
+  FT_Pos min_y, max_y;
+
+  do
+  {
+    p = p->next;
+    if ( p->y < min_y )
+    {
+      min_y = p->y;
+    }
+    if ( p->y > max_y )
+    {
+      max_y = p->y;
+    }
+  }
+  while ( p != first_point );
+
+  //FT_Pos mid_y = ( min_y + max_y ) / 2;
+  FT_Pos min_y_rounded = FT_PIX_ROUND( min_y );
+  FT_Pos delta = min_y_rounded - min_y;
+
+  do
+  {
+    p = p->next;
+    p->y += delta;
   }
   while ( p != first_point );
 }
@@ -4141,7 +4193,8 @@ af_glyph_hints_apply_vertical_separation_adjustments( AF_GlyphHints hints,
       FT_Bool is_tilde = af_lookup_tilde_correction_type( metrics->root.reverse_charmap, glyph_index );
       if ( is_tilde ) {
         traceheight(0, hints);
-        af_latin_stretch_tildes( hints, glyph_index );
+        af_latin_stretch_tildes( hints );
+        af_latin_align_tildes( hints );
         traceheight(1, hints);
       }
       axis  = &metrics->axis[AF_DIMENSION_VERT];
