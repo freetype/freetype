@@ -1892,18 +1892,17 @@ typedef ptrdiff_t  FT_PtrDist;
       height  = ( height + n - 1 ) / n;
     }
 
-    ras.min_ex = ras.cbox.xMin;
-    ras.max_ex = ras.cbox.xMax;
-
     for ( y = ras.cbox.yMin; y < ras.cbox.yMax; )
     {
       ras.min_ey = y;
       y         += height;
       ras.max_ey = FT_MIN( y, ras.cbox.yMax );
 
+      ras.count_ey = ras.max_ey - ras.min_ey;
+
       band    = bands;
-      band[1] = ras.min_ey;
-      band[0] = ras.max_ey;
+      band[1] = ras.cbox.xMin;
+      band[0] = ras.cbox.xMax;
 
       do
       {
@@ -1911,10 +1910,8 @@ typedef ptrdiff_t  FT_PtrDist;
         int     error;
 
 
-        ras.min_ey   = band[1];
-        ras.max_ey   = band[0];
-
-        ras.count_ey = ras.max_ey - ras.min_ey;
+        ras.min_ex = band[1];
+        ras.max_ex = band[0];
 
         /* memory management: zero out and skip ycells */
         for ( i = 0; i < ras.count_ey; ++i )
