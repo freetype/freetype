@@ -489,7 +489,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   typedef struct  gray_TWorker_
   {
-    ft_jmp_buf  jump_buffer;
+    FT_BBox     cbox;
 
     TCoord  min_ex, max_ex;  /* min and max integer pixel coordinates */
     TCoord  min_ey, max_ey;
@@ -509,6 +509,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_Raster_Span_Func  render_span;
     void*                render_span_data;
+
+    ft_jmp_buf  jump_buffer;
 
   } gray_TWorker, *gray_PWorker;
 
@@ -1863,11 +1865,8 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    const TCoord  yMin = ras.min_ey;
-    const TCoord  yMax = ras.max_ey;
-
     TCell    buffer[FT_MAX_GRAY_POOL];
-    size_t   height = (size_t)( yMax - yMin );
+    size_t   height = (size_t)( ras.cbox.yMax - ras.cbox.yMin );
     size_t   n = FT_MAX_GRAY_POOL / 8;
     TCoord   y;
     TCoord   bands[32];  /* enough to accommodate bisections */
@@ -1893,11 +1892,14 @@ typedef ptrdiff_t  FT_PtrDist;
       height  = ( height + n - 1 ) / n;
     }
 
-    for ( y = yMin; y < yMax; )
+    ras.min_ex = ras.cbox.xMin;
+    ras.max_ex = ras.cbox.xMax;
+
+    for ( y = ras.cbox.yMin; y < ras.cbox.yMax; )
     {
       ras.min_ey = y;
       y         += height;
-      ras.max_ey = FT_MIN( y, yMax );
+      ras.max_ey = FT_MIN( y, ras.cbox.yMax );
 
       band    = bands;
       band[1] = ras.min_ey;
@@ -2001,10 +2003,7 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
       ras.render_span_data = params->user;
 
-      ras.min_ex = params->clip_box.xMin;
-      ras.min_ey = params->clip_box.yMin;
-      ras.max_ex = params->clip_box.xMax;
-      ras.max_ey = params->clip_box.yMax;
+      ras.cbox = params->clip_box;
     }
     else
     {
@@ -2030,14 +2029,14 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.render_span      = (FT_Raster_Span_Func)NULL;
       ras.render_span_data = NULL;
 
-      ras.min_ex = 0;
-      ras.min_ey = 0;
-      ras.max_ex = (FT_Pos)target_map->width;
-      ras.max_ey = (FT_Pos)target_map->rows;
+      ras.cbox.xMin = 0;
+      ras.cbox.yMin = 0;
+      ras.cbox.xMax = (FT_Pos)target_map->width;
+      ras.cbox.yMax = (FT_Pos)target_map->rows;
     }
 
     /* exit if nothing to do */
-    if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
+    if ( ras.cbox.xMin >= ras.cbox.xMax || ras.cbox.yMin >= ras.cbox.yMax )
       return Smooth_Err_Ok;
 
     return gray_convert_glyph( RAS_VAR );
