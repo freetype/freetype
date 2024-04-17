@@ -249,11 +249,13 @@
 
       if ( list->clazz.node_reset )
       {
-        FTC_MruNode_Up( &list->nodes, node );
-
         error = list->clazz.node_reset( node, key, list->data );
         if ( !error )
-          goto Exit;
+          FTC_MruNode_Up( &list->nodes, node );
+        else
+          node = NULL;
+
+        goto Exit;
       }
 
       FTC_MruNode_Remove( &list->nodes, node );

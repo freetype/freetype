@@ -118,14 +118,21 @@
                       FT_Pointer   ftcscaler,
                       FT_Pointer   ftcmanager )
   {
+    FT_Error      error;
+    FT_Size       size;
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
     FTC_Scaler    scaler  = (FTC_Scaler)ftcscaler;
     FTC_Manager   manager = (FTC_Manager)ftcmanager;
 
 
-    node->scaler = scaler[0];
+    error = ftc_scaler_lookup_size( manager, scaler, &size );
+    if ( !error )
+    {
+      node->size   = size;
+      node->scaler = scaler[0];
+    }
 
-    return ftc_scaler_lookup_size( manager, scaler, &node->size );
+    return error;
   }
 
 
@@ -134,16 +141,23 @@
                        FT_Pointer   ftcscaler,
                        FT_Pointer   ftcmanager )
   {
+    FT_Error      error;
+    FT_Size       size;
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
     FTC_Scaler    scaler  = (FTC_Scaler)ftcscaler;
     FTC_Manager   manager = (FTC_Manager)ftcmanager;
 
 
-    FT_Done_Size( node->size );
+    error = ftc_scaler_lookup_size( manager, scaler, &size );
+    if ( !error )
+    {
+      FT_Done_Size( node->size );
 
-    node->scaler = scaler[0];
+      node->size   = size;
+      node->scaler = scaler[0];
+    }
 
-    return ftc_scaler_lookup_size( manager, scaler, &node->size );
+    return error;
   }
 
 
@@ -231,23 +245,25 @@
                       FT_Pointer   ftcface_id,
                       FT_Pointer   ftcmanager )
   {
+    FT_Error      error;
+    FT_Face       face;
     FTC_FaceNode  node    = (FTC_FaceNode)ftcnode;
     FTC_FaceID    face_id = (FTC_FaceID)ftcface_id;
     FTC_Manager   manager = (FTC_Manager)ftcmanager;
-    FT_Error      error;
 
-
-    node->face_id = face_id;
 
     error = manager->request_face( face_id,
                                    manager->library,
                                    manager->request_data,
-                                   &node->face );
+                                   &face );
     if ( !error )
     {
       /* destroy initial size object; it will be re-created later */
-      if ( node->face->size )
-        FT_Done_Size( node->face->size );
+      if ( face->size )
+        FT_Done_Size( face->size );
+
+      node->face    = face;
+      node->face_id = face_id;
     }
 
     return error;
