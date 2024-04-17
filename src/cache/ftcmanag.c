@@ -86,12 +86,10 @@
                       FT_Pointer   data )
   {
     FTC_SizeNode  node = (FTC_SizeNode)ftcnode;
-    FT_Size       size = node->size;
     FT_UNUSED( data );
 
 
-    if ( size )
-      FT_Done_Size( size );
+    FT_Done_Size( node->size );
   }
 
 

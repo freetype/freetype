@@ -238,54 +238,62 @@
   {
     FT_Error     error;
     FTC_MruNode  node   = NULL;
+    FTC_MruNode  prev   = NULL;
     FT_Memory    memory = list->memory;
 
 
-    if ( list->num_nodes >= list->max_nodes && list->max_nodes > 0 )
+    if ( list->max_nodes > 0 && list->num_nodes >= list->max_nodes )
     {
-      node = list->nodes->prev;
+      prev = list->nodes->prev;
 
-      FT_ASSERT( node );
+      FT_ASSERT( prev );
 
+      /* try fast reset when available */
       if ( list->clazz.node_reset )
       {
-        error = list->clazz.node_reset( node, key, list->data );
+        error = list->clazz.node_reset( prev, key, list->data );
         if ( !error )
+        {
+          node = prev;
+
           FTC_MruNode_Up( &list->nodes, node );
-        else
-          node = NULL;
+        }
 
         goto Exit;
       }
-
-      FTC_MruNode_Remove( &list->nodes, node );
-      list->num_nodes--;
-
-      if ( list->clazz.node_done )
-        list->clazz.node_done( node, list->data );
     }
 
     /* zero new node in case of node_init failure */
-    else if ( FT_ALLOC( node, list->clazz.node_size ) )
+    if ( FT_ALLOC( node, list->clazz.node_size ) )
       goto Exit;
 
     error = list->clazz.node_init( node, key, list->data );
     if ( error )
-      goto Fail;
+    {
+      prev = node;
+      node = NULL;
+
+      goto Clean;
+    }
 
     FTC_MruNode_Prepend( &list->nodes, node );
     list->num_nodes++;
 
+    if ( !prev )
+      goto Exit;
+
+    FTC_MruNode_Remove( &list->nodes, prev );
+    list->num_nodes--;
+
+  Clean:
+    if ( list->clazz.node_done )
+      list->clazz.node_done( prev, list->data );
+
+    FT_FREE( prev );
+
   Exit:
     *anode = node;
     return error;
-
-  Fail:
-    if ( list->clazz.node_done )
-      list->clazz.node_done( node, list->data );
-
-    FT_FREE( node );
-    goto Exit;
   }
 
 
@@ -311,18 +319,16 @@
   FTC_MruList_Remove( FTC_MruList  list,
                       FTC_MruNode  node )
   {
+    FT_Memory  memory = list->memory;
+
+
     FTC_MruNode_Remove( &list->nodes, node );
     list->num_nodes--;
 
-    {
-      FT_Memory  memory = list->memory;
+    if ( list->clazz.node_done )
+      list->clazz.node_done( node, list->data );
 
-
-      if ( list->clazz.node_done )
-        list->clazz.node_done( node, list->data );
-
-      FT_FREE( node );
-    }
+    FT_FREE( node );
   }
 
 
