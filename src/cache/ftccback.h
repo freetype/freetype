@@ -19,11 +19,7 @@
 #define FTCCBACK_H_
 
 #include <freetype/ftcache.h>
-#include "ftcmru.h"
-#include "ftcimage.h"
-#include "ftcmanag.h"
-#include "ftcglyph.h"
-#include "ftcsbits.h"
+#include "ftccache.h"
 
 FT_BEGIN_HEADER
 
@@ -80,10 +76,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   ftc_cache_done( FTC_Cache  cache );
-
-  FT_LOCAL( void )
-  ftc_node_destroy( FTC_Node     node,
-                    FTC_Manager  manager );
 
 FT_END_HEADER
 

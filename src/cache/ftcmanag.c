@@ -22,7 +22,6 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftsizes.h>
 
-#include "ftccback.h"
 #include "ftcerror.h"
 
 

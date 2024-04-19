@@ -87,6 +87,10 @@ FT_BEGIN_HEADER
         ftc_get_top_node_for_hash( ( cache ), ( hash ) )
 #endif
 
+  FT_LOCAL( void )
+  ftc_node_destroy( FTC_Node     node,
+                    FTC_Manager  manager );
+
 
   /*************************************************************************/
   /*************************************************************************/
