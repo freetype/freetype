@@ -334,7 +334,7 @@
 
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
 
-#if 1  /* inlining is about 50% faster! */
+#ifdef FTC_INLINE  /* inlining is about 50% faster! */
     FTC_GCACHE_LOOKUP_CMP( cache,
                            ftc_basic_family_compare,
                            ftc_gnode_compare,
@@ -534,7 +534,7 @@
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
            gindex / FTC_SBIT_ITEMS_PER_NODE;
 
-#if 1  /* inlining is about 50% faster! */
+#ifdef FTC_INLINE  /* inlining is about 50% faster! */
     FTC_GCACHE_LOOKUP_CMP( cache,
                            ftc_basic_family_compare,
                            ftc_snode_compare,

@@ -264,7 +264,7 @@
 
     hash = FTC_CMAP_HASH( face_id, (FT_UInt)cmap_index, char_code );
 
-#if 1
+#ifdef FTC_INLINE
     FTC_CACHE_LOOKUP_CMP( cache, ftc_cmap_node_compare, hash, &query,
                           node, error );
 #else
