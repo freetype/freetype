@@ -180,7 +180,7 @@
 
     query->gindex = gindex;
 
-    FTC_MRULIST_LOOKUP( &cache->families, query, query->family, error );
+    FTC_MRULIST_LOOKUP( &gcache->families, query, query->family, error );
     if ( !error )
     {
       FTC_Family  family = query->family;
@@ -193,7 +193,7 @@
       error = FTC_Cache_Lookup( FTC_CACHE( gcache ), hash, query, anode );
 
       if ( --family->num_nodes == 0 )
-        FTC_FAMILY_FREE( family, cache );
+        FTC_FAMILY_FREE( family, FTC_CACHE( gcache ) );
     }
     return error;
   }
