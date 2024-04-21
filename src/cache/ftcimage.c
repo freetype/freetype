@@ -34,11 +34,7 @@
     FT_Memory  memory = cache->memory;
 
 
-    if ( inode->glyph )
-    {
-      FT_Done_Glyph( inode->glyph );
-      inode->glyph = NULL;
-    }
+    FT_Done_Glyph( inode->glyph );
 
     FTC_GNode_Done( FTC_GNODE( inode ), cache );
     FT_FREE( inode );
