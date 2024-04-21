@@ -290,22 +290,19 @@
                          FT_Glyph       *aglyph,
                          FTC_Node       *anode )
   {
-    FTC_BasicQueryRec  query;
-    FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
+    FTC_BasicQueryRec  query;
+    FTC_Node           node = NULL;  /* make compiler happy */
     FT_Offset          hash;
 
 
-    /* some argument checks are delayed to `FTC_Cache_Lookup' */
+    /* other argument checks delayed to `FTC_Cache_Lookup' */
     if ( !aglyph )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+      return FT_THROW( Invalid_Argument );
 
     *aglyph = NULL;
     if ( anode )
-      *anode  = NULL;
+      *anode = NULL;
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;
@@ -343,7 +340,6 @@
       }
     }
 
-  Exit:
     return error;
   }
 
@@ -358,22 +354,19 @@
                                FT_Glyph       *aglyph,
                                FTC_Node       *anode )
   {
-    FTC_BasicQueryRec  query;
-    FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
+    FTC_BasicQueryRec  query;
+    FTC_Node           node = NULL;  /* make compiler happy */
     FT_Offset          hash;
 
 
-    /* some argument checks are delayed to `FTC_Cache_Lookup' */
+    /* other argument checks delayed to `FTC_Cache_Lookup' */
     if ( !aglyph || !scaler )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+      return FT_THROW( Invalid_Argument );
 
     *aglyph = NULL;
     if ( anode )
-      *anode  = NULL;
+      *anode = NULL;
 
     /*
      * Internal `FTC_BasicAttr->load_flags' is of type `FT_Int32',
@@ -411,7 +404,6 @@
       }
     }
 
-  Exit:
     return error;
   }
 
@@ -479,18 +471,17 @@
   {
     FT_Error           error;
     FTC_BasicQueryRec  query;
-    FTC_Node           node = 0; /* make compiler happy */
+    FTC_Node           node = NULL;  /* make compiler happy */
     FT_Offset          hash;
 
-
-    if ( anode )
-      *anode = NULL;
 
     /* other argument checks delayed to `FTC_Cache_Lookup' */
     if ( !ansbit )
       return FT_THROW( Invalid_Argument );
 
     *ansbit = NULL;
+    if ( anode )
+      *anode = NULL;
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;
@@ -549,18 +540,17 @@
   {
     FT_Error           error;
     FTC_BasicQueryRec  query;
-    FTC_Node           node = 0; /* make compiler happy */
+    FTC_Node           node = NULL;  /* make compiler happy */
     FT_Offset          hash;
 
 
-    if ( anode )
-        *anode = NULL;
-
     /* other argument checks delayed to `FTC_Cache_Lookup' */
     if ( !ansbit || !scaler )
-        return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Argument );
 
     *ansbit = NULL;
+    if ( anode )
+      *anode = NULL;
 
     /*
      * Internal `FTC_BasicAttr->load_flags' is of type `FT_Int32',
