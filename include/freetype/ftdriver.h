@@ -827,9 +827,9 @@ FT_BEGIN_HEADER
    *   This property of the 'sdf' and 'bsdf' renderers defines how the signed
    *   distance field (SDF) is represented in the output bitmap.  The output
    *   values are calculated as follows, '128 * ( SDF / spread + 1 )', with
-   *   the result truncated to the 8-bit range [0..255].  Therefore, 'spread'
+   *   the result clamped to the 8-bit range [0..255].  Therefore, 'spread'
    *   is also the maximum euclidean distance from the edge after which the
-   *   values are truncated.  The spread is specified in pixels with the
+   *   values are clamped.  The spread is specified in pixels with the
    *   default value of 8.
    *
    * @example:
@@ -838,7 +838,7 @@ FT_BEGIN_HEADER
    *
    *   ```
    *     FT_Library  library;
-   *     FT_UInt     spread = 2;
+   *     FT_Int      spread = 2;
    *
    *
    *     FT_Init_FreeType( &library );
