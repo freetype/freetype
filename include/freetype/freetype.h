@@ -3771,86 +3771,17 @@ FT_BEGIN_HEADER
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
    *   FT_RENDER_MODE_SDF ::
-   *     This mode corresponds to 8-bit, single-channel signed distance field
-   *     (SDF) bitmaps.  Each pixel in the SDF grid is the value from the
-   *     pixel's position to the nearest glyph's outline.  The distances are
-   *     calculated from the center of the pixel and are positive if they are
-   *     filled by the outline (i.e., inside the outline) and negative
-   *     otherwise.  Check the note below on how to convert the output values
-   *     to usable data.
+   *     The positive (unsigned) 8-bit bitmap values can be converted to the
+   *     single-channel signed distance field (SDF) by subtracting 128, with
+   *     the positive and negative results corresponding to the inside and
+   *     the outside of a glyph contour, respectively.  The distance units are
+   *     arbitrarily determined by an adjustable @spread property.
    *
    * @note:
-   *   The selected render mode only affects vector glyphs of a font.
+   *   The selected render mode only affects scalable vector glyphs of a font.
    *   Embedded bitmaps often have a different pixel mode like
    *   @FT_PIXEL_MODE_MONO.  You can use @FT_Bitmap_Convert to transform them
    *   into 8-bit pixmaps.
-   *
-   *   For @FT_RENDER_MODE_SDF the output bitmap buffer contains normalized
-   *   distances that are packed into unsigned 8-bit values.  To get pixel
-   *   values in floating point representation use the following pseudo-C
-   *   code for the conversion.
-   *
-   *   ```
-   *   // Load glyph and render using FT_RENDER_MODE_SDF,
-   *   // then use the output buffer as follows.
-   *
-   *   ...
-   *   FT_Byte  buffer = glyph->bitmap->buffer;
-   *
-   *
-   *   for pixel in buffer
-   *   {
-   *     // `sd` is the signed distance and `spread` is the current spread;
-   *     // the default spread is 2 and can be changed.
-   *
-   *     float  sd = (float)pixel - 128.0f;
-   *
-   *
-   *     // Convert to pixel values.
-   *     sd = ( sd / 128.0f ) * spread;
-   *
-   *     // Store `sd` in a buffer or use as required.
-   *   }
-   *
-   *   ```
-   *
-   *   FreeType has two rasterizers for generating SDF, namely:
-   *
-   *   1. `sdf` for generating SDF directly from glyph's outline, and
-   *
-   *   2. `bsdf` for generating SDF from rasterized bitmaps.
-   *
-   *   Depending on the glyph type (i.e., outline or bitmap), one of the two
-   *   rasterizers is chosen at runtime and used for generating SDFs.  To
-   *   force the use of `bsdf` you should render the glyph with any of the
-   *   FreeType's other rendering modes (e.g., `FT_RENDER_MODE_NORMAL`) and
-   *   then re-render with `FT_RENDER_MODE_SDF`.
-   *
-   *   There are some issues with stability and possible failures of the SDF
-   *   renderers (specifically `sdf`).
-   *
-   *   1. The `sdf` rasterizer is sensitive to really small features (e.g.,
-   *      sharp turns that are less than 1~pixel) and imperfections in the
-   *      glyph's outline, causing artifacts in the final output.
-   *
-   *   2. The `sdf` rasterizer has limited support for handling intersecting
-   *      contours and *cannot* handle self-intersecting contours whatsoever.
-   *      Self-intersection happens when a single connected contour
-   *      intersects itself at some point; having these in your font
-   *      definitely poses a problem to the rasterizer and cause artifacts,
-   *      too.
-   *
-   *   3. Generating SDF for really small glyphs may result in undesirable
-   *      output; the pixel grid (which stores distance information) becomes
-   *      too coarse.
-   *
-   *   4. Since the output buffer is normalized, precision at smaller spreads
-   *      is greater than precision at larger spread values because the
-   *      output range of [0..255] gets mapped to a smaller SDF range.  A
-   *      spread of~2 should be sufficient in most cases.
-   *
-   *   Points (1) and (2) can be avoided by using the `bsdf` rasterizer,
-   *   which is more stable than the `sdf` rasterizer in general.
    *
    */
   typedef enum  FT_Render_Mode_
