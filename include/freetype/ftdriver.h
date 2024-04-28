@@ -830,7 +830,8 @@ FT_BEGIN_HEADER
    *   the result clamped to the 8-bit range [0..255].  Therefore, 'spread'
    *   is also the maximum euclidean distance from the edge after which the
    *   values are clamped.  The spread is specified in pixels with the
-   *   default value of 8.
+   *   default value of 8.  For accurate SDF texture mapping (interpolation),
+   *   the spread should be large enough to accommodate the target grid unit.
    *
    * @example:
    *   The following example code demonstrates how to set the SDF spread
