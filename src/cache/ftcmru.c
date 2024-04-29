@@ -242,27 +242,6 @@
     FT_Memory    memory = list->memory;
 
 
-    if ( list->max_nodes > 0 && list->num_nodes >= list->max_nodes )
-    {
-      prev = list->nodes->prev;
-
-      FT_ASSERT( prev );
-
-      /* try fast reset when available */
-      if ( list->clazz.node_reset )
-      {
-        error = list->clazz.node_reset( prev, key, list->data );
-        if ( !error )
-        {
-          node = prev;
-
-          FTC_MruNode_Up( &list->nodes, node );
-        }
-
-        goto Exit;
-      }
-    }
-
     /* zero new node in case of node_init failure */
     if ( FT_ALLOC( node, list->clazz.node_size ) )
       goto Exit;
@@ -275,6 +254,8 @@
 
       goto Clean;
     }
+    else if ( list->max_nodes > 0 && list->num_nodes >= list->max_nodes )
+      prev = list->nodes->prev;
 
     FTC_MruNode_Prepend( &list->nodes, node );
     list->num_nodes++;
