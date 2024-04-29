@@ -133,31 +133,6 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_Error )
-  ftc_size_node_reset( FTC_MruNode  ftcnode,
-                       FT_Pointer   ftcscaler,
-                       FT_Pointer   ftcmanager )
-  {
-    FT_Error      error;
-    FT_Size       size;
-    FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
-    FTC_Scaler    scaler  = (FTC_Scaler)ftcscaler;
-    FTC_Manager   manager = (FTC_Manager)ftcmanager;
-
-
-    error = ftc_scaler_lookup_size( manager, scaler, &size );
-    if ( !error )
-    {
-      FT_Done_Size( node->size );
-
-      node->size   = size;
-      node->scaler = scaler[0];
-    }
-
-    return error;
-  }
-
-
   static
   const FTC_MruListClassRec  ftc_size_list_class =
   {
@@ -165,7 +140,6 @@
 
     ftc_size_node_compare,  /* FTC_MruNode_CompareFunc  node_compare */
     ftc_size_node_init,     /* FTC_MruNode_InitFunc     node_init    */
-    ftc_size_node_reset,    /* FTC_MruNode_ResetFunc    node_reset   */
     ftc_size_node_done      /* FTC_MruNode_DoneFunc     node_done    */
   };
 
@@ -307,7 +281,6 @@
 
     ftc_face_node_compare,  /* FTC_MruNode_CompareFunc  node_compare */
     ftc_face_node_init,     /* FTC_MruNode_InitFunc     node_init    */
-    NULL,                   /* FTC_MruNode_ResetFunc    node_reset   */
     ftc_face_node_done      /* FTC_MruNode_DoneFunc     node_done    */
   };
 

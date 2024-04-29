@@ -243,7 +243,6 @@
 
       ftc_basic_family_compare, /* FTC_MruNode_CompareFunc  node_compare */
       ftc_basic_family_init,    /* FTC_MruNode_InitFunc     node_init    */
-      NULL,                     /* FTC_MruNode_ResetFunc    node_reset   */
       NULL                      /* FTC_MruNode_DoneFunc     node_done    */
     },
 
@@ -421,7 +420,6 @@
       sizeof ( FTC_BasicFamilyRec ),
       ftc_basic_family_compare,     /* FTC_MruNode_CompareFunc  node_compare */
       ftc_basic_family_init,        /* FTC_MruNode_InitFunc     node_init    */
-      NULL,                         /* FTC_MruNode_ResetFunc    node_reset   */
       NULL                          /* FTC_MruNode_DoneFunc     node_done    */
     },
 
