@@ -1,6 +1,8 @@
-CHANGES BETWEEN 2.13.2 and 2.13.3 (202Y-Mmm-DD)
+CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Mmm-DD)
 
   I. IMPORTANT BUG FIXES
+
+  - Rare double-free crashes in the cache subsystem have been fixed.
 
   - Excessive stack allocation in the autohinter has been fixed.
 
