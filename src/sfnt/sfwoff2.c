@@ -289,7 +289,6 @@
     FT_ULong  checksum     = 0;
     FT_ULong  aligned_size = size & ~3UL;
     FT_ULong  i;
-    FT_ULong  v;
 
 
     for ( i = 0; i < aligned_size; i += 4 )
@@ -298,14 +297,9 @@
                   ( (FT_ULong)buf[i + 2] <<  8 ) |
                   ( (FT_ULong)buf[i + 3] <<  0 );
 
-    /* If size is not aligned to 4, treat as if it is padded with 0s. */
-    if ( size != aligned_size )
-    {
-      v = 0;
-      for ( i = aligned_size ; i < size; ++i )
-        v |= (FT_ULong)buf[i] << ( 24 - 8 * ( i & 3 ) );
-      checksum += v;
-    }
+    /* remaining bytes can be shifted and added one at a time */
+    for ( ; i < size; ++i )
+      checksum += (FT_ULong)buf[i] << ( 24 - 8 * ( i & 3 ) );
 
     return checksum;
   }
