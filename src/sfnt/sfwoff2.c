@@ -1791,7 +1791,6 @@
 
     FT_Byte*   sfnt        = NULL;
     FT_Stream  sfnt_stream = NULL;
-    FT_Byte*   sfnt_header;
     FT_ULong   sfnt_size;
 
     FT_Byte*  uncompressed_buf = NULL;
@@ -2135,6 +2134,13 @@
       WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + face_index;
 
 
+      if ( ttc_font->num_tables == 0 )
+      {
+        FT_ERROR(( "woff2_open_font: invalid WOFF2 CollectionFontEntry\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+
       /* Create a temporary array. */
       if ( FT_QNEW_ARRAY( temp_indices,
                           ttc_font->num_tables ) )
@@ -2190,13 +2196,9 @@
          FT_NEW( sfnt_stream )        )
       goto Exit;
 
-    sfnt_header = sfnt;
-
-    WRITE_ULONG( sfnt_header, woff2.flavor );
-
-    if ( woff2.num_tables )
     {
-      FT_UInt  searchRange, entrySelector, rangeShift, x;
+      FT_UInt   searchRange, entrySelector, rangeShift, x;
+      FT_Byte*  sfnt_header = sfnt;
 
 
       x             = woff2.num_tables;
@@ -2211,6 +2213,7 @@
       searchRange = ( 1 << entrySelector ) * 16;
       rangeShift  = ( woff2.num_tables * 16 ) - searchRange;
 
+      WRITE_ULONG( sfnt_header, woff2.flavor );
       WRITE_USHORT( sfnt_header, woff2.num_tables );
       WRITE_USHORT( sfnt_header, searchRange );
       WRITE_USHORT( sfnt_header, entrySelector );
