@@ -256,17 +256,20 @@
   {
     FT_Error   error;
     FT_UInt32  checksum = 0;
-    FT_UInt    i;
+    FT_Byte*   p;
+    FT_Int     shift;
 
 
     if ( FT_FRAME_ENTER( length ) )
       return 0;
 
-    for ( ; length > 3; length -= 4 )
-      checksum += (FT_UInt32)FT_GET_ULONG();
+    p = (FT_Byte*)stream->cursor;
 
-    for ( i = 3; length > 0; length--, i-- )
-      checksum += (FT_UInt32)FT_GET_BYTE() << ( i * 8 );
+    for ( ; length > 3; length -= 4 )
+      checksum += FT_NEXT_ULONG( p );
+
+    for ( shift = 24; length > 0; length--, shift -=8 )
+      checksum += (FT_UInt32)FT_NEXT_BYTE( p ) << shift;
 
     FT_FRAME_EXIT();
 

@@ -289,17 +289,15 @@
     FT_ULong  checksum     = 0;
     FT_ULong  aligned_size = size & ~3UL;
     FT_ULong  i;
+    FT_Int    shift;
 
 
     for ( i = 0; i < aligned_size; i += 4 )
-      checksum += ( (FT_ULong)buf[i    ] << 24 ) |
-                  ( (FT_ULong)buf[i + 1] << 16 ) |
-                  ( (FT_ULong)buf[i + 2] <<  8 ) |
-                  ( (FT_ULong)buf[i + 3] <<  0 );
+      checksum += FT_NEXT_ULONG( buf );
 
     /* remaining bytes can be shifted and added one at a time */
-    for ( ; i < size; ++i )
-      checksum += (FT_ULong)buf[i] << ( 24 - 8 * ( i & 3 ) );
+    for ( shift = 24; i < size; i++, shift -= 8 )
+      checksum += (FT_UInt32)FT_NEXT_BYTE( buf ) << shift;
 
     return checksum;
   }
