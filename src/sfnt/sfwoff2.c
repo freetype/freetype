@@ -2201,9 +2201,9 @@
     {
       FT_Byte*  sfnt_header = sfnt;
 
-      FT_Int  entrySelector = FT_MSB( woff.num_tables );
+      FT_Int  entrySelector = FT_MSB( woff2.num_tables );
       FT_Int  searchRange   = ( 1 << entrySelector ) * 16;
-      FT_Int  rangeShift    = woff.num_tables * 16 - searchRange;
+      FT_Int  rangeShift    = woff2.num_tables * 16 - searchRange;
 
 
       WRITE_ULONG ( sfnt_header, woff2.flavor );
