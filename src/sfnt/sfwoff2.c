@@ -18,6 +18,7 @@
 #include "sfwoff2.h"
 #include "woff2tags.h"
 #include <freetype/tttags.h>
+#include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
@@ -1844,6 +1845,7 @@
     /* Miscellaneous checks. */
     if ( woff2.length != stream->size                               ||
          woff2.num_tables == 0                                      ||
+         woff2.num_tables >  0xFFFU                                 ||
          48 + woff2.num_tables * 20UL >= woff2.length               ||
          ( woff2.metaOffset == 0 && ( woff2.metaLength != 0     ||
                                       woff2.metaOrigLength != 0 ) ) ||
@@ -2134,7 +2136,7 @@
       WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + face_index;
 
 
-      if ( ttc_font->num_tables == 0 )
+      if ( ttc_font->num_tables == 0 || ttc_font->num_tables > 0xFFFU )
       {
         FT_ERROR(( "woff2_open_font: invalid WOFF2 CollectionFontEntry\n" ));
         error = FT_THROW( Invalid_Table );
@@ -2197,23 +2199,14 @@
       goto Exit;
 
     {
-      FT_UInt   searchRange, entrySelector, rangeShift, x;
       FT_Byte*  sfnt_header = sfnt;
 
+      FT_Int  entrySelector = FT_MSB( woff.num_tables );
+      FT_Int  searchRange   = ( 1 << entrySelector ) * 16;
+      FT_Int  rangeShift    = woff.num_tables * 16 - searchRange;
 
-      x             = woff2.num_tables;
-      entrySelector = 0;
-      while ( x )
-      {
-        x            >>= 1;
-        entrySelector += 1;
-      }
-      entrySelector--;
 
-      searchRange = ( 1 << entrySelector ) * 16;
-      rangeShift  = ( woff2.num_tables * 16 ) - searchRange;
-
-      WRITE_ULONG( sfnt_header, woff2.flavor );
+      WRITE_ULONG ( sfnt_header, woff2.flavor );
       WRITE_USHORT( sfnt_header, woff2.num_tables );
       WRITE_USHORT( sfnt_header, searchRange );
       WRITE_USHORT( sfnt_header, entrySelector );
