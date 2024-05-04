@@ -1263,10 +1263,9 @@
               max_height = FT_MAX( max_height, -Axis->blues[nn].descender );
             }
 
-            dist  = FT_ABS( FT_MulFix( max_height, new_scale - scale ) );
-            dist &= ~127;
+            dist  = FT_MulFix( max_height, new_scale - scale );
 
-            if ( dist == 0 )
+            if ( -128 < dist && dist < 128 )
             {
               FT_TRACE5(( "af_latin_metrics_scale_dim:"
                           " x height alignment (style `%s'):\n",
