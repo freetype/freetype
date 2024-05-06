@@ -24,49 +24,6 @@
 
   /**************************************************************************
    *
-   * common functions
-   *
-   */
-
-  /*
-   * Original algorithm:
-   *
-   *   https://github.com/chmike/fpsqrt
-   *
-   * Use this to compute the square root of a 16.16 fixed-point number.
-   */
-  FT_LOCAL_DEF( FT_16D16 )
-  square_root( FT_16D16  val )
-  {
-    FT_ULong  t, q, b, r;
-
-
-    r = (FT_ULong)val;
-    b = 0x40000000L;
-    q = 0;
-
-    while ( b > 0x40L )
-    {
-      t = q + b;
-
-      if ( r >= t )
-      {
-        r -= t;
-        q  = t + b;
-      }
-
-      r <<= 1;
-      b >>= 1;
-    }
-
-    q >>= 8;
-
-    return (FT_16D16)q;
-  }
-
-
-  /**************************************************************************
-   *
    * format and sign manipulating functions
    *
    */
