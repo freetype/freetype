@@ -363,7 +363,7 @@ FT_BEGIN_HEADER
 #define T1_FIELD_ZERO                                         \
           {                                                   \
             0,                                                \
-            NULL, T1_FIELD_TYPE_NONE, T1_FIELD_LOCATION_NONE, \
+            NULL, T1_FIELD_LOCATION_NONE, T1_FIELD_TYPE_NONE, \
             NULL, 0, 0, 0, 0, 0                               \
           }
 
