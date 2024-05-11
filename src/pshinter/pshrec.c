@@ -806,7 +806,7 @@
   ps_hints_stem( PS_Hints  hints,
                  FT_UInt   dimension,
                  FT_Int    count,
-                 FT_Long*  stems )
+                 FT_Pos*   stems )
   {
     PS_Dimension  dim;
 
