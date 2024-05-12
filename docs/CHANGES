@@ -23,6 +23,10 @@ CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Mmm-DD)
 
     Code contributed by David Saltzman <davidbsaltzman@gmail.com>.
 
+  - The internal structures  `PS_DesignMap` and `PS_Blend` related  to
+    parsing of old Multiple Masters fonts  have been removed  from the
+    public header file `t1tables.h`.
+
 
 ======================================================================
 
