@@ -1045,7 +1045,7 @@
       /* allocate design map data */
       if ( FT_QNEW_ARRAY( map->design_points, num_points * 2 ) )
         goto Exit;
-      map->blend_points = map->design_points + num_points;
+      map->blend_points = (FT_Fixed*)(map->design_points + num_points);
       map->num_points   = (FT_Byte)num_points;
 
       for ( p = 0; p < num_points; p++ )
