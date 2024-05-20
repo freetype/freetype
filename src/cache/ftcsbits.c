@@ -53,8 +53,7 @@
 
     size = (FT_ULong)pitch * bitmap->rows;
 
-    if ( !FT_QALLOC( sbit->buffer, size ) )
-      FT_MEM_COPY( sbit->buffer, bitmap->buffer, size );
+    FT_MEM_DUP( sbit->buffer, bitmap->buffer, size );
 
     return error;
   }
