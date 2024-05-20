@@ -2722,9 +2722,8 @@
       FT_UInt  n;
 
 
-      if ( FT_ALLOC( mmvar, ttface->blend->mmvar_len ) )
+      if ( FT_DUP( mmvar, ttface->blend->mmvar, ttface->blend->mmvar_len ) )
         goto Exit;
-      FT_MEM_COPY( mmvar, ttface->blend->mmvar, ttface->blend->mmvar_len );
 
       axis_flags =
         (FT_UShort*)( (char*)mmvar + mmvar_size );

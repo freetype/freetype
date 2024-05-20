@@ -1877,9 +1877,8 @@
         }
 
         /* t1_decrypt() shouldn't write to base -- make temporary copy */
-        if ( FT_QALLOC( temp, size ) )
+        if ( FT_DUP( temp, base, size ) )
           goto Fail;
-        FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
         size -= (FT_ULong)t1face->type1.private_dict.lenIV;
         error = T1_Add_Table( table,
@@ -2091,9 +2090,8 @@
           }
 
           /* t1_decrypt() shouldn't write to base -- make temporary copy */
-          if ( FT_QALLOC( temp, size ) )
+          if ( FT_DUP( temp, base, size ) )
             goto Fail;
-          FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );
           size -= (FT_ULong)t1face->type1.private_dict.lenIV;
           error = T1_Add_Table( code_table,
