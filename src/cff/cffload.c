@@ -1495,44 +1495,41 @@
       for ( j = 0; j < lenNDV; j++ )
       {
         CFF_AxisCoords*  axis = &varRegion->axisList[j];
-        FT_Fixed         axisScalar;
 
 
         /* compute the scalar contribution of this axis; */
         /* ignore invalid ranges                         */
         if ( axis->startCoord > axis->peakCoord ||
              axis->peakCoord > axis->endCoord   )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         else if ( axis->startCoord < 0 &&
                   axis->endCoord > 0   &&
                   axis->peakCoord != 0 )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         /* peak of 0 means ignore this axis */
         else if ( axis->peakCoord == 0 )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         /* ignore this region if coords are out of range */
         else if ( NDV[j] < axis->startCoord ||
                   NDV[j] > axis->endCoord   )
-          axisScalar = 0;
-
-        /* calculate a proportional factor */
-        else
         {
-          if ( NDV[j] == axis->peakCoord )
-            axisScalar = FT_FIXED_ONE;
-          else if ( NDV[j] < axis->peakCoord )
-            axisScalar = FT_DivFix( NDV[j] - axis->startCoord,
-                                    axis->peakCoord - axis->startCoord );
-          else
-            axisScalar = FT_DivFix( axis->endCoord - NDV[j],
-                                    axis->endCoord - axis->peakCoord );
+          blend->BV[master] = 0;
+          break;
         }
 
-        /* take product of all the axis scalars */
-        blend->BV[master] = FT_MulFix( blend->BV[master], axisScalar );
+        /* adjust proportionally */
+        else if ( NDV[j] < axis->peakCoord )
+          blend->BV[master] = FT_MulDiv( blend->BV[master],
+                                         NDV[j] - axis->startCoord,
+                                         axis->peakCoord - axis->startCoord );
+
+        else if ( NDV[j] > axis->peakCoord )
+          blend->BV[master] = FT_MulDiv( blend->BV[master],
+                                         axis->endCoord - NDV[j],
+                                         axis->endCoord - axis->peakCoord );
       }
 
       FT_TRACE4(( ", %f ",
