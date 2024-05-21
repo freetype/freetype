@@ -1093,8 +1093,8 @@
           continue;
 
         /* ignore this region if coords are out of range */
-        else if ( ncv <= axis->startCoord ||
-                  ncv >= axis->endCoord   )
+        else if ( ncv < axis->startCoord ||
+                  ncv > axis->endCoord   )
         {
           scalar = 0;
           break;
