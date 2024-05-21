@@ -1077,24 +1077,23 @@
         FT_Fixed  ncv = ttface->blend->normalizedcoords[j];
 
 
-        /* compute the scalar contribution of this axis; */
-        /* ignore invalid ranges                         */
-        if ( axis->startCoord > axis->peakCoord ||
-             axis->peakCoord > axis->endCoord   )
+        /* compute the scalar contribution of this axis */
+        /* while running mandatory range checks         */
+        if ( axis->peakCoord == ncv ||
+             axis->peakCoord == 0   )
           continue;
 
         else if ( axis->startCoord < 0 &&
-                  axis->endCoord > 0   &&
-                  axis->peakCoord != 0 )
+                  axis->endCoord   > 0 )
           continue;
 
-        /* peak of 0 means ignore this axis */
-        else if ( axis->peakCoord == 0 )
+        else if ( axis->startCoord > axis->peakCoord ||
+                  axis->peakCoord  > axis->endCoord  )
           continue;
 
         /* ignore this region if coords are out of range */
-        else if ( ncv < axis->startCoord ||
-                  ncv > axis->endCoord   )
+        else if ( ncv <= axis->startCoord ||
+                  ncv >= axis->endCoord   )
         {
           scalar = 0;
           break;
@@ -1105,7 +1104,7 @@
           scalar = FT_MulDiv( scalar,
                               ncv - axis->startCoord,
                               axis->peakCoord - axis->startCoord );
-        else if ( ncv > axis->peakCoord )
+        else   /* ncv > axis->peakCoord */
           scalar = FT_MulDiv( scalar,
                               axis->endCoord - ncv,
                               axis->endCoord - axis->peakCoord );

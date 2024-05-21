@@ -1497,24 +1497,23 @@
         CFF_AxisCoords*  axis = &varRegion->axisList[j];
 
 
-        /* compute the scalar contribution of this axis; */
-        /* ignore invalid ranges                         */
-        if ( axis->startCoord > axis->peakCoord ||
-             axis->peakCoord > axis->endCoord   )
+        /* compute the scalar contribution of this axis */
+        /* while running mandatory range checks         */
+        if ( axis->peakCoord == NDV[j] ||
+             axis->peakCoord == 0      )
           continue;
 
         else if ( axis->startCoord < 0 &&
-                  axis->endCoord > 0   &&
-                  axis->peakCoord != 0 )
+                  axis->endCoord   > 0 )
           continue;
 
-        /* peak of 0 means ignore this axis */
-        else if ( axis->peakCoord == 0 )
+        else if ( axis->startCoord > axis->peakCoord ||
+                  axis->peakCoord  > axis->endCoord  )
           continue;
 
         /* ignore this region if coords are out of range */
-        else if ( NDV[j] < axis->startCoord ||
-                  NDV[j] > axis->endCoord   )
+        else if ( NDV[j] <= axis->startCoord ||
+                  NDV[j] >= axis->endCoord   )
         {
           blend->BV[master] = 0;
           break;
@@ -1525,8 +1524,7 @@
           blend->BV[master] = FT_MulDiv( blend->BV[master],
                                          NDV[j] - axis->startCoord,
                                          axis->peakCoord - axis->startCoord );
-
-        else if ( NDV[j] > axis->peakCoord )
+        else   /* NDV[j] > axis->peakCoord ) */
           blend->BV[master] = FT_MulDiv( blend->BV[master],
                                          axis->endCoord - NDV[j],
                                          axis->endCoord - axis->peakCoord );
