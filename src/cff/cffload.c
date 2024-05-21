@@ -1202,17 +1202,21 @@
         {
           CFF_AxisCoords*  axis = &region->axisList[j];
 
-          FT_Int16  start14, peak14, end14;
+          FT_Int  start, peak, end;
 
 
-          if ( FT_READ_SHORT( start14 ) ||
-               FT_READ_SHORT( peak14 )  ||
-               FT_READ_SHORT( end14 )   )
+          if ( FT_READ_SHORT( start ) ||
+               FT_READ_SHORT( peak )  ||
+               FT_READ_SHORT( end )   )
             goto Exit;
 
-          axis->startCoord = FT_fdot14ToFixed( start14 );
-          axis->peakCoord  = FT_fdot14ToFixed( peak14 );
-          axis->endCoord   = FT_fdot14ToFixed( end14 );
+          /* immediately tag invalid ranges with special peak = 0 */
+          if ( ( start < 0 && end > 0 ) || start > peak || peak > end )
+            peak = 0;
+
+          axis->startCoord = FT_fdot14ToFixed( start );
+          axis->peakCoord  = FT_fdot14ToFixed( peak );
+          axis->endCoord   = FT_fdot14ToFixed( end );
         }
       }
 
@@ -1498,17 +1502,9 @@
 
 
         /* compute the scalar contribution of this axis */
-        /* while running mandatory range checks         */
+        /* with peak of 0 used for invalid axes         */
         if ( axis->peakCoord == NDV[j] ||
              axis->peakCoord == 0      )
-          continue;
-
-        else if ( axis->startCoord < 0 &&
-                  axis->endCoord   > 0 )
-          continue;
-
-        else if ( axis->startCoord > axis->peakCoord ||
-                  axis->peakCoord  > axis->endCoord  )
           continue;
 
         /* ignore this region if coords are out of range */
