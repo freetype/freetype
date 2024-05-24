@@ -4079,6 +4079,10 @@
     FT_UInt    glyph_index = loader->glyph_index;
     FT_UInt    n_points    = (FT_UInt)outline->n_points + 4;
 
+    FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
+    FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
+    FT_Bool*    has_delta  = NULL;
+
     FT_ULong  glyph_start;
 
     FT_UInt   tupleCount;
@@ -4125,12 +4129,17 @@
       return FT_Err_Ok;
     }
 
+    if ( FT_NEW_ARRAY( points_org, n_points ) ||
+         FT_NEW_ARRAY( points_out, n_points ) ||
+         FT_NEW_ARRAY( has_delta, n_points )  )
+      goto Fail1;
+
     dataSize = blend->glyphoffsets[glyph_index + 1] -
                  blend->glyphoffsets[glyph_index];
 
     if ( FT_STREAM_SEEK( blend->glyphoffsets[glyph_index] ) ||
          FT_FRAME_ENTER( dataSize )                         )
-      return error;
+      goto Fail1;
 
     glyph_start = FT_Stream_FTell( stream );
 
@@ -4179,6 +4188,12 @@
     if ( FT_NEW_ARRAY( point_deltas_x, n_points ) ||
          FT_NEW_ARRAY( point_deltas_y, n_points ) )
       goto Fail3;
+
+    for ( j = 0; j < n_points; j++ )
+    {
+      points_org[j].x = FT_intToFixed( outline->points[j].x );
+      points_org[j].y = FT_intToFixed( outline->points[j].y );
+    }
 
     for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
@@ -4309,30 +4324,19 @@
 
       else
       {
-        FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
-        FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
-        FT_Bool*    has_delta  = NULL;
-
 #ifdef FT_DEBUG_LEVEL_TRACE
         int  count = 0;
 #endif
 
 
-        /* note that `has_delta` is set to FALSE, zeroed out */
-        if ( FT_QNEW_ARRAY( points_org, n_points ) ||
-             FT_QNEW_ARRAY( points_out, n_points ) ||
-             FT_NEW_ARRAY( has_delta, n_points )   )
-          goto Fail4;
-
-        for ( j = 0; j < n_points; j++ )
-        {
-          points_org[j].x = FT_intToFixed( outline->points[j].x );
-          points_org[j].y = FT_intToFixed( outline->points[j].y );
-        }
-        FT_ARRAY_COPY( points_out, points_org, n_points );
-
         /* we have to interpolate the missing deltas similar to the */
         /* IUP bytecode instruction                                 */
+        for ( j = 0; j < n_points; j++ )
+        {
+          has_delta[j]  = FALSE;
+          points_out[j] = points_org[j];
+        }
+
         for ( j = 0; j < point_count; j++ )
         {
           FT_UShort  idx = points[j];
@@ -4390,10 +4394,6 @@
         if ( !count )
           FT_TRACE7(( "      none\n" ));
 #endif
-      Fail4:
-        FT_FREE( points_org );
-        FT_FREE( points_out );
-        FT_FREE( has_delta );
       }
 
       if ( localpoints != ALL_POINTS )
@@ -4465,6 +4465,11 @@
     FT_FREE( im_end_coords );
 
     FT_FRAME_EXIT();
+
+  Fail1:
+    FT_FREE( points_org );
+    FT_FREE( points_out );
+    FT_FREE( has_delta );
 
     return error;
   }
