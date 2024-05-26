@@ -1924,7 +1924,7 @@
       /* axis.                                                          */
 
       if ( tuple_coords[i] == ncv )
-      { 
+      {
         FT_TRACE6(( "      tuple coordinate %.5f fits perfectly\n",
                     (double)tuple_coords[i] / 65536 ));
         /* `apply' does not change */
@@ -1932,18 +1932,18 @@
       }
 
       if ( tuple_coords[i] == 0 )
-      { 
+      {
         FT_TRACE6(( "      tuple coordinate is zero, ignore\n" ));
         continue;
       }
 
       if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
-      { 
+      {
         /* not an intermediate tuple */
-        
+
         if ( ( tuple_coords[i] > ncv && ncv > 0 ) ||
              ( tuple_coords[i] < ncv && ncv < 0 ) )
-        { 
+        {
           FT_TRACE6(( "      tuple coordinate %.5f fits\n",
                       (double)tuple_coords[i] / 65536 ));
           apply = FT_MulDiv( apply, ncv, tuple_coords[i] );
