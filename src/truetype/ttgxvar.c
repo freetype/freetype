@@ -2129,12 +2129,12 @@
                                          outerIndex,
                                          innerIndex );
 
-          /* Convert to 16.16 format before adding. */
-	  v += MUL_INT( delta, 4 );
+          /* Convert delta in F2DOT14 to 16.16 before adding. */
+          v += MUL_INT( delta, 4 );
 
-	  /* Clamp value range. */
-	  v = v >=  0x10000L ?  0x10000 : v;
-	  v = v <= -0x10000L ? -0x10000 : v;
+          /* Clamp value range [-1, 1]. */
+          v = v >=  0x10000L ?  0x10000 : v;
+          v = v <= -0x10000L ? -0x10000 : v;
 
           new_normalized[i] = v;
         }
