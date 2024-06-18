@@ -1049,13 +1049,13 @@
         AF_Point*  contour       = hints->contours;
         AF_Point*  contour_limit = contour + hints->num_contours;
         short*     end           = outline->contours;
-        short      idx           = 0;
+        FT_Int     idx           = 0;
 
 
         for ( ; contour < contour_limit; contour++, end++ )
         {
           contour[0] = points + idx;
-          idx        = (short)( end[0] + 1 );
+          idx        = *end + 1;
         }
       }
 

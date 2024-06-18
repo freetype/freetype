@@ -1677,8 +1677,7 @@
     if ( !error )
     {
       if ( outline->n_contours > 0 )
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
 
       outline->n_contours++;
     }
@@ -1760,8 +1759,7 @@
         outline->n_points--;
       }
       else
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
     }
   }
 
@@ -1959,8 +1957,7 @@
     if ( !error )
     {
       if ( outline->n_contours > 0 )
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
 
       outline->n_contours++;
     }
@@ -2039,8 +2036,7 @@
         outline->n_points--;
       }
       else
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
     }
   }
 
@@ -2267,8 +2263,7 @@
     if ( !error )
     {
       if ( outline->n_contours > 0 )
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
 
       outline->n_contours++;
     }
@@ -2347,8 +2342,7 @@
         outline->n_points--;
       }
       else
-        outline->contours[outline->n_contours - 1] =
-          (short)( outline->n_points - 1 );
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
     }
   }
 
