@@ -355,24 +355,25 @@
   FT_BASE_DEF( void )
   FT_GlyphLoader_Add( FT_GlyphLoader  loader )
   {
-    FT_GlyphLoad  base;
-    FT_GlyphLoad  current;
-    FT_Int        n;
+    FT_Outline*  base;
+    FT_Outline*  current;
+    FT_Int       n;
 
 
     if ( !loader )
       return;
 
-    base    = &loader->base;
-    current = &loader->current;
+    base    = &loader->base.outline;
+    current = &loader->current.outline;
 
     /* adjust contours count in newest outline */
-    for ( n = 0; n < current->outline.n_contours; n++ )
-      current->outline.contours[n] += base->outline.n_points;
+    for ( n = 0; n < current->n_contours; n++ )
+      current->contours[n] += base->n_points;
 
-    base->outline.n_points   += current->outline.n_points;
-    base->outline.n_contours += current->outline.n_contours;
-    base->num_subglyphs      += current->num_subglyphs;
+    base->n_points   += current->n_points;
+    base->n_contours += current->n_contours;
+
+    loader->base.num_subglyphs += loader->current.num_subglyphs;
 
     /* prepare for another new glyph image */
     FT_GlyphLoader_Prepare( loader );
