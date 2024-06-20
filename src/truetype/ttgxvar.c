@@ -1028,6 +1028,9 @@
     if ( innerIndex >= varData->itemCount )
       return 0; /* Out of range. */
 
+    if ( varData->regionIdxCount == 0 )
+      return 0; /* Avoid "applying zero offset to null pointer". */
+
     if ( varData->regionIdxCount < 16 )
     {
       deltaSet = deltaSetStack;
