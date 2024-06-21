@@ -178,8 +178,8 @@
     error = FT_GLYPHLOADER_CHECK_POINTS( loader, 3, 0 );
     if ( !error )
     {
-      FT_Vector*  vec = outline->points         + outline->n_points;
-      FT_Byte*    tag = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Vector*  vec = outline->points + outline->n_points;
+      FT_Byte*    tag = outline->tags   + outline->n_points;
 
 
       vec[0] = *control1;

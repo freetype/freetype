@@ -431,7 +431,7 @@
     p += n_ins;
 
     /* reading the point tags */
-    flag       = (FT_Byte*)outline->tags;
+    flag       = outline->tags;
     flag_limit = flag + n_points;
 
     FT_ASSERT( flag );
@@ -464,7 +464,7 @@
 
     vec       = outline->points;
     vec_limit = vec + n_points;
-    flag      = (FT_Byte*)outline->tags;
+    flag      = outline->tags;
     x         = 0;
 
     for ( ; vec < vec_limit; vec++, flag++ )
@@ -498,7 +498,7 @@
 
     vec       = outline->points;
     vec_limit = vec + n_points;
-    flag      = (FT_Byte*)outline->tags;
+    flag      = outline->tags;
     y         = 0;
 
     for ( ; vec < vec_limit; vec++, flag++ )
@@ -758,8 +758,8 @@
     zone->org         = load->extra_points + start_point;
     zone->cur         = load->outline.points + start_point;
     zone->orus        = load->extra_points2 + start_point;
-    zone->tags        = (FT_Byte*)load->outline.tags + start_point;
-    zone->contours    = (FT_UShort*)load->outline.contours + start_contour;
+    zone->tags        = load->outline.tags + start_point;
+    zone->contours    = load->outline.contours + start_contour;
     zone->first_point = (FT_UShort)start_point;
   }
 

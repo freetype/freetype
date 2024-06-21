@@ -1598,7 +1598,7 @@
     FT_Vector*  points;
     FT_Vector*  point;
     FT_Vector*  limit;
-    char*       tags;
+    FT_Byte*    tags;
 
     UInt        tag;       /* current point's state           */
 

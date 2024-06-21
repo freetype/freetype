@@ -53,7 +53,7 @@
 
     FT_Vector*  point;
     FT_Vector*  limit;
-    char*       tags;
+    FT_Byte*    tags;
 
     FT_Error    error;
 
@@ -578,13 +578,13 @@
 
       /* reverse tags table */
       {
-        char*  p = outline->tags + first;
-        char*  q = outline->tags + last;
+        FT_Byte*  p = outline->tags + first;
+        FT_Byte*  q = outline->tags + last;
 
 
         while ( p < q )
         {
-          char  swap;
+          FT_Byte  swap;
 
 
           swap = *p;

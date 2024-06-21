@@ -711,7 +711,7 @@
     {
       FT_UInt   count = border->num_points;
       FT_Byte*  read  = border->tags;
-      FT_Byte*  write = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Byte*  write = outline->tags + outline->n_points;
 
 
       for ( ; count > 0; count--, read++, write++ )
@@ -2050,7 +2050,7 @@
 
     FT_Vector*  point;
     FT_Vector*  limit;
-    char*       tags;
+    FT_Byte*    tags;
 
     FT_Error    error;
 

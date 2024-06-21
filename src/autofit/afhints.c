@@ -979,7 +979,7 @@
       /* compute coordinates & Bezier flags, next and prev */
       {
         FT_Vector*  vec           = outline->points;
-        char*       tag           = outline->tags;
+        FT_Byte*    tag           = outline->tags;
         FT_UShort   endpoint      = outline->contours[0];
         AF_Point    end           = points + endpoint;
         AF_Point    prev          = end;
@@ -1292,7 +1292,7 @@
     AF_Point    point = hints->points;
     AF_Point    limit = point + hints->num_points;
     FT_Vector*  vec   = outline->points;
-    char*       tag   = outline->tags;
+    FT_Byte*    tag   = outline->tags;
 
 
     for ( ; point < limit; point++, vec++, tag++ )

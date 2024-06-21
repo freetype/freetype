@@ -1118,7 +1118,7 @@
     FT_UInt     n;
     PSH_Point   point = glyph->points;
     FT_Vector*  vec   = glyph->outline->points;
-    char*       tags  = glyph->outline->tags;
+    FT_Byte*    tags  = glyph->outline->tags;
 
 
     for ( n = 0; n < glyph->num_points; n++ )

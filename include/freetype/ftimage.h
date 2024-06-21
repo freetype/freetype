@@ -349,7 +349,7 @@ FT_BEGIN_HEADER
     unsigned short   n_points;    /* number of points in the glyph      */
 
     FT_Vector*       points;      /* the outline's points               */
-    char*            tags;        /* the points flags                   */
+    unsigned char*   tags;        /* the points flags                   */
     unsigned short*  contours;    /* the contour end points             */
 
     int              flags;       /* outline masks                      */

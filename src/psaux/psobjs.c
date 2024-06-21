@@ -1624,7 +1624,7 @@
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Byte*    control = outline->tags   + outline->n_points;
 
 
       point->x = FIXED_TO_INT( x );
@@ -1739,7 +1739,7 @@
     {
       FT_Vector*  p1      = outline->points + first;
       FT_Vector*  p2      = outline->points + outline->n_points - 1;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
+      FT_Byte*    control = outline->tags   + outline->n_points - 1;
 
 
       /* `delete' last point only if it coincides with the first */
@@ -1897,7 +1897,7 @@
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Byte*    control = outline->tags   + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
@@ -2016,7 +2016,7 @@
     {
       FT_Vector*  p1      = outline->points + first;
       FT_Vector*  p2      = outline->points + outline->n_points - 1;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
+      FT_Byte*    control = outline->tags   + outline->n_points - 1;
 
 
       /* `delete' last point only if it coincides with the first    */
@@ -2184,7 +2184,7 @@
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Byte*    control = outline->tags   + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
@@ -2322,7 +2322,7 @@
     {
       FT_Vector*  p1      = outline->points + first;
       FT_Vector*  p2      = outline->points + outline->n_points - 1;
-      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
+      FT_Byte*    control = outline->tags   + outline->n_points - 1;
 
 
       /* `delete' last point only if it coincides with the first */
