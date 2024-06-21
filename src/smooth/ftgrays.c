@@ -1981,7 +1981,7 @@ typedef ptrdiff_t  FT_PtrDist;
       return FT_THROW( Invalid_Outline );
 
     /* return immediately if the outline is empty */
-    if ( outline->n_points == 0 || outline->n_contours <= 0 )
+    if ( outline->n_points == 0 || outline->n_contours == 0 )
       return Smooth_Err_Ok;
 
     if ( !outline->contours || !outline->points )

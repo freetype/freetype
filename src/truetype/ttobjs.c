@@ -115,7 +115,7 @@
   FT_LOCAL_DEF( FT_Error )
   tt_glyphzone_new( FT_Memory     memory,
                     FT_UShort     maxPoints,
-                    FT_Short      maxContours,
+                    FT_UShort     maxContours,
                     TT_GlyphZone  zone )
   {
     FT_Error  error;

@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   tt_glyphzone_new( FT_Memory     memory,
                     FT_UShort     maxPoints,
-                    FT_Short      maxContours,
+                    FT_UShort     maxContours,
                     TT_GlyphZone  zone );
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */

@@ -345,14 +345,14 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_Outline_
   {
-    short       n_contours;      /* number of contours in glyph        */
-    short       n_points;        /* number of points in the glyph      */
+    unsigned short   n_contours;  /* number of contours in glyph        */
+    unsigned short   n_points;    /* number of points in the glyph      */
 
-    FT_Vector*  points;          /* the outline's points               */
-    char*       tags;            /* the points flags                   */
-    short*      contours;        /* the contour end points             */
+    FT_Vector*       points;      /* the outline's points               */
+    char*            tags;        /* the points flags                   */
+    unsigned short*  contours;    /* the contour end points             */
 
-    int         flags;           /* outline masks                      */
+    int              flags;       /* outline masks                      */
 
   } FT_Outline;
 
@@ -360,8 +360,8 @@ FT_BEGIN_HEADER
 
   /* Following limits must be consistent with */
   /* FT_Outline.{n_contours,n_points}         */
-#define FT_OUTLINE_CONTOURS_MAX  SHRT_MAX
-#define FT_OUTLINE_POINTS_MAX    SHRT_MAX
+#define FT_OUTLINE_CONTOURS_MAX  USHRT_MAX
+#define FT_OUTLINE_POINTS_MAX    USHRT_MAX
 
 
   /**************************************************************************

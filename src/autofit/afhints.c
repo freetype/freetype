@@ -980,7 +980,7 @@
       {
         FT_Vector*  vec           = outline->points;
         char*       tag           = outline->tags;
-        FT_Short    endpoint      = outline->contours[0];
+        FT_UShort   endpoint      = outline->contours[0];
         AF_Point    end           = points + endpoint;
         AF_Point    prev          = end;
         FT_Int      contour_index = 0;
@@ -1046,10 +1046,10 @@
 
       /* set up the contours array */
       {
-        AF_Point*  contour       = hints->contours;
-        AF_Point*  contour_limit = contour + hints->num_contours;
-        short*     end           = outline->contours;
-        FT_Int     idx           = 0;
+        AF_Point*   contour       = hints->contours;
+        AF_Point*   contour_limit = contour + hints->num_contours;
+        FT_UShort*  end           = outline->contours;
+        FT_Int      idx           = 0;
 
 
         for ( ; contour < contour_limit; contour++, end++ )

@@ -332,8 +332,8 @@
          FT_NEW_ARRAY( anoutline->contours, numContours ) )
       goto Fail;
 
-    anoutline->n_points    = (FT_Short)numPoints;
-    anoutline->n_contours  = (FT_Short)numContours;
+    anoutline->n_points    = (FT_UShort)numPoints;
+    anoutline->n_contours  = (FT_UShort)numContours;
     anoutline->flags      |= FT_OUTLINE_OWNER;
 
     return FT_Err_Ok;
@@ -359,12 +359,14 @@
       FT_Int  n;
 
 
+      FT_TRACE5(( "FT_Outline_Check: contours = %d, points = %d\n",
+                  n_contours, n_points ));
       /* empty glyph? */
       if ( n_points == 0 && n_contours == 0 )
         return FT_Err_Ok;
 
       /* check point and contour counts */
-      if ( n_points <= 0 || n_contours <= 0 )
+      if ( n_points == 0 || n_contours == 0 )
         goto Bad;
 
       end0 = -1;

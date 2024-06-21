@@ -108,7 +108,7 @@
 
     /* don't add empty contours */
     if ( last >= first )
-      outline->contours[outline->n_contours++] = (short)last;
+      outline->contours[outline->n_contours++] = (FT_UShort)last;
 
     glyph->path_begun = 0;
   }

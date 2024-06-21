@@ -727,10 +727,10 @@
 
     /* copy contours */
     {
-      FT_UInt    count = border->num_points;
-      FT_Byte*   tags  = border->tags;
-      FT_Short*  write = outline->contours + outline->n_contours;
-      FT_Short   idx   = (FT_Short)outline->n_points;
+      FT_UInt     count = border->num_points;
+      FT_Byte*    tags  = border->tags;
+      FT_UShort*  write = outline->contours + outline->n_contours;
+      FT_UShort   idx   = outline->n_points;
 
 
       for ( ; count > 0; count--, tags++, idx++ )
@@ -743,7 +743,7 @@
       }
     }
 
-    outline->n_points += (short)border->num_points;
+    outline->n_points += (FT_UShort)border->num_points;
 
     FT_ASSERT( FT_Outline_Check( outline ) == 0 );
   }
