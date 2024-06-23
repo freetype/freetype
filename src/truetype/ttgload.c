@@ -1738,14 +1738,14 @@
       if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
            FT_IS_VARIATION( FT_FACE( face ) )      )
       {
-        short        i, limit;
+        FT_UShort    i, limit;
         FT_SubGlyph  subglyph;
 
         FT_Outline  outline = { 0, 0, NULL, NULL, NULL, 0 };
         FT_Vector*  unrounded = NULL;
 
 
-        limit = (short)gloader->current.num_subglyphs;
+        limit = (FT_UShort)gloader->current.num_subglyphs;
 
         /* construct an outline structure for              */
         /* communication with `TT_Vary_Apply_Glyph_Deltas' */
