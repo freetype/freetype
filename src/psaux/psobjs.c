@@ -23,6 +23,7 @@
 
 #include "psobjs.h"
 #include "psconv.h"
+#include "psft.h"
 
 #include "psauxerr.h"
 #include "psauxmod.h"

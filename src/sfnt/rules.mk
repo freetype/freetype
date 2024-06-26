@@ -38,6 +38,7 @@ SFNT_DRV_SRC := $(SFNT_DIR)/pngshim.c   \
                 $(SFNT_DIR)/ttcolr.c    \
                 $(SFNT_DIR)/ttsvg.c     \
                 $(SFNT_DIR)/ttcpal.c    \
+                $(SFNT_DIR)/ttgpos.c    \
                 $(SFNT_DIR)/ttkern.c    \
                 $(SFNT_DIR)/ttload.c    \
                 $(SFNT_DIR)/ttmtx.c     \
