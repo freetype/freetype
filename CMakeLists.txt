@@ -265,6 +265,8 @@ if (NOT FT_DISABLE_PNG)
   else ()
     find_package(PNG)
   endif ()
+  # FreePNG calls FindZLIB so unset ZLIB_FOUND to respect FT_DISABLE_ZLIB
+  unset(ZLIB_FOUND)
 endif ()
 
 if (NOT FT_DISABLE_ZLIB)
