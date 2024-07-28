@@ -1006,7 +1006,7 @@
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
   {
-    FNT_Face    face   = (FNT_Face)FT_SIZE_FACE( size );
+    FNT_Face    face   = (FNT_Face)size->face;
     FNT_Font    font;
     FT_Error    error  = FT_Err_Ok;
     FT_Byte*    p;
