@@ -152,6 +152,7 @@
     FT_UInt    runcnt;
     FT_UInt    i, j;
     FT_UShort  first;
+    FT_Byte*   p;
     FT_Memory  memory = stream->memory;
     FT_Error   error;
 
@@ -183,21 +184,22 @@
 
     *point_cnt = n;
 
+    p     = stream->cursor;
     first = 0;
     i     = 0;
     while ( i < n )
     {
-      runcnt = FT_GET_BYTE();
+      runcnt = FT_NEXT_BYTE( p );
       if ( runcnt & GX_PT_POINTS_ARE_WORDS )
       {
         runcnt     &= GX_PT_POINT_RUN_COUNT_MASK;
-        first      += FT_GET_USHORT();
+        first      += FT_NEXT_USHORT( p );
         points[i++] = first;
 
         /* first point not included in run count */
         for ( j = 0; j < runcnt; j++ )
         {
-          first      += FT_GET_USHORT();
+          first      += FT_NEXT_USHORT( p );
           points[i++] = first;
           if ( i >= n )
             break;
@@ -205,18 +207,20 @@
       }
       else
       {
-        first      += FT_GET_BYTE();
+        first      += FT_NEXT_BYTE( p );
         points[i++] = first;
 
         for ( j = 0; j < runcnt; j++ )
         {
-          first      += FT_GET_BYTE();
+          first      += FT_NEXT_BYTE( p );
           points[i++] = first;
           if ( i >= n )
             break;
         }
       }
     }
+
+    stream->cursor = p;
 
     return points;
   }
@@ -265,6 +269,7 @@
     FT_UInt    runcnt, cnt;
     FT_UInt    i, j;
     FT_UInt    bytes_used;
+    FT_Byte*   p;
     FT_Memory  memory = stream->memory;
     FT_Error   error;
 
@@ -272,12 +277,13 @@
     if ( FT_QNEW_ARRAY( deltas, delta_cnt ) )
       return NULL;
 
+    p          = stream->cursor;
     i          = 0;
     bytes_used = 0;
 
     while ( i < delta_cnt && bytes_used < size )
     {
-      runcnt = FT_GET_BYTE();
+      runcnt = FT_NEXT_BYTE( p );
       cnt    = runcnt & GX_DT_DELTA_RUN_COUNT_MASK;
 
       bytes_used++;
@@ -300,7 +306,7 @@
         }
 
         for ( j = 0; j <= cnt && i < delta_cnt; j++ )
-          deltas[i++] = FT_intToFixed( FT_GET_SHORT() );
+          deltas[i++] = FT_intToFixed( FT_NEXT_SHORT( p ) );
       }
       else
       {
@@ -314,7 +320,7 @@
         }
 
         for ( j = 0; j <= cnt && i < delta_cnt; j++ )
-          deltas[i++] = FT_intToFixed( FT_GET_CHAR() );
+          deltas[i++] = FT_intToFixed( FT_NEXT_CHAR( p ) );
       }
 
       if ( j <= cnt )
@@ -330,6 +336,8 @@
       FT_TRACE1(( "ft_var_readpackeddeltas: not enough deltas\n" ));
       goto Fail;
     }
+
+    stream->cursor = p;
 
     return deltas;
 
