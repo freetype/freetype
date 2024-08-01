@@ -187,7 +187,7 @@
 
       if ( runcnt & GX_PT_POINTS_ARE_WORDS )
       {
-        if ( p + 2 * cnt > stream->limit )
+        if ( 2 * cnt > (FT_UInt)( stream->limit - p ) )
           goto Fail;
 
         for ( j = 0; j < cnt; j++ )
@@ -198,7 +198,7 @@
       }
       else
       {
-        if ( p + cnt > stream->limit )
+        if ( cnt > (FT_UInt)( stream->limit - p ) )
           goto Fail;
 
         for ( j = 0; j < cnt; j++ )
@@ -274,9 +274,7 @@
     while ( i < delta_cnt )
     {
       if ( p >= stream->limit )
-      {
         goto Fail;
-      }
 
       runcnt = FT_NEXT_BYTE( p );
       cnt    = runcnt & GX_DT_DELTA_RUN_COUNT_MASK;
@@ -293,7 +291,7 @@
       }
       else if ( runcnt & GX_DT_DELTAS_ARE_WORDS )
       {
-        if ( p + 2 * cnt > stream->limit )
+        if ( 2 * cnt > (FT_UInt)( stream->limit - p ) )
           goto Fail;
 
         for ( j = 0; j < cnt; j++ )
@@ -301,7 +299,7 @@
       }
       else
       {
-        if ( p + cnt > stream->limit )
+        if ( cnt > (FT_UInt)( stream->limit - p ) )
           goto Fail;
 
         for ( j = 0; j < cnt; j++ )
