@@ -182,7 +182,7 @@
 
       /* first point not included in run count */
       cnt++;
-      if ( i + cnt > n )
+      if ( cnt > n - i )
         cnt = n - i;
 
       if ( runcnt & GX_PT_POINTS_ARE_WORDS )
@@ -281,7 +281,7 @@
 
       /* first point not included in run count */
       cnt++;
-      if ( i + cnt > delta_cnt )
+      if ( cnt > delta_cnt - i )
         cnt = delta_cnt - i;
 
       if ( runcnt & GX_DT_DELTAS_ARE_ZERO )
