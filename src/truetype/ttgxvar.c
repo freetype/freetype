@@ -2115,7 +2115,7 @@
           /* Convert delta in F2DOT14 to 16.16 before adding. */
           v += MUL_INT( delta, 4 );
 
-          /* Clamp value range [-1, 1]. */
+          /* Clamp value to range [-1, 1]. */
           v = v >=  0x10000L ?  0x10000 : v;
           v = v <= -0x10000L ? -0x10000 : v;
 
@@ -3770,8 +3770,8 @@
     for ( i = 0; i < face->cvt_size; i++ )
       face->cvt[i] += FT_fixedToFdot6( cvt_deltas[i] );
 
-    /* iterate over all FT_Size objects and set `cvt_ready' to -1 */
-    /* to trigger rescaling of all CVT values                     */
+    /* Iterate over all `FT_Size` objects and set `cvt_ready` to -1 */
+    /* to trigger rescaling of all CVT values.                      */
     FT_List_Iterate( &root->sizes_list,
                      tt_cvt_ready_iterator,
                      NULL );

@@ -226,7 +226,7 @@
         FT_UInt  len = *p;
 
 
-        /* all names in Adobe Glyph List are shorter than 40 characters */
+        /* names in the Adobe Glyph List are shorter than 40 characters */
         if ( len >= 40U )
           FT_TRACE4(( "load_format_20: unusual %u-char name found\n", len ));
 
