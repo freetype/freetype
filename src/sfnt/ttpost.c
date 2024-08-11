@@ -240,7 +240,7 @@
       if ( n < num_names )
       {
         FT_TRACE4(( "load_format_20: %hu PostScript names are truncated\n",
-                    num_names - n ));
+                    (FT_UShort)( num_names - n ) ));
 
         for ( ; n < num_names; n++ )
           name_strings[n] = p_end;
