@@ -1,4 +1,4 @@
-CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Mmm-DD)
+CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Aug-11)
 
   I. IMPORTANT CHANGES
 
@@ -17,8 +17,8 @@ CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Mmm-DD)
 
   III. MISCELLANEOUS
 
-  - The B/W rasterizer  has  received a major upkeep  that resulted in
-    large performance improvement.  The rendering speed  has increased
+  - The B/W  rasterizer has  received a major  upkeep that  results in
+    large performance improvements.  The rendering speed has increased
     and even doubled for very complex glyphs.
 
   - If the new configuration option `TT_CONFIG_OPTION_GPOS_KERNING` is
