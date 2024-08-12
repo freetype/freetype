@@ -54,6 +54,9 @@ freetype_includedir = join_paths(get_option('includedir'), 'freetype2')
 
 ft2_defines = []
 
+freetype_aclocaldir = join_paths(get_option('datadir'), 'aclocal')
+
+
 # Generate a custom `ftmodule.h` version based on the content of
 # `modules.cfg`.
 
@@ -431,6 +434,10 @@ install_headers(ft2_public_headers,
   install_dir: join_paths(freetype_includedir, 'freetype'))
 install_headers(ft2_config_headers,
   install_dir: join_paths(freetype_includedir, 'freetype/config'))
+
+
+install_data('builds/unix/freetype2.m4',
+  install_dir: freetype_aclocaldir)
 
 
 pkgconfig = import('pkgconfig')
