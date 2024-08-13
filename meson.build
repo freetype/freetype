@@ -159,6 +159,7 @@ ft2_public_headers = files([
   'include/freetype/ftincrem.h',
   'include/freetype/ftlcdfil.h',
   'include/freetype/ftlist.h',
+  'include/freetype/ftlogging.h',
   'include/freetype/ftlzw.h',
   'include/freetype/ftmac.h',
   'include/freetype/ftmm.h',
