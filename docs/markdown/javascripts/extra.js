@@ -1,5 +1,5 @@
 /*
-Internal link topbar offest adjust Javascript
+Internal link topbar offset adjust Javascript
 Code provided by @makshh on GitHub
 
 Bug report on material-mkdocs
