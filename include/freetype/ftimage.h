@@ -267,6 +267,10 @@ FT_BEGIN_HEADER
    *   *logical* one.  For example, if @FT_Pixel_Mode is set to
    *   `FT_PIXEL_MODE_LCD`, the logical width is a just a third of the
    *   physical one.
+   *
+   *   An empty bitmap with a NULL `buffer` is valid, with `rows` and/or
+   *   `pitch` also set to 0.  Such bitmaps might be produced while rendering
+   *   empty or degenerate outlines.
    */
   typedef struct  FT_Bitmap_
   {
