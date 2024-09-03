@@ -62,12 +62,18 @@ if test ${cross_compiling} = yes; then
   fi
   rm -f a.* b.* a_out.exe conftest.*
   AC_MSG_RESULT($EXEEXT_BUILD)
+  CFLAGS_BUILD=
+  LDFLAGS_BUILD=
 else
   CC_BUILD=${CC}
+  CFLAGS_BUILD=${CFLAGS}
+  LDFLAGS_BUILD=${LDFLAGS}
   EXEEXT_BUILD=${EXEEXT}
 fi
 
 AC_SUBST(CC_BUILD)
+AC_SUBST(CFLAGS_BUILD)
+AC_SUBST(LDFLAGS_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
 

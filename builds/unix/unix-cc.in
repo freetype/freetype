@@ -113,7 +113,9 @@ LDFLAGS := @LDFLAGS@
 CCraw_build  := @CC_BUILD@	# native CC of building system
 E_BUILD      := @EXEEXT_BUILD@	# extension for executable on building system
 EXPORTS_LIST := $(OBJ_DIR)/ftexport.sym
-CCexe        := $(CCraw_build)	# used to compile `apinames' only
+CCexe        := $(CCraw_build)	# used to compile `apinames' only, see exports.mk
+CCexe_CFLAGS := @CFLAGS_BUILD@	# ditto.
+CCexe_LDFLAGS := @LDFLAGS_BUILD@	# ditto.
 
 
 # Library linking.
