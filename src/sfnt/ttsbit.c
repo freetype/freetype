@@ -1552,9 +1552,7 @@
 
         /* `Load_SBit_Png` always returns a pixmap with 32 bits per pixel */
         /* and no extra pitch bytes.                                      */
-        FT_UInt32  width      = (FT_UInt32)( map->width );
-        FT_UInt32  half_width = (FT_UInt32)( map->width / 2 );
-
+        FT_UInt  width = map->width;
         FT_UInt  y;
 
 
@@ -1563,10 +1561,8 @@
           FT_UInt32*  left  = curr_pos;
           FT_UInt32*  right = curr_pos + width - 1;
 
-          FT_UInt32  x;
 
-
-          for ( x = 0; x < half_width; x++ )
+          while( left < right )
           {
             FT_UInt32  value;
 
