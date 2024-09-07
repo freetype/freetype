@@ -1467,8 +1467,8 @@
     FT_Error  error;
     FT_Byte*  p;
 
-    FT_UNUSED( map );
 #ifndef FT_CONFIG_OPTION_USE_PNG
+    FT_UNUSED( map );
     FT_UNUSED( metrics_only );
 #endif
 
@@ -1527,7 +1527,7 @@
         recurse_depth++;
 
         if ( graphicType == FT_MAKE_TAG( 'f', 'l', 'i', 'p' ) )
-          flipped = TRUE;
+          flipped = !flipped;
 
         goto retry;
       }
@@ -1546,7 +1546,7 @@
                              glyph_end - glyph_start - 8,
                              TRUE,
                              metrics_only );
-      if ( !error && flipped )
+      if ( flipped && !metrics_only && !error )
       {
         FT_UInt32*  curr_pos = (FT_UInt32*)map->buffer;
 
@@ -1562,7 +1562,7 @@
           FT_UInt32*  right = curr_pos + width - 1;
 
 
-          while( left < right )
+          while ( left < right )
           {
             FT_UInt32  value;
 
