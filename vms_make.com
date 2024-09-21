@@ -1499,7 +1499,8 @@ $ deck
 
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.sfnt])
 .ifdef X86
-CXXFLAGS=$(CXXCOMP_FLAGS) -I[] -I[--.include] -I[--.src.base] -Isys$library
+CXXFLAGS=$(CXXCOMP_FLAGS) -I[] -I[--.include] -I[--.src.base] -Isys$library\
+         -Wno-incompatible-pointer-types
 .endif
 
 .ifdef X86
