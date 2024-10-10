@@ -380,7 +380,7 @@ usage( void )
     "It receives a list of header files as an argument and\n"
     "generates a sorted list of unique identifiers in various formats.\n"
     "\n"
-    "usage: %s header1 [options] [header2 ...]\n"
+    "usage: %s [options] header1 [header2 ...]\n"
     "\n"
     "options:   -       parse the contents of stdin, ignore arguments\n"
     "           -v      verbose mode, output sent to standard error\n"
