@@ -363,6 +363,10 @@ if brotli_dep.found()
   ft2_deps += [brotli_dep]
 endif
 
+if get_option('error_strings')
+  ftoption_command += ['--enable=FT_CONFIG_OPTION_ERROR_STRINGS']
+endif
+
 # We can now generate `ftoption.h`.
 ftoption_h = custom_target('ftoption.h',
   input: 'include/freetype/config/ftoption.h',
