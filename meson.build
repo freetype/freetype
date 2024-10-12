@@ -486,10 +486,10 @@ summary({'OS': host_machine.system(),
         }, section: 'Operating System')
 
 summary({'Zlib': zlib_option,
-         'Bzip2': bzip2_dep.found() ? 'yes' : 'no',
-         'Png': libpng_dep.found() ? 'yes' : 'no',
-         'Harfbuzz': harfbuzz_dep.found() ? 'yes' : 'no',
-         'Brotli': brotli_dep.found() ? 'yes' : 'no',
-        }, section: 'Used Libraries')
+         'Bzip2': bzip2_dep.found(),
+         'Png': libpng_dep.found(),
+         'Harfbuzz': harfbuzz_dep.found(),
+         'Brotli': brotli_dep.found(),
+        }, bool_yn: true, section: 'Used Libraries')
 
 # EOF
