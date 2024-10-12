@@ -383,7 +383,8 @@ ftoption_h = custom_target('ftoption.h',
 ft2_sources += ftoption_h
 ft2_defines += ['-DFT_CONFIG_OPTIONS_H=<ftoption.h>']
 
-if host_machine.system() == 'windows'
+if host_machine.system() == 'windows' and \
+   get_option('default_library') == 'shared'
   ft2_defines += ['-DDLL_EXPORT=1']
 endif
 
