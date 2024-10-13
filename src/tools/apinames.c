@@ -181,6 +181,7 @@ names_dump( FILE*         out,
 
   case OUTPUT_WATCOM_LBC:
     {
+      char         temp[512];
       const char*  dot;
 
 
@@ -195,7 +196,6 @@ names_dump( FILE*         out,
       dot = strchr( dll_name, '.' );
       if ( dot )
       {
-        char  temp[512];
         int   len = dot - dll_name;
 
 
