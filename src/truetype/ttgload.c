@@ -1566,13 +1566,14 @@
     if ( header_only )
       goto Exit;
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    tt_get_metrics_incremental( loader, glyph_index );
+#endif
+    tt_loader_set_pp( loader );
+
+    /* shortcut for empty glyphs */
     if ( loader->byte_len == 0 || loader->n_contours == 0 )
     {
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-      tt_get_metrics_incremental( loader, glyph_index );
-#endif
-      tt_loader_set_pp( loader );
-
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -1626,11 +1627,6 @@
       error = FT_Err_Ok;
       goto Exit;
     }
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    tt_get_metrics_incremental( loader, glyph_index );
-#endif
-    tt_loader_set_pp( loader );
 
 
     /***********************************************************************/
