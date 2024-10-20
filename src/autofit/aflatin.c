@@ -2984,18 +2984,20 @@
           min_measurement = measurement;
       }
     } while ( p != first_point );
-
-    /* touch all points */
-    p = first_point;
-    do
-    {
-      p = p->next;
-      if ( !( p->flags & AF_FLAG_CONTROL ) )
-        p->flags |= AF_FLAG_TOUCH_Y;
-
-    } while ( p != first_point );
-
     height        = max_y - min_y;
+
+    if ( height < 256 ) {
+      /* touch all points */
+      p = first_point;
+      do
+      {
+        p = p->next;
+        if ( !( p->flags & AF_FLAG_CONTROL ) )
+          p->flags |= AF_FLAG_TOUCH_Y;
+
+      } while ( p != first_point );
+    }
+
     target_height = min_measurement + 64;
 
     if ( height >= target_height )
@@ -3043,7 +3045,6 @@
     AF_Point  first_point = p;
 
     FT_Pos  min_y, max_y;
-    FT_Pos  min_y_rounded;
     FT_Pos  delta;
 
 
@@ -3057,10 +3058,17 @@
 
     } while ( p != first_point );
 
-    // mid_y = ( min_y + max_y ) / 2;
-    min_y_rounded = FT_PIX_ROUND( min_y );
-    delta         = min_y_rounded - min_y;
+    // If the tilde is less than 2 pixels tall, snap the center of it to
+    // the grid instead of the bottom to improve readability
+    //
+    FT_Pos min_y_rounded = FT_PIX_ROUND( min_y );
+    delta                = min_y_rounded - min_y;
+    FT_Pos height        = max_y - min_y;
+    if ( height < 64*3 ) {
+      delta += ( FT_PIX_ROUND( height ) - height ) / 2;
+    }
 
+    p = first_point;
     do
     {
       p     = p->next;
@@ -3193,6 +3201,17 @@
         return;
       }
 
+      AF_Point point = hints->contours[highest_contour];
+      AF_Point first_point = point;
+      FT_Pos   highest_max_y = point->y;
+      do
+      {
+        if ( point->y > highest_max_y )
+        {
+          highest_max_y = point->y;
+        }
+      } while ( point != first_point );
+
       /* If there are any contours that have a maximum y coordinate       */
       /* greater than or equal to the minimum y coordinate of the         */
       /* previously found highest contour, bump the high contour up until */
@@ -3225,7 +3244,20 @@
         } while ( point != first_point );
 
         if ( max_y >= highest_min_y - 64 )
+        {
           adjustment_amount = 64 - ( highest_min_y - max_y );
+        }
+      }
+
+      FT_TRACE4(( "    Calculated adjustment amount 1: %d\n",
+                  adjustment_amount ));
+
+
+      if ( adjustment_amount > 0 && ( highest_max_y - highest_min_y ) < 128 )
+      {
+        adjustment_amount += ( 128 - ( highest_max_y - highest_min_y ) ) / 2;
+        FT_TRACE4(( "    Additional push: %d\n",
+                  ( 128 - ( highest_max_y - highest_min_y ) ) / 2 ));
       }
 
       FT_TRACE4(( "    Calculated adjustment amount: %d\n",
@@ -4186,6 +4218,7 @@
     } while ( p != first_point );
 
     FT_TRACE4(( "height %d: %ld\n", num, max_y - min_y ));
+    FT_TRACE4(( "min y %d: %ld\n", num, min_y ));
   }
 #else
   static void
@@ -4240,6 +4273,7 @@
       {
         af_latin_trace_height(0, hints );
         af_latin_stretch_tildes( hints );
+        af_latin_trace_height(33, hints );
         af_latin_align_tildes( hints );
         af_latin_trace_height(1, hints );
       }
@@ -4279,7 +4313,7 @@
           (AF_Dimension)dim,
           glyph_index,
           metrics->root.reverse_charmap );
-        af_latin_trace_height(6, hints );
+        af_latin_trace_height(99, hints );
       }
     }
 
