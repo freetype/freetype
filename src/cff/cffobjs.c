@@ -550,13 +550,13 @@
         if ( error )
           goto Exit;
       }
-      else
-      {
-        /* load the `cmap' table explicitly */
-        error = sfnt->load_cmap( face, stream );
-        if ( error )
-          goto Exit;
-      }
+
+      /* load the `cmap' table explicitly */
+      error = sfnt->load_cmap( face, stream );
+
+      /* this may fail because CID-keyed fonts don't have a cmap */
+      if ( FT_ERR_NEQ( error, Table_Missing ) && FT_ERR_NEQ( error, Ok ) )
+        goto Exit;
 
       /* now load the CFF part of the file; */
       /* give priority to CFF2              */
