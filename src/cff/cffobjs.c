@@ -537,8 +537,8 @@
 
       sfnt_format = 1;
 
-      /* now, the font can be either an OpenType/CFF font, or an SVG CEF */
-      /* font; in the latter case it doesn't have a `head' table         */
+      /* the font may be OpenType/CFF, SVG CEF, or sfnt/CFF; a `head' table */
+      /* implies OpenType/CFF, otherwise just look for an optional cmap     */
       error = face->goto_table( face, TTAG_head, stream, 0 );
       if ( !error )
       {
@@ -550,13 +550,15 @@
         if ( error )
           goto Exit;
       }
+      else
+      {
+        /* load the `cmap' table explicitly */
+        error = sfnt->load_cmap( face, stream );
 
-      /* load the `cmap' table explicitly */
-      error = sfnt->load_cmap( face, stream );
-
-      /* this may fail because CID-keyed fonts don't have a cmap */
-      if ( FT_ERR_NEQ( error, Table_Missing ) && FT_ERR_NEQ( error, Ok ) )
-        goto Exit;
+        /* this may fail because CID-keyed fonts don't have a cmap */
+        if ( FT_ERR_NEQ( error, Table_Missing ) && FT_ERR_NEQ( error, Ok ) )
+          goto Exit;
+      }
 
       /* now load the CFF part of the file; */
       /* give priority to CFF2              */
