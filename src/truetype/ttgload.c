@@ -2427,9 +2427,10 @@
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* try to load embedded bitmap (if any) */
-    if ( size->strike_index != 0xFFFFFFFFUL      &&
-         ( load_flags & FT_LOAD_NO_BITMAP ) == 0 &&
-         IS_DEFAULT_INSTANCE( glyph->face )      )
+    if ( size->strike_index != 0xFFFFFFFFUL  &&
+         !( load_flags & FT_LOAD_NO_BITMAP &&
+            FT_IS_SCALABLE( glyph->face )  ) &&
+         IS_DEFAULT_INSTANCE( glyph->face )  )
     {
       FT_Fixed  x_scale = size->root.metrics.x_scale;
       FT_Fixed  y_scale = size->root.metrics.y_scale;

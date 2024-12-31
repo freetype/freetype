@@ -1,3 +1,16 @@
+CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
+
+  I. IMPORTANT CHANGES
+
+  - Bitmap-only TrueType fonts  now ignore FT_LOAD_NO_BITMAP flag  and
+    proceed loading bitmaps instead of giving an error.  This behavior
+    is documented  and  implemented  for other bitmap-only fonts.  The
+    flag  has always meant  to suppress the bitmap strikes in favor of
+    outlines, not to ban them completely.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.13.2 and 2.13.3 (2024-Aug-11)
 
   I. IMPORTANT CHANGES
@@ -579,7 +592,7 @@ CHANGES BETWEEN 2.9.1 and 2.10.0 (2019-Mar-15)
           Set text foreground color for palette index 0xFFFF.
 
         FT_Get_Color_Glyph_Layer
-          Get color layers for a given glyph (using an interator
+          Get color layers for a given glyph (using an iterator
           object).
 
         FT_Bitmap_Blend
