@@ -2149,6 +2149,53 @@
         glyph->bitmap_top  = sbit_metrics.horiBearingY;
       }
     }
+    /* a missing glyph in a bitmap-only font is assumed whitespace */
+    /* that needs to be constructed using metrics data from `hmtx' */
+    /* and, optionally, `vmtx' tables                              */
+    else if ( FT_ERR_EQ( error, Missing_Bitmap ) &&
+              !FT_IS_SCALABLE( glyph->face )     &&
+              face->horz_metrics_size            )
+    {
+      FT_Fixed  x_scale = size->root.metrics.x_scale;
+      FT_Fixed  y_scale = size->root.metrics.y_scale;
+
+      FT_Short  left_bearing = 0;
+      FT_Short  top_bearing  = 0;
+
+      FT_UShort  advance_width  = 0;
+      FT_UShort  advance_height = 0;
+
+
+      TT_Get_HMetrics( face, glyph_index,
+                       &left_bearing,
+                       &advance_width );
+      TT_Get_VMetrics( face, glyph_index,
+                       0,
+                       &top_bearing,
+                       &advance_height );
+
+      glyph->outline.n_points   = 0;
+      glyph->outline.n_contours = 0;
+
+      glyph->metrics.width  = 0;
+      glyph->metrics.height = 0;
+
+      glyph->metrics.horiBearingX = FT_MulFix( left_bearing, x_scale );
+      glyph->metrics.horiBearingY = 0;
+      glyph->metrics.horiAdvance  = FT_MulFix( advance_width, x_scale );
+
+      glyph->metrics.vertBearingX = 0;
+      glyph->metrics.vertBearingY = FT_MulFix( top_bearing, y_scale );
+      glyph->metrics.vertAdvance  = FT_MulFix( advance_height, y_scale );
+
+      glyph->format            = FT_GLYPH_FORMAT_BITMAP;
+      glyph->bitmap.pixel_mode = FT_PIXEL_MODE_MONO;
+
+      glyph->bitmap_left = 0;
+      glyph->bitmap_top  = 0;
+
+      error = FT_Err_Ok;
+    }
 
     return error;
   }
@@ -2432,75 +2479,16 @@
             FT_IS_SCALABLE( glyph->face )  ) &&
          IS_DEFAULT_INSTANCE( glyph->face )  )
     {
-      FT_Fixed  x_scale = size->root.metrics.x_scale;
-      FT_Fixed  y_scale = size->root.metrics.y_scale;
-
-
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
-      if ( FT_ERR_EQ( error, Missing_Bitmap ) )
-      {
-        /* the bitmap strike is incomplete and misses the requested glyph; */
-        /* if we have a bitmap-only font, return an empty glyph            */
-        if ( !FT_IS_SCALABLE( glyph->face ) )
-        {
-          FT_Short  left_bearing = 0;
-          FT_Short  top_bearing  = 0;
-
-          FT_UShort  advance_width  = 0;
-          FT_UShort  advance_height = 0;
-
-
-          /* to return an empty glyph, however, we need metrics data   */
-          /* from the `hmtx' (or `vmtx') table; the assumption is that */
-          /* empty glyphs are missing intentionally, representing      */
-          /* whitespace - not having at least horizontal metrics is    */
-          /* thus considered an error                                  */
-          if ( !face->horz_metrics_size )
-            return error;
-
-          /* we now construct an empty bitmap glyph */
-          TT_Get_HMetrics( face, glyph_index,
-                           &left_bearing,
-                           &advance_width );
-          TT_Get_VMetrics( face, glyph_index,
-                           0,
-                           &top_bearing,
-                           &advance_height );
-
-          glyph->outline.n_points   = 0;
-          glyph->outline.n_contours = 0;
-
-          glyph->metrics.width  = 0;
-          glyph->metrics.height = 0;
-
-          glyph->metrics.horiBearingX = FT_MulFix( left_bearing, x_scale );
-          glyph->metrics.horiBearingY = 0;
-          glyph->metrics.horiAdvance  = FT_MulFix( advance_width, x_scale );
-
-          glyph->metrics.vertBearingX = 0;
-          glyph->metrics.vertBearingY = FT_MulFix( top_bearing, y_scale );
-          glyph->metrics.vertAdvance  = FT_MulFix( advance_height, y_scale );
-
-          glyph->format            = FT_GLYPH_FORMAT_BITMAP;
-          glyph->bitmap.pixel_mode = FT_PIXEL_MODE_MONO;
-
-          glyph->bitmap_left = 0;
-          glyph->bitmap_top  = 0;
-
-          return FT_Err_Ok;
-        }
-      }
-      else if ( error )
-      {
-        /* return error if font is not scalable */
-        if ( !FT_IS_SCALABLE( glyph->face ) )
-          return error;
-      }
-      else
+      if ( !error )
       {
         if ( FT_IS_SCALABLE( glyph->face ) ||
              FT_HAS_SBIX( glyph->face )    )
         {
+          FT_Fixed  x_scale = size->root.metrics.x_scale;
+          FT_Fixed  y_scale = size->root.metrics.y_scale;
+
+
           /* for the bbox we need the header only */
           (void)tt_loader_init( &loader, size, glyph, load_flags, TRUE );
           (void)load_truetype_glyph( &loader, glyph_index, 0, TRUE );
@@ -2547,8 +2535,10 @@
                                                     y_scale );
         }
 
-        return FT_Err_Ok;
+        goto Exit;
       }
+      else if ( !FT_IS_SCALABLE( glyph->face ) )
+        goto Exit;
     }
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
@@ -2724,11 +2714,8 @@
     tt_loader_done( &loader );
 
   Exit:
-#ifdef FT_DEBUG_LEVEL_TRACE
-    if ( error )
-      FT_TRACE1(( "  failed (error code 0x%x)\n",
-                  error ));
-#endif
+    FT_TRACE1(( error ? "  failed (error code 0x%x)\n" : "",
+                error ));
 
     return error;
   }
