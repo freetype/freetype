@@ -1519,15 +1519,14 @@
     switch ( graphicType )
     {
     case FT_MAKE_TAG( 'f', 'l', 'i', 'p' ):
+      flipped = !flipped;
+      FALL_THROUGH;
+
     case FT_MAKE_TAG( 'd', 'u', 'p', 'e' ):
-      if ( recurse_depth < 4 )
+      if ( recurse_depth++ < 4 )
       {
         glyph_index = FT_GET_USHORT();
         FT_FRAME_EXIT();
-        recurse_depth++;
-
-        if ( graphicType == FT_MAKE_TAG( 'f', 'l', 'i', 'p' ) )
-          flipped = !flipped;
 
         goto retry;
       }
