@@ -357,8 +357,6 @@
 
     gchar               = face->phy_font.chars + gindex;
     pfrslot->format     = FT_GLYPH_FORMAT_OUTLINE;
-    outline->n_points   = 0;
-    outline->n_contours = 0;
     gps_offset          = face->header.gps_section_offset;
 
     /* load the glyph outline (FT_LOAD_NO_RECURSE isn't supported) */

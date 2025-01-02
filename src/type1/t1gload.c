@@ -398,9 +398,6 @@
       glyph->y_scale = 0x10000L;
     }
 
-    t1glyph->outline.n_points   = 0;
-    t1glyph->outline.n_contours = 0;
-
     hinting = FT_BOOL( !( load_flags & FT_LOAD_NO_SCALE   ) &&
                        !( load_flags & FT_LOAD_NO_HINTING ) );
     scaled  = FT_BOOL( !( load_flags & FT_LOAD_NO_SCALE   ) );

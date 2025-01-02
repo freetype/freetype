@@ -2122,9 +2122,6 @@
                                    &sbit_metrics );
     if ( !error )
     {
-      glyph->outline.n_points   = 0;
-      glyph->outline.n_contours = 0;
-
       glyph->metrics.width  = (FT_Pos)sbit_metrics.width  * 64;
       glyph->metrics.height = (FT_Pos)sbit_metrics.height * 64;
 
@@ -2173,9 +2170,6 @@
                        0,
                        &top_bearing,
                        &advance_height );
-
-      glyph->outline.n_points   = 0;
-      glyph->outline.n_contours = 0;
 
       glyph->metrics.width  = 0;
       glyph->metrics.height = 0;

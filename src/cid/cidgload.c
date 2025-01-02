@@ -452,9 +452,6 @@
     glyph->x_scale = cidsize->metrics.x_scale;
     glyph->y_scale = cidsize->metrics.y_scale;
 
-    cidglyph->outline.n_points   = 0;
-    cidglyph->outline.n_contours = 0;
-
     hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
                        ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
     scaled  = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 );

@@ -284,9 +284,6 @@
           FT_Short   dummy;
 
 
-          glyph->root.outline.n_points   = 0;
-          glyph->root.outline.n_contours = 0;
-
           glyph->root.metrics.width  = (FT_Pos)metrics.width  * 64;
           glyph->root.metrics.height = (FT_Pos)metrics.height * 64;
 
@@ -456,9 +453,6 @@
       font_matrix = cff->top_font.font_dict.font_matrix;
       font_offset = cff->top_font.font_dict.font_offset;
     }
-
-    glyph->root.outline.n_points   = 0;
-    glyph->root.outline.n_contours = 0;
 
     /* top-level code ensures that FT_LOAD_NO_HINTING is set */
     /* if FT_LOAD_NO_SCALE is active                         */
