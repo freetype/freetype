@@ -2639,6 +2639,13 @@
         glyph->outline        = loader.gloader->base.outline;
         glyph->outline.flags &= ~FT_OUTLINE_SINGLE_PASS;
 
+        /* Set the `high precision' bit flag.  This is _critical_ to   */
+        /* get correct output for monochrome TrueType glyphs at all    */
+        /* sizes using the bytecode interpreter.                       */
+        if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
+             size->metrics->y_ppem < 24         )
+          glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
+
         /* Translate array so that (0,0) is the glyph's origin.  Note  */
         /* that this behaviour is independent on the value of bit 1 of */
         /* the `flags' field in the `head' table -- at least major     */
@@ -2686,14 +2693,6 @@
 
       error = compute_glyph_metrics( &loader, glyph_index );
     }
-
-    /* Set the `high precision' bit flag.                           */
-    /* This is _critical_ to get correct output for monochrome      */
-    /* TrueType glyphs at all sizes using the bytecode interpreter. */
-    /*                                                              */
-    if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
-         size->metrics->y_ppem < 24         )
-      glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
     FT_TRACE1(( "  subglyphs = %u, contours = %hu, points = %hu,"
                 " flags = 0x%.3x\n",
