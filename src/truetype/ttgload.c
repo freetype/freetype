@@ -2595,7 +2595,7 @@
         glyph->metrics.horiAdvance = FT_MulFix( advanceX, x_scale );
         glyph->metrics.vertAdvance = FT_MulFix( advanceY, y_scale );
 
-        return error;
+        goto Exit;
       }
 
       FT_TRACE3(( "Failed to load SVG glyph\n" ));
@@ -2623,10 +2623,6 @@
       goto Done;
     }
 
-    glyph->format        = FT_GLYPH_FORMAT_OUTLINE;
-    glyph->num_subglyphs = 0;
-    glyph->outline.flags = 0;
-
     /* main loading loop */
     error = load_truetype_glyph( &loader, glyph_index, 0, FALSE );
     if ( !error )
@@ -2638,6 +2634,8 @@
       }
       else
       {
+        glyph->format         = FT_GLYPH_FORMAT_OUTLINE;
+
         glyph->outline        = loader.gloader->base.outline;
         glyph->outline.flags &= ~FT_OUTLINE_SINGLE_PASS;
 
