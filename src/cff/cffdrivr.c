@@ -205,105 +205,70 @@
                     FT_Int32   flags,
                     FT_Fixed*  advances )
   {
-    FT_UInt       nn;
-    FT_Error      error = FT_Err_Ok;
-    FT_GlyphSlot  slot  = face->glyph;
+    CFF_Face  cffface = (CFF_Face)face;
+    FT_Bool   horz;
+    FT_UInt   nn;
 
 
-    if ( FT_IS_SFNT( face ) )
+    if ( !FT_IS_SFNT( face ) )
+      return FT_THROW( Unimplemented_Feature );
+
+    horz = !( flags & FT_LOAD_VERTICAL_LAYOUT );
+
+    if ( horz )
     {
       /* OpenType 1.7 mandates that the data from `hmtx' table be used; */
       /* it is no longer necessary that those values are identical to   */
       /* the values in the `CFF' table                                  */
+      if ( !cffface->horizontal.number_Of_HMetrics )
+        return FT_THROW( Unimplemented_Feature );
 
-      CFF_Face  cffface = (CFF_Face)face;
-      FT_Short  dummy;
-
-
-      if ( flags & FT_LOAD_VERTICAL_LAYOUT )
-      {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-        /* no fast retrieval for blended MM fonts without VVAR table */
-        if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
-             !( cffface->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-          return FT_THROW( Unimplemented_Feature );
+      /* no fast retrieval for blended MM fonts without HVAR table */
+      if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
+           !( cffface->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+        return FT_THROW( Unimplemented_Feature );
 #endif
+    }
+    else  /* vertical */
+    {
+      /* check whether we have data from the `vmtx' table at all; */
+      /* otherwise we extract the info from the CFF glyphstrings  */
+      /* (instead of synthesizing a global value using the `OS/2' */
+      /* table)                                                   */
+      if ( !cffface->vertical_info )
+        return FT_THROW( Unimplemented_Feature );
 
-        /* check whether we have data from the `vmtx' table at all; */
-        /* otherwise we extract the info from the CFF glyphstrings  */
-        /* (instead of synthesizing a global value using the `OS/2' */
-        /* table)                                                   */
-        if ( !cffface->vertical_info )
-          goto Missing_Table;
-
-        for ( nn = 0; nn < count; nn++ )
-        {
-          FT_UShort  ah;
-
-
-          ( (SFNT_Service)cffface->sfnt )->get_metrics( cffface,
-                                                        1,
-                                                        start + nn,
-                                                        &dummy,
-                                                        &ah );
-
-          FT_TRACE5(( "  idx %d: advance height %d font unit%s\n",
-                      start + nn,
-                      ah,
-                      ah == 1 ? "" : "s" ));
-          advances[nn] = ah;
-        }
-      }
-      else
-      {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-        /* no fast retrieval for blended MM fonts without HVAR table */
-        if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
-             !( cffface->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-          return FT_THROW( Unimplemented_Feature );
+      /* no fast retrieval for blended MM fonts without VVAR table */
+      if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
+           !( cffface->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+        return FT_THROW( Unimplemented_Feature );
 #endif
-
-        /* check whether we have data from the `hmtx' table at all */
-        if ( !cffface->horizontal.number_Of_HMetrics )
-          goto Missing_Table;
-
-        for ( nn = 0; nn < count; nn++ )
-        {
-          FT_UShort  aw;
-
-
-          ( (SFNT_Service)cffface->sfnt )->get_metrics( cffface,
-                                                        0,
-                                                        start + nn,
-                                                        &dummy,
-                                                        &aw );
-
-          FT_TRACE5(( "  idx %d: advance width %d font unit%s\n",
-                      start + nn,
-                      aw,
-                      aw == 1 ? "" : "s" ));
-          advances[nn] = aw;
-        }
-      }
-
-      return error;
     }
 
-  Missing_Table:
-    flags |= (FT_UInt32)FT_LOAD_ADVANCE_ONLY;
-
+    /* proceed to fast advances */
     for ( nn = 0; nn < count; nn++ )
     {
-      error = cff_glyph_load( slot, face->size, start + nn, flags );
-      if ( error )
-        break;
+      FT_UShort  aw;
+      FT_Short   dummy;
 
-      advances[nn] = ( flags & FT_LOAD_VERTICAL_LAYOUT )
-                     ? slot->linearVertAdvance
-                     : slot->linearHoriAdvance;
+
+      ( (SFNT_Service)cffface->sfnt )->get_metrics( cffface,
+                                                    !horz,
+                                                    start + nn,
+                                                    &dummy,
+                                                    &aw );
+
+      FT_TRACE5(( "  idx %d: advance %s %d font unit%s\n",
+                  start + nn,
+                  horz ? "width" : "height",
+                  aw,
+                  aw == 1 ? "" : "s" ));
+      advances[nn] = aw;
     }
 
-    return error;
+    return FT_Err_Ok;
   }
 
 
