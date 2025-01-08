@@ -168,25 +168,7 @@
     CFF_Size       cffsize = (CFF_Size)size;
 
 
-    if ( !cffslot )
-      return FT_THROW( Invalid_Slot_Handle );
-
     FT_TRACE1(( "cff_glyph_load: glyph index %d\n", glyph_index ));
-
-    /* check whether we want a scaled outline or bitmap */
-    if ( !cffsize )
-      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
-
-    /* reset the size object if necessary */
-    if ( load_flags & FT_LOAD_NO_SCALE )
-      size = NULL;
-
-    if ( size )
-    {
-      /* these two objects must have the same parent */
-      if ( size->face != slot->face )
-        return FT_THROW( Invalid_Face_Handle );
-    }
 
     /* now load the glyph outline if necessary */
     error = cff_slot_load( cffslot, cffsize, glyph_index, load_flags );

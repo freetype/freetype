@@ -238,24 +238,12 @@
     else if ( glyph_index >= cff->num_glyphs )
       return FT_THROW( Invalid_Argument );
 
-    if ( load_flags & FT_LOAD_NO_RECURSE )
-      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
-
-    glyph->x_scale = 0x10000L;
-    glyph->y_scale = 0x10000L;
-    if ( size )
-    {
-      glyph->x_scale = size->root.metrics.x_scale;
-      glyph->y_scale = size->root.metrics.y_scale;
-    }
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* try to load embedded bitmap if any              */
     /*                                                 */
     /* XXX: The convention should be emphasized in     */
     /*      the documents because it can be confusing. */
-    if ( size )
     {
       CFF_Face      cff_face = (CFF_Face)size->root.face;
       SFNT_Service  sfnt     = (SFNT_Service)cff_face->sfnt;
@@ -422,6 +410,9 @@
 
     /* if we have a CID subfont, use its matrix (which has already */
     /* been multiplied with the root matrix)                       */
+
+    glyph->x_scale = size->root.metrics.x_scale;
+    glyph->y_scale = size->root.metrics.y_scale;
 
     /* this scaling is only relevant if the PS hinter isn't active */
     if ( cff->num_subfonts )
