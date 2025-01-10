@@ -1975,7 +1975,7 @@
       {
         p->font->props_size = 0;
 
-        FT_ERROR(( "bdf_parse_glyphs_: " ERRMSG5, lineno, "STARTPROPERTIES" ));
+        FT_ERROR(( "bdf_parse_start_: " ERRMSG5, lineno, "STARTPROPERTIES" ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
@@ -2127,7 +2127,7 @@
                                  nbuf, lineno );
       if ( error )
         goto Exit;
-      FT_TRACE2(( "bdf_parse_properties_: " ACMSG1, p->font->bbx.ascent ));
+      FT_TRACE2(( "bdf_parse_start_: " ACMSG1, p->font->bbx.ascent ));
 
       p->font->font_descent = p->font->bbx.descent;
       ft_snprintf( nbuf, BUFSIZE, "%hd", p->font->bbx.descent );
@@ -2135,7 +2135,7 @@
                                  nbuf, lineno );
       if ( error )
         goto Exit;
-      FT_TRACE2(( "bdf_parse_properties_: " ACMSG2, p->font->bbx.descent ));
+      FT_TRACE2(( "bdf_parse_start_: " ACMSG2, p->font->bbx.descent ));
 
       *next = bdf_parse_glyphs_;
 
