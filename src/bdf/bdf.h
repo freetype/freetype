@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
     char*            comments;       /* Font comments.                      */
     unsigned long    comments_len;   /* Length of comment string.           */
 
-    void*            internal;       /* Internal data for the font.         */
+    FT_Hash          internal;       /* Internal data for the font.         */
 
     unsigned short   bpp;            /* Bits per pixel.                     */
 
