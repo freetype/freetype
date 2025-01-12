@@ -1636,6 +1636,10 @@
       goto Exit;
     }
 
+    /* Do not leak the bitmap or reset its size */
+    if ( p->flags & BDF_BITMAP_ )
+      goto Exit;
+
     /* Expect the BBX field next. */
     if ( _bdf_strncmp( line, "BBX", 3 ) == 0 )
     {
