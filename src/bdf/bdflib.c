@@ -268,6 +268,7 @@
     char*           glyph_name;
     long            glyph_enc;
 
+    bdf_glyph_t*    glyph;
     bdf_font_t*     font;
     bdf_options_t*  opts;
 
@@ -940,9 +941,6 @@
                           BDF_BBX_      | \
                           BDF_BITMAP_   )
 
-#define BDF_GLYPH_WIDTH_CHECK_   0x40000000UL
-#define BDF_GLYPH_HEIGHT_CHECK_  0x80000000UL
-
 
   static FT_Error
   bdf_add_comment_( bdf_font_t*    font,
@@ -1280,7 +1278,67 @@
   }
 
 
-  /* Actually parse the glyph info and bitmaps. */
+  /* Line function prototype. */
+  static FT_Error
+  bdf_parse_glyphs_( char*          line,
+                     unsigned long  linelen,
+                     unsigned long  lineno,
+                     void*          call_data,
+                     void*          client_data );
+
+
+  /* Aggressively parse the glyph bitmaps. */
+  static FT_Error
+  bdf_parse_bitmap_( char*          line,
+                     unsigned long  linelen,
+                     unsigned long  lineno,
+                     void*          call_data,
+                     void*          client_data )
+  {
+    bdf_line_func_t_*  next  = (bdf_line_func_t_ *)call_data;
+    bdf_parse_t_*      p     = (bdf_parse_t_ *)    client_data;
+    bdf_glyph_t*       glyph = p->glyph;
+
+    unsigned char*     bp;
+    unsigned long      i, nibbles;
+    int                x;
+
+    FT_UNUSED( lineno );        /* only used in debug mode */
+
+
+    nibbles = glyph->bpr << 1;
+    bp      = glyph->bitmap + p->row * glyph->bpr;
+
+    if ( nibbles > linelen )
+    {
+      FT_TRACE2(( "bdf_parse_bitmap_: " ACMSG16, glyph->encoding ));
+      nibbles = linelen;
+    }
+
+    for ( i = 0; i < nibbles; i++ )
+    {
+      /* char to hex without checks */
+      x  = line[i];
+      x += ( x & 0x40 ) * 9 >> 6;  /* for [A-Fa-f] */
+      x &= 0x0F;
+
+      if ( i & 1 )
+        *bp++ |= x;
+      else
+        *bp    = x << 4;
+    }
+
+    p->row++;
+
+    /* When done, go back to parsing glyphs */
+    if ( p->row >= (unsigned long)glyph->bbx.height )
+      *next = bdf_parse_glyphs_;
+
+    return FT_Err_Ok;
+  }
+
+
+  /* Actually parse the glyph info. */
   static FT_Error
   bdf_parse_glyphs_( char*          line,
                      unsigned long  linelen,
@@ -1296,10 +1354,8 @@
     FT_Memory          memory = font->memory;
     FT_Error           error  = FT_Err_Ok;
 
-    int                c, mask_index;
     char*              s;
-    unsigned char*     bp;
-    unsigned long      i, slen, nibbles;
+    unsigned long      slen;
 
     FT_UNUSED( lineno );        /* only used in debug mode */
 
@@ -1528,10 +1584,6 @@
         }
       }
 
-      /* Clear the flags that might be added when width and height are */
-      /* checked for consistency.                                      */
-      p->flags &= ~( BDF_GLYPH_WIDTH_CHECK_ | BDF_GLYPH_HEIGHT_CHECK_ );
-
       p->flags |= BDF_ENCODING_;
 
       goto Exit;
@@ -1545,64 +1597,6 @@
       glyph = font->unencoded + ( font->unencoded_used - 1 );
     else
       glyph = font->glyphs + ( font->glyphs_used - 1 );
-
-    /* Check whether a bitmap is being constructed. */
-    if ( p->flags & BDF_BITMAP_ )
-    {
-      /* If there are more rows than are specified in the glyph metrics, */
-      /* ignore the remaining lines.                                     */
-      if ( p->row >= (unsigned long)glyph->bbx.height )
-      {
-        if ( !( p->flags & BDF_GLYPH_HEIGHT_CHECK_ ) )
-        {
-          FT_TRACE2(( "bdf_parse_glyphs_: " ACMSG13, glyph->encoding ));
-          p->flags |= BDF_GLYPH_HEIGHT_CHECK_;
-        }
-
-        goto Exit;
-      }
-
-      /* Only collect the number of nibbles indicated by the glyph     */
-      /* metrics.  If there are more columns, they are simply ignored. */
-      nibbles = glyph->bpr << 1;
-      bp      = glyph->bitmap + p->row * glyph->bpr;
-
-      for ( i = 0; i < nibbles; i++ )
-      {
-        c = line[i];
-        if ( !sbitset( hdigits, c ) )
-          break;
-        *bp = (FT_Byte)( ( *bp << 4 ) + a2i[c] );
-        if ( i + 1 < nibbles && ( i & 1 ) )
-          *++bp = 0;
-      }
-
-      /* If any line has not enough columns,            */
-      /* indicate they have been padded with zero bits. */
-      if ( i < nibbles                            &&
-           !( p->flags & BDF_GLYPH_WIDTH_CHECK_ ) )
-      {
-        FT_TRACE2(( "bdf_parse_glyphs_: " ACMSG16, glyph->encoding ));
-        p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
-      }
-
-      /* Remove possible garbage at the right. */
-      mask_index = ( glyph->bbx.width * p->font->bpp ) & 7;
-      if ( glyph->bbx.width )
-        *bp &= nibble_mask[mask_index];
-
-      /* If any line has extra columns, indicate they have been removed. */
-      if ( i == nibbles                           &&
-           sbitset( hdigits, line[nibbles] )      &&
-           !( p->flags & BDF_GLYPH_WIDTH_CHECK_ ) )
-      {
-        FT_TRACE2(( "bdf_parse_glyphs_: " ACMSG14, glyph->encoding ));
-        p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
-      }
-
-      p->row++;
-      goto Exit;
-    }
 
     /* Expect the SWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "SWIDTH", 6 ) == 0 )
@@ -1727,11 +1721,13 @@
       else
         glyph->bytes = (unsigned short)bitmap_size;
 
-      if ( FT_ALLOC( glyph->bitmap, glyph->bytes ) )
+      if ( !bitmap_size || FT_ALLOC( glyph->bitmap, glyph->bytes ) )
         goto Exit;
 
+      p->glyph  = glyph;
       p->row    = 0;
       p->flags |= BDF_BITMAP_;
+      *next     = bdf_parse_bitmap_;
 
       goto Exit;
     }

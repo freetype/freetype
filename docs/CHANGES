@@ -5,8 +5,13 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
   - Bitmap-only TrueType fonts  now ignore FT_LOAD_NO_BITMAP flag  and
     proceed loading bitmaps instead of giving an error.  This behavior
     is documented  and  implemented  for other bitmap-only fonts.  The
-    flag  has always meant  to suppress the bitmap strikes in favor of
+    flag  was always meant  to suppress the bitmap strikes in favor of
     outlines, not to ban them completely.
+
+
+  III. MISCELLANEOUS
+
+  - The BDF driver now loads fonts noticeably faster. 
 
 
 ======================================================================
