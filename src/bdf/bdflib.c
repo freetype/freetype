@@ -1447,6 +1447,9 @@
     /* Check for the ENDCHAR field. */
     if ( _bdf_strncmp( line, "ENDCHAR", 7 ) == 0 )
     {
+      /* Free unused glyph_name */
+      FT_FREE( p->glyph_name );
+
       p->glyph_enc = 0;
       p->flags    &= ~BDF_GLYPH_BITS_;
 
