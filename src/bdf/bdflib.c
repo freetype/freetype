@@ -1473,8 +1473,6 @@
 
       /* Set the character name in the parse info first until the */
       /* encoding can be checked for an unencoded character.      */
-      FT_FREE( p->glyph_name );
-
       error = bdf_list_split_( &p->list, " +", line, linelen );
       if ( error )
         goto Exit;
@@ -1548,43 +1546,35 @@
         glyph           = font->glyphs + font->glyphs_used++;
         glyph->name     = p->glyph_name;
         glyph->encoding = (unsigned long)p->glyph_enc;
+      }
+      else if ( p->opts->keep_unencoded )
+      {
+        /* Allocate the next unencoded glyph. */
+        if ( font->unencoded_used == font->unencoded_size )
+        {
+          if ( FT_RENEW_ARRAY( font->unencoded ,
+                               font->unencoded_size,
+                               font->unencoded_size + 4 ) )
+            goto Exit;
 
-        /* Reset the initial glyph info. */
-        p->glyph_name = NULL;
+          font->unencoded_size += 4;
+        }
+
+        glyph           = font->unencoded + font->unencoded_used;
+        glyph->name     = p->glyph_name;
+        glyph->encoding = font->unencoded_used++;
       }
       else
       {
-        /* Unencoded glyph.  Check whether it should */
-        /* be added or not.                          */
-        if ( p->opts->keep_unencoded )
-        {
-          /* Allocate the next unencoded glyph. */
-          if ( font->unencoded_used == font->unencoded_size )
-          {
-            if ( FT_RENEW_ARRAY( font->unencoded ,
-                                 font->unencoded_size,
-                                 font->unencoded_size + 4 ) )
-              goto Exit;
-
-            font->unencoded_size += 4;
-          }
-
-          glyph           = font->unencoded + font->unencoded_used;
-          glyph->name     = p->glyph_name;
-          glyph->encoding = font->unencoded_used++;
-
-          /* Reset the initial glyph info. */
-          p->glyph_name = NULL;
-        }
-        else
-        {
-          /* Free up the glyph name if the unencoded shouldn't be */
-          /* kept.                                                */
-          FT_FREE( p->glyph_name );
-        }
+        /* Free up the glyph name if the unencoded shouldn't be */
+        /* kept.                                                */
+        FT_FREE( p->glyph_name );
+        glyph = NULL;
       }
 
-      p->flags |= BDF_ENCODING_;
+      p->glyph_name = NULL;
+      p->glyph      = glyph;
+      p->flags     |= BDF_ENCODING_;
 
       goto Exit;
     }
@@ -1593,10 +1583,7 @@
       goto Missing_Encoding;
 
     /* Point at the glyph being constructed. */
-    if ( p->glyph_enc == -1 )
-      glyph = font->unencoded + ( font->unencoded_used - 1 );
-    else
-      glyph = font->glyphs + ( font->glyphs_used - 1 );
+    glyph = p->glyph;
 
     /* Expect the SWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "SWIDTH", 6 ) == 0 )
@@ -1728,7 +1715,6 @@
       if ( !bitmap_size || FT_ALLOC( glyph->bitmap, glyph->bytes ) )
         goto Exit;
 
-      p->glyph  = glyph;
       p->row    = 0;
       p->flags |= BDF_BITMAP_;
       *next     = bdf_parse_bitmap_;
