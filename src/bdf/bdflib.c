@@ -526,8 +526,8 @@
   {
     bdf_line_func_t_  cb;
     unsigned long     lineno, buf_size;
-    int               refill, hold, to_skip;
-    ptrdiff_t         bytes, start, end, cursor, avail;
+    int               hold, to_skip;
+    unsigned long     bytes, start, end, cursor, avail;
     char*             buf    = NULL;
     FT_Memory         memory = stream->memory;
     FT_Error          error  = FT_Err_Ok;
@@ -549,26 +549,16 @@
     lineno  = 1;
     buf[0]  = 0;
     start   = 0;
-    avail   = 0;
     cursor  = 0;
-    refill  = 1;
     to_skip = NO_SKIP;
-    bytes   = 0;        /* make compiler happy */
+
+  Refill:
+    bytes  = FT_Stream_TryRead( stream,
+                                (FT_Byte*)buf + cursor, buf_size - cursor );
+    avail  = cursor + bytes;
 
     for (;;)
     {
-      if ( refill )
-      {
-        bytes  = (ptrdiff_t)FT_Stream_TryRead(
-                   stream, (FT_Byte*)buf + cursor,
-                   buf_size - (unsigned long)cursor );
-        avail  = cursor + bytes;
-        cursor = 0;
-        refill = 0;
-      }
-
-      end = start;
-
       /* should we skip an optional character like \n or \r? */
       if ( start < avail && buf[start] == to_skip )
       {
@@ -578,6 +568,7 @@
       }
 
       /* try to find the end of the line */
+      end = start;
       while ( end < avail && buf[end] != '\n' && buf[end] != '\r' )
         end++;
 
@@ -622,15 +613,13 @@
         }
         else
         {
-          bytes = avail - start;
+          cursor = avail - start;
 
-          FT_MEM_MOVE( buf, buf + start, bytes );
+          FT_MEM_MOVE( buf, buf + start, cursor );
 
-          cursor = bytes;
           start  = 0;
         }
-        refill = 1;
-        continue;
+        goto Refill;
       }
 
       /* Temporarily NUL-terminate the line. */
@@ -640,11 +629,11 @@
       /* XXX: Use encoding independent value for 0x1A */
       if ( buf[start] != '#' && buf[start] != 0x1A && end > start )
       {
-        error = (*cb)( buf + start, (unsigned long)( end - start ), lineno,
+        error = (*cb)( buf + start, end - start, lineno,
                        (void*)&cb, client_data );
         /* Redo if we have encountered CHARS without properties. */
         if ( error == -1 )
-          error = (*cb)( buf + start, (unsigned long)( end - start ), lineno,
+          error = (*cb)( buf + start, end - start, lineno,
                          (void*)&cb, client_data );
         if ( error )
           break;
