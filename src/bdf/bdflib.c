@@ -56,22 +56,6 @@
 
   /**************************************************************************
    *
-   * Default BDF font options.
-   *
-   */
-
-
-  static const bdf_options_t  bdf_opts_ =
-  {
-    1,                /* Correct metrics.               */
-    1,                /* Preserve unencoded glyphs.     */
-    0,                /* Preserve comments.             */
-    BDF_PROPORTIONAL  /* Default spacing.               */
-  };
-
-
-  /**************************************************************************
-   *
    * Builtin BDF font properties.
    *
    */
@@ -270,7 +254,6 @@
 
     bdf_glyph_t*    glyph;
     bdf_font_t*     font;
-    bdf_options_t*  opts;
 
     bdf_list_t_     list;
 
@@ -954,11 +937,10 @@
   }
 
 
-  /* Set the spacing from the font name if it exists, or set it to the */
-  /* default specified in the options.                                 */
+  /* Set the spacing from the font name if it exists, */
+  /* or use default                                   */
   static FT_Error
   bdf_set_default_spacing_( bdf_font_t*     font,
-                            bdf_options_t*  opts,
                             unsigned long   lineno )
   {
     size_t       len;
@@ -980,7 +962,7 @@
 
     bdf_list_init_( &list, memory );
 
-    font->spacing = opts->font_spacing;
+    font->spacing = BDF_PROPORTIONAL;  /* default */
 
     len = ft_strlen( font->name ) + 1;
     /* Limit ourselves to 256 characters in the font name. */
@@ -1356,7 +1338,7 @@
     /* Check for a comment. */
     if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
     {
-      if ( p->opts->keep_comments )
+      if ( p->flags & BDF_KEEP_COMMENTS )
       {
         linelen -= 7;
 
@@ -1408,9 +1390,9 @@
 
     /* Check whether a glyph is being scanned but should be */
     /* ignored because it is an unencoded glyph.            */
-    if ( ( p->flags & BDF_GLYPH_ )     &&
-         p->glyph_enc            == -1 &&
-         p->opts->keep_unencoded == 0  )
+    if ( p->flags & BDF_GLYPH_              &&
+         p->glyph_enc            == -1      &&
+         !( p->flags & BDF_KEEP_UNENCODED ) )
       goto Exit;
 
     /* Check for the STARTCHAR field. */
@@ -1500,7 +1482,7 @@
         glyph->name     = p->glyph_name;
         glyph->encoding = (unsigned long)p->glyph_enc;
       }
-      else if ( p->opts->keep_unencoded )
+      else if ( p->flags & BDF_KEEP_UNENCODED )
       {
         /* Allocate the next unencoded glyph. */
         if ( font->unencoded_used == font->unencoded_size )
@@ -1617,7 +1599,7 @@
 
       /* If the BDF_CORRECT_METRICS flag is set, then adjust the SWIDTH */
       /* value if necessary.                                            */
-      if ( p->opts->correct_metrics )
+      if ( p->flags & BDF_CORRECT_METRICS )
       {
         /* Determine the point size of the glyph. */
         unsigned short  sw = (unsigned short)FT_MulDiv(
@@ -1788,7 +1770,7 @@
     /* comments before the STARTFONT line for some reason.                */
     if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
     {
-      if ( p->opts->keep_comments && p->font )
+      if ( p->flags & BDF_KEEP_COMMENTS && p->font )
       {
         linelen -= 7;
 
@@ -1842,7 +1824,7 @@
       error = ft_hash_str_init( p->font->internal, memory );
       if ( error )
         goto Exit;
-      p->font->spacing      = p->opts->font_spacing;
+      p->font->spacing      = BDF_PROPORTIONAL;
       p->font->default_char = ~0UL;
 
       goto Exit;
@@ -1945,7 +1927,7 @@
 
       /* If the font name is an XLFD name, set the spacing to the one in  */
       /* the font name.  If there is no spacing fall back on the default. */
-      error = bdf_set_default_spacing_( font, p->opts, lineno );
+      error = bdf_set_default_spacing_( font, lineno );
       if ( error )
         goto Exit;
 
@@ -2096,7 +2078,7 @@
   FT_LOCAL_DEF( FT_Error )
   bdf_load_font( FT_Stream       stream,
                  FT_Memory       memory,
-                 bdf_options_t*  opts,
+                 unsigned long   flags,
                  bdf_font_t*    *font )
   {
     unsigned long  lineno = 0; /* make compiler happy */
@@ -2108,7 +2090,7 @@
     if ( FT_NEW( p ) )
       goto Exit;
 
-    p->opts   = (bdf_options_t*)( opts ? opts : &bdf_opts_ );
+    p->flags  = flags;   /* comments, metrics, unencoded */
     p->minlb  = 32767;
     p->size   = stream->size;
     p->memory = memory;  /* only during font creation */
@@ -2138,7 +2120,7 @@
 
       /* Once the font has been loaded, adjust the overall font metrics if */
       /* necessary.                                                        */
-      if ( p->opts->correct_metrics != 0 &&
+      if ( p->flags & BDF_CORRECT_METRICS &&
            ( p->font->glyphs_used > 0 || p->font->unencoded_used > 0 ) )
       {
         if ( p->maxrb - p->minlb != p->font->bbx.width )
