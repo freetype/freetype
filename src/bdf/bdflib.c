@@ -1085,7 +1085,8 @@
 
 
     /* First, check whether the property already exists in the font. */
-    if ( ( propid = ft_hash_str_lookup( name, font->internal ) ) != NULL )
+    if ( font->props_used                                                &&
+         ( propid = ft_hash_str_lookup( name, font->internal ) ) != NULL )
     {
       /* The property already exists in the font, so simply replace */
       /* the value of the property with the current value.          */
