@@ -1220,12 +1220,6 @@
   }
 
 
-  static const unsigned char nibble_mask[8] =
-  {
-    0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE
-  };
-
-
   static FT_Error
   bdf_parse_end_( char*          line,
                   unsigned long  linelen,
@@ -1294,7 +1288,7 @@
     {
       /* char to hex without checks */
       x  = line[i];
-      x += ( x & 0x40 ) * 9 >> 6;  /* for [A-Fa-f] */
+      x += 9 * ( x & 0x40 ) >> 6;  /* for [A-Fa-f] */
       x &= 0x0F;
 
       if ( i & 1 )
