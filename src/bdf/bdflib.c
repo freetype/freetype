@@ -1759,7 +1759,7 @@
         goto Exit;
       }
 
-      p->flags = BDF_START_;
+      p->flags |= BDF_START_;
 
       if ( FT_NEW( p->font ) )
         goto Exit;
