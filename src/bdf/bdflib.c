@@ -1085,8 +1085,7 @@
 
 
     /* First, check whether the property already exists in the font. */
-    if ( font->props_used                                                &&
-         ( propid = ft_hash_str_lookup( name, font->internal ) ) != NULL )
+    if ( ( propid = ft_hash_str_lookup( name, font->internal ) ) != NULL )
     {
       /* The property already exists in the font, so simply replace */
       /* the value of the property with the current value.          */
@@ -1991,6 +1990,15 @@
         FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
         error = FT_THROW( Missing_Fontboundingbox_Field );
         goto Exit;
+      }
+
+      /* Reserve space for artificial FONT_ASCENT or FONT_DESCENT. */
+      if ( font->props_size == 0 )
+      {
+        if ( FT_NEW_ARRAY( font->props, 2 ) )
+          goto Exit;
+
+        font->props_size = 2;
       }
 
       /* If the FONT_ASCENT or FONT_DESCENT properties have not been      */
