@@ -509,7 +509,6 @@
   {
     bdf_line_func_t_  cb;
     unsigned long     lineno, buf_size;
-    int               hold, to_skip;
     unsigned long     bytes, start, end, cursor, avail;
     char*             buf    = NULL;
     FT_Memory         memory = stream->memory;
@@ -530,44 +529,29 @@
 
     cb      = callback;
     lineno  = 1;
-    buf[0]  = 0;
     start   = 0;
     cursor  = 0;
-    to_skip = NO_SKIP;
 
   Refill:
     bytes  = FT_Stream_TryRead( stream,
                                 (FT_Byte*)buf + cursor, buf_size - cursor );
     avail  = cursor + bytes;
 
-    for (;;)
+    while ( bytes )
     {
-      /* should we skip an optional character like \n or \r? */
-      if ( start < avail && buf[start] == to_skip )
-      {
-        start  += 1;
-        to_skip = NO_SKIP;
-        continue;
-      }
+      /* try to fine the start of the line */
+      while ( start < avail && buf[start] < ' ' )
+        start++;
 
       /* try to find the end of the line */
-      end = start;
-      while ( end < avail && buf[end] != '\n' && buf[end] != '\r' )
+      end = start + 1;
+      while (   end < avail && buf[end] >= ' ' )
         end++;
 
       /* if we hit the end of the buffer, try shifting its content */
       /* or even resizing it                                       */
       if ( end >= avail )
       {
-        if ( bytes == 0 )
-        {
-          /* last line in file doesn't end in \r or \n; */
-          /* ignore it then exit                        */
-          if ( lineno == 1 )
-            error = FT_THROW( Missing_Startfont_Field );
-          break;
-        }
-
         if ( start == 0 )
         {
           /* this line is definitely too long; try resizing the input */
@@ -577,17 +561,13 @@
 
           if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
           {
-            if ( lineno == 1 )
-              error = FT_THROW( Missing_Startfont_Field );
-            else
-            {
-              FT_ERROR(( "bdf_readstream_: " ERRMSG6, lineno ));
-              error = FT_THROW( Invalid_Argument );
-            }
+            FT_ERROR(( "bdf_readstream_: " ERRMSG6, lineno ));
+            error = FT_THROW( Invalid_File_Format );
+
             goto Exit;
           }
 
-          new_size = buf_size * 2;
+          new_size = buf_size * 4;
           if ( FT_QREALLOC( buf, buf_size, new_size ) )
             goto Exit;
 
@@ -605,12 +585,10 @@
         goto Refill;
       }
 
-      /* Temporarily NUL-terminate the line. */
-      hold     = buf[end];
+      /* NUL-terminate the line. */
       buf[end] = 0;
 
-      /* XXX: Use encoding independent value for 0x1A */
-      if ( buf[start] != '#' && buf[start] != 0x1A && end > start )
+      if ( buf[start] != '#' )
       {
         error = (*cb)( buf + start, end - start, lineno,
                        (void*)&cb, client_data );
@@ -619,15 +597,7 @@
       }
 
       lineno  += 1;
-      buf[end] = (char)hold;
       start    = end + 1;
-
-      if ( hold == '\n' )
-        to_skip = '\r';
-      else if ( hold == '\r' )
-        to_skip = '\n';
-      else
-        to_skip = NO_SKIP;
     }
 
     *lno = lineno;
