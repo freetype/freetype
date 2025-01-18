@@ -539,7 +539,7 @@
 
     while ( bytes )
     {
-      /* try to fine the start of the line */
+      /* try to find the start of the line */
       while ( start < avail && buf[start] < ' ' )
         start++;
 
@@ -1661,7 +1661,6 @@
     /* Check for the end of the properties. */
     if ( _bdf_strncmp( line, "ENDPROPERTIES", 13 ) == 0 )
     {
-      p->flags &= ~BDF_PROPS_;
       *next     = bdf_parse_start_;
 
       goto Exit;
@@ -1798,7 +1797,8 @@
     font = p->font;
 
     /* Check for the start of the properties. */
-    if ( _bdf_strncmp( line, "STARTPROPERTIES", 15 ) == 0 )
+    if ( !( p->flags & BDF_PROPS_ )                       &&
+         _bdf_strncmp( line, "STARTPROPERTIES", 15 ) == 0 )
     {
       if ( !( p->flags & BDF_FONT_BBX_ ) )
       {
@@ -1812,9 +1812,13 @@
       if ( error )
         goto Exit;
 
-      p->cnt = font->props_size = bdf_atoul_( p->list.field[1] );
+      font->props_size = bdf_atoul_( p->list.field[1] );
+
+      if ( font->props_size < 2 )
+        font->props_size = 2;
+
       /* We need at least 4 bytes per property. */
-      if ( p->cnt > p->size / 4 )
+      if ( font->props_size > p->size / 4 )
       {
         font->props_size = 0;
 
@@ -1823,7 +1827,7 @@
         goto Exit;
       }
 
-      if ( FT_NEW_ARRAY( font->props, p->cnt ) )
+      if ( FT_NEW_ARRAY( font->props, font->props_size ) )
       {
         font->props_size = 0;
         goto Exit;
