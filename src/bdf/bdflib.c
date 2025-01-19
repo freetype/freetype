@@ -1076,7 +1076,7 @@
 
       p->flags |= BDF_GLYPH_;
 
-      FT_TRACE4(( DBGMSG1, lineno, s ));
+      FT_TRACE4(( DBGMSG1, lineno, line ));
 
       goto Exit;
     }
