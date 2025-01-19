@@ -11,7 +11,7 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
 
   III. MISCELLANEOUS
 
-  - The BDF driver now loads fonts noticeably faster. 
+  - The BDF driver now loads fonts 75% faster. 
 
 
 ======================================================================
