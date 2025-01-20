@@ -3676,7 +3676,7 @@
       if ( !points || !deltas )
         ; /* failure, ignore it */
 
-      else if ( localpoints == ALL_POINTS )
+      else if ( points == ALL_POINTS )
       {
 #ifdef FT_DEBUG_LEVEL_TRACE
         int  count = 0;
