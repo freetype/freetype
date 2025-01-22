@@ -1467,14 +1467,6 @@
     if ( !( p->flags & BDF_PROPS_ )                       &&
          _bdf_strncmp( line, "STARTPROPERTIES", 15 ) == 0 )
     {
-      if ( !( p->flags & BDF_FONT_BBX_ ) )
-      {
-        /* Missing the FONTBOUNDINGBOX field. */
-        FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
-        error = FT_THROW( Missing_Fontboundingbox_Field );
-        goto Exit;
-      }
-
       line             = bdf_strtok_( line, ' ' );
       font->props_size = bdf_atoul_( line );
 
@@ -1506,14 +1498,6 @@
     /* Check for the FONTBOUNDINGBOX field. */
     if ( _bdf_strncmp( line, "FONTBOUNDINGBOX", 15 ) == 0 )
     {
-      if ( !( p->flags & BDF_SIZE_ ) )
-      {
-        /* Missing the SIZE field. */
-        FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "SIZE" ));
-        error = FT_THROW( Missing_Size_Field );
-        goto Exit;
-      }
-
       line               = bdf_strtok_( line, ' ' );
       font->bbx.width    = bdf_atous_( line );
       line               = bdf_strtok_( line, ' ' );
@@ -1581,14 +1565,6 @@
     /* Check for the SIZE field. */
     if ( _bdf_strncmp( line, "SIZE", 4 ) == 0 )
     {
-      if ( !( p->flags & BDF_FONT_NAME_ ) )
-      {
-        /* Missing the FONT field. */
-        FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "FONT" ));
-        error = FT_THROW( Missing_Font_Field );
-        goto Exit;
-      }
-
       line               = bdf_strtok_( line, ' ' );
       font->point_size   = bdf_atoul_( line );
       line               = bdf_strtok_( line, ' ' );
@@ -1631,6 +1607,24 @@
     {
       char  nbuf[BUFSIZE];
 
+
+      /* Check the header for completeness before leaving. */
+
+      if ( !( p->flags & BDF_FONT_NAME_ ) )
+      {
+        /* Missing the FONT field. */
+        FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "FONT" ));
+        error = FT_THROW( Missing_Font_Field );
+        goto Exit;
+      }
+
+      if ( !( p->flags & BDF_SIZE_ ) )
+      {
+        /* Missing the SIZE field. */
+        FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "SIZE" ));
+        error = FT_THROW( Missing_Size_Field );
+        goto Exit;
+      }
 
       if ( !( p->flags & BDF_FONT_BBX_ ) )
       {
