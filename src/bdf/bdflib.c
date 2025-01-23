@@ -856,14 +856,6 @@
 
     font->props_used++;
 
-    /* Some special cases need to be handled here.  The DEFAULT_CHAR       */
-    /* property needs to be located if it exists in the property list, the */
-    /* FONT_ASCENT and FONT_DESCENT need to be assigned if they are        */
-    /* present, and the SPACING property should override the default       */
-    /* spacing.                                                            */
-    if ( _bdf_strncmp( name, "DEFAULT_CHAR", 12 ) == 0 )
-      font->default_char = fp->value.ul;
-
   Exit:
     return error;
   }
@@ -1431,7 +1423,6 @@
       error = ft_hash_str_init( p->font->internal, memory );
       if ( error )
         goto Exit;
-      p->font->default_char = ~0UL;
 
       goto Exit;
     }

@@ -600,6 +600,12 @@ THE SOFTWARE.
                                      resolution_y );
         else
           bsize->x_ppem = bsize->y_ppem;
+
+        prop = bdf_get_font_property( font, "DEFAULT_CHAR" );
+        if ( prop )
+          font->default_char = prop->value.ul;
+        else
+          font->default_char = ~0UL;
       }
 
       /* encoding table */
