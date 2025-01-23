@@ -422,9 +422,6 @@
     unsigned long  v;
 
 
-    if ( s == NULL || *s == 0 )
-      return 0;
-
     for ( v = 0; sbitset( ddigits, *s ); s++ )
     {
       if ( v < ( FT_ULONG_MAX - 9 ) / 10 )
@@ -447,16 +444,14 @@
     long  v, neg;
 
 
-    if ( s == NULL || *s == 0 )
-      return 0;
-
     /* Check for a minus sign. */
-    neg = 0;
     if ( *s == '-' )
     {
       s++;
-      neg = 1;
+      neg = -1;
     }
+    else
+      neg =  1;
 
     for ( v = 0; sbitset( ddigits, *s ); s++ )
     {
@@ -469,7 +464,7 @@
       }
     }
 
-    return ( !neg ) ? v : -v;
+    return neg * v;
   }
 
 
@@ -505,16 +500,14 @@
     short  v, neg;
 
 
-    if ( s == NULL || *s == 0 )
-      return 0;
-
     /* Check for a minus. */
-    neg = 0;
     if ( *s == '-' )
     {
       s++;
-      neg = 1;
+      neg = -1;
     }
+    else
+      neg =  1;
 
     for ( v = 0; sbitset( ddigits, *s ); s++ )
     {
@@ -527,7 +520,7 @@
       }
     }
 
-    return (short)( ( !neg ) ? v : -v );
+    return neg * v;
   }
 
 
@@ -1845,7 +1838,7 @@
 
     propid = ft_hash_str_lookup( name, font->internal );
 
-    return propid ? ( font->props + *propid ) : 0;
+    return propid ? ( font->props + *propid ) : NULL;
   }
 
 
