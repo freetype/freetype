@@ -475,9 +475,6 @@
     unsigned short  v;
 
 
-    if ( s == NULL || *s == 0 )
-      return 0;
-
     for ( v = 0; sbitset( ddigits, *s ); s++ )
     {
       if ( v < ( FT_USHORT_MAX - 9 ) / 10 )
