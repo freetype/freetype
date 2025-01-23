@@ -863,22 +863,6 @@
     /* spacing.                                                            */
     if ( _bdf_strncmp( name, "DEFAULT_CHAR", 12 ) == 0 )
       font->default_char = fp->value.ul;
-    else if ( _bdf_strncmp( name, "SPACING", 7 ) == 0 )
-    {
-      if ( !fp->value.atom )
-      {
-        FT_ERROR(( "bdf_add_property_: " ERRMSG8, lineno, "SPACING" ));
-        error = FT_THROW( Invalid_File_Format );
-        goto Exit;
-      }
-
-      if ( fp->value.atom[0] == 'p' || fp->value.atom[0] == 'P' )
-        font->spacing = BDF_PROPORTIONAL;
-      else if ( fp->value.atom[0] == 'm' || fp->value.atom[0] == 'M' )
-        font->spacing = BDF_MONOWIDTH;
-      else if ( fp->value.atom[0] == 'c' || fp->value.atom[0] == 'C' )
-        font->spacing = BDF_CHARCELL;
-    }
 
   Exit:
     return error;
@@ -1447,7 +1431,6 @@
       error = ft_hash_str_init( p->font->internal, memory );
       if ( error )
         goto Exit;
-      p->font->spacing      = BDF_PROPORTIONAL;  /* default */
       p->font->default_char = ~0UL;
 
       goto Exit;
@@ -1546,6 +1529,7 @@
         break;
       case 'P':
       case 'p':
+      default:
         font->spacing = BDF_PROPORTIONAL;
         break;
       }
@@ -1695,12 +1679,6 @@
 
     if ( p->font )
     {
-      /* If the font is not proportional, set the font's monowidth */
-      /* field to the width of the font bounding box.              */
-
-      if ( p->font->spacing != BDF_PROPORTIONAL )
-        p->font->monowidth = p->font->bbx.width;
-
       /* If the number of glyphs loaded is not that of the original count, */
       /* indicate the difference.                                          */
       if ( p->cnt != p->font->glyphs_used + p->font->unencoded_used )

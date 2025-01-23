@@ -403,10 +403,18 @@ THE SOFTWARE.
                           FT_FACE_FLAG_HORIZONTAL;
 
       prop = bdf_get_font_property( font, "SPACING" );
-      if ( prop && prop->format == BDF_ATOM                             &&
-           prop->value.atom                                             &&
-           ( *(prop->value.atom) == 'M' || *(prop->value.atom) == 'm' ||
-             *(prop->value.atom) == 'C' || *(prop->value.atom) == 'c' ) )
+      if ( prop && prop->value.atom )
+      {
+        if      ( prop->value.atom[0] == 'p' || prop->value.atom[0] == 'P' )
+          font->spacing = BDF_PROPORTIONAL;
+        else if ( prop->value.atom[0] == 'm' || prop->value.atom[0] == 'M' )
+          font->spacing = BDF_MONOWIDTH;
+        else if ( prop->value.atom[0] == 'c' || prop->value.atom[0] == 'C' )
+          font->spacing = BDF_CHARCELL;
+      }
+
+      if ( font->spacing == BDF_MONOWIDTH ||
+           font->spacing == BDF_CHARCELL  )
         face->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
       /* FZ XXX: TO DO: FT_FACE_FLAGS_VERTICAL   */

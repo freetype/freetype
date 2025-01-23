@@ -141,9 +141,6 @@ FT_BEGIN_HEADER
     unsigned long    resolution_y;   /* Font vertical resolution.           */
 
     int              spacing;        /* Font spacing value.                 */
-
-    unsigned short   monowidth;      /* Logical width for monowidth font.   */
-
     unsigned long    default_char;   /* Encoding of the default glyph.      */
 
     long             font_ascent;    /* Font ascent.                        */
