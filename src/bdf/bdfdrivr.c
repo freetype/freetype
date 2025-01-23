@@ -439,19 +439,25 @@ THE SOFTWARE.
         long             value;
 
 
-        /* sanity checks */
-        if ( font->font_ascent > 0x7FFF || font->font_ascent < -0x7FFF )
-        {
-          font->font_ascent = font->font_ascent < 0 ? -0x7FFF : 0x7FFF;
-          FT_TRACE0(( "BDF_Face_Init: clamping font ascent to value %ld\n",
-                      font->font_ascent ));
-        }
-        if ( font->font_descent > 0x7FFF || font->font_descent < -0x7FFF )
-        {
-          font->font_descent = font->font_descent < 0 ? -0x7FFF : 0x7FFF;
-          FT_TRACE0(( "BDF_Face_Init: clamping font descent to value %ld\n",
-                      font->font_descent ));
-        }
+        prop = bdf_get_font_property( font, "FONT_ASCENT" );
+        if ( prop )
+          font->font_ascent = prop->value.l;
+        else
+          font->font_ascent = font->bbx.ascent;
+        if ( font->font_ascent > 0x7FFF )
+          font->font_ascent = 0x7FFF;
+        else if ( font->font_ascent < 0 )
+          font->font_ascent = 0;
+
+        prop = bdf_get_font_property( font, "FONT_DESCENT" );
+        if ( prop )
+          font->font_descent = prop->value.l;
+        else
+          font->font_descent = font->bbx.descent;
+        if ( font->font_descent > 0x7FFF )
+          font->font_descent = 0x7FFF;
+        else if ( font->font_descent < 0 )
+          font->font_descent = 0;
 
         bsize->height = (FT_Short)( font->font_ascent + font->font_descent );
 

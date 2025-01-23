@@ -51,9 +51,6 @@
 #define FT_COMPONENT  bdflib
 
 
-#define BUFSIZE  128
-
-
   /**************************************************************************
    *
    * Builtin BDF font properties.
@@ -866,10 +863,6 @@
     /* spacing.                                                            */
     if ( _bdf_strncmp( name, "DEFAULT_CHAR", 12 ) == 0 )
       font->default_char = fp->value.ul;
-    else if ( _bdf_strncmp( name, "FONT_ASCENT", 11 ) == 0 )
-      font->font_ascent = fp->value.l;
-    else if ( _bdf_strncmp( name, "FONT_DESCENT", 12 ) == 0 )
-      font->font_descent = fp->value.l;
     else if ( _bdf_strncmp( name, "SPACING", 7 ) == 0 )
     {
       if ( !fp->value.atom )
@@ -1605,11 +1598,7 @@
     /* Check for the CHARS field */
     if ( _bdf_strncmp( line, "CHARS", 5 ) == 0 )
     {
-      char  nbuf[BUFSIZE];
-
-
-      /* Check the header for completeness before leaving. */
-
+      /* Check the header for completeness before parsing glyphs. */
       if ( !( p->flags & BDF_FONT_NAME_ ) )
       {
         /* Missing the FONT field. */
@@ -1617,7 +1606,6 @@
         error = FT_THROW( Missing_Font_Field );
         goto Exit;
       }
-
       if ( !( p->flags & BDF_SIZE_ ) )
       {
         /* Missing the SIZE field. */
@@ -1625,50 +1613,12 @@
         error = FT_THROW( Missing_Size_Field );
         goto Exit;
       }
-
       if ( !( p->flags & BDF_FONT_BBX_ ) )
       {
         /* Missing the FONTBOUNDINGBOX field. */
         FT_ERROR(( "bdf_parse_start_: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
         error = FT_THROW( Missing_Fontboundingbox_Field );
         goto Exit;
-      }
-
-      /* Reserve space for artificial FONT_ASCENT or FONT_DESCENT. */
-      if ( font->props_size == 0 )
-      {
-        if ( FT_NEW_ARRAY( font->props, 2 ) )
-          goto Exit;
-
-        font->props_size = 2;
-      }
-
-      /* If the FONT_ASCENT or FONT_DESCENT properties have not been      */
-      /* encountered yet, then make sure they are added as properties and */
-      /* make sure they are set from the font bounding box info.          */
-      /*                                                                  */
-      /* This is *always* done regardless of the options, because X11     */
-      /* requires these two fields to compile fonts.                      */
-      if ( bdf_get_font_property( font, "FONT_ASCENT" ) == 0 )
-      {
-        font->font_ascent = font->bbx.ascent;
-        ft_snprintf( nbuf, BUFSIZE, "%hd", font->bbx.ascent );
-        error = bdf_add_property_( font, "FONT_ASCENT", nbuf, lineno );
-        if ( error )
-          goto Exit;
-
-        FT_TRACE2(( "bdf_parse_start_: " ACMSG1, font->bbx.ascent ));
-      }
-
-      if ( bdf_get_font_property( font, "FONT_DESCENT" ) == 0 )
-      {
-        font->font_descent = font->bbx.descent;
-        ft_snprintf( nbuf, BUFSIZE, "%hd", font->bbx.descent );
-        error = bdf_add_property_( font, "FONT_DESCENT", nbuf, lineno );
-        if ( error )
-          goto Exit;
-
-        FT_TRACE2(( "bdf_parse_start_: " ACMSG2, font->bbx.descent ));
       }
 
       line   = bdf_strtok_( line, ' ' );
