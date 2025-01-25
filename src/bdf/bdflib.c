@@ -628,8 +628,6 @@
 #define BDF_BBX_        0x0400U
 #define BDF_BITMAP_     0x0800U
 
-#define BDF_SWIDTH_ADJ_  0x1000U
-
 #define BDF_GLYPH_BITS_ ( BDF_GLYPH_    | \
                           BDF_ENCODING_ | \
                           BDF_SWIDTH_   | \
@@ -1213,7 +1211,7 @@
         {
           glyph->swidth = sw;
 
-          p->flags       |= BDF_SWIDTH_ADJ_;
+          FT_TRACE2(( "bdf_parse_glyphs_: " ACMSG8 ));
         }
       }
 
@@ -1708,9 +1706,6 @@
                       p->font->bbx.height, p->maxas + p->maxds ));
           p->font->bbx.height = (unsigned short)( p->maxas + p->maxds );
         }
-
-        if ( p->flags & BDF_SWIDTH_ADJ_ )
-          FT_TRACE2(( "bdf_load_font: " ACMSG8 ));
       }
     }
 
