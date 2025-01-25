@@ -70,7 +70,6 @@
     { "CHARSET_COLLECTIONS",     BDF_ATOM,     1, { 0 } },
     { "CHARSET_ENCODING",        BDF_ATOM,     1, { 0 } },
     { "CHARSET_REGISTRY",        BDF_ATOM,     1, { 0 } },
-    { "COMMENT",                 BDF_ATOM,     1, { 0 } },
     { "COPYRIGHT",               BDF_ATOM,     1, { 0 } },
     { "DEFAULT_CHAR",            BDF_CARDINAL, 1, { 0 } },
     { "DESTINATION",             BDF_CARDINAL, 1, { 0 } },
@@ -646,6 +645,13 @@
     FT_Error   error  = FT_Err_Ok;
 
 
+    /* Skip keyword COMMENT. */
+    comment += 7;
+    len     -= 7;
+
+    if ( len == 0 )
+      goto Exit;
+
     if ( FT_QRENEW_ARRAY( font->comments,
                           font->comments_len,
                           font->comments_len + len + 1 ) )
@@ -829,18 +835,13 @@
       break;
     }
 
-    /* If the property happens to be a comment, then it doesn't need */
-    /* to be added to the internal hash table.                       */
-    if ( _bdf_strncmp( name, "COMMENT", 7 ) != 0 )
-    {
-      /* Add the property to the font property table. */
-      error = ft_hash_str_insert( fp->name,
-                                  font->props_used,
-                                  font->internal,
-                                  memory );
-      if ( error )
-        goto Exit;
-    }
+    /* Add the property to the font property table. */
+    error = ft_hash_str_insert( fp->name,
+                                font->props_used,
+                                font->internal,
+                                memory );
+    if ( error )
+      goto Exit;
 
     font->props_used++;
 
@@ -959,17 +960,8 @@
     if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
     {
       if ( p->flags & BDF_KEEP_COMMENTS )
-      {
-        line    += 7;
-        linelen -= 7;
+        error = bdf_add_comment_( font, line, linelen );
 
-        if ( *line )
-        {
-          line++;
-          linelen--;
-        }
-        error = bdf_add_comment_( p->font, line, linelen );
-      }
       goto Exit;
     }
 
@@ -1283,6 +1275,7 @@
   {
     bdf_line_func_t_*  next = (bdf_line_func_t_ *)call_data;
     bdf_parse_t_*      p    = (bdf_parse_t_ *)    client_data;
+    bdf_font_t*        font = p->font;
 
     FT_Error           error = FT_Err_Ok;
 
@@ -1291,6 +1284,15 @@
 
     FT_UNUSED( lineno );
 
+
+    /* Check for a comment. */
+    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    {
+      if ( p->flags & BDF_KEEP_COMMENTS )
+        error = bdf_add_comment_( font, line, linelen );
+
+      goto Exit;
+    }
 
     /* Check for the end of the properties. */
     if ( _bdf_strncmp( line, "ENDPROPERTIES", 13 ) == 0 )
@@ -1304,21 +1306,9 @@
     if ( _bdf_strncmp( line, "_XFREE86_GLYPH_RANGES", 21 ) == 0 )
       goto Exit;
 
-    /* Handle COMMENT fields and properties in a special way to preserve */
-    /* the spacing.                                                      */
-    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    if ( bdf_is_atom_( line, linelen, &name, &value, p->font ) )
     {
-      name = value = line;
-      value += 7;
-      if ( *value )
-        *value++ = 0;
-      error = bdf_add_property_( p->font, name, value, lineno );
-      if ( error )
-        goto Exit;
-    }
-    else if ( bdf_is_atom_( line, linelen, &name, &value, p->font ) )
-    {
-      error = bdf_add_property_( p->font, name, value, lineno );
+      error = bdf_add_property_( font, name, value, lineno );
       if ( error )
         goto Exit;
     }
@@ -1326,7 +1316,7 @@
     {
       value = bdf_strtok_( line, ' ' );
 
-      error = bdf_add_property_( p->font, line, value, lineno );
+      error = bdf_add_property_( font, line, value, lineno );
       if ( error )
         goto Exit;
     }
@@ -1354,30 +1344,12 @@
     FT_UNUSED( lineno );            /* only used in debug mode */
 
 
-    /* Check for a comment.  This is done to handle those fonts that have */
-    /* comments before the STARTFONT line for some reason.                */
-    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
-    {
-      if ( p->flags & BDF_KEEP_COMMENTS && p->font )
-      {
-        line    += 7;
-        linelen -= 7;
-        if ( *line )
-        {
-          line++;
-          linelen--;
-        }
-        error = bdf_add_comment_( p->font, line, linelen );
-      }
-      goto Exit;
-    }
-
+    /* The first line must be STARTFONT.       */
+    /* Otherwise, reject the font immediately. */
     if ( !( p->flags & BDF_START_ ) )
     {
       if ( _bdf_strncmp( line, "STARTFONT", 9 ) != 0 )
       {
-        /* we don't emit an error message since this code gets */
-        /* explicitly caught one level higher                  */
         error = FT_THROW( Missing_Startfont_Field );
         goto Exit;
       }
@@ -1417,6 +1389,15 @@
 
     /* Point at the font being constructed. */
     font = p->font;
+
+    /* Check for a comment. */
+    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    {
+      if ( p->flags & BDF_KEEP_COMMENTS )
+        error = bdf_add_comment_( font, line, linelen );
+
+      goto Exit;
+    }
 
     /* Check for the start of the properties. */
     if ( !( p->flags & BDF_PROPS_ )                       &&
