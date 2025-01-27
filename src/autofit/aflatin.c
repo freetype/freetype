@@ -3201,8 +3201,8 @@
         return;
       }
 
-      AF_Point point = hints->contours[highest_contour];
-      AF_Point first_point = point;
+      AF_Point point         = hints->contours[highest_contour];
+      AF_Point first_point   = point;
       FT_Pos   highest_max_y = point->y;
       do
       {
@@ -3249,11 +3249,7 @@
         }
       }
 
-      FT_TRACE4(( "    Calculated adjustment amount 1: %d\n",
-                  adjustment_amount ));
-
-
-      if ( adjustment_amount > 0 && ( highest_max_y - highest_min_y ) < 128 )
+      if ( adjustment_amount > 0 && ( highest_max_y - highest_min_y ) < 128 && ( highest_max_y - highest_min_y ) > 100)
       {
         adjustment_amount += ( 128 - ( highest_max_y - highest_min_y ) ) / 2;
         FT_TRACE4(( "    Additional push: %d\n",
@@ -4271,11 +4267,11 @@
 
       if ( is_tilde )
       {
-        af_latin_trace_height(0, hints );
+        af_latin_trace_height( 10, hints );
         af_latin_stretch_tildes( hints );
-        af_latin_trace_height(33, hints );
+        af_latin_trace_height( 11, hints );
         af_latin_align_tildes( hints );
-        af_latin_trace_height(1, hints );
+        af_latin_trace_height( 12, hints );
       }
 
       axis  = &metrics->axis[AF_DIMENSION_VERT];
@@ -4301,19 +4297,19 @@
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
         af_latin_hint_edges( hints, (AF_Dimension)dim );
-        af_latin_trace_height(2, hints );
+        af_latin_trace_height( 1, hints );
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height(3, hints );
+        af_latin_trace_height( 2, hints );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height(4, hints );
+        af_latin_trace_height( 3, hints );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height(5, hints );
+        af_latin_trace_height( 4, hints );
         af_glyph_hints_apply_vertical_separation_adjustments(
           hints,
           (AF_Dimension)dim,
           glyph_index,
           metrics->root.reverse_charmap );
-        af_latin_trace_height(99, hints );
+        af_latin_trace_height(5, hints );
       }
     }
 
