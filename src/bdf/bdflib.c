@@ -1361,29 +1361,6 @@
 
       p->font->memory = memory;
 
-      { /* setup */
-        bdf_property_t*  prop    = (bdf_property_t*)bdf_properties_;
-        FT_Hash          proptbl = &p->font->proptbl;
-        size_t           i;
-
-
-        error = ft_hash_str_init( proptbl, memory );
-        if ( error )
-          goto Exit;
-        for ( i = 0; i < num_bdf_properties_; i++, prop++ )
-        {
-          error = ft_hash_str_insert( prop->name, i, proptbl, memory );
-          if ( error )
-            goto Exit;
-        }
-      }
-
-      if ( FT_QNEW( p->font->internal ) )
-        goto Exit;
-      error = ft_hash_str_init( p->font->internal, memory );
-      if ( error )
-        goto Exit;
-
       goto Exit;
     }
 
@@ -1423,6 +1400,30 @@
       {
         font->props_size = 0;
         goto Exit;
+      }
+
+      if ( FT_QNEW( font->internal ) )
+        goto Exit;
+      error = ft_hash_str_init( font->internal, memory );
+      if ( error )
+        goto Exit;
+
+      /* preset common properties */
+      {
+        bdf_property_t*  prop    = (bdf_property_t*)bdf_properties_;
+        FT_Hash          proptbl = &font->proptbl;
+        size_t           i;
+
+
+        error = ft_hash_str_init( proptbl, memory );
+        if ( error )
+          goto Exit;
+        for ( i = 0; i < num_bdf_properties_; i++, prop++ )
+        {
+          error = ft_hash_str_insert( prop->name, i, proptbl, memory );
+          if ( error )
+            goto Exit;
+        }
       }
 
       p->flags |= BDF_PROPS_;
