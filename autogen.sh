@@ -99,7 +99,7 @@ check_tool_version ()
   if test "$field"x = x; then
     field=3  # default to 3 for all GNU autotools, after filtering enclosed string
   fi
-  version=`$1 --version | head -1 | sed 's/([^)]*)/()/g' | cut -d ' ' -f $field`
+  version=`$1 --version | sed -n '1s/([^)]*)/()/gp' | cut -d ' ' -f $field`
   version_check=`compare_to_minimum_version $version $4`
   if test "$version_check"x = 0x; then
     echo "ERROR: Your version of the \`$2' tool is too old."
@@ -182,7 +182,7 @@ copy_submodule_files ()
   cp $DLG_SRC_DIR/* src/dlg
 }
 
-if test -e ".git"; then
+if test -d ".git" -o -h ".git"; then
   DLG_INC_DIR=subprojects/dlg/include/dlg
   DLG_SRC_DIR=subprojects/dlg/src/dlg
 

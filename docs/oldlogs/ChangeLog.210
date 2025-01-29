@@ -2983,7 +2983,7 @@
 	[raster] Tune SMART macro (#58352).
 
 	Windows seems to perform smart dropout control at 26.6 precision.
-	To mimick Windows independent of increased precision, we need to tweak
+	To mimic Windows independent of increased precision, we need to tweak
 	the macro so that some close calls break down rather than up.
 
 	* src/raster/ftraster.c (SMART): Tweak the macro.
@@ -6484,7 +6484,7 @@
 
 	Add internal functions `FT_Trace_Disable' and `FT_Trace_Enable'.
 
-	It sometimes makes sense to suppress tracing informations, for
+	It sometimes makes sense to suppress tracing information, for
 	example, if it outputs identical messages again and again.
 
 	* include/freetype/internal/ftdebug.h: Make `ft_trace_levels' a

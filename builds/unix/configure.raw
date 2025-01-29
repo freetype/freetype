@@ -17,7 +17,7 @@ AC_CONFIG_SRCDIR([ftconfig.h.in])
 
 # Don't forget to update `docs/VERSIONS.TXT'!
 
-version_info='26:1:20'
+version_info='26:2:20'
 AC_SUBST([version_info])
 ft_version=`echo $version_info | tr : .`
 AC_SUBST([ft_version])
@@ -46,6 +46,7 @@ if test ${cross_compiling} = yes; then
   AC_CHECK_PROG(CC_BUILD, ${build}-gcc, ${build}-gcc)
   test -z "${CC_BUILD}" && AC_CHECK_PROG(CC_BUILD, gcc, gcc)
   test -z "${CC_BUILD}" && AC_CHECK_PROG(CC_BUILD, cc, cc, , , /usr/ucb/cc)
+  test -z "${CC_BUILD}" && AC_CHECK_PROG(CC_BUILD, clang, clang)
   test -z "${CC_BUILD}" && AC_MSG_ERROR([cannot find native C compiler])
 
   AC_MSG_CHECKING([for suffix of native executables])
@@ -62,12 +63,18 @@ if test ${cross_compiling} = yes; then
   fi
   rm -f a.* b.* a_out.exe conftest.*
   AC_MSG_RESULT($EXEEXT_BUILD)
+  CFLAGS_BUILD=
+  LDFLAGS_BUILD=
 else
   CC_BUILD=${CC}
+  CFLAGS_BUILD=${CFLAGS}
+  LDFLAGS_BUILD=${LDFLAGS}
   EXEEXT_BUILD=${EXEEXT}
 fi
 
 AC_SUBST(CC_BUILD)
+AC_SUBST(CFLAGS_BUILD)
+AC_SUBST(LDFLAGS_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
 

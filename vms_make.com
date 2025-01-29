@@ -221,77 +221,77 @@ $ deck
 
 
 all :
-        define config [--.include.freetype.config]
-        define internal [--.include.freetype.internal]
-        define autofit [-.autofit]
-        define base [-.base]
-        define cache [-.cache]
-        define cff [-.cff]
-        define cid [-.cid]
-        define freetype [--.include.freetype]
-        define pcf [-.pcf]
-        define psaux [-.psaux]
-        define psnames [-.psnames]
-        define raster [-.raster]
-        define sfnt [-.sfnt]
-        define smooth [-.smooth]
-        define truetype [-.truetype]
-        define type1 [-.type1]
-        define winfonts [-.winfonts]
-        if f$search("lib.dir") .eqs. "" then create/directory [.lib]
-        set default [.builds.vms]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [--.src.autofit]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.base]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.bdf]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.cache]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.cff]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.cid]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.gxvalid]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.gzip]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.bzip2]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.lzw]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.otvalid]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.pcf]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.pfr]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.psaux]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.pshinter]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.psnames]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.raster]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.sfnt]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.smooth]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.svg]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.truetype]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.type1]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.type42]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.winfonts]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [-.sdf]
-        $(MMS)$(MMSQUALIFIERS)
-        set default [--]
+	define config [--.include.freetype.config]
+	define internal [--.include.freetype.internal]
+	define autofit [-.autofit]
+	define base [-.base]
+	define cache [-.cache]
+	define cff [-.cff]
+	define cid [-.cid]
+	define freetype [--.include.freetype]
+	define pcf [-.pcf]
+	define psaux [-.psaux]
+	define psnames [-.psnames]
+	define raster [-.raster]
+	define sfnt [-.sfnt]
+	define smooth [-.smooth]
+	define truetype [-.truetype]
+	define type1 [-.type1]
+	define winfonts [-.winfonts]
+	if f$search("lib.dir") .eqs. "" then create/directory [.lib]
+	set default [.builds.vms]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [--.src.autofit]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.base]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.bdf]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.cache]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.cff]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.cid]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.gxvalid]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.gzip]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.bzip2]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.lzw]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.otvalid]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.pcf]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.pfr]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.psaux]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.pshinter]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.psnames]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.raster]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.sfnt]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.smooth]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.svg]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.truetype]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.type1]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.type42]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.winfonts]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [-.sdf]
+	$(MMS)$(MMSQUALIFIERS)
+	set default [--]
 
 # EOF
 $ eod
@@ -348,11 +348,11 @@ OBJS64=ftsystem_64.obj
 OBJSCXX=ftsystem_cxx.obj
 
 all : $(OBJS)
-        library/create [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library/create [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library/create [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library/create [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 ftsystem.obj : ftsystem.c ftconfig.h
@@ -411,11 +411,11 @@ OBJS64=autofit_64.obj
 OBJSCXX=autofit_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -518,11 +518,11 @@ OBJSCXX=ftbase_cxx.obj,\
      ftwinfnt_cxx.obj,ftpatent_cxx.obj,ftgxval_cxx.obj,ftotval_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 ftbase.obj : ftbase.c ftadvanc.c ftcalc.c ftcolor.c ftdbgmem.c fterrors.c\
@@ -585,11 +585,11 @@ OBJS64=bdf_64.obj
 OBJSCXX=bdf_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -647,11 +647,11 @@ OBJS64=ftcache_64.obj
 OBJSCXX=ftcache_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 ftcache.obj : ftcache.c ftcbasic.c ftccache.c ftccmap.c ftcglyph.c ftcimage.c \
@@ -712,11 +712,11 @@ OBJS64=cff_64.obj
 OBJSCXX=cff_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -774,11 +774,11 @@ OBJS64=type1cid_64.obj
 OBJSCXX=type1cid_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -836,11 +836,11 @@ OBJS64=gxvalid_64.obj
 OBJSCXX=gxvalid_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -897,11 +897,11 @@ OBJS64=ftgzip_64.obj
 OBJSCXX=ftgzip_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -960,11 +960,11 @@ OBJS64=ftbzip2_64.obj
 OBJSCXX=ftbzip2_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1021,11 +1021,11 @@ OBJS64=ftlzw_64.obj
 OBJSCXX=ftlzw_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1083,11 +1083,11 @@ OBJS64=otvalid_64.obj
 OBJSCXX=otvalid_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1157,11 +1157,11 @@ OBJS64=pcf_64.obj
 OBJSCXX=pcf_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1219,11 +1219,11 @@ OBJS64=pfr_64.obj
 OBJSCXX=pfr_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1281,11 +1281,11 @@ OBJS64=psaux_64.obj
 OBJSCXX=psaux_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1343,11 +1343,11 @@ OBJS64=pshinter_64.obj
 OBJSCXX=pshinter_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1405,11 +1405,11 @@ OBJS64=psnames_64.obj
 OBJSCXX=psnames_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1467,11 +1467,11 @@ OBJS64=raster_64.obj
 OBJSCXX=raster_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1499,7 +1499,8 @@ $ deck
 
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.sfnt])
 .ifdef X86
-CXXFLAGS=$(CXXCOMP_FLAGS) -I[] -I[--.include] -I[--.src.base] -Isys$library
+CXXFLAGS=$(CXXCOMP_FLAGS) -I[] -I[--.include] -I[--.src.base] -Isys$library\
+         -Wno-incompatible-pointer-types
 .endif
 
 .ifdef X86
@@ -1529,11 +1530,11 @@ OBJS64=sfnt_64.obj
 OBJSCXX=sfnt_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1591,11 +1592,11 @@ OBJS64=smooth_64.obj
 OBJSCXX=smooth_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1653,11 +1654,11 @@ OBJS64=svg_64.obj
 OBJSCXX=svg_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1715,11 +1716,11 @@ OBJS64=truetype_64.obj
 OBJSCXX=truetype_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1777,11 +1778,11 @@ OBJS64=type1_64.obj
 OBJSCXX=type1_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 type1.obj : type1.c t1parse.c t1load.c t1objs.c t1driver.c t1gload.c t1afm.c
@@ -1841,11 +1842,11 @@ OBJS64=sdf_64.obj
 OBJSCXX=sdf_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 sdf.obj : sdf.c ftbsdf.c ftsdf.c ftsdfcommon.c ftsdfrend.c
@@ -1905,11 +1906,11 @@ OBJS64=type42_64.obj
 OBJSCXX=type42_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -1967,11 +1968,11 @@ OBJS64=winfnt_64.obj
 OBJSCXX=winfnt_cxx.obj
 
 all : $(OBJS)
-        library [--.lib]freetype.olb $(OBJS)
-        library [--.lib]freetype.olb $(OBJS64)
+	library [--.lib]freetype.olb $(OBJS)
+	library [--.lib]freetype.olb $(OBJS64)
 .ifdef X86
-        library [--.lib]freetype_cxx.olb $(OBJSCXX)
-        library [--.lib]freetype_cxx.olb $(OBJS64)
+	library [--.lib]freetype_cxx.olb $(OBJSCXX)
+	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
 # EOF
@@ -2014,7 +2015,7 @@ $     len    = f$length(cparm) - start
 $     cc_com = f$extract(start,len,cparm)
       if (cc_com .nes. "DECC") .and. -
          (cc_com .nes. "VAXC") .and. -
-	 (cc_com .nes. "GNUC")
+         (cc_com .nes. "GNUC")
 $     then
 $       write sys$output "Unsupported compiler choice ''cc_com' ignored"
 $       write sys$output "Use DECC, VAXC, or GNUC instead"

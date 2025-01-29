@@ -52,4 +52,9 @@ option('zlib',
              'disabled', 'enabled' ],
   description: 'Support reading gzip-compressed font files')
 
+option('error_strings',
+  type: 'boolean',
+  value: false,
+  description: 'Enable support for meaningful error descriptions')
+
 # EOF

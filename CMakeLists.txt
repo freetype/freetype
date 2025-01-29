@@ -108,18 +108,8 @@
 #   (this is compatible with the same CMake variables in zlib's CMake
 #   support).
 
-# To minimize the number of cmake_policy() workarounds,
-# CMake >= 3 is requested.
-cmake_minimum_required(VERSION 3.0...3.5)
-
-if (NOT CMAKE_VERSION VERSION_LESS 3.3)
-  # Allow symbol visibility settings also on static libraries. CMake < 3.3
-  # only sets the property on a shared library build.
-  cmake_policy(SET CMP0063 NEW)
-
-  # Support new IN_LIST if() operator.
-  cmake_policy(SET CMP0057 NEW)
-endif ()
+# CMake 3.12 provides for IMPORTED targets for common libraries like zlib, libpng and bzip2
+cmake_minimum_required(VERSION 3.12)
 
 include(CheckIncludeFile)
 include(CMakeDependentOption)
@@ -164,7 +154,7 @@ project(freetype C)
 
 set(VERSION_MAJOR "2")
 set(VERSION_MINOR "13")
-set(VERSION_PATCH "2")
+set(VERSION_PATCH "3")
 
 # Generate LIBRARY_VERSION and LIBRARY_SOVERSION.
 set(LIBTOOL_REGEX "version_info='([0-9]+):([0-9]+):([0-9]+)'")
@@ -524,13 +514,11 @@ set(PKGCONFIG_LIBS "-L\${libdir} -lfreetype")
 set(PKGCONFIG_LIBS_PRIVATE "")
 
 if (ZLIB_FOUND)
-  target_link_libraries(freetype PRIVATE ${ZLIB_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
+  target_link_libraries(freetype PRIVATE ZLIB::ZLIB)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "zlib")
 endif ()
 if (BZIP2_FOUND)
-  target_link_libraries(freetype PRIVATE ${BZIP2_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
+  target_link_libraries(freetype PRIVATE BZip2::BZip2)
   if (PC_BZIP2_FOUND)
     list(APPEND PKGCONFIG_REQUIRES_PRIVATE "bzip2")
   else ()
@@ -538,14 +526,11 @@ if (BZIP2_FOUND)
   endif ()
 endif ()
 if (PNG_FOUND)
-  target_link_libraries(freetype PRIVATE ${PNG_LIBRARIES})
-  target_compile_definitions(freetype PRIVATE ${PNG_DEFINITIONS})
-  target_include_directories(freetype PRIVATE ${PNG_INCLUDE_DIRS})
+  target_link_libraries(freetype PRIVATE PNG::PNG)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "libpng")
 endif ()
 if (HarfBuzz_FOUND)
-  target_link_libraries(freetype PRIVATE ${HarfBuzz_LIBRARY})
-  target_include_directories(freetype PRIVATE ${HarfBuzz_INCLUDE_DIRS})
+  target_link_libraries(freetype PRIVATE HarfBuzz::HarfBuzz)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
 endif ()
 if (BROTLIDEC_FOUND)
