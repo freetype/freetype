@@ -3210,6 +3210,7 @@
         {
           highest_max_y = point->y;
         }
+        point = point->next;
       } while ( point != first_point );
 
       /* If there are any contours that have a maximum y coordinate       */
@@ -3249,11 +3250,20 @@
         }
       }
 
-      if ( adjustment_amount > 0 && ( highest_max_y - highest_min_y ) < 128 && ( highest_max_y - highest_min_y ) > 100)
+
+      FT_Bool grid_aligned_after_adjustment = ( highest_min_y + adjustment_amount ) % 64 == 0;
+      FT_Bool is_tilde = af_lookup_tilde_correction_type( reverse_charmap, glyph_index );
+      FT_Pos height = highest_max_y - highest_min_y;
+
+      /* The vertical separation adjustment potentially undoes the tilde center alignment
+         If the vertical adjustment would grid-align a tilde less than 192 units in height,
+         add an offset to the vertical adjustment to re-center it.  */
+      if ( is_tilde && grid_aligned_after_adjustment && height < 3*64)
       {
-        adjustment_amount += ( 128 - ( highest_max_y - highest_min_y ) ) / 2;
-        FT_TRACE4(( "    Additional push: %d\n",
-                  ( 128 - ( highest_max_y - highest_min_y ) ) / 2 ));
+        FT_Pos centering_adjustment = ( FT_PIX_ROUND( height ) - height ) / 2;
+        adjustment_amount += centering_adjustment;
+        FT_TRACE4(( "    Additional centering: %d\n",
+                   centering_adjustment ));
       }
 
       FT_TRACE4(( "    Calculated adjustment amount: %d\n",
