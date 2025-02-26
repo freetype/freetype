@@ -32,9 +32,10 @@ variables:
   stage: 'build'
 
 .build macos common:
+  image: "registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/15-sequoia:2024-10-28.0"
   stage: 'build'
   tags:
-    - 'gst-macos-11.1'
+    - gst-mac-arm
 
 .build windows meson:
   extends: '.build windows common'
@@ -211,9 +212,10 @@ macos autotools:
   before_script:
     - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
   script:
+    - export PATH=/opt/homebrew/bin:$PATH
     - brew install autoconf automake libtool
     - ./autogen.sh
-    - ./configure
+    - ./configure --prefix=/tmp/install-prefix
     - 'make -j$(sysctl -n hw.logicalcpu)'
     - make install
 
@@ -222,20 +224,21 @@ macos autotools clang:
   before_script:
     - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
   script:
+    - export PATH=/opt/homebrew/bin:$PATH
     - brew install autoconf automake libtool
     - ./autogen.sh
-    - './configure CC=clang'
+    - CC=clang ./configure --prefix=/tmp/install-prefix
     - 'make -j$(sysctl -n hw.logicalcpu)'
     - make install
 
 macos meson:
   extends: '.build macos common'
-  script:
+  before_script:
     - pip3 install --upgrade pip
     - pip3 install -U meson
     - pip3 install --upgrade certifi
     - pip3 install -U ninja
-
-    - meson setup build ${MESON_ARGS}
+  script:
+    - meson setup . build --fatal-meson-warnings --default-library=both --prefix=/tmp/install-prefix
     - meson compile --verbose -C build
-    - sudo meson install -C build
+    - meson install -C build
