@@ -227,7 +227,7 @@ macos autotools clang:
     - export PATH=/opt/homebrew/bin:$PATH
     - brew install autoconf automake libtool
     - ./autogen.sh
-    - CC=clang ./configure --prefix=/tmp/install-prefix
+    - ./configure --prefix=/tmp/install-prefix CC=clang
     - 'make -j$(sysctl -n hw.logicalcpu)'
     - make install
 
