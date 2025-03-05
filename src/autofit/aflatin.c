@@ -3008,7 +3008,7 @@
     {
       p     = p->next;
       p->y  = ( ( p->y - min_y ) * target_height / height ) + min_y;
-      p->fy = ( ( p->fy - min_fy ) * target_height / height ) + min_fy;
+      p->fy = ( FT_Short ) ( ( p->fy - min_fy ) * target_height / height ) + min_fy;
       p->oy = p->y;
 
     } while ( p != first_point );
@@ -3044,7 +3044,8 @@
     AF_Point  p           = hints->contours[highest_contour];
     AF_Point  first_point = p;
 
-    FT_Pos  min_y, max_y;
+    FT_Pos  min_y = p->y;
+    FT_Pos  max_y = p->y;
     FT_Pos  delta;
 
 
@@ -3221,9 +3222,6 @@
 
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
-        AF_Point  point;
-        AF_Point  first_point;
-
         FT_Pos max_y;
 
 
