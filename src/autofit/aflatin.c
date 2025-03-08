@@ -2948,7 +2948,9 @@
 
     } while ( p != first_point );
 
-    min_measurement = 32000;
+    FT_Bool measurement_taken = FALSE;
+    FT_TRACE4(("af_latin_stretch_tildes: min y: %d, max y: %d\n", min_y, max_y));
+
     do
     {
       p = p->next;
@@ -2980,10 +2982,16 @@
         else
           continue;
 
-        if ( measurement < min_measurement )
+        if ( !measurement_taken || measurement < min_measurement ) {
+          measurement_taken = TRUE;
           min_measurement = measurement;
+        }
       }
     } while ( p != first_point );
+    if ( !measurement_taken ) {
+      min_measurement = 0;
+    }
+
     height        = max_y - min_y;
 
     if ( height < 256 ) {
@@ -2999,6 +3007,7 @@
     }
 
     target_height = min_measurement + 64;
+    FT_TRACE4(("af_latin_stretch_tildes: min measurement %d\n", min_measurement));
 
     if ( height >= target_height )
       return;
