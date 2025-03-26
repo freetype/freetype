@@ -150,19 +150,6 @@
   num_bdf_properties_ = sizeof ( bdf_properties_ ) /
                         sizeof ( bdf_properties_[0] );
 
-
-  /* An auxiliary macro to parse properties, to be used in conditionals. */
-  /* It behaves like `strncmp' but also tests the following character    */
-  /* whether it is a whitespace or null.                                 */
-  /* `property' is a constant string of length `n' to compare with.      */
-#define _bdf_strncmp( name, property, n )      \
-          ( ft_strncmp( name, property, n ) || \
-            !( name[n] == ' '  ||              \
-               name[n] == '\0' ||              \
-               name[n] == '\n' ||              \
-               name[n] == '\r' ||              \
-               name[n] == '\t' )            )
-
   /* Auto correction messages. */
 #define ACMSG1   "FONT_ASCENT property missing.  " \
                  "Added `FONT_ASCENT %hd'.\n"
@@ -957,7 +944,7 @@
 
 
     /* Check for a comment. */
-    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    if ( ft_strncmp( line, "COMMENT", 7 ) == 0 )
     {
       if ( p->flags & BDF_KEEP_COMMENTS )
         error = bdf_add_comment_( font, line, linelen );
@@ -966,7 +953,7 @@
     }
 
     /* Check for the ENDFONT field. */
-    if ( _bdf_strncmp( line, "ENDFONT", 7 ) == 0 )
+    if ( ft_strncmp( line, "ENDFONT", 7 ) == 0 )
     {
       if ( p->flags & BDF_GLYPH_BITS_ )
       {
@@ -989,7 +976,7 @@
     }
 
     /* Check for the ENDCHAR field. */
-    if ( _bdf_strncmp( line, "ENDCHAR", 7 ) == 0 )
+    if ( ft_strncmp( line, "ENDCHAR", 7 ) == 0 )
     {
       /* Free unused glyph_name */
       FT_FREE( p->glyph_name );
@@ -1008,7 +995,7 @@
       goto Exit;
 
     /* Check for the STARTCHAR field. */
-    if ( _bdf_strncmp( line, "STARTCHAR", 9 ) == 0 )
+    if ( ft_strncmp( line, "STARTCHAR ", 10 ) == 0 )
     {
       if ( p->flags & BDF_GLYPH_BITS_ )
       {
@@ -1031,7 +1018,7 @@
     }
 
     /* Check for the ENCODING field. */
-    if ( _bdf_strncmp( line, "ENCODING", 8 ) == 0 )
+    if ( ft_strncmp( line, "ENCODING ", 9 ) == 0 )
     {
       if ( !( p->flags & BDF_GLYPH_ ) )
       {
@@ -1118,7 +1105,7 @@
     glyph = p->glyph;
 
     /* Expect the SWIDTH (scalable width) field next. */
-    if ( _bdf_strncmp( line, "SWIDTH", 6 ) == 0 )
+    if ( ft_strncmp( line, "SWIDTH ", 7 ) == 0 )
     {
       line          = bdf_strtok_( line, ' ' );
       glyph->swidth = bdf_atous_( line );
@@ -1128,7 +1115,7 @@
     }
 
     /* Expect the DWIDTH (device width) field next. */
-    if ( _bdf_strncmp( line, "DWIDTH", 6 ) == 0 )
+    if ( ft_strncmp( line, "DWIDTH ", 7 ) == 0 )
     {
       line          = bdf_strtok_( line, ' ' );
       glyph->dwidth = bdf_atous_( line );
@@ -1154,7 +1141,7 @@
       goto Exit;
 
     /* Expect the BBX field next. */
-    if ( _bdf_strncmp( line, "BBX", 3 ) == 0 )
+    if ( ft_strncmp( line, "BBX ", 4 ) == 0 )
     {
       line                = bdf_strtok_( line, ' ' );
       glyph->bbx.width    = bdf_atous_( line );
@@ -1212,7 +1199,7 @@
     }
 
     /* And finally, gather up the bitmap. */
-    if ( _bdf_strncmp( line, "BITMAP", 6 ) == 0 )
+    if ( ft_strncmp( line, "BITMAP", 6 ) == 0 )
     {
       unsigned long  bitmap_size;
 
@@ -1286,7 +1273,7 @@
 
 
     /* Check for a comment. */
-    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    if ( ft_strncmp( line, "COMMENT", 7 ) == 0 )
     {
       if ( p->flags & BDF_KEEP_COMMENTS )
         error = bdf_add_comment_( font, line, linelen );
@@ -1295,7 +1282,7 @@
     }
 
     /* Check for the end of the properties. */
-    if ( _bdf_strncmp( line, "ENDPROPERTIES", 13 ) == 0 )
+    if ( ft_strncmp( line, "ENDPROPERTIES", 13 ) == 0 )
     {
       *next     = bdf_parse_start_;
 
@@ -1303,7 +1290,7 @@
     }
 
     /* Ignore the _XFREE86_GLYPH_RANGES properties. */
-    if ( _bdf_strncmp( line, "_XFREE86_GLYPH_RANGES", 21 ) == 0 )
+    if ( ft_strncmp( line, "_XFREE86_GLYPH_RANGES", 21 ) == 0 )
       goto Exit;
 
     if ( bdf_is_atom_( line, linelen, &name, &value, p->font ) )
@@ -1348,7 +1335,7 @@
     /* Otherwise, reject the font immediately. */
     if ( !( p->flags & BDF_START_ ) )
     {
-      if ( _bdf_strncmp( line, "STARTFONT", 9 ) != 0 )
+      if ( ft_strncmp( line, "STARTFONT", 9 ) != 0 )
       {
         error = FT_THROW( Missing_Startfont_Field );
         goto Exit;
@@ -1368,7 +1355,7 @@
     font = p->font;
 
     /* Check for a comment. */
-    if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
+    if ( ft_strncmp( line, "COMMENT", 7 ) == 0 )
     {
       if ( p->flags & BDF_KEEP_COMMENTS )
         error = bdf_add_comment_( font, line, linelen );
@@ -1378,7 +1365,7 @@
 
     /* Check for the start of the properties. */
     if ( !( p->flags & BDF_PROPS_ )                       &&
-         _bdf_strncmp( line, "STARTPROPERTIES", 15 ) == 0 )
+         ft_strncmp( line, "STARTPROPERTIES ", 16 ) == 0 )
     {
       line             = bdf_strtok_( line, ' ' );
       font->props_size = bdf_atoul_( line );
@@ -1433,7 +1420,7 @@
     }
 
     /* Check for the FONTBOUNDINGBOX field. */
-    if ( _bdf_strncmp( line, "FONTBOUNDINGBOX", 15 ) == 0 )
+    if ( ft_strncmp( line, "FONTBOUNDINGBOX ", 16 ) == 0 )
     {
       line               = bdf_strtok_( line, ' ' );
       font->bbx.width    = bdf_atous_( line );
@@ -1455,7 +1442,7 @@
     }
 
     /* The next thing to check for is the FONT field. */
-    if ( _bdf_strncmp( line, "FONT", 4 ) == 0 )
+    if ( ft_strncmp( line, "FONT ", 5 ) == 0 )
     {
       int  i;
 
@@ -1501,7 +1488,7 @@
     }
 
     /* Check for the SIZE field. */
-    if ( _bdf_strncmp( line, "SIZE", 4 ) == 0 )
+    if ( ft_strncmp( line, "SIZE ", 5 ) == 0 )
     {
       line               = bdf_strtok_( line, ' ' );
       font->point_size   = bdf_atoul_( line );
@@ -1541,7 +1528,7 @@
     }
 
     /* Check for the CHARS field */
-    if ( _bdf_strncmp( line, "CHARS", 5 ) == 0 )
+    if ( ft_strncmp( line, "CHARS ", 6 ) == 0 )
     {
       /* Check the header for completeness before parsing glyphs. */
       if ( !( p->flags & BDF_FONT_NAME_ ) )
