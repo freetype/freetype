@@ -194,16 +194,6 @@
    */
 
 
-  /* Function type for parsing lines of a BDF font. */
-
-  typedef FT_Error
-  (*bdf_line_func_t_)( char*          line,
-                       unsigned long  linelen,
-                       unsigned long  lineno,
-                       void*          call_data,
-                       void*          client_data );
-
-
   /* Structure used while loading BDF fonts. */
 
   typedef struct  bdf_parse_t__
@@ -230,6 +220,16 @@
     unsigned long   size;        /* the stream size */
 
   } bdf_parse_t_;
+
+
+  /* Function type for parsing lines of a BDF font. */
+
+  typedef FT_Error
+  (*bdf_line_func_t_)( char*          line,
+                       unsigned long  linelen,
+                       unsigned long  lineno,
+                       bdf_parse_t_*  p,
+                       void*          next );
 
 
 #define setsbit( m, cc ) \
@@ -734,16 +734,16 @@
   bdf_parse_end_( char*          line,
                   unsigned long  linelen,
                   unsigned long  lineno,
-                  void*          call_data,
-                  void*          client_data )
+                  bdf_parse_t_*  p,
+                  void*          next )
   {
     /* a no-op; we ignore everything after `ENDFONT' */
 
     FT_UNUSED( line );
     FT_UNUSED( linelen );
     FT_UNUSED( lineno );
-    FT_UNUSED( call_data );
-    FT_UNUSED( client_data );
+    FT_UNUSED( p );
+    FT_UNUSED( next );
 
     return FT_Err_Ok;
   }
@@ -752,18 +752,18 @@
   /* Line function prototypes. */
   static FT_Error
   bdf_parse_start_( char*          line,
-                     unsigned long  linelen,
-                     unsigned long  lineno,
-                     void*          call_data,
-                     void*          client_data );
+                    unsigned long  linelen,
+                    unsigned long  lineno,
+                    bdf_parse_t_*  p,
+                    void*          next );
 
 
   static FT_Error
   bdf_parse_glyphs_( char*          line,
                      unsigned long  linelen,
                      unsigned long  lineno,
-                     void*          call_data,
-                     void*          client_data );
+                     bdf_parse_t_*  p,
+                     void*          next );
 
 
   /* Aggressively parse the glyph bitmaps. */
@@ -771,16 +771,13 @@
   bdf_parse_bitmap_( char*          line,
                      unsigned long  linelen,
                      unsigned long  lineno,
-                     void*          call_data,
-                     void*          client_data )
+                     bdf_parse_t_*  p,
+                     void*          next )
   {
-    bdf_line_func_t_*  next  = (bdf_line_func_t_ *)call_data;
-    bdf_parse_t_*      p     = (bdf_parse_t_ *)    client_data;
-    bdf_glyph_t*       glyph = p->glyph;
-
-    unsigned char*     bp;
-    unsigned long      i, nibbles;
-    int                x;
+    bdf_glyph_t*    glyph = p->glyph;
+    unsigned char*  bp;
+    unsigned long   i, nibbles;
+    int             x;
 
     FT_UNUSED( lineno );        /* only used in debug mode */
 
@@ -811,7 +808,7 @@
 
     /* When done, go back to parsing glyphs */
     if ( p->row >= (unsigned long)glyph->bbx.height )
-      *next = bdf_parse_glyphs_;
+      *(bdf_line_func_t_*)next = bdf_parse_glyphs_;
 
     return FT_Err_Ok;
   }
@@ -822,16 +819,13 @@
   bdf_parse_glyphs_( char*          line,
                      unsigned long  linelen,
                      unsigned long  lineno,
-                     void*          call_data,
-                     void*          client_data )
+                     bdf_parse_t_*  p,
+                     void*          next )
   {
-    bdf_line_func_t_*  next = (bdf_line_func_t_ *)call_data;
-    bdf_parse_t_*      p    = (bdf_parse_t_ *)    client_data;
-    bdf_font_t*        font = p->font;
-    bdf_glyph_t*       glyph;
-
-    FT_Memory          memory = font->memory;
-    FT_Error           error  = FT_Err_Ok;
+    bdf_font_t*   font   = p->font;
+    bdf_glyph_t*  glyph;
+    FT_Memory     memory = font->memory;
+    FT_Error      error  = FT_Err_Ok;
 
     FT_UNUSED( lineno );        /* only used in debug mode */
 
@@ -863,7 +857,8 @@
                 by_encoding );
 
       p->flags &= ~BDF_START_;
-      *next     = bdf_parse_end_;
+
+      *(bdf_line_func_t_*)next = bdf_parse_end_;
 
       goto Exit;
     }
@@ -1123,7 +1118,7 @@
 
       p->row    = 0;
       p->flags |= BDF_BITMAP_;
-      *next     = bdf_parse_bitmap_;
+      *(bdf_line_func_t_*)next = bdf_parse_bitmap_;
 
       goto Exit;
     }
@@ -1150,17 +1145,13 @@
   bdf_parse_properties_( char*          line,
                          unsigned long  linelen,
                          unsigned long  lineno,
-                         void*          call_data,
-                         void*          client_data )
+                         bdf_parse_t_*  p,
+                         void*          next )
   {
-    bdf_line_func_t_*  next = (bdf_line_func_t_ *)call_data;
-    bdf_parse_t_*      p    = (bdf_parse_t_ *)    client_data;
-    bdf_font_t*        font = p->font;
-
-    FT_Error           error = FT_Err_Ok;
-
-    char*              name;
-    char*              value;
+    bdf_font_t*  font  = p->font;
+    FT_Error     error = FT_Err_Ok;
+    char*        name;
+    char*        value;
 
     FT_UNUSED( lineno );
 
@@ -1177,7 +1168,7 @@
     /* Check for the end of the properties. */
     if ( ft_strncmp( line, "ENDPROPERTIES", 13 ) == 0 )
     {
-      *next     = bdf_parse_start_;
+      *(bdf_line_func_t_*)next = bdf_parse_start_;
 
       goto Exit;
     }
@@ -1211,15 +1202,12 @@
   bdf_parse_start_( char*          line,
                     unsigned long  linelen,
                     unsigned long  lineno,
-                    void*          call_data,
-                    void*          client_data )
+                    bdf_parse_t_*  p,
+                    void*          next )
   {
-    bdf_line_func_t_*  next = (bdf_line_func_t_ *)call_data;
-    bdf_parse_t_*      p    = (bdf_parse_t_ *)    client_data;
-    bdf_font_t*        font;
-
-    FT_Memory          memory = p->memory;
-    FT_Error           error  = FT_Err_Ok;
+    bdf_font_t*  font;
+    FT_Memory    memory = p->memory;
+    FT_Error     error  = FT_Err_Ok;
 
     FT_UNUSED( lineno );            /* only used in debug mode */
 
@@ -1307,7 +1295,8 @@
       }
 
       p->flags |= BDF_PROPS_;
-      *next     = bdf_parse_properties_;
+
+      *(bdf_line_func_t_*)next = bdf_parse_properties_;
 
       goto Exit;
     }
@@ -1473,7 +1462,8 @@
         goto Exit;
 
       p->flags |= BDF_GLYPHS_;
-      *next     = bdf_parse_glyphs_;
+
+      *(bdf_line_func_t_*)next = bdf_parse_glyphs_;
 
       goto Exit;
     }
@@ -1487,12 +1477,11 @@
 
 
   static FT_Error
-  bdf_readstream_( FT_Stream         stream,
-                   bdf_line_func_t_  callback,
-                   void*             client_data,
-                   unsigned long    *lno )
+  bdf_readstream_( FT_Stream       stream,
+                   bdf_parse_t_*   p,
+                   unsigned long*  lno )
   {
-    bdf_line_func_t_  cb;
+    bdf_line_func_t_  cb = bdf_parse_start_;
     unsigned long     lineno, buf_size;
     unsigned long     bytes, start, end, cursor, avail;
     char*             buf    = NULL;
@@ -1500,19 +1489,12 @@
     FT_Error          error  = FT_Err_Ok;
 
 
-    if ( callback == NULL )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
     /* initial size and allocation of the input buffer */
     buf_size = 1024;
 
     if ( FT_QALLOC( buf, buf_size ) )
       goto Exit;
 
-    cb      = callback;
     lineno  = 1;
     start   = 0;
     cursor  = 0;
@@ -1575,8 +1557,7 @@
 
       if ( buf[start] != '#' )
       {
-        error = (*cb)( buf + start, end - start, lineno,
-                       (void*)&cb, client_data );
+        error = (*cb)( buf + start, end - start, lineno, p, (void*)&cb );
         if ( error )
           break;
       }
@@ -1620,8 +1601,7 @@
     p->size   = stream->size;
     p->memory = memory;  /* only during font creation */
 
-    error = bdf_readstream_( stream, bdf_parse_start_,
-                             (void *)p, &lineno );
+    error = bdf_readstream_( stream, p, &lineno );
     if ( error )
       goto Fail;
 
