@@ -672,7 +672,7 @@
 
     sp = ep = line;
 
-    while ( *ep && *ep != ' ' && *ep != '\t' )
+    while ( *ep && *ep != ' ' )
       ep++;
 
     hold = *ep;
@@ -698,7 +698,7 @@
     if ( sp < ep )
       do
          sp++;
-      while ( *sp == ' ' || *sp == '\t' );
+      while ( *sp == ' ' );
 
     /* Trim the leading double quote if it exists. */
     if ( *sp == '"' )
@@ -710,7 +710,7 @@
     if ( sp < ep )
       do
         *ep-- = '\0';
-      while ( *ep == ' ' || *ep  == '\t' );
+      while ( *ep == ' ' );
 
     /* Trim the trailing double quote if it exists. */
     if ( *ep  == '"' )
