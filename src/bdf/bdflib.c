@@ -255,113 +255,6 @@
   }
 
 
-  static FT_Error
-  bdf_readstream_( FT_Stream         stream,
-                   bdf_line_func_t_  callback,
-                   void*             client_data,
-                   unsigned long    *lno )
-  {
-    bdf_line_func_t_  cb;
-    unsigned long     lineno, buf_size;
-    unsigned long     bytes, start, end, cursor, avail;
-    char*             buf    = NULL;
-    FT_Memory         memory = stream->memory;
-    FT_Error          error  = FT_Err_Ok;
-
-
-    if ( callback == NULL )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
-    /* initial size and allocation of the input buffer */
-    buf_size = 1024;
-
-    if ( FT_QALLOC( buf, buf_size ) )
-      goto Exit;
-
-    cb      = callback;
-    lineno  = 1;
-    start   = 0;
-    cursor  = 0;
-
-  Refill:
-    bytes  = FT_Stream_TryRead( stream,
-                                (FT_Byte*)buf + cursor, buf_size - cursor );
-    avail  = cursor + bytes;
-
-    while ( bytes )
-    {
-      /* try to find the start of the line */
-      while ( start < avail && buf[start] < ' ' )
-        start++;
-
-      /* try to find the end of the line */
-      end = start + 1;
-      while (   end < avail && buf[end] >= ' ' )
-        end++;
-
-      /* if we hit the end of the buffer, try shifting its content */
-      /* or even resizing it                                       */
-      if ( end >= avail )
-      {
-        if ( start == 0 )
-        {
-          /* this line is definitely too long; try resizing the input */
-          /* buffer a bit to handle it.                               */
-          FT_ULong  new_size;
-
-
-          if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
-          {
-            FT_ERROR(( "bdf_readstream_: " ERRMSG6, lineno ));
-            error = FT_THROW( Invalid_File_Format );
-
-            goto Exit;
-          }
-
-          new_size = buf_size * 4;
-          if ( FT_QREALLOC( buf, buf_size, new_size ) )
-            goto Exit;
-
-          cursor   = avail;
-          buf_size = new_size;
-        }
-        else
-        {
-          cursor = avail - start;
-
-          FT_MEM_MOVE( buf, buf + start, cursor );
-
-          start  = 0;
-        }
-        goto Refill;
-      }
-
-      /* NUL-terminate the line. */
-      buf[end] = 0;
-
-      if ( buf[start] != '#' )
-      {
-        error = (*cb)( buf + start, end - start, lineno,
-                       (void*)&cb, client_data );
-        if ( error )
-          break;
-      }
-
-      lineno  += 1;
-      start    = end + 1;
-    }
-
-    *lno = lineno;
-
-  Exit:
-    FT_FREE( buf );
-    return error;
-  }
-
-
   /* XXX: make this work with EBCDIC also */
 
   static const unsigned char  a2i[128] =
@@ -1589,6 +1482,113 @@
     error = FT_THROW( Invalid_File_Format );
 
   Exit:
+    return error;
+  }
+
+
+  static FT_Error
+  bdf_readstream_( FT_Stream         stream,
+                   bdf_line_func_t_  callback,
+                   void*             client_data,
+                   unsigned long    *lno )
+  {
+    bdf_line_func_t_  cb;
+    unsigned long     lineno, buf_size;
+    unsigned long     bytes, start, end, cursor, avail;
+    char*             buf    = NULL;
+    FT_Memory         memory = stream->memory;
+    FT_Error          error  = FT_Err_Ok;
+
+
+    if ( callback == NULL )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* initial size and allocation of the input buffer */
+    buf_size = 1024;
+
+    if ( FT_QALLOC( buf, buf_size ) )
+      goto Exit;
+
+    cb      = callback;
+    lineno  = 1;
+    start   = 0;
+    cursor  = 0;
+
+  Refill:
+    bytes  = FT_Stream_TryRead( stream,
+                                (FT_Byte*)buf + cursor, buf_size - cursor );
+    avail  = cursor + bytes;
+
+    while ( bytes )
+    {
+      /* try to find the start of the line */
+      while ( start < avail && buf[start] < ' ' )
+        start++;
+
+      /* try to find the end of the line */
+      end = start + 1;
+      while (   end < avail && buf[end] >= ' ' )
+        end++;
+
+      /* if we hit the end of the buffer, try shifting its content */
+      /* or even resizing it                                       */
+      if ( end >= avail )
+      {
+        if ( start == 0 )
+        {
+          /* this line is definitely too long; try resizing the input */
+          /* buffer a bit to handle it.                               */
+          FT_ULong  new_size;
+
+
+          if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
+          {
+            FT_ERROR(( "bdf_readstream_: " ERRMSG6, lineno ));
+            error = FT_THROW( Invalid_File_Format );
+
+            goto Exit;
+          }
+
+          new_size = buf_size * 4;
+          if ( FT_QREALLOC( buf, buf_size, new_size ) )
+            goto Exit;
+
+          cursor   = avail;
+          buf_size = new_size;
+        }
+        else
+        {
+          cursor = avail - start;
+
+          FT_MEM_MOVE( buf, buf + start, cursor );
+
+          start  = 0;
+        }
+        goto Refill;
+      }
+
+      /* NUL-terminate the line. */
+      buf[end] = 0;
+
+      if ( buf[start] != '#' )
+      {
+        error = (*cb)( buf + start, end - start, lineno,
+                       (void*)&cb, client_data );
+        if ( error )
+          break;
+      }
+
+      lineno  += 1;
+      start    = end + 1;
+    }
+
+    *lno = lineno;
+
+  Exit:
+    FT_FREE( buf );
     return error;
   }
 
