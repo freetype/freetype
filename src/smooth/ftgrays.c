@@ -170,8 +170,8 @@ typedef ptrdiff_t  FT_PtrDist;
 #define Smooth_Err_Invalid_Argument     -3
 #define Smooth_Err_Raster_Overflow      -4
 
-#define FT_BEGIN_HEADER
-#define FT_END_HEADER
+#define FT_BEGIN_HEADER  /* nothing */
+#define FT_END_HEADER    /* nothing */
 
 #include "ftimage.h"
 #include "ftgrays.h"
