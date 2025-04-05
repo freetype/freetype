@@ -109,7 +109,7 @@
 #   support).
 
 # CMake 3.12 provides for IMPORTED targets for common libraries like zlib, libpng and bzip2
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12...3.31.0)
 
 include(CheckIncludeFile)
 include(CMakeDependentOption)
