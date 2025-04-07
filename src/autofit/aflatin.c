@@ -2912,7 +2912,6 @@
     AF_Point  first_point = p;
 
     FT_Pos    min_y, max_y;
-    FT_Short  min_fy;       /* We don't need `max_fy`. */
 
     FT_Pos   min_measurement;
     FT_Bool  measurement_taken = FALSE;
@@ -2924,7 +2923,6 @@
 
     /* Find vertical extrema of the highest contour. */
     min_y = max_y = p->y;
-    min_fy        = p->fy;
 
     do
     {
@@ -2934,9 +2932,6 @@
         min_y = p->y;
       if ( p->y > max_y )
         max_y = p->y;
-
-      if ( p->fy < min_fy )
-        min_fy = p->fy;
 
     } while ( p != first_point );
 
@@ -3035,9 +3030,6 @@
       /* we are never dealing with large numbers and can thus avoid */
       /* `FT_MulFix`.                                               */
       p->y  = ( ( p->y - min_y ) * target_height / height ) + min_y;
-      p->fy = (FT_Short)( ( p->fy - min_fy ) * target_height / height ) +
-                min_fy;
-      p->oy = p->y;
 
     } while ( p != first_point );
   }
