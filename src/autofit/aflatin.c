@@ -2918,6 +2918,7 @@
     FT_Bool  measurement_taken = FALSE;
 
     FT_Pos  height;
+    FT_Pos  extremum_threshold;
     FT_Pos  target_height;
 
 
@@ -2941,6 +2942,9 @@
 
     FT_TRACE4(( "af_latin_stretch_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
+
+    height             = max_y - min_y;
+    extremum_threshold = height / 8;    /* Value 8 is heuristic. */
 
     /* Find points that are local vertical round extrema, and which   */
     /* do not coincide with the vertical extreme values (i.e., we     */
@@ -2982,6 +2986,10 @@
         else
           continue;
 
+        /* Ignore hits that are too near to a vertical extremum. */
+        if ( measurement < extremum_threshold )
+          continue;
+
         if ( !measurement_taken || measurement < min_measurement )
         {
           measurement_taken = TRUE;
@@ -2996,8 +3004,6 @@
 
     FT_TRACE4(( "af_latin_stretch_tilde: min measurement %ld\n",
                 min_measurement ));
-
-    height = max_y - min_y;
 
     /* To preserve the stretched shape we suppress any         */
     /* auto-hinting if the tilde height is less than 4 pixels. */
