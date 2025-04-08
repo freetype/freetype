@@ -2779,10 +2779,8 @@
   static FT_Int
   af_find_highest_contour( AF_GlyphHints  hints )
   {
-    FT_Int  highest_contour = -1;
-
-    FT_Pos  highest_min_y = 0;
-    FT_Pos  current_min_y = 0;
+    FT_Int  highest_contour = 0;
+    FT_Pos  highest_min_y   = FT_INT_MIN;
 
     FT_Int  contour;
 
@@ -2791,6 +2789,8 @@
     {
       AF_Point  point       = hints->contours[contour];
       AF_Point  first_point = point;
+
+      FT_Pos  current_min_y;
 
 
       if ( !point )
@@ -2806,7 +2806,7 @@
 
       } while ( point != first_point );
 
-      if ( highest_contour == -1 || current_min_y > highest_min_y )
+      if ( current_min_y > highest_min_y )
       {
         highest_min_y   = current_min_y;
         highest_contour = contour;
@@ -3104,10 +3104,10 @@
   af_check_contour_horizontal_overlap( AF_GlyphHints  hints,
                                        FT_Int         contour_index )
   {
-    FT_Pos  contour_max_x = -32000;
-    FT_Pos  contour_min_x =  32000;
-    FT_Pos  others_max_x  = -32000;
-    FT_Pos  others_min_x  =  32000;
+    FT_Pos  contour_max_x = FT_INT_MIN;
+    FT_Pos  contour_min_x = FT_INT_MAX;
+    FT_Pos  others_max_x  = FT_INT_MIN;
+    FT_Pos  others_min_x  = FT_INT_MAX;
 
     FT_Int  contour;
 
@@ -3172,9 +3172,8 @@
     if ( adj_type == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP &&
          hints->num_contours >= 2                          )
     {
-      FT_Int  highest_contour = -1;
-      FT_Pos  highest_min_y   = 0;
-      FT_Pos  current_min_y   = 0;
+      FT_Int  highest_contour = 0;
+      FT_Pos  highest_min_y   = FT_INT_MIN;
 
       FT_Pos  highest_max_y;
 
@@ -3200,6 +3199,9 @@
       /* with the highest minimum y value.                             */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
+        FT_Pos  current_min_y;
+
+
         point       = hints->contours[contour];
         first_point = point;
 
@@ -3216,7 +3218,7 @@
 
         } while ( point != first_point );
 
-        if ( highest_contour == -1 || current_min_y > highest_min_y )
+        if ( current_min_y > highest_min_y )
         {
           highest_min_y   = current_min_y;
           highest_contour = contour;
@@ -3317,9 +3319,8 @@
     else if ( adj_type == AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN &&
               hints->num_contours >= 2                               )
     {
-      FT_Int  lowest_contour = -1;
-      FT_Pos  lowest_max_y   = 0;
-      FT_Pos  current_max_y  = 0;
+      FT_Int  lowest_contour = 0;
+      FT_Pos  lowest_max_y   = FT_INT_MAX;
 
       FT_Int  contour;
       FT_Pos  adjustment_amount = 0;
@@ -3335,6 +3336,9 @@
       /* Find lowest contour. */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
+        FT_Pos  current_max_y;
+
+
         point       = hints->contours[contour];
         first_point = point;
 
@@ -3351,7 +3355,7 @@
 
         } while ( point != first_point );
 
-        if ( lowest_contour == -1 || current_max_y < lowest_max_y )
+        if ( current_max_y < lowest_max_y )
         {
           lowest_max_y   = current_max_y;
           lowest_contour = contour;
