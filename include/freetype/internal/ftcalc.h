@@ -33,9 +33,27 @@ FT_BEGIN_HEADER
    *
    */
 
-#ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
-  /* Provide assembler fragments for performance-critical functions. */
-  /* These must be defined `static __inline__' with GCC.             */
+#ifdef FT_CONFIG_OPTION_INLINE_MULFIX
+
+#ifdef FT_INT64
+
+  static inline FT_Long
+  FT_MulFix_64( FT_Long  a,
+                FT_Long  b )
+  {
+    FT_Int64  ab = (FT_Int64)a * b;
+
+
+    ab += 0x8000 + ( ab >> 63 );  /* rounding phase */
+
+    return (FT_Long)( ab >> 16 );
+  }
+
+#define FT_MulFix( a, b )  FT_MulFix_64( a, b )
+
+#elif !defined( FT_CONFIG_OPTION_NO_ASSEMBLER )
+  /* Provide 32-bit assembler fragments for optimized FT_MulFix. */
+  /* These must be defined `static __inline__' or similar.       */
 
 #if defined( __CC_ARM ) || defined( __ARMCC__ )  /* RVCT */
 
@@ -177,73 +195,11 @@ FT_BEGIN_HEADER
 #endif /* _MSC_VER */
 
 
-#if defined( __GNUC__ ) && defined( __x86_64__ )
-
-#define FT_MULFIX_ASSEMBLER  FT_MulFix_x86_64
-
-  static __inline__ FT_Int32
-  FT_MulFix_x86_64( FT_Int32  a,
-                    FT_Int32  b )
-  {
-    /* Temporarily disable the warning that C90 doesn't support */
-    /* `long long'.                                             */
-#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wlong-long"
-#endif
-
-#if 1
-    /* Technically not an assembly fragment, but GCC does a really good */
-    /* job at inlining it and generating good machine code for it.      */
-    long long  ret, tmp;
-
-
-    ret  = (long long)a * b;
-    tmp  = ret >> 63;
-    ret += 0x8000 + tmp;
-
-    return (FT_Int32)( ret >> 16 );
-#else
-
-    /* For some reason, GCC 4.6 on Ubuntu 12.04 generates invalid machine  */
-    /* code from the lines below.  The main issue is that `wide_a' is not  */
-    /* properly initialized by sign-extending `a'.  Instead, the generated */
-    /* machine code assumes that the register that contains `a' on input   */
-    /* can be used directly as a 64-bit value, which is wrong most of the  */
-    /* time.                                                               */
-    long long  wide_a = (long long)a;
-    long long  wide_b = (long long)b;
-    long long  result;
-
-
-    __asm__ __volatile__ (
-      "imul %2, %1\n"
-      "mov %1, %0\n"
-      "sar $63, %0\n"
-      "lea 0x8000(%1, %0), %0\n"
-      "sar $16, %0\n"
-      : "=&r"(result), "=&r"(wide_a)
-      : "r"(wide_b)
-      : "cc" );
-
-    return (FT_Int32)result;
-#endif
-
-#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
-#pragma GCC diagnostic pop
-#endif
-  }
-
-#endif /* __GNUC__ && __x86_64__ */
+#define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
-
-#ifdef FT_CONFIG_OPTION_INLINE_MULFIX
-#ifdef FT_MULFIX_ASSEMBLER
-#define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
-#endif
-#endif
+#endif /* FT_CONFIG_OPTION_INLINE_MULFIX */
 
 
   /**************************************************************************

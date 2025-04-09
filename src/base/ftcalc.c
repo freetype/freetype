@@ -38,13 +38,12 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 
-
-#ifdef FT_MULFIX_ASSEMBLER
+  /* cancel inlining macro from internal/ftcalc.h */
+#ifdef FT_MulFix
 #undef FT_MulFix
 #endif
 
-/* we need to emulate a 64-bit data type if a real one isn't available */
-
+  /* we need to emulate a 64-bit data type if one isn't available */
 #ifndef FT_INT64
 
   typedef struct  FT_Int64_
@@ -225,9 +224,9 @@
   FT_MulFix( FT_Long  a_,
              FT_Long  b_ )
   {
-#ifdef FT_MULFIX_ASSEMBLER
+#ifdef FT_CONFIG_OPTION_INLINE_MULFIX
 
-    return FT_MULFIX_ASSEMBLER( (FT_Int32)a_, (FT_Int32)b_ );
+    return FT_MulFix_64( a_, b_ );
 
 #else
 
@@ -236,7 +235,7 @@
     /* this requires arithmetic right shift of signed numbers */
     return (FT_Long)( ( ab + 0x8000L - ( ab < 0 ) ) >> 16 );
 
-#endif /* FT_MULFIX_ASSEMBLER */
+#endif /* FT_CONFIG_OPTION_INLINE_MULFIX */
   }
 
 
