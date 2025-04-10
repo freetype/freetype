@@ -669,6 +669,7 @@
 
   Exit:
     hb_set_destroy( feature_tags );
+    hb_set_destroy( type_3_lookup_indices );
     hb_buffer_destroy( codepoint_buffer );
     FT_FREE( feature_buffer );
     FT_FREE( type_3_alternate_glyphs_buffer );
