@@ -3185,7 +3185,6 @@
     {
       FT_Int  highest_contour = 0;
       FT_Pos  highest_min_y   = FT_INT_MIN;
-
       FT_Pos  highest_max_y;
 
       FT_Int   contour;
@@ -3213,6 +3212,7 @@
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
         FT_Pos  current_min_y;
+        FT_Pos  current_max_y;
 
 
         point       = hints->contours[contour];
@@ -3225,11 +3225,14 @@
           continue;
 
         current_min_y = point->y;
+        current_max_y = point->y;
 
         do
         {
           if ( point->y < current_min_y )
             current_min_y = point->y;
+          if ( point->y > current_max_y )
+            current_max_y = point->y;
           point = point->next;
 
         } while ( point != first_point );
@@ -3239,6 +3242,9 @@
           highest_min_y   = current_min_y;
           highest_contour = contour;
         }
+
+        hints->contour_y_minima[contour] = current_min_y;
+        hints->contour_y_maxima[contour] = current_max_y;
       }
 
       /* Check for a horizontal overlap between the top contour and the */
@@ -3256,15 +3262,7 @@
       point       = hints->contours[highest_contour];
       first_point = point;
 
-      /* Now get the maximum y value of the highest contour. */
-      highest_max_y = point->y;
-      do
-      {
-        if ( point->y > highest_max_y )
-          highest_max_y = point->y;
-        point = point->next;
-
-      } while ( point != first_point );
+      highest_max_y = hints->contour_y_maxima[highest_contour];
 
       /* If the difference between the vertical minimum of the       */
       /* highest contour and the vertical maximum of another contour */
@@ -3287,14 +3285,7 @@
         if ( first_point->next->next == first_point )
           continue;
 
-        max_y = point->y;
-        do
-        {
-          if ( point->y > max_y )
-            max_y = point->y;
-          point = point->next;
-
-        } while ( point != first_point );
+        max_y = hints->contour_y_maxima[contour];
 
         distance = highest_min_y - max_y;
         if ( distance < 64 && distance < min_distance )
@@ -3361,6 +3352,7 @@
       /* Find lowest contour. */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
+        FT_Pos  current_min_y;
         FT_Pos  current_max_y;
 
 
@@ -3373,10 +3365,13 @@
         if ( first_point->next->next == first_point )
           continue;
 
+        current_min_y = point->y;
         current_max_y = point->y;
 
         do
         {
+          if ( point->y < current_min_y )
+            current_min_y = point->y;
           if ( point->y > current_max_y )
             current_max_y = point->y;
           point = point->next;
@@ -3388,6 +3383,9 @@
           lowest_max_y   = current_max_y;
           lowest_contour = contour;
         }
+
+        hints->contour_y_minima[contour] = current_min_y;
+        hints->contour_y_maxima[contour] = current_max_y;
       }
 
       for ( contour = 0; contour < hints->num_contours; contour++ )
@@ -3407,14 +3405,7 @@
         if ( first_point->next->next == first_point )
           continue;
 
-        min_y = point->y;
-        do
-        {
-          if ( point->y < min_y )
-            min_y = point->y;
-          point = point->next;
-
-        } while ( point != first_point );
+        min_y = hints->contour_y_minima[contour];
 
         distance = min_y - lowest_max_y;
         if ( distance < 64 && distance < min_distance )
