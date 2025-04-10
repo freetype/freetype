@@ -303,6 +303,7 @@ FT_BEGIN_HEADER
 
   } AF_EdgeRec;
 
+
 #define AF_SEGMENTS_EMBEDDED  18   /* number of embedded segments   */
 #define AF_EDGES_EMBEDDED     12   /* number of embedded edges      */
 
@@ -346,9 +347,11 @@ FT_BEGIN_HEADER
     FT_Int           num_points;    /* number of used points      */
     AF_Point         points;        /* points array               */
 
-    FT_Int           max_contours;  /* number of allocated contours */
-    FT_Int           num_contours;  /* number of used contours      */
-    AF_Point*        contours;      /* contours array               */
+    FT_Int           max_contours;     /* number of allocated contours    */
+    FT_Int           num_contours;     /* number of used contours         */
+    AF_Point*        contours;         /* contours array                  */
+    FT_Pos*          contour_y_minima; /* array with y maxima of contours */
+    FT_Pos*          contour_y_maxima; /* array with y minima of contours */
 
     AF_AxisHintsRec  axis[AF_DIMENSION_MAX];
 
@@ -357,11 +360,13 @@ FT_BEGIN_HEADER
                                     /* implementations         */
     AF_StyleMetrics  metrics;
 
-    /* Two arrays to avoid allocation penalty.            */
+    /* Some arrays to avoid allocation penalty.           */
     /* The `embedded' structure must be the last element! */
     struct
     {
       AF_Point       contours[AF_CONTOURS_EMBEDDED];
+      FT_Pos         contour_y_minima[AF_CONTOURS_EMBEDDED];
+      FT_Pos         contour_y_maxima[AF_CONTOURS_EMBEDDED];
       AF_PointRec    points[AF_POINTS_EMBEDDED];
     } embedded;
 
