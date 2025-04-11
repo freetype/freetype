@@ -3344,11 +3344,31 @@
                     adjustment_amount ));
       else if ( adjustment_amount > 0 )
       {
+        /* Value 8 is heuristic. */
+        FT_Pos  height_delta = ( highest_max_y - highest_min_y ) / 8;
+        FT_Pos  min_y_limit  = highest_min_y - height_delta;
+        FT_Pos  max_y_limit  = highest_max_y + height_delta;
+
+
         FT_TRACE4(( "    Pushing top contour %ld units up\n",
                     adjustment_amount ));
 
-        af_move_contour_vertically( hints->contours[highest_contour],
-                                    adjustment_amount );
+        /* While we use only a single contour (the 'highest' one) for */
+        /* computing `adjustment_amount`, we apply it to all contours */
+        /* that are (approximately) in the same vertical range.  This */
+        /* covers, for example, the inner contour of the Czech ring   */
+        /* accent or the second acute accent in the Hungarian double  */
+        /* acute accent.                                              */
+        for ( contour = 0; contour < hints->num_contours; contour++ )
+        {
+          FT_Pos  min_y = hints->contour_y_minima[contour];
+          FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+          if ( min_y > min_y_limit && max_y < max_y_limit )
+            af_move_contour_vertically( hints->contours[contour],
+                                        adjustment_amount );
+        }
       }
     }
 
@@ -3452,11 +3472,24 @@
                     adjustment_amount ));
       else if ( adjustment_amount > 0 )
       {
+        FT_Pos  height_delta = ( lowest_max_y - lowest_min_y ) / 8;
+        FT_Pos  min_y_limit  = lowest_min_y - height_delta;
+        FT_Pos  max_y_limit  = lowest_max_y + height_delta;
+
+
         FT_TRACE4(( "    Pushing bottom contour %ld units down\n",
                     adjustment_amount ));
 
-        af_move_contour_vertically( hints->contours[lowest_contour],
-                                    -adjustment_amount );
+        for ( contour = 0; contour < hints->num_contours; contour++ )
+        {
+          FT_Pos  min_y = hints->contour_y_minima[contour];
+          FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+          if ( min_y > min_y_limit && max_y < max_y_limit )
+            af_move_contour_vertically( hints->contours[contour],
+                                        -adjustment_amount );
+        }
       }
     }
 
