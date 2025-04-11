@@ -2780,17 +2780,23 @@
   af_find_highest_contour( AF_GlyphHints  hints )
   {
     FT_Int  highest_contour = 0;
-    FT_Pos  highest_min_y   = FT_INT_MIN;
+    FT_Pos  highest_max_y   = FT_INT_MIN;
 
     FT_Int  contour;
 
 
+    /* At this point we have one 'lower' (usually the base glyph)   */
+    /* and one 'upper' object (usually the diacritic glyph).  If    */
+    /* there are more contours, they must be enclosed within either */
+    /* 'lower' or 'upper'.  To find this enclosing 'upper' contour  */
+    /* it is thus sufficient to search for the contour with the     */
+    /* highest y maximum value.                                     */
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
+      FT_Pos  current_max_y;
+
       AF_Point  point       = hints->contours[contour];
       AF_Point  first_point = point;
-
-      FT_Pos  current_min_y;
 
 
       if ( !point )
@@ -2799,19 +2805,19 @@
       if ( first_point->next->next == first_point )
         continue;
 
-      current_min_y = point->y;
+      current_max_y = point->y;
 
       do
       {
-        if ( point->y < current_min_y )
-          current_min_y = point->y;
+        if ( point->y > current_max_y )
+          current_max_y = point->y;
         point = point->next;
 
       } while ( point != first_point );
 
-      if ( current_min_y > highest_min_y )
+      if ( current_max_y > highest_max_y )
       {
-        highest_min_y   = current_min_y;
+        highest_max_y   = current_max_y;
         highest_contour = contour;
       }
     }
@@ -3184,8 +3190,8 @@
          hints->num_contours >= 2                          )
     {
       FT_Int  highest_contour = 0;
-      FT_Pos  highest_min_y   = FT_INT_MIN;
-      FT_Pos  highest_max_y;
+      FT_Pos  highest_min_y;
+      FT_Pos  highest_max_y   = FT_INT_MIN;
 
       FT_Int   contour;
       FT_Bool  horizontal_overlap;
@@ -3203,12 +3209,21 @@
       AF_Point  first_point;
 
 
+      /* Similar to the reasoning given in a comment to                   */
+      /* `af_find_highest_contour`, we can find the 'lower' contour by    */
+      /* getting the smallest distance between the y minimum value of the */
+      /* 'upper' contour and the y maximum value of all other contours.   */
+      /* Note that this distance might be negative if 'lower' and 'upper' */
+      /* intersect, which can happen due to blue zone snapping.           */
+
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment:"
                   " AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP\n" ));
 
-      /* Figure out which contour is the higher one by finding the one */
-      /* with the highest minimum y value.                             */
+      /* Compute vertical extrema of all contours while finding the   */
+      /* highest contour.  There is some redundancy code-wise with    */
+      /* `af_find_highest_contour`; this time, however, we are acting */
+      /* on already auto-hinted outlines.                             */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
         FT_Pos  current_min_y;
@@ -3237,9 +3252,9 @@
 
         } while ( point != first_point );
 
-        if ( current_min_y > highest_min_y )
+        if ( current_max_y > highest_max_y )
         {
-          highest_min_y   = current_min_y;
+          highest_max_y   = current_max_y;
           highest_contour = contour;
         }
 
@@ -3262,7 +3277,7 @@
       point       = hints->contours[highest_contour];
       first_point = point;
 
-      highest_max_y = hints->contour_y_maxima[highest_contour];
+      highest_min_y = hints->contour_y_minima[highest_contour];
 
       /* If the difference between the vertical minimum of the       */
       /* highest contour and the vertical maximum of another contour */
@@ -3270,6 +3285,7 @@
       /* distance one pixel.                                         */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
+        FT_Pos  min_y;
         FT_Pos  max_y;
         FT_Pos  distance;
 
@@ -3285,10 +3301,16 @@
         if ( first_point->next->next == first_point )
           continue;
 
+        min_y = hints->contour_y_minima[contour];
         max_y = hints->contour_y_maxima[contour];
 
+        /* We also check that the y minimum of the 'other' contour */
+        /* is below the highest contour to avoid potential false   */
+        /* hits with contours enclosed in the highest one.         */
         distance = highest_min_y - max_y;
-        if ( distance < 64 && distance < min_distance )
+        if ( distance < 64           &&
+             distance < min_distance &&
+             min_y < highest_min_y   )
           min_distance = distance;
       }
 
@@ -3334,7 +3356,8 @@
               hints->num_contours >= 2                               )
     {
       FT_Int  lowest_contour = 0;
-      FT_Pos  lowest_max_y   = FT_INT_MAX;
+      FT_Pos  lowest_min_y   = FT_INT_MAX;
+      FT_Pos  lowest_max_y;
 
       FT_Int  contour;
 
@@ -3349,7 +3372,7 @@
                   "  Applying vertical adjustment:"
                   " AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN\n" ));
 
-      /* Find lowest contour. */
+      /* Compute vertical extrema and find lowest contour. */
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
         FT_Pos  current_min_y;
@@ -3378,9 +3401,9 @@
 
         } while ( point != first_point );
 
-        if ( current_max_y < lowest_max_y )
+        if ( current_min_y < lowest_min_y )
         {
-          lowest_max_y   = current_max_y;
+          lowest_min_y   = current_min_y;
           lowest_contour = contour;
         }
 
@@ -3388,9 +3411,12 @@
         hints->contour_y_maxima[contour] = current_max_y;
       }
 
+      lowest_max_y = hints->contour_y_maxima[lowest_contour];
+
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
         FT_Pos  min_y;
+        FT_Pos  max_y;
         FT_Pos  distance;
 
 
@@ -3406,9 +3432,12 @@
           continue;
 
         min_y = hints->contour_y_minima[contour];
+        max_y = hints->contour_y_maxima[contour];
 
         distance = min_y - lowest_max_y;
-        if ( distance < 64 && distance < min_distance )
+        if ( distance < 64           &&
+             distance < min_distance &&
+             max_y > lowest_max_y    )
           min_distance = distance;
       }
 
