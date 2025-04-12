@@ -374,6 +374,10 @@ FT_BEGIN_HEADER
 
 #define FT_MSB( x )  FT_MSB_i386( x )
 
+#elif defined( __CC_ARM )
+
+#define FT_MSB( x )  ( 31 - __clz( x ) )
+
 #elif defined( __SunOS_5_11 )
 
 #include <string.h>
