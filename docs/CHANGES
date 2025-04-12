@@ -11,6 +11,10 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
 
   III. MISCELLANEOUS
 
+  - TrueType and CFF glyph loading speed has been improved by 5-10% on
+    modern 64-bit platforms  as  a result of better handling of fixed-
+    point multiplication.
+
   - The BDF driver now loads fonts 75% faster. 
 
 
