@@ -27,7 +27,7 @@
 
 #include <hb.h>
 #include <hb-ot.h>
-#include "ft-hb.h"
+#include "ft-hb-ft.h"
 
 #endif
 
