@@ -41,7 +41,7 @@ FT_BEGIN_HEADER
   FT_MulFix_64( FT_Long  a,
                 FT_Long  b )
   {
-    FT_Int64  ab = (FT_Int64)a * b;
+    FT_Int64  ab = (FT_Int64)( (FT_UInt64)a * (FT_UInt64)b );
 
 
     ab += 0x8000 + ( ab >> 63 );  /* rounding phase */
