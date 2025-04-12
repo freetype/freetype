@@ -1183,12 +1183,11 @@
 
 #define TT_MulFix14  TT_MulFix14_arm
 
-  static FT_Int32
+  static __inline FT_Int32
   TT_MulFix14_arm( FT_Int32  a,
-                   FT_Int    b )
+                   FT_Int32  b )
   {
     FT_Int32  t, t2;
-
 
 #if defined( __CC_ARM ) || defined( __ARMCC__ )
 
@@ -1215,8 +1214,8 @@
 #endif
       "adds   %1, %1, %0\n\t"           /* %1 += %0 */
       "adc    %2, %2, #0\n\t"           /* %2 += carry */
-      "mov    %0, %1, lsr #14\n\t"      /* %0  = %1 >> 16 */
-      "orr    %0, %0, %2, lsl #18\n\t"  /* %0 |= %2 << 16 */
+      "mov    %0, %1, lsr #14\n\t"      /* %0  = %1 >> 14 */
+      "orr    %0, %0, %2, lsl #18\n\t"  /* %0 |= %2 << 18 */
       : "=r"(a), "=&r"(t2), "=&r"(t)
       : "r"(a), "r"(b)
       : "cc" );
@@ -1226,7 +1225,58 @@
     return a;
   }
 
-#endif /* __arm__ && ( __thumb2__ || !__thumb__ ) */
+#elif defined( __i386__ ) || defined( _M_X86 )
+
+#define TT_MulFix14  TT_MulFix14_i386
+
+  /* documentation is in freetype.h */
+
+  static __inline FT_Int32
+  TT_MulFixi14_i386( FT_Int32  a,
+                     FT_Int32  b )
+  {
+    FT_Int32  result;
+
+#if defined( __GNUC__ )
+
+    __asm__ __volatile__ (
+      "imul  %%edx\n"
+      "movl  %%edx, %%ecx\n"
+      "sarl  $31, %%ecx\n"
+      "addl  $0x2000, %%ecx\n"
+      "addl  %%ecx, %%eax\n"
+      "adcl  $0, %%edx\n"
+      "shrl  $14, %%eax\n"
+      "shll  $18, %%edx\n"
+      "addl  %%edx, %%eax\n"
+      : "=a"(result), "=d"(b)
+      : "a"(a), "d"(b)
+      : "%ecx", "cc" );
+
+#elif defined( _MSC_VER)
+
+    __asm
+    {
+      mov eax, a
+      mov edx, b
+      imul edx
+      mov ecx, edx
+      sar ecx, 31
+      add ecx, 2000h
+      add eax, ecx
+      adc edx, 0
+      shr eax, 14
+      shl edx, 18
+      add eax, edx
+      mov result, eax
+    }
+
+#endif
+
+    return result;
+  }
+
+#endif /* __i386__ || _M_X86 */
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 

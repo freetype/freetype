@@ -55,7 +55,8 @@ FT_BEGIN_HEADER
   /* Provide 32-bit assembler fragments for optimized FT_MulFix. */
   /* These must be defined `static __inline__' or similar.       */
 
-#if defined( __CC_ARM ) || defined( __ARMCC__ )  /* RVCT */
+#if defined( __arm__ )                                 && \
+    ( defined( __thumb2__ ) || !defined( __thumb__ ) )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_arm
 
@@ -67,6 +68,7 @@ FT_BEGIN_HEADER
   {
     FT_Int32  t, t2;
 
+#if defined( __CC_ARM ) || defined( __ARMCC__ )  /* RVCT */
 
     __asm
     {
@@ -78,28 +80,8 @@ FT_BEGIN_HEADER
       mov   a,  t2, lsr #16         /* a   = t2 >> 16 */
       orr   a,  a,  t,  lsl #16     /* a  |= t << 16 */
     }
-    return a;
-  }
 
-#endif /* __CC_ARM || __ARMCC__ */
-
-
-#ifdef __GNUC__
-
-#if defined( __arm__ )                                 && \
-    ( !defined( __thumb__ ) || defined( __thumb2__ ) ) && \
-    !( defined( __CC_ARM ) || defined( __ARMCC__ ) )
-
-#define FT_MULFIX_ASSEMBLER  FT_MulFix_arm
-
-  /* documentation is in freetype.h */
-
-  static __inline__ FT_Int32
-  FT_MulFix_arm( FT_Int32  a,
-                 FT_Int32  b )
-  {
-    FT_Int32  t, t2;
-
+#elif defined( __GNUC__ )
 
     __asm__ __volatile__ (
       "smull  %1, %2, %4, %3\n\t"       /* (lo=%1,hi=%2) = a*b */
@@ -116,26 +98,25 @@ FT_BEGIN_HEADER
       : "=r"(a), "=&r"(t2), "=&r"(t)
       : "r"(a), "r"(b)
       : "cc" );
+
+#endif
+
     return a;
   }
 
-#endif /* __arm__                      && */
-       /* ( __thumb2__ || !__thumb__ ) && */
-       /* !( __CC_ARM || __ARMCC__ )      */
-
-
-#if defined( __i386__ )
+#elif defined( __i386__ ) || defined( _M_X86 )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_i386
 
   /* documentation is in freetype.h */
 
-  static __inline__ FT_Int32
+  static __inline FT_Int32
   FT_MulFix_i386( FT_Int32  a,
                   FT_Int32  b )
   {
     FT_Int32  result;
 
+#if defined( __GNUC__ )
 
     __asm__ __volatile__ (
       "imul  %%edx\n"
@@ -150,27 +131,8 @@ FT_BEGIN_HEADER
       : "=a"(result), "=d"(b)
       : "a"(a), "d"(b)
       : "%ecx", "cc" );
-    return result;
-  }
 
-#endif /* i386 */
-
-#endif /* __GNUC__ */
-
-
-#ifdef _MSC_VER /* Visual C++ */
-
-#ifdef _M_IX86
-
-#define FT_MULFIX_ASSEMBLER  FT_MulFix_i386
-
-  /* documentation is in freetype.h */
-
-  static __inline FT_Int32
-  FT_MulFix_i386( FT_Int32  a,
-                  FT_Int32  b )
-  {
-    FT_Int32  result;
+#elif defined( _MSC_VER)
 
     __asm
     {
@@ -187,12 +149,13 @@ FT_BEGIN_HEADER
       add eax, edx
       mov result, eax
     }
+
+#endif
+
     return result;
   }
 
-#endif /* _M_IX86 */
-
-#endif /* _MSC_VER */
+#endif /* __i386__ || _M_X86 */
 
 
 #define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
