@@ -24,8 +24,8 @@
  * Google Author(s): Behdad Esfahbod
  */
 
-#ifndef FT_HB_H
-#define FT_HB_H
+#ifndef FT_HB_FT_H
+#define FT_HB_FT_H
 
 #include <hb.h>
 
@@ -36,13 +36,13 @@
 FT_BEGIN_HEADER
 
 FT_LOCAL(hb_font_t *)
-hb_ft_font_create_ (FT_Face           ft_face,
-                    hb_destroy_func_t destroy);
+ft_hb_ft_font_create (FT_Face           ft_face,
+                      hb_destroy_func_t destroy);
 
 
 FT_END_HEADER
 
-#endif /* FT_HB_H */
+#endif /* FT_HB_FT_H */
 
 
 /* END */
