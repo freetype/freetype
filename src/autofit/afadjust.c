@@ -288,8 +288,8 @@
   }
 
 
-  /* Return 1 if tilde correction should be applied to the topmost */
-  /* contour, else 0.                                              */
+  /* Return FALSE if tilde correction should be applied to the topmost */
+  /* contour, else TRUE.                                               */
   FT_LOCAL_DEF( FT_Bool )
   af_lookup_tilde_correction_type( AF_ReverseCharacterMap  map,
                                    FT_Int                  glyph_index )
@@ -302,7 +302,7 @@
 
 
     if ( !entry )
-      return 0;
+      return FALSE;
 
     return entry->apply_tilde;
   }
@@ -345,7 +345,7 @@
     buffer:           a buffer containing only the input code point
     feature_tag_pool: the current list of features under consideration
     current_features: the current list of features being applied
-    num_features:     length of current_features
+    num_features:     length of `current_features`
     result:           the set of glyphs that the input code point can map to
 
     The algorithm works by running the `hb_ot_shape_glyphs_closure` function
@@ -471,11 +471,11 @@
 
       current_features[num_features].tag = feature_tag;
 
-      hb_ot_shape_glyphs_closure ( font,
-                                   buffer,
-                                   current_features,
-                                   num_features + 1,
-                                   new_glyphs );
+      hb_ot_shape_glyphs_closure( font,
+                                  buffer,
+                                  current_features,
+                                  num_features + 1,
+                                  new_glyphs );
       if ( !hb_set_allocation_successful( new_glyphs ) )
       {
         error = FT_Err_Out_Of_Memory;
@@ -553,9 +553,9 @@
     FT_UInt         base_glyph_index;
 
 
-    if ( !hb_set_allocation_successful( feature_tags )           ||
-         !hb_buffer_allocation_successful( codepoint_buffer )    ||
-         !hb_set_allocation_successful ( type_3_lookup_indices ) )
+    if ( !hb_set_allocation_successful( feature_tags )          ||
+         !hb_buffer_allocation_successful( codepoint_buffer )   ||
+         !hb_set_allocation_successful( type_3_lookup_indices ) )
     {
       error = FT_Err_Out_Of_Memory;
       goto Exit;
@@ -781,10 +781,6 @@
       FT_UInt  i;
       FT_Long  insert_point;
 
-#ifdef FT_DEBUG_LEVEL_TRACE
-      int  failed_lookups = 0;
-#endif
-
 
       for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
       {
@@ -793,12 +789,7 @@
 
 
         if ( glyph == 0 )
-        {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          failed_lookups++;
-#endif
           continue;
-        }
 
         error = af_reverse_character_map_expand( *map, &capacity, memory );
         if ( error )
@@ -820,7 +811,7 @@
               af_reverse_character_map_entry_compare );
 
     FT_TRACE4(( "    reverse character map built successfully"
-                " with %ld entries\n", (*map)->length ));
+                " with %ld entries\n", ( *map )->length ));
 
   Exit:
     face->charmap = old_charmap;
