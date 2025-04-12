@@ -1225,7 +1225,7 @@
     return a;
   }
 
-#elif defined( __i386__ ) || defined( _M_X86 )
+#elif defined( __i386__ ) || defined( _M_IX86 )
 
 #define TT_MulFix14  TT_MulFix14_i386
 
@@ -1276,7 +1276,7 @@
     return result;
   }
 
-#endif /* __i386__ || _M_X86 */
+#endif /* __i386__ || _M_IX86 */
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 

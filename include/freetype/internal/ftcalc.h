@@ -104,7 +104,7 @@ FT_BEGIN_HEADER
     return a;
   }
 
-#elif defined( __i386__ ) || defined( _M_X86 )
+#elif defined( __i386__ ) || defined( _M_IX86 )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_i386
 
@@ -155,7 +155,7 @@ FT_BEGIN_HEADER
     return result;
   }
 
-#endif /* __i386__ || _M_X86 */
+#endif /* __i386__ || _M_IX86 */
 
 
 #define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
