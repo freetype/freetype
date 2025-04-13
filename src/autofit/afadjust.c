@@ -813,6 +813,40 @@
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %ld entries\n", ( *map )->length ));
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    {
+      FT_Long  i;
+
+
+      FT_TRACE7(( "       gidx   code    adj  tilde\n" ));
+               /* "      XXXXX  0xXXXX  XXXX   XXX" */
+      FT_TRACE7(( "     ----------------------------\n" ));
+
+      for ( i = 0; i < ( *map )->length; i++ )
+      {
+        FT_Long  glyph_index = ( *map )->entries[i].glyph_index;
+        FT_Int   codepoint   = ( *map )->entries[i].codepoint;
+
+        AF_VerticalSeparationAdjustmentType  adj_type =
+          af_lookup_vertical_separation_type( *map, glyph_index );
+        FT_Bool                              is_tilde =
+          af_lookup_tilde_correction_type( *map, glyph_index );
+
+
+        FT_TRACE7(( "      %5ld  0x%04X  %4s   %3s\n",
+                    glyph_index,
+                    codepoint,
+                    adj_type == AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN
+                      ? "down"
+                      : adj_type == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP
+                        ? "up"
+                        : "",
+                    is_tilde ? "yes" : "no" ));
+      }
+    }
+#endif
+
+
   Exit:
     face->charmap = old_charmap;
 
