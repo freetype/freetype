@@ -58,12 +58,11 @@ FT_BEGIN_HEADER
   } AF_AdjustmentDatabaseEntry;
 
 
-  FT_LOCAL( AF_VerticalSeparationAdjustmentType )
-  af_lookup_vertical_separation_type( AF_ReverseCharacterMap  map,
-                                      FT_Int                  glyph_index );
+  FT_LOCAL( const AF_AdjustmentDatabaseEntry* )
+  af_adjustment_database_lookup( FT_UInt32  codepoint );
 
-  FT_LOCAL( FT_Bool )
-  af_lookup_tilde_correction_type( AF_ReverseCharacterMap  map,
+  FT_LOCAL( const AF_ReverseMapEntry* )
+  af_reverse_character_map_lookup( AF_ReverseCharacterMap  map,
                                    FT_Int                  glyph_index );
 
   /* Allocate and populate the reverse character map, */

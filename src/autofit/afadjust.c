@@ -219,8 +219,7 @@
   };
 
 
-  /* Helper function: get the adjustment database entry for a codepoint. */
-  static const AF_AdjustmentDatabaseEntry*
+  FT_LOCAL_DEF( const AF_AdjustmentDatabaseEntry* )
   af_adjustment_database_lookup( FT_UInt32  codepoint )
   {
     /* Binary search for database entry */
@@ -263,7 +262,7 @@
   }
 
 
-  static FT_UInt32
+  FT_LOCAL_DEF( const AF_ReverseMapEntry* )
   af_reverse_character_map_lookup( AF_ReverseCharacterMap  map,
                                    FT_Int                  glyph_index )
   {
@@ -272,7 +271,7 @@
 
 
     if ( !map )
-      return 0;
+      return NULL;
 
     length = map->length;
 
@@ -291,48 +290,10 @@
       else if ( glyph_index > mid_glyph_index )
         low = mid + 1;
       else
-        return map->entries[mid].codepoint;
+        return &map->entries[mid];
     }
 
-    return 0;
-  }
-
-
-  FT_LOCAL_DEF( AF_VerticalSeparationAdjustmentType )
-  af_lookup_vertical_separation_type( AF_ReverseCharacterMap  map,
-                                      FT_Int                  glyph_index )
-  {
-    FT_UInt32  codepoint = af_reverse_character_map_lookup( map,
-                                                            glyph_index );
-
-    const AF_AdjustmentDatabaseEntry  *entry =
-      af_adjustment_database_lookup( codepoint );
-
-
-    if ( !entry )
-      return AF_VERTICAL_ADJUSTMENT_NONE;
-
-    return entry->vertical_separation_adjustment_type;
-  }
-
-
-  /* Return FALSE if tilde correction should be applied to the topmost */
-  /* contour, else TRUE.                                               */
-  FT_LOCAL_DEF( FT_Bool )
-  af_lookup_tilde_correction_type( AF_ReverseCharacterMap  map,
-                                   FT_Int                  glyph_index )
-  {
-    FT_UInt32  codepoint = af_reverse_character_map_lookup( map,
-                                                            glyph_index );
-
-    const AF_AdjustmentDatabaseEntry  *entry =
-      af_adjustment_database_lookup( codepoint );
-
-
-    if ( !entry )
-      return FALSE;
-
-    return entry->apply_tilde;
+    return NULL;
   }
 
 
@@ -855,11 +816,15 @@
         FT_Long  glyph_index = ( *map )->entries[i].glyph_index;
         FT_Int   codepoint   = ( *map )->entries[i].codepoint;
 
-        AF_VerticalSeparationAdjustmentType  adj_type =
-          af_lookup_vertical_separation_type( *map, glyph_index );
-        FT_Bool                              is_tilde =
-          af_lookup_tilde_correction_type( *map, glyph_index );
+        const AF_AdjustmentDatabaseEntry    *db_entry =
+          af_adjustment_database_lookup( codepoint );
+        AF_VerticalSeparationAdjustmentType  adj_type;
 
+
+        if ( !db_entry )
+          continue;
+
+        adj_type = db_entry->vertical_separation_adjustment_type;
 
         FT_TRACE7(( "      %5ld  0x%04X  %4s   %3s\n",
                     glyph_index,
@@ -869,7 +834,7 @@
                       : adj_type == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP
                         ? "up"
                         : "",
-                    is_tilde ? "yes" : "no" ));
+                    db_entry->apply_tilde ? "yes" : "no" ));
       }
     }
 #endif

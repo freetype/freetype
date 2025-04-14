@@ -3174,7 +3174,11 @@
     FT_Int                  glyph_index,
     AF_ReverseCharacterMap  reverse_charmap )
   {
-    AF_VerticalSeparationAdjustmentType  adj_type;
+    const AF_ReverseMapEntry          *entry;
+    const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
+
+    AF_VerticalSeparationAdjustmentType
+      adj_type = AF_VERTICAL_ADJUSTMENT_NONE;
 
 
     FT_TRACE4(( "Entering"
@@ -3183,8 +3187,13 @@
     if ( dim != AF_DIMENSION_VERT )
       return;
 
-    adj_type = af_lookup_vertical_separation_type( reverse_charmap,
-                                                   glyph_index );
+    entry = af_reverse_character_map_lookup( reverse_charmap, glyph_index );
+    if ( entry )
+    {
+      db_entry = af_adjustment_database_lookup( entry->codepoint );
+      if ( db_entry )
+        adj_type = db_entry->vertical_separation_adjustment_type;
+    }
 
     if ( adj_type == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP &&
          hints->num_contours >= 2                          )
@@ -3199,8 +3208,7 @@
       FT_Pos  min_distance = 64;
       FT_Pos  adjustment_amount;
 
-      FT_Bool  is_tilde = af_lookup_tilde_correction_type( reverse_charmap,
-                                                           glyph_index );
+      FT_Bool  is_tilde = FALSE;
 
       FT_Bool  grid_aligned_after_adjustment;
       FT_Pos   height;
@@ -3208,6 +3216,9 @@
       AF_Point  point;
       AF_Point  first_point;
 
+
+      if ( db_entry )
+        is_tilde = db_entry->apply_tilde;
 
       /* Similar to the reasoning given in a comment to                   */
       /* `af_find_highest_contour`, we can find the 'lower' contour by    */
@@ -4392,9 +4403,22 @@
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
-      FT_Bool  is_tilde = af_lookup_tilde_correction_type(
-                            metrics->root.reverse_charmap, glyph_index );
+      const AF_ReverseMapEntry  *entry;
 
+      FT_Bool  is_tilde = FALSE;
+
+
+      entry = af_reverse_character_map_lookup( metrics->root.reverse_charmap,
+                                               glyph_index );
+      if ( entry )
+      {
+        const AF_AdjustmentDatabaseEntry  *db_entry;
+
+
+        db_entry = af_adjustment_database_lookup( entry->codepoint );
+        if ( db_entry )
+          is_tilde = db_entry->apply_tilde;
+      }
 
       if ( is_tilde )
       {
