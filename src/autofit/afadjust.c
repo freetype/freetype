@@ -518,6 +518,8 @@
   static FT_Error
   af_all_glyph_variants( FT_Face     face,
                          hb_font_t  *hb_font,
+                         hb_set_t   *feature_tags,
+                         hb_set_t   *type_3_lookup_indices,
                          FT_UInt32   codepoint,
                          hb_set_t*   result )
   {
@@ -526,68 +528,19 @@
     FT_Memory   memory  = face->memory;
     hb_face_t  *hb_face = hb_font_get_face( hb_font );
 
-    FT_Bool       feature_list_done;
-    unsigned int  start_offset;
-
-    /* The set of all feature tags in the font. */
-    hb_set_t        *feature_tags          = hb_set_create();
-    hb_set_t        *type_3_lookup_indices = hb_set_create();
-    hb_buffer_t     *codepoint_buffer      = hb_buffer_create();
+    hb_buffer_t     *codepoint_buffer = hb_buffer_create();
     hb_codepoint_t  *type_3_alternate_glyphs_buffer;
 
     hb_feature_t  *feature_buffer;
-
-    /* List of features containing type 3 lookups. */
-    hb_tag_t  feature_list[] =
-    {
-      HB_TAG( 's', 'a', 'l', 't' ),
-      HB_TAG( 's', 'w', 's', 'h' ),
-      HB_TAG( 'n', 'a', 'l', 't' ),
-      HB_TAG_NONE
-    };
 
     hb_codepoint_t  lookup_index;
     FT_UInt         base_glyph_index;
 
 
-    if ( !hb_set_allocation_successful( feature_tags )          ||
-         !hb_buffer_allocation_successful( codepoint_buffer )   ||
-         !hb_set_allocation_successful( type_3_lookup_indices ) )
+    if ( !hb_buffer_allocation_successful( codepoint_buffer ) )
     {
       error = FT_Err_Out_Of_Memory;
       goto Exit;
-    }
-
-    /* Populate `feature_tags` using the output of */
-    /* `hb_ot_layout_table_get_feature_tags`.      */
-    feature_list_done = 0;
-    start_offset      = 0;
-
-    while ( !feature_list_done )
-    {
-      unsigned int  feature_count = 20;
-      hb_tag_t      tags[20];
-
-      unsigned int  i;
-
-
-      hb_ot_layout_table_get_feature_tags( hb_face,
-                                           HB_OT_TAG_GSUB,
-                                           start_offset,
-                                           &feature_count,
-                                           tags );
-      start_offset += 20;
-      if ( feature_count < 20 )
-        feature_list_done = 1;
-
-      for ( i = 0; i < feature_count; i++ )
-        hb_set_add( feature_tags, tags[i] );
-
-      if ( !hb_set_allocation_successful( feature_tags ) )
-      {
-        error = FT_Err_Out_Of_Memory;
-        goto Exit;
-      }
     }
 
     /* Make a buffer only consisting of the given code point. */
@@ -614,25 +567,6 @@
                                           result );
     if ( error )
       goto Exit;
-
-    /* Add the alternative glyph forms that come from features using
-       type 3 lookups.
-
-       This file from gtk was very useful in figuring out my approach:
-
-         https://gitlab.gnome.org/GNOME/gtk/-/blob/40f20fee3d8468749dfb233a6f95921c765c1163/gtk/gtkfontchooserwidget.c#L2100
-     */
-    hb_ot_layout_collect_lookups( hb_face,
-                                  HB_OT_TAG_GSUB,
-                                  NULL,
-                                  NULL,
-                                  feature_list,
-                                  type_3_lookup_indices );
-    if ( !hb_set_allocation_successful( type_3_lookup_indices ) )
-    {
-      error = FT_Err_Out_Of_Memory;
-      goto Exit;
-    }
 
 #define MAX_ALTERNATES  100  /* ad-hoc value */
 
@@ -665,8 +599,6 @@
     }
 
   Exit:
-    hb_set_destroy( feature_tags );
-    hb_set_destroy( type_3_lookup_indices );
     hb_buffer_destroy( codepoint_buffer );
     FT_FREE( feature_buffer );
     FT_FREE( type_3_alternate_glyphs_buffer );
@@ -718,7 +650,24 @@
 
     {
       hb_font_t  *hb_font    = globals->hb_font;
+      hb_face_t  *hb_face    = hb_font_get_face( hb_font );
       hb_set_t   *result_set = hb_set_create();
+
+      /* The set of all feature tags in the font. */
+      hb_set_t  *feature_tags          = hb_set_create();
+      hb_set_t  *type_3_lookup_indices = hb_set_create();
+
+      /* List of features containing type 3 lookups. */
+      hb_tag_t  feature_list[] =
+      {
+        HB_TAG( 's', 'a', 'l', 't' ),
+        HB_TAG( 's', 'w', 's', 'h' ),
+        HB_TAG( 'n', 'a', 'l', 't' ),
+        HB_TAG_NONE
+      };
+
+      FT_Bool       feature_list_done;
+      unsigned int  start_offset;
 
       FT_ULong  i;
 
@@ -726,10 +675,63 @@
       FT_UInt    glyph_index;
 
 
-      if ( !hb_set_allocation_successful( result_set ) )
+      if ( !hb_set_allocation_successful( result_set )            ||
+           !hb_set_allocation_successful( feature_tags )          ||
+           !hb_set_allocation_successful( type_3_lookup_indices ) )
       {
         error = FT_Err_Out_Of_Memory;
         goto harfbuzz_path_Exit;
+      }
+
+      /* Populate `feature_tags` using the output of */
+      /* `hb_ot_layout_table_get_feature_tags`.      */
+      feature_list_done = 0;
+      start_offset      = 0;
+
+      while ( !feature_list_done )
+      {
+        unsigned int  feature_count = 20;
+        hb_tag_t      tags[20];
+
+        unsigned int  n;
+
+
+        hb_ot_layout_table_get_feature_tags( hb_face,
+                                             HB_OT_TAG_GSUB,
+                                             start_offset,
+                                             &feature_count,
+                                             tags );
+        start_offset += 20;
+        if ( feature_count < 20 )
+          feature_list_done = 1;
+
+        for ( n = 0; n < feature_count; n++ )
+          hb_set_add( feature_tags, tags[n] );
+
+        if ( !hb_set_allocation_successful( feature_tags ) )
+        {
+          error = FT_Err_Out_Of_Memory;
+          goto Exit;
+        }
+      }
+
+      /* Add the alternative glyph forms that come from features using
+         type 3 lookups.
+
+         This file from gtk was very useful in figuring out my approach:
+
+           https://gitlab.gnome.org/GNOME/gtk/-/blob/40f20fee3d8468749dfb233a6f95921c765c1163/gtk/gtkfontchooserwidget.c#L2100
+       */
+      hb_ot_layout_collect_lookups( hb_face,
+                                    HB_OT_TAG_GSUB,
+                                    NULL,
+                                    NULL,
+                                    feature_list,
+                                    type_3_lookup_indices );
+      if ( !hb_set_allocation_successful( type_3_lookup_indices ) )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
       }
 
       /* Find all glyph variants of the code points, then make an entry */
@@ -743,6 +745,8 @@
 
         error = af_all_glyph_variants( face,
                                        hb_font,
+                                       feature_tags,
+                                       type_3_lookup_indices,
                                        codepoint,
                                        result_set );
         if ( error )
@@ -771,6 +775,9 @@
 
     harfbuzz_path_Exit:
       hb_set_destroy( result_set );
+      hb_set_destroy( feature_tags );
+      hb_set_destroy( type_3_lookup_indices );
+
       if ( error )
         goto Exit;
 
