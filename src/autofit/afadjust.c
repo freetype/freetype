@@ -258,7 +258,11 @@
            ? -1
            : entry_a.glyph_index > entry_b.glyph_index
                ? 1
-               : 0;
+               : entry_a.codepoint < entry_b.codepoint
+                   ? -1
+                   : entry_a.codepoint > entry_b.codepoint
+                       ? 1
+                       : 0;
   }
 
 
@@ -289,6 +293,10 @@
         high = mid - 1;
       else if ( glyph_index > mid_glyph_index )
         low = mid + 1;
+      else if (low != mid)
+        /* We want the first occurrence of `glyph_index` */
+        /* (i.e., the one with the lowest array index).  */
+        high = mid;
       else
         return &map->entries[mid];
     }
@@ -714,6 +722,9 @@
 
       FT_ULong  i;
 
+      FT_UInt32  codepoint;
+      FT_UInt    glyph_index;
+
 
       if ( !hb_set_allocation_successful( result_set ) )
       {
@@ -725,7 +736,7 @@
       /* from the glyph to the code point for each one.                 */
       for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
       {
-        FT_UInt32  codepoint = adjustment_database[i].codepoint;
+        codepoint = adjustment_database[i].codepoint;
 
         hb_codepoint_t  glyph;
 
@@ -762,6 +773,47 @@
       hb_set_destroy( result_set );
       if ( error )
         goto Exit;
+
+      ft_qsort( ( *map )->entries,
+                ( *map )->length,
+                sizeof ( AF_ReverseMapEntry ),
+                af_reverse_character_map_entry_compare );
+
+      /* OpenType features like 'unic' map lowercase letter glyphs to    */
+      /* uppercase forms (and vice versa), which could lead to the use   */
+      /* of a wrong entry in the adjustment database.  For this reason   */
+      /* we prioritize cmap entries.                                     */
+      /*                                                                 */
+      /* XXX Note, however, that this cannot cover all cases since there */
+      /* might be contradictory entries for glyphs not in the cmap.  A   */
+      /* possible solution might be to specially mark pairs of related   */
+      /* lowercase and uppercase characters in the adjustment database   */
+      /* that have diacritics on different vertical sides (for example,  */
+      /* U+0122 'Ģ' and U+0123 'ģ').  The auto-hinter could then perform */
+      /* a topological analysis to do the right thing.                   */
+
+      codepoint = FT_Get_First_Char( face, &glyph_index );
+      while ( glyph_index )
+      {
+        AF_ReverseMapEntry  *entry;
+
+
+        entry = (AF_ReverseMapEntry*)
+                  af_reverse_character_map_lookup( *map, glyph_index );
+        if ( entry )
+        {
+          FT_Int  idx = entry->glyph_index;
+
+
+          while ( entry->glyph_index == idx )
+          {
+            entry->codepoint = codepoint;
+            entry++;
+          }
+        }
+
+        codepoint = FT_Get_Next_Char( face, codepoint, &glyph_index );
+      }
     }
 
 #else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
@@ -790,14 +842,14 @@
         ( *map )->entries[insert_point].glyph_index = glyph;
         ( *map )->entries[insert_point].codepoint   = codepoint;
       }
+
+      ft_qsort( ( *map )->entries,
+                ( *map )->length,
+                sizeof ( AF_ReverseMapEntry ),
+                af_reverse_character_map_entry_compare );
     }
 
 #endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-    ft_qsort( ( *map )->entries,
-              ( *map )->length,
-              sizeof ( AF_ReverseMapEntry ),
-              af_reverse_character_map_entry_compare );
 
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %ld entries\n", ( *map )->length ));
