@@ -779,6 +779,8 @@
 
     {
       FT_UInt  i;
+      FT_Long  insert_point;
+
 #ifdef FT_DEBUG_LEVEL_TRACE
       int  failed_lookups = 0;
 #endif
@@ -802,9 +804,11 @@
         if ( error )
           goto Exit;
 
+        insert_point = ( *map )-> length;
+
         ( *map )->length++;
-        ( *map )->entries[i].glyph_index = glyph;
-        ( *map )->entries[i].codepoint   = codepoint;
+        ( *map )->entries[insert_point].glyph_index = glyph;
+        ( *map )->entries[insert_point].codepoint   = codepoint;
       }
     }
 
