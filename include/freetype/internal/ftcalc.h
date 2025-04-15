@@ -27,6 +27,56 @@
 FT_BEGIN_HEADER
 
 
+  /*
+   * The following macros have two purposes.
+   *
+   * - Tag places where overflow is expected and harmless.
+   *
+   * - Avoid run-time undefined behavior sanitizer errors.
+   *
+   * Use with care!
+   */
+#define ADD_INT( a, b )                           \
+          (FT_Int)( (FT_UInt)(a) + (FT_UInt)(b) )
+#define SUB_INT( a, b )                           \
+          (FT_Int)( (FT_UInt)(a) - (FT_UInt)(b) )
+#define MUL_INT( a, b )                           \
+          (FT_Int)( (FT_UInt)(a) * (FT_UInt)(b) )
+#define NEG_INT( a )                              \
+          (FT_Int)( (FT_UInt)0 - (FT_UInt)(a) )
+
+#define ADD_LONG( a, b )                             \
+          (FT_Long)( (FT_ULong)(a) + (FT_ULong)(b) )
+#define SUB_LONG( a, b )                             \
+          (FT_Long)( (FT_ULong)(a) - (FT_ULong)(b) )
+#define MUL_LONG( a, b )                             \
+          (FT_Long)( (FT_ULong)(a) * (FT_ULong)(b) )
+#define NEG_LONG( a )                                \
+          (FT_Long)( (FT_ULong)0 - (FT_ULong)(a) )
+
+#define ADD_INT32( a, b )                               \
+          (FT_Int32)( (FT_UInt32)(a) + (FT_UInt32)(b) )
+#define SUB_INT32( a, b )                               \
+          (FT_Int32)( (FT_UInt32)(a) - (FT_UInt32)(b) )
+#define MUL_INT32( a, b )                               \
+          (FT_Int32)( (FT_UInt32)(a) * (FT_UInt32)(b) )
+#define NEG_INT32( a )                                  \
+          (FT_Int32)( (FT_UInt32)0 - (FT_UInt32)(a) )
+
+#ifdef FT_INT64
+
+#define ADD_INT64( a, b )                               \
+          (FT_Int64)( (FT_UInt64)(a) + (FT_UInt64)(b) )
+#define SUB_INT64( a, b )                               \
+          (FT_Int64)( (FT_UInt64)(a) - (FT_UInt64)(b) )
+#define MUL_INT64( a, b )                               \
+          (FT_Int64)( (FT_UInt64)(a) * (FT_UInt64)(b) )
+#define NEG_INT64( a )                                  \
+          (FT_Int64)( (FT_UInt64)0 - (FT_UInt64)(a) )
+
+#endif /* FT_INT64 */
+
+
   /**************************************************************************
    *
    * FT_MulDiv() and FT_MulFix() are declared in freetype.h.
@@ -41,7 +91,7 @@ FT_BEGIN_HEADER
   FT_MulFix_64( FT_Long  a,
                 FT_Long  b )
   {
-    FT_Int64  ab = (FT_Int64)( (FT_UInt64)a * (FT_UInt64)b );
+    FT_Int64  ab = MUL_INT64( a, b );
 
 
     ab += 0x8000 + ( ab >> 63 );  /* rounding phase */
@@ -448,55 +498,6 @@ FT_BEGIN_HEADER
 #define FIXED_TO_INT( x )      ( FT_RoundFix( x ) >> 16 )
 
 #define ROUND_F26DOT6( x )     ( ( (x) + 32 - ( x < 0 ) ) & -64 )
-
-  /*
-   * The following macros have two purposes.
-   *
-   * - Tag places where overflow is expected and harmless.
-   *
-   * - Avoid run-time sanitizer errors.
-   *
-   * Use with care!
-   */
-#define ADD_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) + (FT_UInt)(b) )
-#define SUB_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) - (FT_UInt)(b) )
-#define MUL_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) * (FT_UInt)(b) )
-#define NEG_INT( a )                              \
-          (FT_Int)( (FT_UInt)0 - (FT_UInt)(a) )
-
-#define ADD_LONG( a, b )                             \
-          (FT_Long)( (FT_ULong)(a) + (FT_ULong)(b) )
-#define SUB_LONG( a, b )                             \
-          (FT_Long)( (FT_ULong)(a) - (FT_ULong)(b) )
-#define MUL_LONG( a, b )                             \
-          (FT_Long)( (FT_ULong)(a) * (FT_ULong)(b) )
-#define NEG_LONG( a )                                \
-          (FT_Long)( (FT_ULong)0 - (FT_ULong)(a) )
-
-#define ADD_INT32( a, b )                               \
-          (FT_Int32)( (FT_UInt32)(a) + (FT_UInt32)(b) )
-#define SUB_INT32( a, b )                               \
-          (FT_Int32)( (FT_UInt32)(a) - (FT_UInt32)(b) )
-#define MUL_INT32( a, b )                               \
-          (FT_Int32)( (FT_UInt32)(a) * (FT_UInt32)(b) )
-#define NEG_INT32( a )                                  \
-          (FT_Int32)( (FT_UInt32)0 - (FT_UInt32)(a) )
-
-#ifdef FT_INT64
-
-#define ADD_INT64( a, b )                               \
-          (FT_Int64)( (FT_UInt64)(a) + (FT_UInt64)(b) )
-#define SUB_INT64( a, b )                               \
-          (FT_Int64)( (FT_UInt64)(a) - (FT_UInt64)(b) )
-#define MUL_INT64( a, b )                               \
-          (FT_Int64)( (FT_UInt64)(a) * (FT_UInt64)(b) )
-#define NEG_INT64( a )                                  \
-          (FT_Int64)( (FT_UInt64)0 - (FT_UInt64)(a) )
-
-#endif /* FT_INT64 */
 
 
 FT_END_HEADER

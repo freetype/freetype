@@ -1168,7 +1168,7 @@
   TT_MulFix14_64( FT_F26Dot6  a,
                   FT_F2Dot14  b )
   {
-    FT_Int64  ab = (FT_Int64)( (FT_UInt64)a * (FT_UInt64)b );
+    FT_Int64  ab = MUL_INT64( a, b );
 
 
     ab += 0x2000 + ( ab >> 63 );  /* rounding phase */
@@ -1329,8 +1329,8 @@
                FT_F2Dot14  bx,
                FT_F2Dot14  by )
   {
-    FT_Int64  temp1 = (FT_Int64)ax * bx;
-    FT_Int64  temp2 = (FT_Int64)ay * by;
+    FT_Int64  temp1 = MUL_INT64( ax, bx );
+    FT_Int64  temp2 = MUL_INT64( ay, by );
 
 
     temp1 += temp2;
