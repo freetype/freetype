@@ -2858,6 +2858,9 @@
         AF_Edge  edge = seg->edge;
 
 
+        if ( !edge )
+          continue;
+
         if ( edge->first == seg && edge->last == seg )
         {
           /* The edge only consists of the segment to be removed. */
