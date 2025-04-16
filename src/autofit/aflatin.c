@@ -2882,7 +2882,7 @@
           {
             edge->last = edge->first;
 
-            while ( edge->last->edge_next != seg )
+            while ( edge->last && edge->last->edge_next != seg )
               edge->last = edge->last->edge_next;
           }
         }
