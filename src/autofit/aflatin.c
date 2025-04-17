@@ -3244,11 +3244,12 @@
         point       = hints->contours[contour];
         first_point = point;
 
-        if ( !point )
+        if ( !point || first_point->next->next == first_point )
+        {
+          hints->contour_y_minima[contour] = FT_INT_MAX;
+          hints->contour_y_maxima[contour] = FT_INT_MIN;
           continue;
-
-        if ( first_point->next->next == first_point )
-          continue;
+        }
 
         current_min_y = point->y;
         current_max_y = point->y;
@@ -3376,7 +3377,9 @@
           FT_Pos  max_y = hints->contour_y_maxima[contour];
 
 
-          if ( min_y > min_y_limit && max_y < max_y_limit )
+          if ( min_y < max_y       &&
+               min_y > min_y_limit &&
+               max_y < max_y_limit )
             af_move_contour_vertically( hints->contours[contour],
                                         adjustment_amount );
         }
@@ -3413,11 +3416,12 @@
         point       = hints->contours[contour];
         first_point = point;
 
-        if ( !point )
+        if ( !point || first_point->next->next == first_point )
+        {
+          hints->contour_y_minima[contour] = FT_INT_MAX;
+          hints->contour_y_maxima[contour] = FT_INT_MIN;
           continue;
-
-        if ( first_point->next->next == first_point )
-          continue;
+        }
 
         current_min_y = point->y;
         current_max_y = point->y;
@@ -3497,7 +3501,9 @@
           FT_Pos  max_y = hints->contour_y_maxima[contour];
 
 
-          if ( min_y > min_y_limit && max_y < max_y_limit )
+          if ( min_y < max_y       &&
+               min_y > min_y_limit &&
+               max_y < max_y_limit )
             af_move_contour_vertically( hints->contours[contour],
                                         -adjustment_amount );
         }
