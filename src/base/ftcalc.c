@@ -87,7 +87,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_RoundFix( FT_Fixed  a )
   {
-    return ( ADD_LONG( a, 0x8000L - ( a < 0 ) ) ) & ~0xFFFFL;
+    return ADD_LONG( a, 0x8000L - ( a < 0 ) ) & ~0xFFFFL;
   }
 
 
@@ -96,7 +96,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_CeilFix( FT_Fixed  a )
   {
-    return ( ADD_LONG( a, 0xFFFFL ) ) & ~0xFFFFL;
+    return ADD_LONG( a, 0xFFFFL ) & ~0xFFFFL;
   }
 
 
@@ -230,10 +230,10 @@
 
 #else
 
-    FT_Int64  ab = (FT_Int64)a_ * (FT_Int64)b_;
+    FT_Int64  ab = MUL_INT64( a_, b_ );
 
     /* this requires arithmetic right shift of signed numbers */
-    return (FT_Long)( ( ab + 0x8000L - ( ab < 0 ) ) >> 16 );
+    return (FT_Long)( ( ab + 0x8000L + ( ab >> 63 ) ) >> 16 );
 
 #endif /* FT_CONFIG_OPTION_INLINE_MULFIX */
   }
@@ -977,11 +977,11 @@
     FT_Int  result;
 
 
-    if ( ADD_LONG( FT_ABS( in_x ), FT_ABS( out_y ) ) <= 131071L &&
-         ADD_LONG( FT_ABS( in_y ), FT_ABS( out_x ) ) <= 131071L )
+    if ( (FT_ULong)FT_ABS( in_x ) + (FT_ULong)FT_ABS( out_y ) <= 92681UL &&
+         (FT_ULong)FT_ABS( in_y ) + (FT_ULong)FT_ABS( out_x ) <= 92681UL )
     {
-      FT_Long  z1 = MUL_LONG( in_x, out_y );
-      FT_Long  z2 = MUL_LONG( in_y, out_x );
+      FT_Long  z1 = in_x * out_y;
+      FT_Long  z2 = in_y * out_x;
 
 
       if ( z1 > z2 )
