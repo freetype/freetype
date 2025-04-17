@@ -1329,15 +1329,12 @@
                FT_F2Dot14  bx,
                FT_F2Dot14  by )
   {
-    FT_Int64  temp1 = MUL_INT64( ax, bx );
-    FT_Int64  temp2 = MUL_INT64( ay, by );
+    FT_Int64  c = ADD_INT64( MUL_INT64( ax, bx ), MUL_INT64( ay, by ) );
 
 
-    temp1 += temp2;
-    temp2  = temp1 >> 63;
-    temp1 += 0x2000 + temp2;  /* rounding phase */
+    c += 0x2000 + ( c >> 63 );  /* rounding phase */
 
-    return (FT_F26Dot6)( temp1 >> 14 );
+    return (FT_F26Dot6)( c >> 14 );
   }
 
 #else
