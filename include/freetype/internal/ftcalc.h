@@ -207,8 +207,9 @@ FT_BEGIN_HEADER
 
 #endif /* __i386__ || _M_IX86 */
 
-
+#ifdef FT_MULFIX_ASSEMBLER
 #define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
+#endif
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
