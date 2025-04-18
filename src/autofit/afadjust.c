@@ -674,6 +674,8 @@
       FT_UInt32  codepoint;
       FT_UInt    glyph_index;
 
+      AF_ReverseMapEntry  *map_limit;
+
 
       if ( !hb_set_allocation_successful( result_set )            ||
            !hb_set_allocation_successful( feature_tags )          ||
@@ -800,6 +802,7 @@
       /* a topological analysis to do the right thing.                   */
 
       codepoint = FT_Get_First_Char( face, &glyph_index );
+      map_limit = ( *map )->entries + ( *map )->length;
       while ( glyph_index )
       {
         AF_ReverseMapEntry  *entry;
@@ -812,7 +815,8 @@
           FT_Int  idx = entry->glyph_index;
 
 
-          while ( entry->glyph_index == idx )
+          while ( entry < map_limit         &&
+                  entry->glyph_index == idx )
           {
             entry->codepoint = codepoint;
             entry++;
