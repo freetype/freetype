@@ -333,9 +333,8 @@
   }
 
 
-#if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
-    defined( HB_VERSION_ATLEAST )            && \
-    HB_VERSION_ATLEAST( 7, 2, 0 )
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#  if HB_VERSION_ATLEAST( 7, 2, 0 )
 
   /*
     Find all glyphs that a code point could turn into from the OpenType
@@ -466,6 +465,7 @@
     hb_set_destroy( helper_result );
   }
 
+#  endif /* HB_VERSION_ATLEAST */
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
@@ -506,9 +506,8 @@
     if ( FT_NEW_ARRAY( ( *map )->entries, capacity ) )
       goto Exit;
 
-#if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
-    defined( HB_VERSION_ATLEAST )            && \
-    HB_VERSION_ATLEAST( 7, 2, 0 )
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#  if HB_VERSION_ATLEAST( 7, 2, 0 )
 
     {
       /* No need to check whether HarfBuzz has allocation issues; */
@@ -618,6 +617,8 @@
         codepoint = FT_Get_Next_Char( face, codepoint, &glyph_index );
       }
     }
+
+#  endif /* HB_VERSION_ATLEAST */
 
 #else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
