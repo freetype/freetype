@@ -334,6 +334,7 @@
 
 
 #if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
+    defined( HB_VERSION_ATLEAST )            && \
     HB_VERSION_ATLEAST( 7, 2, 0 )
 
   /*
@@ -506,6 +507,7 @@
       goto Exit;
 
 #if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
+    defined( HB_VERSION_ATLEAST )            && \
     HB_VERSION_ATLEAST( 7, 2, 0 )
 
     {
