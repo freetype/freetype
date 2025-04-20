@@ -22,6 +22,8 @@ CHANGES BETWEEN 2.13.3 and 2.13.4 (2025-Mmm-DD)
     construct a proper Unicode character map from a given font to make
     this work.
 
+    You need HarfBuzz 7.2.0 or newer for the new diacritic support.
+
     This was Craig White's GSoC 2023 project.
 
 

@@ -333,7 +333,8 @@
   }
 
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
+    HB_VERSION_ATLEAST( 7, 2, 0 )
 
   /*
     Find all glyphs that a code point could turn into from the OpenType
@@ -464,7 +465,7 @@
     hb_set_destroy( helper_result );
   }
 
-#endif /*FT_CONFIG_OPTION_USE_HARFBUZZ*/
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -504,7 +505,8 @@
     if ( FT_NEW_ARRAY( ( *map )->entries, capacity ) )
       goto Exit;
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#if defined( FT_CONFIG_OPTION_USE_HARFBUZZ ) && \
+    HB_VERSION_ATLEAST( 7, 2, 0 )
 
     {
       /* No need to check whether HarfBuzz has allocation issues; */
