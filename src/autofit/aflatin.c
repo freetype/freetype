@@ -3178,7 +3178,7 @@
     const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
 
     AF_VerticalSeparationAdjustmentType
-      adj_type = AF_VERTICAL_ADJUSTMENT_NONE;
+      adj_type = AF_ADJUST_NONE;
 
 
     FT_TRACE4(( "Entering"
@@ -3195,8 +3195,8 @@
         adj_type = db_entry->vertical_separation_adjustment_type;
     }
 
-    if ( adj_type == AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP &&
-         hints->num_contours >= 2                          )
+    if ( adj_type == AF_ADJUST_UP &&
+         hints->num_contours >= 2 )
     {
       FT_Int  highest_contour = 0;
       FT_Pos  highest_min_y;
@@ -3228,8 +3228,7 @@
       /* intersect, which can happen due to blue zone snapping.           */
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
-                  "  Applying vertical adjustment:"
-                  " AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP\n" ));
+                  "  Applying vertical adjustment: AF_ADJUST_UP\n" ));
 
       /* Compute vertical extrema of all contours while finding the   */
       /* highest contour.  There is some redundancy code-wise with    */
@@ -3386,8 +3385,8 @@
       }
     }
 
-    else if ( adj_type == AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN &&
-              hints->num_contours >= 2                               )
+    else if ( adj_type == AF_ADJUST_DOWN &&
+              hints->num_contours >= 2   )
     {
       FT_Int  lowest_contour = 0;
       FT_Pos  lowest_min_y   = FT_INT_MAX;
@@ -3403,8 +3402,7 @@
 
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
-                  "  Applying vertical adjustment:"
-                  " AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN\n" ));
+                  "  Applying vertical adjustment: AF_ADJUST_DOWN\n" ));
 
       /* Compute vertical extrema and find lowest contour. */
       for ( contour = 0; contour < hints->num_contours; contour++ )

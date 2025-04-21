@@ -38,13 +38,13 @@ FT_BEGIN_HEADER
     /* This means that the hinter should find the topmost contour and push */
     /* it up until its lowest point is one pixel above the highest point   */
     /* not part of that contour.                                           */
-    AF_VERTICAL_ADJUSTMENT_TOP_CONTOUR_UP,
+    AF_ADJUST_UP,
 
     /* This is the opposite direction.  The hinter should find the         */
     /* bottommost contour and push it down until there is a one-pixel gap. */
-    AF_VERTICAL_ADJUSTMENT_BOTTOM_CONTOUR_DOWN,
+    AF_ADJUST_DOWN,
 
-    AF_VERTICAL_ADJUSTMENT_NONE
+    AF_ADJUST_NONE
 
   } AF_VerticalSeparationAdjustmentType;
 
