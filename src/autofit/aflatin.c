@@ -3384,8 +3384,8 @@
       }
     }
 
-    else if ( adj_type & AF_ADJUST_DOWN &&
-              hints->num_contours >= 2  )
+    if ( adj_type & AF_ADJUST_DOWN &&
+         hints->num_contours >= 2  )
     {
       FT_Int  lowest_contour = 0;
       FT_Pos  lowest_min_y   = FT_INT_MAX;
@@ -3507,9 +3507,12 @@
       }
     }
 
-    else
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) ) ||
+         hints->num_contours < 2                           )
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
-                  "  No vertical adjustment needed\n" ));
+                  "  No vertical adjustment applied\n" ));
+#endif
 
     FT_TRACE4(( "Exiting"
                 " af_glyph_hints_apply_vertical_separation_adjustments\n" ));
