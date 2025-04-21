@@ -658,22 +658,38 @@
                 " with %ld entries\n", ( *map )->length ));
 
 #ifdef FT_DEBUG_LEVEL_TRACE
+
     {
       FT_Long  i;
 
 
-      FT_TRACE7(( "       gidx   code    adj  tilde\n" ));
-               /* "      XXXXX  0xXXXX  XXXX   XXX" */
-      FT_TRACE7(( "     ----------------------------\n" ));
+      FT_TRACE7(( "       gidx   code    flags\n" ));
+               /* "      XXXXX  0xXXXX  XXXXXXXXXXX..." */
+      FT_TRACE7(( "     ------------------------------\n" ));
 
       for ( i = 0; i < ( *map )->length; i++ )
       {
         FT_Long  glyph_index = ( *map )->entries[i].glyph_index;
         FT_Int   codepoint   = ( *map )->entries[i].codepoint;
 
-        const AF_AdjustmentDatabaseEntry    *db_entry =
+        const AF_AdjustmentDatabaseEntry  *db_entry =
           af_adjustment_database_lookup( codepoint );
-        FT_UInt32                            adj_type;
+        FT_UInt32                          adj_type;
+
+        const char*  flag_names[] =
+        {
+          "up",        /* AF_ADJUST_UP   */
+          "down",      /* AF_ADJUST_DOWN */
+          "",
+          "",
+          "top tilde", /* AF_ADJUST_TILDE_TOP */
+        };
+        size_t  flag_names_size = sizeof ( flag_names ) / sizeof ( char* );
+
+        char  flag_str[32];
+        int   need_comma;
+
+        size_t  j;
 
 
         if ( !db_entry )
@@ -681,18 +697,27 @@
 
         adj_type = db_entry->flags;
 
-        FT_TRACE7(( "      %5ld  0x%04X  %4s   %3s\n",
-                    glyph_index,
-                    codepoint,
-                    adj_type & AF_ADJUST_DOWN
-                      ? "down"
-                      : adj_type & AF_ADJUST_UP
-                        ? "up"
-                        : "",
-                    adj_type & AF_ADJUST_TILDE_TOP ? "yes" : "no" ));
+        flag_str[0] = '\0';
+        need_comma  = 0;
+
+        for ( j = 0; j < flag_names_size; j++ )
+        {
+          if ( adj_type & (1 << j ) )
+          {
+            if ( !need_comma )
+              need_comma = 1;
+            else
+              strcat( flag_str, ", " );
+            strcat( flag_str, flag_names[j] );
+          }
+        }
+
+        FT_TRACE7(( "      %5ld  0x%04X  %s\n",
+                    glyph_index, codepoint, flag_str ));
       }
     }
-#endif
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
 
   Exit:
