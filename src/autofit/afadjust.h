@@ -48,6 +48,10 @@ FT_BEGIN_HEADER
   /* is one pixel below the lowest point not enclosed by that contour.    */
 #define AF_ADJUST_DOWN  0x02
 
+  /* The topmost contour is a tilde.  Enlarge it vertically so that it    */
+  /* stays legible at small sizes, not degenerating to a horizontal line. */
+#define AF_ADJUST_TILDE_TOP  0x10
+
   /* No adjustment, i.e., no flag is set. */
 #define AF_ADJUST_NONE  0x00
 
@@ -56,7 +60,6 @@ FT_BEGIN_HEADER
   {
     FT_UInt32  codepoint;
     FT_UInt32  flags;
-    FT_Bool    apply_tilde;
 
   } AF_AdjustmentDatabaseEntry;
 

@@ -3217,7 +3217,7 @@
 
 
       if ( db_entry )
-        is_tilde = db_entry->apply_tilde;
+        is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
 
       /* Similar to the reasoning given in a comment to                   */
       /* `af_find_highest_contour`, we can find the 'lower' contour by    */
@@ -4420,7 +4420,7 @@
 
         db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
-          is_tilde = db_entry->apply_tilde;
+          is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
       }
 
       if ( is_tilde )
