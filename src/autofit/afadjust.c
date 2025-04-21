@@ -37,8 +37,8 @@
     points.  The table entries are 3 numbers consisting of:
 
     - Unicode code point.
-    - The vertical adjustment type.  This should be one of the enum
-      constants in `AF_VerticalSeparationAdjustmentType`.
+    - The vertical adjustment type.  This should be one of the
+      AF_ADJUST_XXX macros.
     - Value 1 if the topmost contour is a tilde and should be prevented from
       flattening, and 0 otherwise.
   */
@@ -675,20 +675,20 @@
 
         const AF_AdjustmentDatabaseEntry    *db_entry =
           af_adjustment_database_lookup( codepoint );
-        AF_VerticalSeparationAdjustmentType  adj_type;
+        FT_UInt32                            adj_type;
 
 
         if ( !db_entry )
           continue;
 
-        adj_type = db_entry->vertical_separation_adjustment_type;
+        adj_type = db_entry->flags;
 
         FT_TRACE7(( "      %5ld  0x%04X  %4s   %3s\n",
                     glyph_index,
                     codepoint,
-                    adj_type == AF_ADJUST_DOWN
+                    adj_type & AF_ADJUST_DOWN
                       ? "down"
-                      : adj_type == AF_ADJUST_UP
+                      : adj_type & AF_ADJUST_UP
                         ? "up"
                         : "",
                     db_entry->apply_tilde ? "yes" : "no" ));

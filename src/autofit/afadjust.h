@@ -29,31 +29,34 @@
 
 FT_BEGIN_HEADER
 
+  /*
+   * Adjustment type flags.
+   *
+   * They also specify topological constraints that the auto-hinter relies
+   * on.  For example, using `AF_ADJUST_UP` implies that we have two
+   * enclosing contours, one for the base glyph and one for the diacritic
+   * above, and no other contour inbetween or above.  With 'enclosing' it is
+   * meant that such a contour can contain more inner contours.
+   *
+   */
 
-  /* The type of adjustment that should be done to prevent cases where   */
-  /* two parts of a character stacked vertically merge, even though they */
-  /* should be separate.                                                 */
-  typedef enum  AF_VerticalSeparationAdjustmentType_
-  {
-    /* This means that the hinter should find the topmost contour and push */
-    /* it up until its lowest point is one pixel above the highest point   */
-    /* not part of that contour.                                           */
-    AF_ADJUST_UP,
+  /* Find the topmost contour and push it up until its lowest point is */
+  /* one pixel above the highest point not enclosed by that contour.   */
+#define AF_ADJUST_UP  0x01
 
-    /* This is the opposite direction.  The hinter should find the         */
-    /* bottommost contour and push it down until there is a one-pixel gap. */
-    AF_ADJUST_DOWN,
+  /* Find the bottommost contour and push it down until its highest point */
+  /* is one pixel below the lowest point not enclosed by that contour.    */
+#define AF_ADJUST_DOWN  0x02
 
-    AF_ADJUST_NONE
-
-  } AF_VerticalSeparationAdjustmentType;
+  /* No adjustment, i.e., no flag is set. */
+#define AF_ADJUST_NONE  0x00
 
 
   typedef struct  AF_AdjustmentDatabaseEntry_
   {
-    FT_UInt32                            codepoint;
-    AF_VerticalSeparationAdjustmentType  vertical_separation_adjustment_type;
-    FT_Bool                              apply_tilde;
+    FT_UInt32  codepoint;
+    FT_UInt32  flags;
+    FT_Bool    apply_tilde;
 
   } AF_AdjustmentDatabaseEntry;
 

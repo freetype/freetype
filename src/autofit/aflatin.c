@@ -3177,8 +3177,7 @@
     const AF_ReverseMapEntry          *entry;
     const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
 
-    AF_VerticalSeparationAdjustmentType
-      adj_type = AF_ADJUST_NONE;
+    FT_UInt32  adj_type = AF_ADJUST_NONE;
 
 
     FT_TRACE4(( "Entering"
@@ -3192,10 +3191,10 @@
     {
       db_entry = af_adjustment_database_lookup( entry->codepoint );
       if ( db_entry )
-        adj_type = db_entry->vertical_separation_adjustment_type;
+        adj_type = db_entry->flags;
     }
 
-    if ( adj_type == AF_ADJUST_UP &&
+    if ( adj_type & AF_ADJUST_UP  &&
          hints->num_contours >= 2 )
     {
       FT_Int  highest_contour = 0;
@@ -3385,8 +3384,8 @@
       }
     }
 
-    else if ( adj_type == AF_ADJUST_DOWN &&
-              hints->num_contours >= 2   )
+    else if ( adj_type & AF_ADJUST_DOWN &&
+              hints->num_contours >= 2  )
     {
       FT_Int  lowest_contour = 0;
       FT_Pos  lowest_min_y   = FT_INT_MAX;
