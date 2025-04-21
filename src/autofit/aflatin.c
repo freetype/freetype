@@ -2898,7 +2898,7 @@
 
   /* Remove all segments containing points on the tilde contour. */
   static void
-  af_latin_remove_tilde_points_from_edges( AF_GlyphHints  hints )
+  af_latin_remove_top_tilde_points_from_edges( AF_GlyphHints  hints )
   {
     FT_Int    highest_contour = af_find_highest_contour( hints );
     AF_Point  first_point     = hints->contours[highest_contour];
@@ -2916,7 +2916,7 @@
 
 
   static void
-  af_latin_stretch_tilde( AF_GlyphHints  hints )
+  af_latin_stretch_top_tilde( AF_GlyphHints  hints )
   {
     FT_Int    highest_contour = af_find_highest_contour( hints );
     AF_Point  p               = hints->contours[highest_contour];
@@ -2947,7 +2947,7 @@
 
     } while ( p != first_point );
 
-    FT_TRACE4(( "af_latin_stretch_tilde: min y: %ld, max y: %ld\n",
+    FT_TRACE4(( "af_latin_stretch_top_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
 
     height             = max_y - min_y;
@@ -3009,7 +3009,7 @@
     if ( !measurement_taken )
       min_measurement = 0;
 
-    FT_TRACE4(( "af_latin_stretch_tilde: min measurement %ld\n",
+    FT_TRACE4(( "af_latin_stretch_top_tilde: min measurement %ld\n",
                 min_measurement ));
 
     /* To preserve the stretched shape we suppress any         */
@@ -3048,9 +3048,9 @@
 
 
   /*
-    As part of `af_latin_stretch_tilde`, normally all points in the tilde
-    are marked as touched, so the existing grid fitting will leave the tilde
-    misaligned with the grid.
+    As part of `af_latin_stretch_top_tilde`, normally all points in the
+    tilde are marked as touched, so the existing grid fitting will leave the
+    tilde misaligned with the grid.
 
     This function moves the tilde contour down to be grid-fitted.  We assume
     that if moving the tilde down would cause it to touch or overlap another
@@ -3069,7 +3069,7 @@
     grid-aligned.
   */
   static void
-  af_latin_align_tilde( AF_GlyphHints  hints )
+  af_latin_align_top_tilde( AF_GlyphHints  hints )
   {
     FT_Int  highest_contour = af_find_highest_contour( hints );
 
@@ -4411,7 +4411,7 @@
     {
       const AF_ReverseMapEntry  *entry;
 
-      FT_Bool  is_tilde = FALSE;
+      FT_Bool  is_top_tilde = FALSE;
 
 
       entry = af_reverse_character_map_lookup( metrics->root.reverse_charmap,
@@ -4423,15 +4423,15 @@
 
         db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
-          is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
+          is_top_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
       }
 
-      if ( is_tilde )
+      if ( is_top_tilde )
       {
         af_latin_trace_height( 10, hints );
-        af_latin_stretch_tilde( hints );
+        af_latin_stretch_top_tilde( hints );
         af_latin_trace_height( 11, hints );
-        af_latin_align_tilde( hints );
+        af_latin_align_top_tilde( hints );
         af_latin_trace_height( 12, hints );
       }
 
@@ -4440,8 +4440,8 @@
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
-      if ( is_tilde )
-        af_latin_remove_tilde_points_from_edges( hints );
+      if ( is_top_tilde )
+        af_latin_remove_top_tilde_points_from_edges( hints );
 
       if ( error )
         goto Exit;
