@@ -458,8 +458,9 @@
                                         gsub_lookups,
                                         helper_result );
         hb_set_add( result, elem );
-        hb_set_del( helper_result, elem );
       }
+
+      hb_set_del( helper_result, elem );
     }
 
     hb_set_destroy( helper_result );
