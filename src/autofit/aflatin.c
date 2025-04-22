@@ -4578,48 +4578,6 @@
   }
 
 
-#ifdef FT_DEBUG_LEVEL_TRACE
-  /* Print the height of the topmost contour for debugging purposes. */
-  /* TODO: remove this once the tilde unflattening works.            */
-  static void
-  af_latin_trace_height( FT_UInt        num,
-                         AF_GlyphHints  hints )
-  {
-    AF_Point  p           = hints->contours[af_find_highest_contour(hints)];
-    AF_Point  first_point = p;
-
-    FT_Pos  min_y, max_y;
-
-
-    min_y = max_y = p->y;
-
-    do
-    {
-      p = p->next;
-      if ( !(p->flags & AF_FLAG_CONTROL) )
-      {
-        if ( p->y < min_y )
-          min_y = p->y;
-        if ( p->y > max_y )
-          max_y = p->y;
-      }
-
-    } while ( p != first_point );
-
-    FT_TRACE4(( "height %d: %ld\n", num, max_y - min_y ));
-    FT_TRACE4(( "min y %d: %ld\n", num, min_y ));
-  }
-#else
-  static void
-  af_latin_trace_height( FT_UInt        num,
-                         AF_GlyphHints  hints )
-  {
-    FT_UNUSED( num );
-    FT_UNUSED( hints );
-  }
-#endif
-
-
   /* Apply the complete hinting algorithm to a latin glyph. */
 
   static FT_Error
@@ -4677,19 +4635,13 @@
 
       if ( is_top_tilde )
       {
-        af_latin_trace_height( 10, hints );
         af_latin_stretch_top_tilde( hints );
-        af_latin_trace_height( 11, hints );
         af_latin_align_top_tilde( hints );
-        af_latin_trace_height( 12, hints );
       }
       if ( is_bottom_tilde )
       {
-        af_latin_trace_height( 20, hints );
         af_latin_stretch_bottom_tilde( hints );
-        af_latin_trace_height( 21, hints );
         af_latin_align_bottom_tilde( hints );
-        af_latin_trace_height( 22, hints );
       }
 
       axis  = &metrics->axis[AF_DIMENSION_VERT];
@@ -4717,19 +4669,14 @@
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
         af_latin_hint_edges( hints, (AF_Dimension)dim );
-        af_latin_trace_height( 1, hints );
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height( 2, hints );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height( 3, hints );
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
-        af_latin_trace_height( 4, hints );
         af_glyph_hints_apply_vertical_separation_adjustments(
           hints,
           (AF_Dimension)dim,
           glyph_index,
           metrics->root.reverse_charmap );
-        af_latin_trace_height( 5, hints );
       }
     }
 
