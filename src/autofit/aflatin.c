@@ -2826,6 +2826,50 @@
   }
 
 
+  static FT_Int
+  af_find_lowest_contour( AF_GlyphHints  hints )
+  {
+    FT_Int  lowest_contour = 0;
+    FT_Pos  lowest_min_y   = FT_INT_MAX;
+
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  current_min_y;
+
+      AF_Point  point       = hints->contours[contour];
+      AF_Point  first_point = point;
+
+
+      if ( !point )
+        continue;
+
+      if ( first_point->next->next == first_point )
+        continue;
+
+      current_min_y = point->y;
+
+      do
+      {
+        if ( point->y < current_min_y )
+          current_min_y = point->y;
+        point = point->next;
+
+      } while ( point != first_point );
+
+      if ( current_min_y < lowest_min_y )
+      {
+        lowest_min_y   = current_min_y;
+        lowest_contour = contour;
+      }
+    }
+
+    return lowest_contour;
+  }
+
+
   static void
   af_remove_segments_containing_point( AF_GlyphHints  hints,
                                        AF_Point       point )
@@ -2916,6 +2960,24 @@
 
 
   static void
+  af_latin_remove_bottom_tilde_points_from_edges( AF_GlyphHints  hints )
+  {
+    FT_Int    lowest_contour = af_find_lowest_contour( hints );
+    AF_Point  first_point    = hints->contours[lowest_contour];
+
+    AF_Point  p = first_point;
+
+
+    do
+    {
+      p = p->next;
+      af_remove_segments_containing_point( hints, p );
+
+    } while ( p != first_point );
+  }
+
+
+  static void
   af_latin_stretch_top_tilde( AF_GlyphHints  hints )
   {
     FT_Int    highest_contour = af_find_highest_contour( hints );
@@ -2923,7 +2985,7 @@
 
     AF_Point  first_point = p;
 
-    FT_Pos    min_y, max_y;
+    FT_Pos  min_y, max_y;
 
     FT_Pos   min_measurement;
     FT_Bool  measurement_taken = FALSE;
@@ -3047,6 +3109,115 @@
   }
 
 
+  static void
+  af_latin_stretch_bottom_tilde( AF_GlyphHints  hints )
+  {
+    FT_Int    lowest_contour = af_find_lowest_contour( hints );
+    AF_Point  p              = hints->contours[lowest_contour];
+
+    AF_Point  first_point = p;
+
+    FT_Pos  min_y, max_y;
+
+    FT_Pos   min_measurement;
+    FT_Bool  measurement_taken = FALSE;
+
+    FT_Pos  height;
+    FT_Pos  extremum_threshold;
+    FT_Pos  target_height;
+
+
+    min_y = max_y = p->y;
+
+    do
+    {
+      p = p->next;
+
+      if ( p->y < min_y )
+        min_y = p->y;
+      if ( p->y > max_y )
+        max_y = p->y;
+
+    } while ( p != first_point );
+
+    FT_TRACE4(( "af_latin_stretch_bottom_tilde: min y: %ld, max y: %ld\n",
+                min_y, max_y ));
+
+    height             = max_y - min_y;
+    extremum_threshold = height / 8;
+
+    do
+    {
+      p = p->next;
+
+      if ( !( p->flags & AF_FLAG_CONTROL )          &&
+           p->prev->y == p->y && p->next->y == p->y &&
+           p->y != min_y && p->y != max_y           &&
+           p->prev->flags & AF_FLAG_CONTROL         &&
+           p->next->flags & AF_FLAG_CONTROL         )
+      {
+        AF_Point  prev_on = p->prev;
+        AF_Point  next_on = p->next;
+
+        FT_Pos  measurement;
+
+
+        while ( prev_on->flags & AF_FLAG_CONTROL )
+          prev_on = prev_on->prev;
+        while ( next_on->flags & AF_FLAG_CONTROL )
+          next_on = next_on->next;
+
+        if ( next_on->y > p->y && prev_on->y > p->y )
+          measurement = p->y - min_y;
+        else if ( next_on->y < p->y && prev_on->y < p->y )
+          measurement = max_y - p->y;
+        else
+          continue;
+
+        if ( measurement < extremum_threshold )
+          continue;
+
+        if ( !measurement_taken || measurement < min_measurement )
+        {
+          measurement_taken = TRUE;
+          min_measurement   = measurement;
+        }
+      }
+
+    } while ( p != first_point );
+
+    if ( !measurement_taken )
+      min_measurement = 0;
+
+    FT_TRACE4(( "af_latin_stretch_bottom_tilde: min measurement %ld\n",
+                min_measurement ));
+
+    if ( height < 64 * 4 )
+    {
+      p = first_point;
+      do
+      {
+        p = p->next;
+        if ( !( p->flags & AF_FLAG_CONTROL ) )
+          p->flags |= AF_FLAG_TOUCH_Y;
+
+      } while ( p != first_point );
+    }
+
+    target_height = min_measurement + 64;
+    if ( height >= target_height )
+      return;
+
+    p = first_point;
+    do
+    {
+      p     = p->next;
+      p->y  = ( ( p->y - max_y ) * target_height / height ) + max_y;
+
+    } while ( p != first_point );
+  }
+
+
   /*
     As part of `af_latin_stretch_top_tilde`, normally all points in the
     tilde are marked as touched, so the existing grid fitting will leave the
@@ -3104,6 +3275,43 @@
     /* to the grid instead of the bottom to improve readability.      */
     if ( height < 64 * 3 )
       delta += ( FT_PIX_ROUND( height ) - height ) / 2;
+
+    af_move_contour_vertically( first_point, delta );
+  }
+
+
+  static void
+  af_latin_align_bottom_tilde( AF_GlyphHints  hints )
+  {
+    FT_Int  lowest_contour = af_find_lowest_contour( hints );
+
+    AF_Point  p           = hints->contours[lowest_contour];
+    AF_Point  first_point = p;
+
+    FT_Pos  min_y = p->y;
+    FT_Pos  max_y = p->y;
+
+    FT_Pos  max_y_rounded;
+    FT_Pos  delta;
+    FT_Pos  height;
+
+
+    do
+    {
+      p = p->next;
+      if ( p->y < min_y )
+        min_y = p->y;
+      if ( p->y > max_y )
+        max_y = p->y;
+
+    } while ( p != first_point );
+
+    max_y_rounded = FT_PIX_ROUND( max_y );
+    delta         = max_y_rounded - max_y;
+    height        = max_y - min_y;
+
+    if ( height < 64 * 3 )
+      delta -= ( FT_PIX_ROUND( height ) - height ) / 2;
 
     af_move_contour_vertically( first_point, delta );
   }
@@ -3391,14 +3599,23 @@
       FT_Pos  lowest_min_y   = FT_INT_MAX;
       FT_Pos  lowest_max_y;
 
-      FT_Int  contour;
+      FT_Int   contour;
+      FT_Bool  horizontal_overlap;
 
       FT_Pos  min_distance = 64;
       FT_Pos  adjustment_amount;
 
+      FT_Bool  is_tilde = FALSE;
+
+      FT_Bool  grid_aligned_after_adjustment;
+      FT_Pos   height;
+
       AF_Point  point;
       AF_Point  first_point;
 
+
+      if ( db_entry )
+        is_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: AF_ADJUST_DOWN\n" ));
@@ -3443,6 +3660,19 @@
         hints->contour_y_maxima[contour] = current_max_y;
       }
 
+      horizontal_overlap =
+        af_check_contour_horizontal_overlap( hints, lowest_contour );
+      if ( !horizontal_overlap )
+      {
+        FT_TRACE4(( "    Bottom contour does not horizontally overlap"
+                    " with other contours.\n"
+                    "    Skipping adjustment.\n" ));
+        return;
+      }
+
+      point       = hints->contours[lowest_contour];
+      first_point = point;
+
       lowest_max_y = hints->contour_y_maxima[lowest_contour];
 
       for ( contour = 0; contour < hints->num_contours; contour++ )
@@ -3474,6 +3704,21 @@
       }
 
       adjustment_amount = 64 - min_distance;
+
+      grid_aligned_after_adjustment =
+        ( ( lowest_max_y - adjustment_amount ) % 64 == 0 );
+      height                        = lowest_max_y - lowest_min_y;
+
+      if ( is_tilde && grid_aligned_after_adjustment && height < 3 * 64 )
+      {
+        FT_Pos  centering_adjustment =
+                  ( FT_PIX_ROUND( height ) - height ) / 2;
+
+
+        adjustment_amount += centering_adjustment;
+        FT_TRACE4(( "    Additional centering: %ld\n",
+                    centering_adjustment ));
+      }
 
       FT_TRACE4(( "    Calculated adjustment amount: %ld\n",
                   adjustment_amount ));
@@ -4411,7 +4656,8 @@
     {
       const AF_ReverseMapEntry  *entry;
 
-      FT_Bool  is_top_tilde = FALSE;
+      FT_Bool  is_top_tilde    = FALSE;
+      FT_Bool  is_bottom_tilde = FALSE;
 
 
       entry = af_reverse_character_map_lookup( metrics->root.reverse_charmap,
@@ -4423,7 +4669,10 @@
 
         db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
-          is_top_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
+        {
+          is_top_tilde    = db_entry->flags & AF_ADJUST_TILDE_TOP;
+          is_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
+        }
       }
 
       if ( is_top_tilde )
@@ -4434,6 +4683,14 @@
         af_latin_align_top_tilde( hints );
         af_latin_trace_height( 12, hints );
       }
+      if ( is_bottom_tilde )
+      {
+        af_latin_trace_height( 20, hints );
+        af_latin_stretch_bottom_tilde( hints );
+        af_latin_trace_height( 21, hints );
+        af_latin_align_bottom_tilde( hints );
+        af_latin_trace_height( 22, hints );
+      }
 
       axis  = &metrics->axis[AF_DIMENSION_VERT];
       error = af_latin_hints_detect_features( hints,
@@ -4442,6 +4699,8 @@
                                               AF_DIMENSION_VERT );
       if ( is_top_tilde )
         af_latin_remove_top_tilde_points_from_edges( hints );
+      if ( is_bottom_tilde )
+        af_latin_remove_bottom_tilde_points_from_edges( hints );
 
       if ( error )
         goto Exit;

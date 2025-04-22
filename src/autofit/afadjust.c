@@ -682,11 +682,12 @@
           "down",      /* AF_ADJUST_DOWN */
           "",
           "",
-          "top tilde", /* AF_ADJUST_TILDE_TOP */
+          "top tilde",    /* AF_ADJUST_TILDE_TOP    */
+          "bottom tilde", /* AF_ADJUST_TILDE_BOTTOM */
         };
         size_t  flag_names_size = sizeof ( flag_names ) / sizeof ( char* );
 
-        char  flag_str[32];
+        char  flag_str[64];
         int   need_comma;
 
         size_t  j;
