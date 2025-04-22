@@ -2942,12 +2942,12 @@
 
   /* Remove all segments containing points on the tilde contour. */
   static void
-  af_latin_remove_top_tilde_points_from_edges( AF_GlyphHints  hints )
+  af_latin_remove_top_tilde_points_from_edges(
+    AF_GlyphHints  hints,
+    FT_Int         highest_contour )
   {
-    FT_Int    highest_contour = af_find_highest_contour( hints );
-    AF_Point  first_point     = hints->contours[highest_contour];
-
-    AF_Point  p = first_point;
+    AF_Point  first_point = hints->contours[highest_contour];
+    AF_Point  p           = first_point;
 
 
     do
@@ -2960,12 +2960,12 @@
 
 
   static void
-  af_latin_remove_bottom_tilde_points_from_edges( AF_GlyphHints  hints )
+  af_latin_remove_bottom_tilde_points_from_edges(
+    AF_GlyphHints  hints,
+    FT_Int         lowest_contour )
   {
-    FT_Int    lowest_contour = af_find_lowest_contour( hints );
-    AF_Point  first_point    = hints->contours[lowest_contour];
-
-    AF_Point  p = first_point;
+    AF_Point  first_point = hints->contours[lowest_contour];
+    AF_Point  p           = first_point;
 
 
     do
@@ -2978,11 +2978,10 @@
 
 
   static void
-  af_latin_stretch_top_tilde( AF_GlyphHints  hints )
+  af_latin_stretch_top_tilde( AF_GlyphHints  hints,
+                              FT_Int         highest_contour )
   {
-    FT_Int    highest_contour = af_find_highest_contour( hints );
-    AF_Point  p               = hints->contours[highest_contour];
-
+    AF_Point  p           = hints->contours[highest_contour];
     AF_Point  first_point = p;
 
     FT_Pos  min_y, max_y;
@@ -3110,11 +3109,10 @@
 
 
   static void
-  af_latin_stretch_bottom_tilde( AF_GlyphHints  hints )
+  af_latin_stretch_bottom_tilde( AF_GlyphHints  hints,
+                                 FT_Int         lowest_contour )
   {
-    FT_Int    lowest_contour = af_find_lowest_contour( hints );
-    AF_Point  p              = hints->contours[lowest_contour];
-
+    AF_Point  p           = hints->contours[lowest_contour];
     AF_Point  first_point = p;
 
     FT_Pos  min_y, max_y;
@@ -3240,10 +3238,9 @@
     grid-aligned.
   */
   static void
-  af_latin_align_top_tilde( AF_GlyphHints  hints )
+  af_latin_align_top_tilde( AF_GlyphHints  hints,
+                            FT_Int         highest_contour )
   {
-    FT_Int  highest_contour = af_find_highest_contour( hints );
-
     AF_Point  p           = hints->contours[highest_contour];
     AF_Point  first_point = p;
 
@@ -3281,10 +3278,9 @@
 
 
   static void
-  af_latin_align_bottom_tilde( AF_GlyphHints  hints )
+  af_latin_align_bottom_tilde( AF_GlyphHints  hints,
+                               FT_Int         lowest_contour )
   {
-    FT_Int  lowest_contour = af_find_lowest_contour( hints );
-
     AF_Point  p           = hints->contours[lowest_contour];
     AF_Point  first_point = p;
 
@@ -4614,6 +4610,9 @@
     {
       const AF_ReverseMapEntry  *entry;
 
+      FT_Int  highest_contour = 0;
+      FT_Int  lowest_contour  = 0;
+
       FT_Bool  is_top_tilde    = FALSE;
       FT_Bool  is_bottom_tilde = FALSE;
 
@@ -4635,13 +4634,17 @@
 
       if ( is_top_tilde )
       {
-        af_latin_stretch_top_tilde( hints );
-        af_latin_align_top_tilde( hints );
+        highest_contour = af_find_highest_contour( hints );
+
+        af_latin_stretch_top_tilde( hints, highest_contour );
+        af_latin_align_top_tilde( hints, highest_contour );
       }
       if ( is_bottom_tilde )
       {
-        af_latin_stretch_bottom_tilde( hints );
-        af_latin_align_bottom_tilde( hints );
+        lowest_contour = af_find_lowest_contour( hints );
+
+        af_latin_stretch_bottom_tilde( hints, lowest_contour );
+        af_latin_align_bottom_tilde( hints, lowest_contour );
       }
 
       axis  = &metrics->axis[AF_DIMENSION_VERT];
@@ -4650,9 +4653,11 @@
                                               axis->widths,
                                               AF_DIMENSION_VERT );
       if ( is_top_tilde )
-        af_latin_remove_top_tilde_points_from_edges( hints );
+        af_latin_remove_top_tilde_points_from_edges( hints,
+                                                     highest_contour );
       if ( is_bottom_tilde )
-        af_latin_remove_bottom_tilde_points_from_edges( hints );
+        af_latin_remove_bottom_tilde_points_from_edges( hints,
+                                                        lowest_contour );
 
       if ( error )
         goto Exit;
