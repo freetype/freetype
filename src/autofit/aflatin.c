@@ -2776,6 +2776,44 @@
   }
 
 
+  /* Compute vertical extrema of all contours and store them in the */
+  /* `contour_y_minima` and `contour_y_maxima` arrays of `hints`.   */
+  static void
+  af_compute_vertical_extrema( AF_GlyphHints  hints )
+  {
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  min_y = FT_INT_MAX;
+      FT_Pos  max_y = FT_INT_MIN;
+
+      AF_Point  first_point = hints->contours[contour];
+      AF_Point  point       = first_point;
+
+
+      if ( !first_point || first_point->next->next == first_point )
+        goto End_loop;
+
+      do
+      {
+        if ( point->y < min_y )
+          min_y = point->y;
+        if ( point->y > max_y )
+          max_y = point->y;
+
+        point = point->next;
+
+      } while ( point != first_point );
+
+    End_loop:
+      hints->contour_y_minima[contour] = min_y;
+      hints->contour_y_maxima[contour] = max_y;
+    }
+  }
+
+
   static FT_Int
   af_find_highest_contour( AF_GlyphHints  hints )
   {
