@@ -3460,16 +3460,18 @@
         adj_type = db_entry->flags;
     }
 
-    if ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) ) &&
-         hints->num_contours >= 2                         )
+    if ( ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) )   &&
+           hints->num_contours >= 2                           ) ||
+         ( ( adj_type & ( AF_ADJUST_UP2 | AF_ADJUST_DOWN2 ) ) &&
+           hints->num_contours >= 3                           ) )
     {
       /* Recompute vertical extrema, this time acting on already */
       /* auto-hinted outlines.                                   */
       af_compute_vertical_extrema( hints );
     }
 
-    if ( adj_type & AF_ADJUST_UP  &&
-         hints->num_contours >= 2 )
+    if ( ( ( adj_type & AF_ADJUST_UP ) && hints->num_contours >= 2 )  ||
+         ( ( adj_type & AF_ADJUST_UP2 ) && hints->num_contours >= 3 ) )
     {
       FT_Int  high_contour = 0;
       FT_Pos  high_min_y;
@@ -3493,7 +3495,9 @@
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: AF_ADJUST_UP\n" ));
 
-      high_contour = af_find_highest_contour( hints );
+      high_contour = adj_type & AF_ADJUST_UP2
+                       ? af_find_second_highest_contour( hints )
+                       : af_find_highest_contour( hints );
 
       /* Check for a horizontal overlap between the top contour and the */
       /* rest.  If there is no overlap, do not adjust.                  */
@@ -3570,7 +3574,6 @@
         /* Value 8 is heuristic. */
         FT_Pos  height_delta = ( high_max_y - high_min_y ) / 8;
         FT_Pos  min_y_limit  = high_min_y - height_delta;
-        FT_Pos  max_y_limit  = high_max_y + height_delta;
 
 
         FT_TRACE4(( "    Pushing top contour %ld units up\n",
@@ -3578,10 +3581,10 @@
 
         /* While we use only a single contour (the 'high' one) for    */
         /* computing `adjustment_amount`, we apply it to all contours */
-        /* that are (approximately) in the same vertical range.  This */
-        /* covers, for example, the inner contour of the Czech ring   */
-        /* accent or the second acute accent in the Hungarian double  */
-        /* acute accent.                                              */
+        /* that are (approximately) in the same vertical range or     */
+        /* higher.  This covers, for example, the inner contour of    */
+        /* the Czech ring accent or the second acute accent in the    */
+        /* Hungarian double acute accent.                             */
         for ( contour = 0; contour < hints->num_contours; contour++ )
         {
           FT_Pos  min_y = hints->contour_y_minima[contour];
@@ -3589,16 +3592,15 @@
 
 
           if ( min_y < max_y       &&
-               min_y > min_y_limit &&
-               max_y < max_y_limit )
+               min_y > min_y_limit )
             af_move_contour_vertically( hints->contours[contour],
                                         adjustment_amount );
         }
       }
     }
 
-    if ( adj_type & AF_ADJUST_DOWN &&
-         hints->num_contours >= 2  )
+    if ( ( ( adj_type & AF_ADJUST_DOWN ) && hints->num_contours >= 2 )  ||
+         ( ( adj_type & AF_ADJUST_DOWN2 ) && hints->num_contours >= 3 ) )
     {
       FT_Int  low_contour = 0;
       FT_Pos  low_min_y;
@@ -3622,7 +3624,9 @@
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: AF_ADJUST_DOWN\n" ));
 
-      low_contour = af_find_lowest_contour( hints );
+      low_contour = adj_type & AF_ADJUST_DOWN2
+                      ? af_find_second_lowest_contour( hints )
+                      : af_find_lowest_contour( hints );
 
       horizontal_overlap =
         af_check_contour_horizontal_overlap( hints, low_contour );
@@ -3684,7 +3688,6 @@
       else if ( adjustment_amount > 0 )
       {
         FT_Pos  height_delta = ( low_max_y - low_min_y ) / 8;
-        FT_Pos  min_y_limit  = low_min_y - height_delta;
         FT_Pos  max_y_limit  = low_max_y + height_delta;
 
 
@@ -3698,7 +3701,6 @@
 
 
           if ( min_y < max_y       &&
-               min_y > min_y_limit &&
                max_y < max_y_limit )
             af_move_contour_vertically( hints->contours[contour],
                                         -adjustment_amount );
@@ -3707,8 +3709,10 @@
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-    if ( !( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) ) ||
-         hints->num_contours < 2                           )
+    if ( !( ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) )   &&
+              hints->num_contours >= 2                           ) ||
+            ( ( adj_type & ( AF_ADJUST_UP2 | AF_ADJUST_DOWN2 ) ) &&
+              hints->num_contours >= 3                           ) ) )
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  No vertical adjustment applied\n" ));
 #endif

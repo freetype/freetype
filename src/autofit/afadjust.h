@@ -48,6 +48,18 @@ FT_BEGIN_HEADER
   /* is one pixel below the lowest point not enclosed by that contour.    */
 #define AF_ADJUST_DOWN  0x02
 
+  /* Find the contour below the topmost contour and push it up, together */
+  /* with the topmost contour, until its lowest point is one pixel above */
+  /* the highest point not enclosed by that contour.  This flag is       */
+  /* mutually exclusive with `AF_ADJUST_UP`.                             */
+#define AF_ADJUST_UP2  0x04
+
+  /* Find the contour above the bottommost contour and push it down,  */
+  /* together with the bottommost contour, until its highest point is */
+  /* one pixel below the lowest point not enclosed by that contour.   */
+  /* This flag is mutually exclusive with `AF_ADJUST_DOWN`.           */
+#define AF_ADJUST_DOWN2  0x08
+
   /* The topmost contour is a tilde.  Enlarge it vertically so that it    */
   /* stays legible at small sizes, not degenerating to a horizontal line. */
 #define AF_ADJUST_TILDE_TOP  0x10
