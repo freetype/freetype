@@ -2831,27 +2831,8 @@
     /* highest y maximum value.                                     */
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
-      FT_Pos  current_max_y;
+      FT_Pos  current_max_y = hints->contour_y_maxima[contour];
 
-      AF_Point  point       = hints->contours[contour];
-      AF_Point  first_point = point;
-
-
-      if ( !point )
-        continue;
-
-      if ( first_point->next->next == first_point )
-        continue;
-
-      current_max_y = point->y;
-
-      do
-      {
-        if ( point->y > current_max_y )
-          current_max_y = point->y;
-        point = point->next;
-
-      } while ( point != first_point );
 
       if ( current_max_y > highest_max_y )
       {
@@ -2875,27 +2856,8 @@
 
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
-      FT_Pos  current_min_y;
+      FT_Pos  current_min_y = hints->contour_y_minima[contour];
 
-      AF_Point  point       = hints->contours[contour];
-      AF_Point  first_point = point;
-
-
-      if ( !point )
-        continue;
-
-      if ( first_point->next->next == first_point )
-        continue;
-
-      current_min_y = point->y;
-
-      do
-      {
-        if ( point->y < current_min_y )
-          current_min_y = point->y;
-        point = point->next;
-
-      } while ( point != first_point );
 
       if ( current_min_y < lowest_min_y )
       {
@@ -3022,7 +2984,8 @@
     AF_Point  p           = hints->contours[tilde_contour];
     AF_Point  first_point = p;
 
-    FT_Pos  min_y, max_y;
+    FT_Pos  min_y = hints->contour_y_minima[tilde_contour];
+    FT_Pos  max_y = hints->contour_y_maxima[tilde_contour];
 
     FT_Pos   min_measurement;
     FT_Bool  measurement_taken = FALSE;
@@ -3031,20 +2994,6 @@
     FT_Pos  extremum_threshold;
     FT_Pos  target_height;
 
-
-    /* Find vertical extrema of the tilde contour. */
-    min_y = max_y = p->y;
-
-    do
-    {
-      p = p->next;
-
-      if ( p->y < min_y )
-        min_y = p->y;
-      if ( p->y > max_y )
-        max_y = p->y;
-
-    } while ( p != first_point );
 
     FT_TRACE4(( "af_latin_stretch_top_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
@@ -3153,7 +3102,8 @@
     AF_Point  p           = hints->contours[tilde_contour];
     AF_Point  first_point = p;
 
-    FT_Pos  min_y, max_y;
+    FT_Pos  min_y = hints->contour_y_minima[tilde_contour];
+    FT_Pos  max_y = hints->contour_y_maxima[tilde_contour];
 
     FT_Pos   min_measurement;
     FT_Bool  measurement_taken = FALSE;
@@ -3162,19 +3112,6 @@
     FT_Pos  extremum_threshold;
     FT_Pos  target_height;
 
-
-    min_y = max_y = p->y;
-
-    do
-    {
-      p = p->next;
-
-      if ( p->y < min_y )
-        min_y = p->y;
-      if ( p->y > max_y )
-        max_y = p->y;
-
-    } while ( p != first_point );
 
     FT_TRACE4(( "af_latin_stretch_bottom_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
@@ -3436,12 +3373,20 @@
         adj_type = db_entry->flags;
     }
 
+    if ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) ) &&
+         hints->num_contours >= 2                         )
+    {
+      /* Recompute vertical extrema, this time acting on already */
+      /* auto-hinted outlines.                                   */
+      af_compute_vertical_extrema( hints );
+    }
+
     if ( adj_type & AF_ADJUST_UP  &&
          hints->num_contours >= 2 )
     {
       FT_Int  highest_contour = 0;
       FT_Pos  highest_min_y;
-      FT_Pos  highest_max_y   = FT_INT_MIN;
+      FT_Pos  highest_max_y;
 
       FT_Int   contour;
       FT_Bool  horizontal_overlap;
@@ -3454,65 +3399,14 @@
       FT_Bool  grid_aligned_after_adjustment;
       FT_Pos   height;
 
-      AF_Point  point;
-      AF_Point  first_point;
-
 
       if ( db_entry )
         is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
 
-      /* Similar to the reasoning given in a comment to                   */
-      /* `af_find_highest_contour`, we can find the 'lower' contour by    */
-      /* getting the smallest distance between the y minimum value of the */
-      /* 'upper' contour and the y maximum value of all other contours.   */
-      /* Note that this distance might be negative if 'lower' and 'upper' */
-      /* intersect, which can happen due to blue zone snapping.           */
-
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: AF_ADJUST_UP\n" ));
 
-      /* Compute vertical extrema of all contours while finding the   */
-      /* highest contour.  There is some redundancy code-wise with    */
-      /* `af_find_highest_contour`; this time, however, we are acting */
-      /* on already auto-hinted outlines.                             */
-      for ( contour = 0; contour < hints->num_contours; contour++ )
-      {
-        FT_Pos  current_min_y;
-        FT_Pos  current_max_y;
-
-
-        point       = hints->contours[contour];
-        first_point = point;
-
-        if ( !point || first_point->next->next == first_point )
-        {
-          hints->contour_y_minima[contour] = FT_INT_MAX;
-          hints->contour_y_maxima[contour] = FT_INT_MIN;
-          continue;
-        }
-
-        current_min_y = point->y;
-        current_max_y = point->y;
-
-        do
-        {
-          if ( point->y < current_min_y )
-            current_min_y = point->y;
-          if ( point->y > current_max_y )
-            current_max_y = point->y;
-          point = point->next;
-
-        } while ( point != first_point );
-
-        if ( current_max_y > highest_max_y )
-        {
-          highest_max_y   = current_max_y;
-          highest_contour = contour;
-        }
-
-        hints->contour_y_minima[contour] = current_min_y;
-        hints->contour_y_maxima[contour] = current_max_y;
-      }
+      highest_contour = af_find_highest_contour( hints );
 
       /* Check for a horizontal overlap between the top contour and the */
       /* rest.  If there is no overlap, do not adjust.                  */
@@ -3526,10 +3420,8 @@
         return;
       }
 
-      point       = hints->contours[highest_contour];
-      first_point = point;
-
       highest_min_y = hints->contour_y_minima[highest_contour];
+      highest_max_y = hints->contour_y_maxima[highest_contour];
 
       /* If the difference between the vertical minimum of the       */
       /* highest contour and the vertical maximum of another contour */
@@ -3543,14 +3435,6 @@
 
 
         if ( contour == highest_contour )
-          continue;
-
-        point       = hints->contours[contour];
-        first_point = point;
-        if ( !point )
-          continue;
-
-        if ( first_point->next->next == first_point )
           continue;
 
         min_y = hints->contour_y_minima[contour];
@@ -3630,7 +3514,7 @@
          hints->num_contours >= 2  )
     {
       FT_Int  lowest_contour = 0;
-      FT_Pos  lowest_min_y   = FT_INT_MAX;
+      FT_Pos  lowest_min_y;
       FT_Pos  lowest_max_y;
 
       FT_Int   contour;
@@ -3644,9 +3528,6 @@
       FT_Bool  grid_aligned_after_adjustment;
       FT_Pos   height;
 
-      AF_Point  point;
-      AF_Point  first_point;
-
 
       if ( db_entry )
         is_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
@@ -3654,45 +3535,7 @@
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: AF_ADJUST_DOWN\n" ));
 
-      /* Compute vertical extrema and find lowest contour. */
-      for ( contour = 0; contour < hints->num_contours; contour++ )
-      {
-        FT_Pos  current_min_y;
-        FT_Pos  current_max_y;
-
-
-        point       = hints->contours[contour];
-        first_point = point;
-
-        if ( !point || first_point->next->next == first_point )
-        {
-          hints->contour_y_minima[contour] = FT_INT_MAX;
-          hints->contour_y_maxima[contour] = FT_INT_MIN;
-          continue;
-        }
-
-        current_min_y = point->y;
-        current_max_y = point->y;
-
-        do
-        {
-          if ( point->y < current_min_y )
-            current_min_y = point->y;
-          if ( point->y > current_max_y )
-            current_max_y = point->y;
-          point = point->next;
-
-        } while ( point != first_point );
-
-        if ( current_min_y < lowest_min_y )
-        {
-          lowest_min_y   = current_min_y;
-          lowest_contour = contour;
-        }
-
-        hints->contour_y_minima[contour] = current_min_y;
-        hints->contour_y_maxima[contour] = current_max_y;
-      }
+      lowest_contour = af_find_lowest_contour( hints );
 
       horizontal_overlap =
         af_check_contour_horizontal_overlap( hints, lowest_contour );
@@ -3704,9 +3547,7 @@
         return;
       }
 
-      point       = hints->contours[lowest_contour];
-      first_point = point;
-
+      lowest_min_y = hints->contour_y_minima[lowest_contour];
       lowest_max_y = hints->contour_y_maxima[lowest_contour];
 
       for ( contour = 0; contour < hints->num_contours; contour++ )
@@ -3717,14 +3558,6 @@
 
 
         if ( contour == lowest_contour )
-          continue;
-
-        point       = hints->contours[contour];
-        first_point = point;
-        if ( !point )
-          continue;
-
-        if ( first_point->next->next == first_point )
           continue;
 
         min_y = hints->contour_y_minima[contour];
@@ -4669,6 +4502,9 @@
           is_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
         }
       }
+
+      if ( is_top_tilde || is_bottom_tilde )
+        af_compute_vertical_extrema( hints );
 
       if ( is_top_tilde )
       {
