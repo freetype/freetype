@@ -2846,6 +2846,51 @@
 
 
   static FT_Int
+  af_find_second_highest_contour( AF_GlyphHints  hints )
+  {
+    FT_Int  highest_contour;
+    FT_Pos  highest_min_y;
+
+    FT_Int  second_highest_contour = 0;
+    FT_Pos  second_highest_max_y   = FT_INT_MIN;
+
+    FT_Int  contour;
+
+
+    if ( hints->num_contours < 3 )
+      return 0;
+
+    highest_contour = af_find_highest_contour( hints );
+    highest_min_y   = hints->contour_y_minima[highest_contour];
+
+    /* Search the contour with the largest vertical maximum that has a */
+    /* vertical minimum lower than the vertical minimum of the topmost */
+    /* contour.                                                        */
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  current_min_y;
+      FT_Pos  current_max_y;
+
+
+      if ( contour == highest_contour )
+        continue;
+
+      current_min_y = hints->contour_y_minima[contour];
+      current_max_y = hints->contour_y_maxima[contour];
+
+      if ( current_max_y > second_highest_max_y &&
+           current_min_y < highest_min_y        )
+      {
+        second_highest_max_y   = current_max_y;
+        second_highest_contour = contour;
+      }
+    }
+
+    return second_highest_contour;
+  }
+
+
+  static FT_Int
   af_find_lowest_contour( AF_GlyphHints  hints )
   {
     FT_Int  lowest_contour = 0;
@@ -2867,6 +2912,48 @@
     }
 
     return lowest_contour;
+  }
+
+
+  static FT_Int
+  af_find_second_lowest_contour( AF_GlyphHints  hints )
+  {
+    FT_Int  lowest_contour;
+    FT_Pos  lowest_max_y;
+
+    FT_Int  second_lowest_contour = 0;
+    FT_Pos  second_lowest_min_y   = FT_INT_MAX;
+
+    FT_Int  contour;
+
+
+    if ( hints->num_contours < 3 )
+      return 0;
+
+    lowest_contour = af_find_lowest_contour( hints );
+    lowest_max_y   = hints->contour_y_maxima[lowest_contour];
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  current_min_y;
+      FT_Pos  current_max_y;
+
+
+      if ( contour == lowest_contour )
+        continue;
+
+      current_min_y = hints->contour_y_minima[contour];
+      current_max_y = hints->contour_y_maxima[contour];
+
+      if ( current_min_y < second_lowest_min_y &&
+           current_max_y > lowest_max_y        )
+      {
+        second_lowest_min_y   = current_min_y;
+        second_lowest_contour = contour;
+      }
+    }
+
+    return second_lowest_contour;
   }
 
 
