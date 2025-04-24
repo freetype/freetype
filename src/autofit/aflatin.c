@@ -2776,6 +2776,51 @@
   }
 
 
+  /* Move all contours higher than `limit` by `delta`. */
+  static void
+  af_move_contours_up( AF_GlyphHints  hints,
+                       FT_Pos         limit,
+                       FT_Pos         delta )
+  {
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+      if ( min_y < max_y &&
+           min_y > limit )
+        af_move_contour_vertically( hints->contours[contour],
+                                    delta );
+    }
+  }
+
+
+  static void
+  af_move_contours_down( AF_GlyphHints  hints,
+                         FT_Pos         limit,
+                         FT_Pos         delta )
+  {
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+      if ( min_y < max_y &&
+           max_y < limit )
+        af_move_contour_vertically( hints->contours[contour],
+                                    -delta );
+    }
+  }
+
+
   /* Compute vertical extrema of all contours and store them in the */
   /* `contour_y_minima` and `contour_y_maxima` arrays of `hints`.   */
   static void
@@ -3027,13 +3072,12 @@
   }
 
 
-  /* Remove all segments containing points on the tilde contour. */
+  /* Remove all segments containing points on `contour`. */
   static void
-  af_latin_remove_top_tilde_points_from_edges(
-    AF_GlyphHints  hints,
-    FT_Int         tilde_contour )
+  af_remove_top_points_from_edges( AF_GlyphHints  hints,
+                                   FT_Int         contour )
   {
-    AF_Point  first_point = hints->contours[tilde_contour];
+    AF_Point  first_point = hints->contours[contour];
     AF_Point  p           = first_point;
 
 
@@ -3047,11 +3091,10 @@
 
 
   static void
-  af_latin_remove_bottom_tilde_points_from_edges(
-    AF_GlyphHints  hints,
-    FT_Int         tilde_contour )
+  af_remove_bottom_points_from_edges( AF_GlyphHints  hints,
+                                      FT_Int         contour )
   {
-    AF_Point  first_point = hints->contours[tilde_contour];
+    AF_Point  first_point = hints->contours[contour];
     AF_Point  p           = first_point;
 
 
@@ -3059,6 +3102,24 @@
     {
       p = p->next;
       af_remove_segments_containing_point( hints, p );
+
+    } while ( p != first_point );
+  }
+
+
+  static void
+  af_touch_contour( AF_GlyphHints  hints,
+                    FT_Int         contour )
+  {
+    AF_Point  first_point = hints->contours[contour];
+    AF_Point  p           = first_point;
+
+
+    do
+    {
+      p = p->next;
+      if ( !( p->flags & AF_FLAG_CONTROL ) )
+        p->flags |= AF_FLAG_TOUCH_Y;
 
     } while ( p != first_point );
   }
@@ -3150,17 +3211,7 @@
     /* To preserve the stretched shape we suppress any         */
     /* auto-hinting if the tilde height is less than 4 pixels. */
     if ( height < 64 * 4 )
-    {
-      /* touch all points */
-      p = first_point;
-      do
-      {
-        p = p->next;
-        if ( !( p->flags & AF_FLAG_CONTROL ) )
-          p->flags |= AF_FLAG_TOUCH_Y;
-
-      } while ( p != first_point );
-    }
+      af_touch_contour( hints, tilde_contour );
 
     /* XXX This is an important element of the algorithm; */
     /*     we need a description.                         */
@@ -3253,16 +3304,7 @@
                 min_measurement ));
 
     if ( height < 64 * 4 )
-    {
-      p = first_point;
-      do
-      {
-        p = p->next;
-        if ( !( p->flags & AF_FLAG_CONTROL ) )
-          p->flags |= AF_FLAG_TOUCH_Y;
-
-      } while ( p != first_point );
-    }
+      af_touch_contour( hints, tilde_contour );
 
     target_height = min_measurement + 64;
     if ( height >= target_height )
@@ -3585,17 +3627,7 @@
         /* higher.  This covers, for example, the inner contour of    */
         /* the Czech ring accent or the second acute accent in the    */
         /* Hungarian double acute accent.                             */
-        for ( contour = 0; contour < hints->num_contours; contour++ )
-        {
-          FT_Pos  min_y = hints->contour_y_minima[contour];
-          FT_Pos  max_y = hints->contour_y_maxima[contour];
-
-
-          if ( min_y < max_y       &&
-               min_y > min_y_limit )
-            af_move_contour_vertically( hints->contours[contour],
-                                        adjustment_amount );
-        }
+        af_move_contours_up( hints, min_y_limit, adjustment_amount );
       }
     }
 
@@ -3694,17 +3726,7 @@
         FT_TRACE4(( "    Pushing bottom contour %ld units down\n",
                     adjustment_amount ));
 
-        for ( contour = 0; contour < hints->num_contours; contour++ )
-        {
-          FT_Pos  min_y = hints->contour_y_minima[contour];
-          FT_Pos  max_y = hints->contour_y_maxima[contour];
-
-
-          if ( min_y < max_y       &&
-               max_y < max_y_limit )
-            af_move_contour_vertically( hints->contours[contour],
-                                        -adjustment_amount );
-        }
+        af_move_contours_down( hints, max_y_limit, adjustment_amount );
       }
     }
 
@@ -4618,11 +4640,9 @@
                                               axis->widths,
                                               AF_DIMENSION_VERT );
       if ( is_top_tilde )
-        af_latin_remove_top_tilde_points_from_edges(
-          hints, top_tilde_contour );
+        af_remove_top_points_from_edges( hints, top_tilde_contour );
       if ( is_bottom_tilde )
-        af_latin_remove_bottom_tilde_points_from_edges(
-          hints, bottom_tilde_contour );
+        af_remove_bottom_points_from_edges( hints, bottom_tilde_contour );
 
       if ( error )
         goto Exit;
