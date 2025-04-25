@@ -2863,6 +2863,7 @@
   af_find_highest_contour( AF_GlyphHints  hints )
   {
     FT_Int  highest_contour = 0;
+    FT_Pos  highest_min_y   = FT_INT_MAX;
     FT_Pos  highest_max_y   = FT_INT_MIN;
 
     FT_Int  contour;
@@ -2876,11 +2877,17 @@
     /* highest y maximum value.                                     */
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
+      FT_Pos  current_min_y = hints->contour_y_minima[contour];
       FT_Pos  current_max_y = hints->contour_y_maxima[contour];
 
 
-      if ( current_max_y > highest_max_y )
+      /* If we have two contours with the same maximum value, take */
+      /* the one that has a smaller height.                        */
+      if ( current_max_y > highest_max_y      ||
+           ( current_max_y == highest_max_y &&
+             current_min_y > highest_min_y  ) )
       {
+        highest_min_y   = current_min_y;
         highest_max_y   = current_max_y;
         highest_contour = contour;
       }
@@ -2940,6 +2947,7 @@
   {
     FT_Int  lowest_contour = 0;
     FT_Pos  lowest_min_y   = FT_INT_MAX;
+    FT_Pos  lowest_max_y   = FT_INT_MIN;
 
     FT_Int  contour;
 
@@ -2947,11 +2955,15 @@
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
       FT_Pos  current_min_y = hints->contour_y_minima[contour];
+      FT_Pos  current_max_y = hints->contour_y_maxima[contour];
 
 
-      if ( current_min_y < lowest_min_y )
+      if ( current_min_y < lowest_min_y      ||
+           ( current_min_y == lowest_min_y &&
+             current_max_y < lowest_max_y  ) )
       {
         lowest_min_y   = current_min_y;
+        lowest_max_y   = current_max_y;
         lowest_contour = contour;
       }
     }
