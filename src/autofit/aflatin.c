@@ -3125,7 +3125,9 @@
   }
 
 
-  static void
+  /* Stretch tilde vertically, if necessary, and return the height */
+  /* difference between the original and the stretched outline.    */
+  static FT_Pos
   af_latin_stretch_top_tilde( AF_GlyphHints  hints,
                               FT_Int         tilde_contour )
   {
@@ -3217,7 +3219,7 @@
     /*     we need a description.                         */
     target_height = min_measurement + 64;
     if ( height >= target_height )
-      return;
+      return 0;
 
     /* Do the scaling. */
     p = first_point;
@@ -3230,10 +3232,12 @@
       p->y  = ( ( p->y - min_y ) * target_height / height ) + min_y;
 
     } while ( p != first_point );
+
+    return target_height - height;
   }
 
 
-  static void
+  static FT_Pos
   af_latin_stretch_bottom_tilde( AF_GlyphHints  hints,
                                  FT_Int         tilde_contour )
   {
@@ -3308,7 +3312,7 @@
 
     target_height = min_measurement + 64;
     if ( height >= target_height )
-      return;
+      return 0;
 
     p = first_point;
     do
@@ -3317,6 +3321,8 @@
       p->y  = ( ( p->y - max_y ) * target_height / height ) + max_y;
 
     } while ( p != first_point );
+
+    return target_height - height;
   }
 
 
@@ -3340,8 +3346,10 @@
     adjustment does nothing, this function ensures that even without the
     intervention of the vertical adjustment step, the tilde will be
     grid-aligned.
+
+    Return the vertical alignment amount.
   */
-  static void
+  static FT_Pos
   af_latin_align_top_tilde( AF_GlyphHints  hints,
                             FT_Int         tilde_contour )
   {
@@ -3378,10 +3386,12 @@
       delta += ( FT_PIX_ROUND( height ) - height ) / 2;
 
     af_move_contour_vertically( first_point, delta );
+
+    return delta;
   }
 
 
-  static void
+  static FT_Pos
   af_latin_align_bottom_tilde( AF_GlyphHints  hints,
                                FT_Int         tilde_contour )
   {
@@ -3414,6 +3424,8 @@
       delta -= ( FT_PIX_ROUND( height ) - height ) / 2;
 
     af_move_contour_vertically( first_point, delta );
+
+    return delta;
   }
 
 
@@ -4623,15 +4635,15 @@
       {
         top_tilde_contour = af_find_highest_contour( hints );
 
-        af_latin_stretch_top_tilde( hints, top_tilde_contour );
-        af_latin_align_top_tilde( hints, top_tilde_contour );
+        (void)af_latin_stretch_top_tilde( hints, top_tilde_contour );
+        (void)af_latin_align_top_tilde( hints, top_tilde_contour );
       }
       if ( is_bottom_tilde )
       {
         bottom_tilde_contour = af_find_lowest_contour( hints );
 
-        af_latin_stretch_bottom_tilde( hints, bottom_tilde_contour );
-        af_latin_align_bottom_tilde( hints, bottom_tilde_contour );
+        (void)af_latin_stretch_bottom_tilde( hints, bottom_tilde_contour );
+        (void)af_latin_align_bottom_tilde( hints, bottom_tilde_contour );
       }
 
       axis  = &metrics->axis[AF_DIMENSION_VERT];
