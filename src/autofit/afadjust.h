@@ -68,6 +68,16 @@ FT_BEGIN_HEADER
   /* stays legible at small sizes, not degenerating to a horizontal line. */
 #define AF_ADJUST_TILDE_BOTTOM  0x20
 
+  /* The contour below the topmost contour is a tilde.  Enlarge it        */
+  /* vertically so that it stays legible at small sizes, not degenerating */
+  /* to a horizontal line.                                                */
+#define AF_ADJUST_TILDE_TOP2  0x40
+
+  /* The contour above the bottommost contour is a tilde.  Enlarge it     */
+  /* vertically so that it stays legible at small sizes, not degenerating */
+  /* to a horizontal line.                                                */
+#define AF_ADJUST_TILDE_BOTTOM2  0x80
+
   /* No adjustment, i.e., no flag is set. */
 #define AF_ADJUST_NONE  0x00
 

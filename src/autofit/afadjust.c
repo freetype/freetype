@@ -678,8 +678,10 @@
 
         const char*  flag_names[] =
         {
-          "up",        /* AF_ADJUST_UP   */
-          "down",      /* AF_ADJUST_DOWN */
+          "up",          /* AF_ADJUST_UP    */
+          "down",        /* AF_ADJUST_DOWN  */
+          "double up",   /* AF_ADJUST_UP2   */
+          "double down", /* AF_ADJUST_DOWN2 */
           "",
           "",
           "top tilde",          /* AF_ADJUST_TILDE_TOP     */

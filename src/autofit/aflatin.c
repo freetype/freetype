@@ -3072,38 +3072,71 @@
   }
 
 
-  /* Remove all segments containing points on `contour`. */
+  /* Remove all segments containing points on `limit_contour` */
+  /* and all higher contours.                                 */
   static void
   af_remove_top_points_from_edges( AF_GlyphHints  hints,
-                                   FT_Int         contour )
+                                   FT_Int         limit_contour )
   {
-    AF_Point  first_point = hints->contours[contour];
-    AF_Point  p           = first_point;
+    FT_Pos  limit = hints->contour_y_minima[limit_contour];
+
+    FT_Int  contour;
 
 
-    do
+    for ( contour = 0; contour < hints->num_contours; contour++ )
     {
-      p = p->next;
-      af_remove_segments_containing_point( hints, p );
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
 
-    } while ( p != first_point );
+
+      if ( min_y < max_y  &&
+           min_y >= limit )
+      {
+        AF_Point  first_point = hints->contours[contour];
+        AF_Point  p           = first_point;
+
+
+        do
+        {
+          p = p->next;
+          af_remove_segments_containing_point( hints, p );
+
+        } while ( p != first_point );
+      }
+    }
   }
 
 
   static void
   af_remove_bottom_points_from_edges( AF_GlyphHints  hints,
-                                      FT_Int         contour )
+                                      FT_Int         limit_contour )
   {
-    AF_Point  first_point = hints->contours[contour];
-    AF_Point  p           = first_point;
+    FT_Pos  limit = hints->contour_y_maxima[limit_contour];
+
+    FT_Int  contour;
 
 
-    do
+    for ( contour = 0; contour < hints->num_contours; contour++ )
     {
-      p = p->next;
-      af_remove_segments_containing_point( hints, p );
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
 
-    } while ( p != first_point );
+
+      if ( min_y < max_y  &&
+           max_y <= limit )
+      {
+        AF_Point  first_point = hints->contours[contour];
+        AF_Point  p           = first_point;
+
+
+        do
+        {
+          p = p->next;
+          af_remove_segments_containing_point( hints, p );
+
+        } while ( p != first_point );
+      }
+    }
   }
 
 
@@ -3122,6 +3155,50 @@
         p->flags |= AF_FLAG_TOUCH_Y;
 
     } while ( p != first_point );
+  }
+
+
+  static void
+  af_touch_top_contours( AF_GlyphHints  hints,
+                         FT_Int         limit_contour )
+  {
+    FT_Pos  limit = hints->contour_y_minima[limit_contour];
+
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+      if ( min_y < max_y  &&
+           min_y >= limit )
+        af_touch_contour( hints, contour );
+    }
+  }
+
+
+  static void
+  af_touch_bottom_contours( AF_GlyphHints  hints,
+                            FT_Int         limit_contour )
+  {
+    FT_Pos  limit = hints->contour_y_minima[limit_contour];
+
+    FT_Int  contour;
+
+
+    for ( contour = 0; contour < hints->num_contours; contour++ )
+    {
+      FT_Pos  min_y = hints->contour_y_minima[contour];
+      FT_Pos  max_y = hints->contour_y_maxima[contour];
+
+
+      if ( min_y < max_y  &&
+           max_y <= limit )
+        af_touch_contour( hints, contour );
+    }
   }
 
 
@@ -3211,9 +3288,14 @@
                 min_measurement ));
 
     /* To preserve the stretched shape we suppress any         */
-    /* auto-hinting if the tilde height is less than 4 pixels. */
+    /* auto-hinting if the tilde height is less than 4 pixels; */
+    /* we do this for all contours equal or above the vertical */
+    /* minimum of `tilde_contour`.                             */
+    /*                                                         */
+    /* The second part is to remove the affected points from   */
+    /* edges, done in `af_latin_hints_apply`.                  */
     if ( height < 64 * 4 )
-      af_touch_contour( hints, tilde_contour );
+      af_touch_top_contours( hints, tilde_contour );
 
     /* XXX This is an important element of the algorithm; */
     /*     we need a description.                         */
@@ -3308,7 +3390,7 @@
                 min_measurement ));
 
     if ( height < 64 * 4 )
-      af_touch_contour( hints, tilde_contour );
+      af_touch_bottom_contours( hints, tilde_contour );
 
     target_height = min_measurement + 64;
     if ( height >= target_height )
@@ -4609,8 +4691,17 @@
       FT_Int  top_tilde_contour    = 0;
       FT_Int  bottom_tilde_contour = 0;
 
+      FT_Int  below_top_tilde_contour    = 0;
+      FT_Int  above_bottom_tilde_contour = 0;
+
       FT_Bool  is_top_tilde    = FALSE;
       FT_Bool  is_bottom_tilde = FALSE;
+
+      FT_Bool  is_below_top_tilde    = FALSE;
+      FT_Bool  is_above_bottom_tilde = FALSE;
+
+      FT_Pos  limit;
+      FT_Pos  y_offset;
 
 
       entry = af_reverse_character_map_lookup( metrics->root.reverse_charmap,
@@ -4625,11 +4716,41 @@
         {
           is_top_tilde    = db_entry->flags & AF_ADJUST_TILDE_TOP;
           is_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
+
+          is_below_top_tilde    = db_entry->flags & AF_ADJUST_TILDE_TOP2;
+          is_above_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM2;
         }
       }
 
-      if ( is_top_tilde || is_bottom_tilde )
+      if ( is_top_tilde || is_bottom_tilde             ||
+           is_below_top_tilde || is_above_bottom_tilde )
         af_compute_vertical_extrema( hints );
+
+      /* Process inner tilde glyphs first. */
+      if ( is_below_top_tilde )
+      {
+        below_top_tilde_contour = af_find_second_highest_contour( hints );
+
+        y_offset = af_latin_stretch_top_tilde(
+                     hints, below_top_tilde_contour );
+        y_offset += af_latin_align_top_tilde(
+                      hints, below_top_tilde_contour );
+
+        limit = hints->contour_y_minima[below_top_tilde_contour];
+        af_move_contours_up( hints, limit, y_offset );
+      }
+      if ( is_above_bottom_tilde )
+      {
+        above_bottom_tilde_contour = af_find_second_lowest_contour( hints );
+
+        y_offset = af_latin_stretch_bottom_tilde(
+                     hints, above_bottom_tilde_contour );
+        y_offset -= af_latin_align_bottom_tilde(
+                      hints, above_bottom_tilde_contour );
+
+        limit = hints->contour_y_maxima[above_bottom_tilde_contour];
+        af_move_contours_down( hints, limit, y_offset );
+      }
 
       if ( is_top_tilde )
       {
@@ -4651,10 +4772,19 @@
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
-      if ( is_top_tilde )
-        af_remove_top_points_from_edges( hints, top_tilde_contour );
-      if ( is_bottom_tilde )
-        af_remove_bottom_points_from_edges( hints, bottom_tilde_contour );
+
+      /* Second part of making everything of a top tilde and above (or */
+      /* a bottom tilde and below) be ignored by the auto-hinter.      */
+      if ( is_top_tilde || is_below_top_tilde )
+        af_remove_top_points_from_edges( hints,
+                                         is_top_tilde
+                                           ? top_tilde_contour
+                                           : below_top_tilde_contour );
+      if ( is_bottom_tilde || is_above_bottom_tilde )
+        af_remove_bottom_points_from_edges( hints,
+                                            is_bottom_tilde
+                                              ? bottom_tilde_contour
+                                              : above_bottom_tilde_contour );
 
       if ( error )
         goto Exit;
