@@ -94,7 +94,7 @@ FT_BEGIN_HEADER
     FT_Int64  ab = MUL_INT64( a, b );
 
 
-    ab += 0x8000 + ( ab >> 63 );  /* rounding phase */
+    ab = ADD_INT64( ab, 0x8000 + ( ab >> 63 ) );  /* rounding phase */
 
     return (FT_Long)( ab >> 16 );
   }
