@@ -859,7 +859,8 @@
 
   const AF_Script_UniRangeRec  af_taml_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x0B80,  0x0BFF ),  /* Tamil */
+    AF_UNIRANGE_REC(  0x0B80,  0x0BFF ),  /* Tamil            */
+    AF_UNIRANGE_REC( 0x11FC0, 0x11FFF ),  /* Tamil Supplement */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -1050,6 +1051,7 @@
     AF_UNIRANGE_REC(  0xFF00,  0xFFEF ),  /* Halfwidth and Fullwidth Forms           */
     AF_UNIRANGE_REC( 0x1B000, 0x1B0FF ),  /* Kana Supplement                         */
     AF_UNIRANGE_REC( 0x1B100, 0x1B12F ),  /* Kana Extended-A                         */
+    AF_UNIRANGE_REC( 0x1B130, 0x1B16F ),  /* Small Kana Extension                    */
     AF_UNIRANGE_REC( 0x1D300, 0x1D35F ),  /* Tai Xuan Hing Symbols                   */
     AF_UNIRANGE_REC( 0x20000, 0x2A6DF ),  /* CJK Unified Ideographs Extension B      */
     AF_UNIRANGE_REC( 0x2A700, 0x2B73F ),  /* CJK Unified Ideographs Extension C      */
