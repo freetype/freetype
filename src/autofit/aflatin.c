@@ -99,7 +99,7 @@
       p = script_class->standard_charstring;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-      shaper_buf = af_shaper_buf_create( face );
+      shaper_buf = af_shaper_buf_create( metrics->root.globals );
 #endif
       /*
        * We check a list of standard characters to catch features like
@@ -141,7 +141,7 @@
           break;
       }
 
-      af_shaper_buf_destroy( face, shaper_buf );
+      af_shaper_buf_destroy( metrics->root.globals, shaper_buf );
 
       if ( !glyph_index )
       {
@@ -351,7 +351,7 @@
     FT_TRACE5(( "\n" ));
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    shaper_buf = af_shaper_buf_create( face );
+    shaper_buf = af_shaper_buf_create( metrics->root.globals );
 #endif
 
     for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
@@ -974,7 +974,7 @@
 
     } /* end for loop */
 
-    af_shaper_buf_destroy( face, shaper_buf );
+    af_shaper_buf_destroy( metrics->root.globals, shaper_buf );
 
     if ( axis->blue_count )
     {
@@ -1082,11 +1082,13 @@
     const char   digits[] = "0 1 2 3 4 5 6 7 8 9";
     const char*  p;
 
+    FT_UNUSED( face );
+
 
     p = digits;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    shaper_buf = af_shaper_buf_create( face );
+    shaper_buf = af_shaper_buf_create( metrics->root.globals );
 #endif
 
     while ( *p )
@@ -1123,7 +1125,7 @@
       }
     }
 
-    af_shaper_buf_destroy( face, shaper_buf );
+    af_shaper_buf_destroy( metrics->root.globals, shaper_buf );
 
     metrics->root.digits_have_same_width = same_width;
   }
