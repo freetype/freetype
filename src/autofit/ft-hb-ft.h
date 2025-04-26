@@ -29,12 +29,13 @@
 
 #include "ft-hb.h"
 
+#include "afglobal.h"
+
 
 FT_BEGIN_HEADER
 
 FT_LOCAL(hb_font_t *)
-ft_hb_ft_font_create (FT_Face           ft_face,
-                      hb_destroy_func_t destroy);
+ft_hb_ft_font_create (AF_FaceGlobals globals);
 
 
 FT_END_HEADER

@@ -1036,12 +1036,15 @@
 
   /* Get all alternates for a given glyph index. */
   static void
-  af_get_glyph_alternates_helper( hb_face_t      *hb_face,
+  af_get_glyph_alternates_helper( AF_FaceGlobals  globals,
+                                  hb_face_t      *hb_face,
                                   hb_codepoint_t  glyph,
                                   hb_set_t       *gsub_lookups,
                                   hb_set_t       *result )
   {
     hb_codepoint_t  lookup_index = HB_SET_VALUE_INVALID;
+
+    FT_UNUSED( globals );
 
 
     /* Iterate over all lookups. */
@@ -1080,7 +1083,8 @@
   /* Get all alternates (including alternates of alternates) */
   /* for a given glyph index.                                */
   static void
-  af_get_glyph_alternates( hb_font_t      *hb_font,
+  af_get_glyph_alternates( AF_FaceGlobals  globals,
+                           hb_font_t      *hb_font,
                            hb_codepoint_t  glyph,
                            hb_set_t       *gsub_lookups,
                            hb_set_t       *result )
@@ -1106,7 +1110,8 @@
       if ( !hb( set_has )( result, elem ) )
       {
         /* This call updates the glyph set in `helper_result`. */
-        af_get_glyph_alternates_helper( hb_face,
+        af_get_glyph_alternates_helper( globals,
+                                        hb_face,
                                         elem,
                                         gsub_lookups,
                                         helper_result );
@@ -1200,7 +1205,8 @@
         codepoint  = adjustment_database[i].codepoint;
         cmap_glyph = FT_Get_Char_Index( face, codepoint );
 
-        af_get_glyph_alternates( hb_font,
+        af_get_glyph_alternates( globals,
+                                 hb_font,
                                  cmap_glyph,
                                  gsub_lookups,
                                  result_set );

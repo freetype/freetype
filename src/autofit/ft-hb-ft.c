@@ -38,7 +38,9 @@
 static hb_blob_t *
 ft_hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 {
-  FT_Face ft_face = (FT_Face) user_data;
+  AF_FaceGlobals globals = (AF_FaceGlobals) user_data;
+
+  FT_Face ft_face = globals->face;
   FT_Byte *buffer;
   FT_ULong  length = 0;
   FT_Error error;
@@ -68,9 +70,10 @@ ft_hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
 }
 
 static hb_face_t *
-ft_hb_ft_face_create (FT_Face           ft_face,
-                      hb_destroy_func_t destroy)
+ft_hb_ft_face_create (AF_FaceGlobals globals)
 {
+  FT_Face ft_face = globals->face;
+
   hb_face_t *face;
 
   if (!ft_face->stream->read) {
@@ -79,11 +82,11 @@ ft_hb_ft_face_create (FT_Face           ft_face,
     blob = hb(blob_create) ((const char *) ft_face->stream->base,
                             (unsigned int) ft_face->stream->size,
                             HB_MEMORY_MODE_READONLY,
-                            ft_face, destroy);
+                            ft_face, NULL);
     face = hb(face_create) (blob, ft_face->face_index);
     hb(blob_destroy) (blob);
   } else {
-    face = hb(face_create_for_tables) (ft_hb_ft_reference_table, ft_face, destroy);
+    face = hb(face_create_for_tables) (ft_hb_ft_reference_table, globals, NULL);
   }
 
   hb(face_set_index) (face, ft_face->face_index);
@@ -93,13 +96,12 @@ ft_hb_ft_face_create (FT_Face           ft_face,
 }
 
 FT_LOCAL_DEF(hb_font_t *)
-ft_hb_ft_font_create (FT_Face           ft_face,
-                      hb_destroy_func_t destroy)
+ft_hb_ft_font_create (AF_FaceGlobals globals)
 {
   hb_font_t *font;
   hb_face_t *face;
 
-  face = ft_hb_ft_face_create (ft_face, destroy);
+  face = ft_hb_ft_face_create (globals);
   font = hb(font_create) (face);
   hb(face_destroy) (face);
   return font;

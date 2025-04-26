@@ -42,11 +42,11 @@ FT_BEGIN_HEADER
 
 
   void*
-  af_shaper_buf_create( FT_Face  face );
+  af_shaper_buf_create( AF_FaceGlobals  globals );
 
   void
-  af_shaper_buf_destroy( FT_Face  face,
-                         void*    buf );
+  af_shaper_buf_destroy( AF_FaceGlobals  globals,
+                         void*           buf );
 
   const char*
   af_shaper_get_cluster( const char*      p,

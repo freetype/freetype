@@ -356,7 +356,7 @@
     globals->scale_down_factor         = 0;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    globals->hb_font = ft_hb_ft_font_create( face, NULL );
+    globals->hb_font = ft_hb_ft_font_create( globals );
     globals->hb_buf  = hb( buffer_create )();
 #endif
 
