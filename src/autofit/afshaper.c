@@ -22,8 +22,8 @@
 #include "aftypes.h"
 #include "afshaper.h"
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
   /**************************************************************************
    *
@@ -95,11 +95,11 @@
   };
 
 
-  FT_Error
-  af_shaper_get_coverage( AF_FaceGlobals  globals,
-                          AF_StyleClass   style_class,
-                          FT_UShort*      gstyles,
-                          FT_Bool         default_script )
+  static FT_Error
+  af_shaper_get_coverage_hb( AF_FaceGlobals  globals,
+                             AF_StyleClass   style_class,
+                             FT_UShort*      gstyles,
+                             FT_Bool         default_script )
   {
     hb_face_t*  face;
 
@@ -437,8 +437,8 @@
   };
 
 
-  void*
-  af_shaper_buf_create( AF_FaceGlobals  globals )
+  static void*
+  af_shaper_buf_create_hb( AF_FaceGlobals  globals )
   {
     FT_UNUSED( globals );
 
@@ -446,9 +446,9 @@
   }
 
 
-  void
-  af_shaper_buf_destroy( AF_FaceGlobals  globals,
-                         void*           buf )
+  static void
+  af_shaper_buf_destroy_hb( AF_FaceGlobals  globals,
+                            void*           buf )
   {
     FT_UNUSED( globals );
 
@@ -456,11 +456,11 @@
   }
 
 
-  const char*
-  af_shaper_get_cluster( const char*      p,
-                         AF_StyleMetrics  metrics,
-                         void*            buf_,
-                         unsigned int*    count )
+  static const char*
+  af_shaper_get_cluster_hb( const char*      p,
+                            AF_StyleMetrics  metrics,
+                            void*            buf_,
+                            unsigned int*    count )
   {
     AF_FaceGlobals  globals = metrics->globals;
 
@@ -558,12 +558,12 @@
   }
 
 
-  FT_ULong
-  af_shaper_get_elem( AF_StyleMetrics  metrics,
-                      void*            buf_,
-                      unsigned int     idx,
-                      FT_Long*         advance,
-                      FT_Long*         y_offset )
+  static FT_ULong
+  af_shaper_get_elem_hb( AF_StyleMetrics  metrics,
+                         void*            buf_,
+                         unsigned int     idx,
+                         FT_Long*         advance,
+                         FT_Long*         y_offset )
   {
     AF_FaceGlobals  globals = metrics->globals;
 
@@ -590,14 +590,14 @@
   }
 
 
-#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
-  FT_Error
-  af_shaper_get_coverage( AF_FaceGlobals  globals,
-                          AF_StyleClass   style_class,
-                          FT_UShort*      gstyles,
-                          FT_Bool         default_script )
+  static FT_Error
+  af_shaper_get_coverage_nohb( AF_FaceGlobals  globals,
+                               AF_StyleClass   style_class,
+                               FT_UShort*      gstyles,
+                               FT_Bool         default_script )
   {
     FT_UNUSED( globals );
     FT_UNUSED( style_class );
@@ -608,8 +608,8 @@
   }
 
 
-  void*
-  af_shaper_buf_create( AF_FaceGlobals  globals )
+  static void*
+  af_shaper_buf_create_nohb( AF_FaceGlobals  globals )
   {
     FT_UNUSED( globals );
 
@@ -617,20 +617,20 @@
   }
 
 
-  void
-  af_shaper_buf_destroy( AF_FaceGlobals  globals,
-                         void*    buf )
+  static void
+  af_shaper_buf_destroy_nohb( AF_FaceGlobals  globals,
+                              void*    buf )
   {
     FT_UNUSED( globals );
     FT_UNUSED( buf );
   }
 
 
-  const char*
-  af_shaper_get_cluster( const char*      p,
-                         AF_StyleMetrics  metrics,
-                         void*            buf_,
-                         unsigned int*    count )
+  static const char*
+  af_shaper_get_cluster_nohb( const char*      p,
+                              AF_StyleMetrics  metrics,
+                              void*            buf_,
+                              unsigned int*    count )
   {
     FT_Face    face      = metrics->globals->face;
     FT_ULong   ch, dummy = 0;
@@ -662,12 +662,12 @@
   }
 
 
-  FT_ULong
-  af_shaper_get_elem( AF_StyleMetrics  metrics,
-                      void*            buf_,
-                      unsigned int     idx,
-                      FT_Long*         advance,
-                      FT_Long*         y_offset )
+  static FT_ULong
+  af_shaper_get_elem_nohb( AF_StyleMetrics  metrics,
+                           void*            buf_,
+                           unsigned int     idx,
+                           FT_Long*         advance,
+                           FT_Long*         y_offset )
   {
     FT_Face   face        = metrics->globals->face;
     FT_ULong  glyph_index = *(FT_ULong*)buf_;
@@ -690,7 +690,73 @@
   }
 
 
-#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+  /********************************************************************/
+
+  FT_Error
+  af_shaper_get_coverage( AF_FaceGlobals  globals,
+                          AF_StyleClass   style_class,
+                          FT_UShort*      gstyles,
+                          FT_Bool         default_script )
+  {
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    return af_shaper_get_coverage_hb( globals,
+                                      style_class,
+                                      gstyles,
+                                      default_script );
+#endif
+    return af_shaper_get_coverage_nohb( globals,
+                                        style_class,
+                                        gstyles,
+                                        default_script );
+  }
+
+
+  void*
+  af_shaper_buf_create( AF_FaceGlobals  globals )
+  {
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    return af_shaper_buf_create_hb( globals );
+#endif
+    return af_shaper_buf_create_nohb( globals );
+  }
+
+
+  void
+  af_shaper_buf_destroy( AF_FaceGlobals  globals,
+                         void*           buf )
+  {
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    af_shaper_buf_destroy_hb( globals, buf );
+#endif
+    af_shaper_buf_destroy_nohb( globals, buf );
+  }
+
+
+  const char*
+  af_shaper_get_cluster( const char*      p,
+                         AF_StyleMetrics  metrics,
+                         void*            buf_,
+                         unsigned int*    count )
+  {
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    return af_shaper_get_cluster_hb( p, metrics, buf_, count );
+#endif
+    return af_shaper_get_cluster_nohb( p, metrics, buf_, count );
+  }
+
+
+  FT_ULong
+  af_shaper_get_elem( AF_StyleMetrics  metrics,
+                      void*            buf_,
+                      unsigned int     idx,
+                      FT_Long*         advance,
+                      FT_Long*         y_offset )
+  {
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    return af_shaper_get_elem_hb( metrics, buf_, idx, advance, y_offset );
+#endif
+    return af_shaper_get_elem_nohb( metrics, buf_, idx, advance, y_offset );
+  }
 
 
 /* END */
