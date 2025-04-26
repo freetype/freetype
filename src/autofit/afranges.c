@@ -77,6 +77,7 @@
     AF_UNIRANGE_REC(  0x08A0,  0x08FF ),  /* Arabic Extended-A                      */
     AF_UNIRANGE_REC(  0xFB50,  0xFDFF ),  /* Arabic Presentation Forms-A            */
     AF_UNIRANGE_REC(  0xFE70,  0xFEFF ),  /* Arabic Presentation Forms-B            */
+    AF_UNIRANGE_REC( 0x10EC0, 0x10EFF ),  /* Arabic Extended-C                      */
     AF_UNIRANGE_REC( 0x1EE00, 0x1EEFF ),  /* Arabic Mathematical Alphabetic Symbols */
     AF_UNIRANGE_REC(       0,       0 )
   };
@@ -103,6 +104,7 @@
     AF_UNIRANGE_REC(  0xFE7A,  0xFE7A ),
     AF_UNIRANGE_REC(  0xFE7C,  0xFE7C ),
     AF_UNIRANGE_REC(  0xFE7E,  0xFE7E ),
+    AF_UNIRANGE_REC( 0x10EFD, 0x10EFF ),
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -262,6 +264,9 @@
   };
 
 
+  /* TODO: Split off data for new 'cyrb' (subscript) and 'cyrp'     */
+  /*       (superscript) groups (mainly from the Extended-D block), */
+  /*       in analogy to 'latb' and 'latp'?                         */
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400,  0x04FF ),  /* Cyrillic            */
@@ -269,6 +274,7 @@
     AF_UNIRANGE_REC(  0x2DE0,  0x2DFF ),  /* Cyrillic Extended-A */
     AF_UNIRANGE_REC(  0xA640,  0xA69F ),  /* Cyrillic Extended-B */
     AF_UNIRANGE_REC(  0x1C80,  0x1C8F ),  /* Cyrillic Extended-C */
+    AF_UNIRANGE_REC( 0x1E030, 0x1E08F ),  /* Cyrillic Extended-D */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -288,15 +294,16 @@
 
   const AF_Script_UniRangeRec  af_deva_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x0900,  0x093B ),  /* Devanagari          */
+    AF_UNIRANGE_REC(  0x0900,  0x093B ),  /* Devanagari            */
     /* omitting U+093C nukta */
-    AF_UNIRANGE_REC(  0x093D,  0x0950 ),  /* ... continued       */
+    AF_UNIRANGE_REC(  0x093D,  0x0950 ),  /* ... continued         */
     /* omitting U+0951 udatta, U+0952 anudatta */
-    AF_UNIRANGE_REC(  0x0953,  0x0963 ),  /* ... continued       */
+    AF_UNIRANGE_REC(  0x0953,  0x0963 ),  /* ... continued         */
     /* omitting U+0964 danda, U+0965 double danda */
-    AF_UNIRANGE_REC(  0x0966,  0x097F ),  /* ... continued       */
-    AF_UNIRANGE_REC(  0x20B9,  0x20B9 ),  /* (new) Rupee sign    */
-    AF_UNIRANGE_REC(  0xA8E0,  0xA8FF ),  /* Devanagari Extended */
+    AF_UNIRANGE_REC(  0x0966,  0x097F ),  /* ... continued         */
+    AF_UNIRANGE_REC(  0x20B9,  0x20B9 ),  /* (new) Rupee sign      */
+    AF_UNIRANGE_REC(  0xA8E0,  0xA8FF ),  /* Devanagari Extended   */
+    AF_UNIRANGE_REC( 0x11B00, 0x11B5F ),  /* Devanagari Extended-A */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -538,7 +545,7 @@
   {
     AF_UNIRANGE_REC(  0x0EB1,  0x0EB1 ),
     AF_UNIRANGE_REC(  0x0EB4,  0x0EBC ),
-    AF_UNIRANGE_REC(  0x0EC8,  0x0ECD ),
+    AF_UNIRANGE_REC(  0x0EC8,  0x0ECE ),
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -1071,8 +1078,10 @@
     AF_UNIRANGE_REC( 0x2B740, 0x2B81F ),  /* CJK Unified Ideographs Extension D      */
     AF_UNIRANGE_REC( 0x2B820, 0x2CEAF ),  /* CJK Unified Ideographs Extension E      */
     AF_UNIRANGE_REC( 0x2CEB0, 0x2EBEF ),  /* CJK Unified Ideographs Extension F      */
+    AF_UNIRANGE_REC( 0x2EBF0, 0x2EE5D ),  /* CJK Unified Ideographs Extension I      */
     AF_UNIRANGE_REC( 0x2F800, 0x2FA1F ),  /* CJK Compatibility Ideographs Supplement */
     AF_UNIRANGE_REC( 0x30000, 0x3134A ),  /* CJK Unified Ideographs Extension G      */
+    AF_UNIRANGE_REC( 0x31350, 0x323AF ),  /* CJK Unified Ideographs Extension H      */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
