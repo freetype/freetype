@@ -578,7 +578,8 @@
     AF_UNIRANGE_REC(  0x2C7E,  0x2C7F ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0x2E00,  0x2E7F ),  /* Supplemental Punctuation               */
     AF_UNIRANGE_REC(  0xA720,  0xA76F ),  /* Latin Extended-D                       */
-    AF_UNIRANGE_REC(  0xA771,  0xA7F7 ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0xA771,  0xA7F0 ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0xA7F2,  0xA7F7 ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xA7FA,  0xA7FF ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xAB30,  0xAB5B ),  /* Latin Extended-E                       */
     AF_UNIRANGE_REC(  0xAB60,  0xAB68 ),  /* ... continued                          */
@@ -601,7 +602,7 @@
     AF_UNIRANGE_REC(  0x02B9,  0x02DF ),
     AF_UNIRANGE_REC(  0x02E5,  0x02FF ),
     AF_UNIRANGE_REC(  0x0300,  0x036F ),
-    AF_UNIRANGE_REC(  0x1AB0,  0x1ACE ),
+    AF_UNIRANGE_REC(  0x1AB0,  0x1AEB ),
     AF_UNIRANGE_REC(  0x1DC0,  0x1DFF ),
     AF_UNIRANGE_REC(  0x2017,  0x2017 ),
     AF_UNIRANGE_REC(  0x203E,  0x203E ),
@@ -638,6 +639,7 @@
     AF_UNIRANGE_REC(  0x2070,  0x207F ),  /* superscript digits and letters      */
     AF_UNIRANGE_REC(  0x2C7D,  0x2C7D ),  /* modifier letter capital v           */
     AF_UNIRANGE_REC(  0xA770,  0xA770 ),  /* modifier letter us                  */
+    AF_UNIRANGE_REC(  0xA7F1,  0xA7F1 ),  /* modifier letter capital s           */
     AF_UNIRANGE_REC(  0xA7F8,  0xA7F9 ),  /* more modifier letters               */
     AF_UNIRANGE_REC(  0xAB5C,  0xAB5F ),  /* more modifier letters               */
     AF_UNIRANGE_REC(  0xAB69,  0xAB69 ),  /* modifier letter small turned w      */
@@ -1083,6 +1085,7 @@
     AF_UNIRANGE_REC( 0x2F800, 0x2FA1F ),  /* CJK Compatibility Ideographs Supplement */
     AF_UNIRANGE_REC( 0x30000, 0x3134A ),  /* CJK Unified Ideographs Extension G      */
     AF_UNIRANGE_REC( 0x31350, 0x323AF ),  /* CJK Unified Ideographs Extension H      */
+    AF_UNIRANGE_REC( 0x323B0, 0x33479 ),  /* CJK Unified Ideographs Extension J      */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
