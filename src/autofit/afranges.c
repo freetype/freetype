@@ -92,7 +92,7 @@
     AF_UNIRANGE_REC(  0x06DF,  0x06E4 ),
     AF_UNIRANGE_REC(  0x06E7,  0x06E8 ),
     AF_UNIRANGE_REC(  0x06EA,  0x06ED ),
-    AF_UNIRANGE_REC(  0x0898,  0x089F ),
+    AF_UNIRANGE_REC(  0x0897,  0x089F ),
     AF_UNIRANGE_REC(  0x08CA,  0x08E1 ),
     AF_UNIRANGE_REC(  0x08E3,  0x08FF ),
     AF_UNIRANGE_REC(  0xFBB2,  0xFBC1 ),
@@ -712,6 +712,7 @@
     AF_UNIRANGE_REC(  0x1000,  0x109F ),    /* Myanmar            */
     AF_UNIRANGE_REC(  0xA9E0,  0xA9FF ),    /* Myanmar Extended-B */
     AF_UNIRANGE_REC(  0xAA60,  0xAA7F ),    /* Myanmar Extended-A */
+    AF_UNIRANGE_REC( 0x116D0, 0x116FF ),    /* Myanmar Extended-C */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
