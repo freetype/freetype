@@ -73,6 +73,7 @@
   {
     AF_UNIRANGE_REC(  0x0600,  0x06FF ),  /* Arabic                                 */
     AF_UNIRANGE_REC(  0x0750,  0x07FF ),  /* Arabic Supplement                      */
+    AF_UNIRANGE_REC(  0x0870,  0x089F ),  /* Arabic Extended-B                      */
     AF_UNIRANGE_REC(  0x08A0,  0x08FF ),  /* Arabic Extended-A                      */
     AF_UNIRANGE_REC(  0xFB50,  0xFDFF ),  /* Arabic Presentation Forms-A            */
     AF_UNIRANGE_REC(  0xFE70,  0xFEFF ),  /* Arabic Presentation Forms-B            */
@@ -90,8 +91,9 @@
     AF_UNIRANGE_REC(  0x06DF,  0x06E4 ),
     AF_UNIRANGE_REC(  0x06E7,  0x06E8 ),
     AF_UNIRANGE_REC(  0x06EA,  0x06ED ),
-    AF_UNIRANGE_REC(  0x08D4,  0x08E1 ),
-    AF_UNIRANGE_REC(  0x08D3,  0x08FF ),
+    AF_UNIRANGE_REC(  0x0898,  0x089F ),
+    AF_UNIRANGE_REC(  0x08CA,  0x08E1 ),
+    AF_UNIRANGE_REC(  0x08E3,  0x08FF ),
     AF_UNIRANGE_REC(  0xFBB2,  0xFBC1 ),
     AF_UNIRANGE_REC(  0xFE70,  0xFE70 ),
     AF_UNIRANGE_REC(  0xFE72,  0xFE72 ),
@@ -198,8 +200,9 @@
 
   const AF_Script_UniRangeRec  af_cans_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics          */
-    AF_UNIRANGE_REC(  0x18B0,  0x18FF ), /* Unified Canadian Aboriginal Syllabics Extended */
+    AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics            */
+    AF_UNIRANGE_REC(  0x18B0,  0x18FF ), /* Unified Canadian Aboriginal Syllabics Extended   */
+    AF_UNIRANGE_REC( 0x11AB0, 0x11ABF ), /* Unified Canadian Aboriginal Syllabics Extended-A */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -329,6 +332,7 @@
     AF_UNIRANGE_REC(  0x1380,  0x139F ),  /* Ethiopic Supplement */
     AF_UNIRANGE_REC(  0x2D80,  0x2DDF ),  /* Ethiopic Extended   */
     AF_UNIRANGE_REC(  0xAB00,  0xAB2F ),  /* Ethiopic Extended-A */
+    AF_UNIRANGE_REC( 0x1E7E0, 0x1E7FF ),  /* Ethiopic Extended-B */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -574,6 +578,7 @@
     AF_UNIRANGE_REC(  0xAB6A,  0xAB6F ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xFB00,  0xFB06 ),  /* Alphab. Present. Forms (Latin Ligs)    */
     AF_UNIRANGE_REC( 0x1D400, 0x1D7FF ),  /* Mathematical Alphanumeric Symbols      */
+    AF_UNIRANGE_REC( 0x1DF00, 0x1DFFF ),  /* Latin Extended-G                       */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -589,7 +594,7 @@
     AF_UNIRANGE_REC(  0x02B9,  0x02DF ),
     AF_UNIRANGE_REC(  0x02E5,  0x02FF ),
     AF_UNIRANGE_REC(  0x0300,  0x036F ),
-    AF_UNIRANGE_REC(  0x1AB0,  0x1AC0 ),
+    AF_UNIRANGE_REC(  0x1AB0,  0x1ACE ),
     AF_UNIRANGE_REC(  0x1DC0,  0x1DFF ),
     AF_UNIRANGE_REC(  0x2017,  0x2017 ),
     AF_UNIRANGE_REC(  0x203E,  0x203E ),
@@ -905,6 +910,7 @@
   {
     AF_UNIRANGE_REC(  0x0C00,  0x0C00 ),
     AF_UNIRANGE_REC(  0x0C04,  0x0C04 ),
+    AF_UNIRANGE_REC(  0x0C3C,  0x0C3C ),
     AF_UNIRANGE_REC(  0x0C3E,  0x0C40 ),
     AF_UNIRANGE_REC(  0x0C46,  0x0C56 ),
     AF_UNIRANGE_REC(  0x0C62,  0x0C63 ),
@@ -1055,6 +1061,7 @@
     AF_UNIRANGE_REC(  0xFE10,  0xFE1F ),  /* Vertical forms                          */
     AF_UNIRANGE_REC(  0xFE30,  0xFE4F ),  /* CJK Compatibility Forms                 */
     AF_UNIRANGE_REC(  0xFF00,  0xFFEF ),  /* Halfwidth and Fullwidth Forms           */
+    AF_UNIRANGE_REC( 0x1AFF0, 0x1AFFF ),  /* Kana Extended-B                         */
     AF_UNIRANGE_REC( 0x1B000, 0x1B0FF ),  /* Kana Supplement                         */
     AF_UNIRANGE_REC( 0x1B100, 0x1B12F ),  /* Kana Extended-A                         */
     AF_UNIRANGE_REC( 0x1B130, 0x1B16F ),  /* Small Kana Extension                    */
