@@ -570,7 +570,8 @@
     AF_UNIRANGE_REC(  0xA771,  0xA7F7 ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xA7FA,  0xA7FF ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xAB30,  0xAB5B ),  /* Latin Extended-E                       */
-    AF_UNIRANGE_REC(  0xAB60,  0xAB6F ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0xAB60,  0xAB68 ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0xAB6A,  0xAB6F ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xFB00,  0xFB06 ),  /* Alphab. Present. Forms (Latin Ligs)    */
     AF_UNIRANGE_REC( 0x1D400, 0x1D7FF ),  /* Mathematical Alphanumeric Symbols      */
     AF_UNIRANGE_REC(       0,       0 )
@@ -588,7 +589,7 @@
     AF_UNIRANGE_REC(  0x02B9,  0x02DF ),
     AF_UNIRANGE_REC(  0x02E5,  0x02FF ),
     AF_UNIRANGE_REC(  0x0300,  0x036F ),
-    AF_UNIRANGE_REC(  0x1AB0,  0x1ABE ),
+    AF_UNIRANGE_REC(  0x1AB0,  0x1AC0 ),
     AF_UNIRANGE_REC(  0x1DC0,  0x1DFF ),
     AF_UNIRANGE_REC(  0x2017,  0x2017 ),
     AF_UNIRANGE_REC(  0x203E,  0x203E ),
@@ -627,6 +628,8 @@
     AF_UNIRANGE_REC(  0xA770,  0xA770 ),  /* modifier letter us                  */
     AF_UNIRANGE_REC(  0xA7F8,  0xA7F9 ),  /* more modifier letters               */
     AF_UNIRANGE_REC(  0xAB5C,  0xAB5F ),  /* more modifier letters               */
+    AF_UNIRANGE_REC(  0xAB69,  0xAB69 ),  /* modifier letter small turned w      */
+    AF_UNIRANGE_REC( 0x10780, 0x107FB ),  /* Latin Extended-F                    */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -638,7 +641,8 @@
 
   const AF_Script_UniRangeRec  af_lisu_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0xA4D0,  0xA4FF ),    /* Lisu */
+    AF_UNIRANGE_REC(  0xA4D0,  0xA4FF ),    /* Lisu            */
+    AF_UNIRANGE_REC( 0x11FB0, 0x11FBF ),    /* Lisu Supplement */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -836,6 +840,7 @@
 
   const AF_Script_UniRangeRec  af_sinh_nonbase_uniranges[] =
   {
+    AF_UNIRANGE_REC(  0x0D81,  0x0D81 ),
     AF_UNIRANGE_REC(  0x0DCA,  0x0DCA ),
     AF_UNIRANGE_REC(  0x0DD2,  0x0DD6 ),
     AF_UNIRANGE_REC(       0,       0 )
@@ -993,6 +998,7 @@
     AF_UNIRANGE_REC(  0xA806,  0xA806 ),
     AF_UNIRANGE_REC(  0xA80B,  0xA80B ),
     AF_UNIRANGE_REC(  0xA825,  0xA826 ),
+    AF_UNIRANGE_REC(  0xA82C,  0xA82C ),
     AF_UNIRANGE_REC(       0,       0 )
   };
 
@@ -1059,6 +1065,7 @@
     AF_UNIRANGE_REC( 0x2B820, 0x2CEAF ),  /* CJK Unified Ideographs Extension E      */
     AF_UNIRANGE_REC( 0x2CEB0, 0x2EBEF ),  /* CJK Unified Ideographs Extension F      */
     AF_UNIRANGE_REC( 0x2F800, 0x2FA1F ),  /* CJK Compatibility Ideographs Supplement */
+    AF_UNIRANGE_REC( 0x30000, 0x3134A ),  /* CJK Unified Ideographs Extension G      */
     AF_UNIRANGE_REC(       0,       0 )
   };
 
