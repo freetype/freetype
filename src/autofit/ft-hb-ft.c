@@ -62,9 +62,9 @@ ft_hb_ft_reference_table (hb_face_t *face, hb_tag_t tag, void *user_data)
     return NULL;
   }
 
-  return hb_blob_create ((const char *) buffer, length,
-                         HB_MEMORY_MODE_WRITABLE,
-                         buffer, ft_sfree);
+  return hb(blob_create) ((const char *) buffer, length,
+                          HB_MEMORY_MODE_WRITABLE,
+                          buffer, ft_sfree);
 }
 
 static hb_face_t *
@@ -76,18 +76,18 @@ ft_hb_ft_face_create (FT_Face           ft_face,
   if (!ft_face->stream->read) {
     hb_blob_t *blob;
 
-    blob = hb_blob_create ((const char *) ft_face->stream->base,
-                           (unsigned int) ft_face->stream->size,
-                           HB_MEMORY_MODE_READONLY,
-                           ft_face, destroy);
-    face = hb_face_create (blob, ft_face->face_index);
-    hb_blob_destroy (blob);
+    blob = hb(blob_create) ((const char *) ft_face->stream->base,
+                            (unsigned int) ft_face->stream->size,
+                            HB_MEMORY_MODE_READONLY,
+                            ft_face, destroy);
+    face = hb(face_create) (blob, ft_face->face_index);
+    hb(blob_destroy) (blob);
   } else {
-    face = hb_face_create_for_tables (ft_hb_ft_reference_table, ft_face, destroy);
+    face = hb(face_create_for_tables) (ft_hb_ft_reference_table, ft_face, destroy);
   }
 
-  hb_face_set_index (face, ft_face->face_index);
-  hb_face_set_upem (face, ft_face->units_per_EM);
+  hb(face_set_index) (face, ft_face->face_index);
+  hb(face_set_upem) (face, ft_face->units_per_EM);
 
   return face;
 }
@@ -100,8 +100,8 @@ ft_hb_ft_font_create (FT_Face           ft_face,
   hb_face_t *face;
 
   face = ft_hb_ft_face_create (ft_face, destroy);
-  font = hb_font_create (face);
-  hb_face_destroy (face);
+  font = hb(font_create) (face);
+  hb(face_destroy) (face);
   return font;
 }
 

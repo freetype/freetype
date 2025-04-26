@@ -27,10 +27,7 @@
 #ifndef FT_HB_FT_H
 #define FT_HB_FT_H
 
-#include <hb.h>
-
-#include <freetype/internal/compiler-macros.h>
-#include <freetype/freetype.h>
+#include "ft-hb.h"
 
 
 FT_BEGIN_HEADER

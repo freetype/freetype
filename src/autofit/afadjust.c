@@ -1045,7 +1045,7 @@
 
 
     /* Iterate over all lookups. */
-    while ( hb_set_next( gsub_lookups, &lookup_index ) )
+    while ( hb( set_next )( gsub_lookups, &lookup_index ) )
     {
       FT_Bool       lookup_done  = FALSE;
       unsigned int  start_offset = 0;
@@ -1059,19 +1059,19 @@
         unsigned int  n;
 
 
-        (void)hb_ot_layout_lookup_get_glyph_alternates( hb_face,
-                                                        lookup_index,
-                                                        glyph,
-                                                        start_offset,
-                                                        &alternates_count,
-                                                        alternates );
+        (void)hb( ot_layout_lookup_get_glyph_alternates )( hb_face,
+                                                           lookup_index,
+                                                           glyph,
+                                                           start_offset,
+                                                           &alternates_count,
+                                                           alternates );
 
         start_offset += ALTERNATE_CHUNK;
         if ( alternates_count < ALTERNATE_CHUNK )
           lookup_done = TRUE;
 
         for ( n = 0; n < alternates_count; n++ )
-          hb_set_add( result, alternates[n] );
+          hb( set_add )( result, alternates[n] );
       }
     }
   }
@@ -1085,38 +1085,38 @@
                            hb_set_t       *gsub_lookups,
                            hb_set_t       *result )
   {
-    hb_face_t  *hb_face       = hb_font_get_face( hb_font );
-    hb_set_t   *helper_result = hb_set_create();
+    hb_face_t  *hb_face       = hb( font_get_face )( hb_font );
+    hb_set_t   *helper_result = hb( set_create )();
 
 
     /* Seed `helper_result` with `glyph` itself, then get all possible */
     /* values.  Note that we can't use `hb_set_next` to control the    */
     /* loop because we modify `helper_result` during iteration.        */
-    hb_set_add( helper_result, glyph );
-    while ( !hb_set_is_empty( helper_result ) )
+    hb( set_add )( helper_result, glyph );
+    while ( !hb( set_is_empty )( helper_result ) )
     {
       hb_codepoint_t  elem;
 
 
       /* Always get the smallest element of the set. */
       elem = HB_SET_VALUE_INVALID;
-      hb_set_next( helper_result, &elem );
+      hb( set_next )( helper_result, &elem );
 
       /* Don't process already handled glyphs again. */
-      if ( !hb_set_has( result, elem ) )
+      if ( !hb( set_has )( result, elem ) )
       {
         /* This call updates the glyph set in `helper_result`. */
         af_get_glyph_alternates_helper( hb_face,
                                         elem,
                                         gsub_lookups,
                                         helper_result );
-        hb_set_add( result, elem );
+        hb( set_add )( result, elem );
       }
 
-      hb_set_del( helper_result, elem );
+      hb( set_del )( helper_result, elem );
     }
 
-    hb_set_destroy( helper_result );
+    hb( set_destroy )( helper_result );
   }
 
 #  endif /* HB_VERSION_ATLEAST */
@@ -1169,10 +1169,10 @@
       /* 'empty' objects that do nothing.                         */
 
       hb_font_t  *hb_font = globals->hb_font;
-      hb_face_t  *hb_face = hb_font_get_face( hb_font );
+      hb_face_t  *hb_face = hb( font_get_face )( hb_font );
 
-      hb_set_t  *result_set   = hb_set_create();
-      hb_set_t  *gsub_lookups = hb_set_create();
+      hb_set_t  *result_set   = hb( set_create )();
+      hb_set_t  *gsub_lookups = hb( set_create )();
 
       FT_UInt32  codepoint;
       FT_UInt    glyph_index;
@@ -1183,10 +1183,10 @@
 
 
       /* Compute set of all GSUB lookups. */
-      hb_ot_layout_collect_lookups( hb_face,
-                                    HB_OT_TAG_GSUB,
-                                    NULL, NULL, NULL,
-                                    gsub_lookups );
+      hb( ot_layout_collect_lookups )( hb_face,
+                                       HB_OT_TAG_GSUB,
+                                       NULL, NULL, NULL,
+                                       gsub_lookups );
 
       /* Find all glyph alternates of the code points in  */
       /* the adjustment database and put them into `map`. */
@@ -1206,7 +1206,7 @@
                                  result_set );
 
         glyph = HB_SET_VALUE_INVALID;
-        while ( hb_set_next( result_set, &glyph ) )
+        while ( hb( set_next )( result_set, &glyph ) )
         {
           FT_Long  insert_point;
 
@@ -1222,11 +1222,11 @@
           ( *map )->entries[insert_point].codepoint   = codepoint;
         }
 
-        hb_set_clear( result_set );
+        hb( set_clear )( result_set );
       }
 
-      hb_set_destroy( result_set );
-      hb_set_destroy( gsub_lookups );
+      hb( set_destroy )( result_set );
+      hb( set_destroy )( gsub_lookups );
 
       ft_qsort( ( *map )->entries,
                 ( *map )->length,
