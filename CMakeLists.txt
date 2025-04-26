@@ -241,7 +241,7 @@ endif ()
 include(FindPkgConfig)
 
 if (NOT FT_DISABLE_HARFBUZZ)
-  set(HARFBUZZ_MIN_VERSION "2.0.0")
+  set(HARFBUZZ_MIN_VERSION "2.6.8")
   if (FT_REQUIRE_HARFBUZZ)
     find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION} REQUIRED)
   else ()
