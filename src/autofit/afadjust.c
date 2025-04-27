@@ -987,7 +987,6 @@
 
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-#  if HB_VERSION_ATLEAST( 7, 2, 0 )
 
   /*
     Find all glyphs that a code point could turn into from the OpenType
@@ -1124,7 +1123,6 @@
     hb( set_destroy )( helper_result );
   }
 
-#  endif /* HB_VERSION_ATLEAST */
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
@@ -1166,8 +1164,8 @@
       goto Exit;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-#  if HB_VERSION_ATLEAST( 7, 2, 0 )
 
+    if ( hb( version_atleast )( 7, 2, 0 ) )
     {
       /* No need to check whether HarfBuzz has allocation issues; */
       /* it continues to work in such cases and simply returns    */
@@ -1277,10 +1275,9 @@
         codepoint = FT_Get_Next_Char( face, codepoint, &glyph_index );
       }
     }
+    else
 
-#  endif /* HB_VERSION_ATLEAST */
-
-#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     {
       FT_UInt  i;
@@ -1312,8 +1309,6 @@
                 sizeof ( AF_ReverseMapEntry ),
                 af_reverse_character_map_entry_compare );
     }
-
-#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %ld entries\n", ( *map )->length ));

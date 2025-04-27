@@ -40,18 +40,20 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afadjust.c \
                  $(AUTOF_DIR)/afmodule.c \
                  $(AUTOF_DIR)/afranges.c \
                  $(AUTOF_DIR)/afshaper.c \
+                 $(AUTOF_DIR)/ft-hb.c    \
                  $(AUTOF_DIR)/ft-hb-ft.c
 
 # AUTOF driver headers
 #
-AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)   \
-               $(AUTOF_DIR)/afcover.h   \
-               $(AUTOF_DIR)/aferrors.h  \
-               $(AUTOF_DIR)/afscript.h  \
-               $(AUTOF_DIR)/afstyles.h  \
-               $(AUTOF_DIR)/aftypes.h   \
-               $(AUTOF_DIR)/afws-decl.h \
-               $(AUTOF_DIR)/afws-iter.h
+AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)     \
+               $(AUTOF_DIR)/afcover.h     \
+               $(AUTOF_DIR)/aferrors.h    \
+               $(AUTOF_DIR)/afscript.h    \
+               $(AUTOF_DIR)/afstyles.h    \
+               $(AUTOF_DIR)/aftypes.h     \
+               $(AUTOF_DIR)/afws-decl.h   \
+               $(AUTOF_DIR)/afws-iter.h   \
+               $(AUTOF_DIR)/ft-hb-decls.h
 
 
 # AUTOF driver object(s)
