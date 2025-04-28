@@ -90,12 +90,8 @@
 
       /* If HarfBuzz is not available, we need a pointer to a single */
       /* unsigned long value.                                        */
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-      void*     shaper_buf;
-#else
       FT_ULong  shaper_buf_;
       void*     shaper_buf = &shaper_buf_;
-#endif
 
       const char*  p;
 
@@ -105,9 +101,8 @@
 
       p = script_class->standard_charstring;
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-      shaper_buf = af_shaper_buf_create( metrics->root.globals );
-#endif
+      if ( ft_hb_enabled( metrics->root.globals ) )
+        shaper_buf = af_shaper_buf_create( metrics->root.globals );
 
       /* We check a list of standard characters.  The first match wins. */
 
@@ -297,12 +292,8 @@
 
     /* If HarfBuzz is not available, we need a pointer to a single */
     /* unsigned long value.                                        */
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    void*     shaper_buf;
-#else
     FT_ULong  shaper_buf_;
     void*     shaper_buf = &shaper_buf_;
-#endif
 
 
     /* we walk over the blue character strings as specified in the   */
@@ -313,9 +304,8 @@
     FT_TRACE5(( "==========================\n" ));
     FT_TRACE5(( "\n" ));
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    shaper_buf = af_shaper_buf_create( metrics->root.globals );
-#endif
+    if ( ft_hb_enabled( metrics->root.globals ) )
+      shaper_buf = af_shaper_buf_create( metrics->root.globals );
 
     for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
     {
@@ -572,12 +562,8 @@
 
     /* If HarfBuzz is not available, we need a pointer to a single */
     /* unsigned long value.                                        */
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    void*     shaper_buf;
-#else
     FT_ULong  shaper_buf_;
     void*     shaper_buf = &shaper_buf_;
-#endif
 
     /* in all supported charmaps, digits have character codes 0x30-0x39 */
     const char   digits[] = "0 1 2 3 4 5 6 7 8 9";
@@ -588,9 +574,8 @@
 
     p = digits;
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    shaper_buf = af_shaper_buf_create( metrics->root.globals );
-#endif
+    if ( ft_hb_enabled( metrics->root.globals ) )
+      shaper_buf = af_shaper_buf_create( metrics->root.globals );
 
     while ( *p )
     {

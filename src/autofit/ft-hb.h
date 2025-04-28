@@ -68,6 +68,12 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
+  struct AF_FaceGlobalsRec_;
+
+  FT_LOCAL( FT_Bool )
+  ft_hb_enabled( struct AF_FaceGlobalsRec_  *globals );
+
+
 FT_END_HEADER
 
 #endif /* FT_HB_H */
