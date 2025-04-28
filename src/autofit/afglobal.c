@@ -22,6 +22,10 @@
 #include "afws-decl.h"
 #include <freetype/internal/ftdebug.h>
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#  include "ft-hb-ft.h"
+#endif
+
 
   /**************************************************************************
    *
@@ -356,8 +360,16 @@
     globals->scale_down_factor         = 0;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    globals->hb_font = ft_hb_ft_font_create( globals );
-    globals->hb_buf  = hb( buffer_create )();
+    if ( ft_hb_enabled ( globals ) )
+    {
+      globals->hb_font = ft_hb_ft_font_create( globals );
+      globals->hb_buf  = hb( buffer_create )();
+    }
+    else
+    {
+      globals->hb_font = NULL;
+      globals->hb_buf  = NULL;
+    }
 #endif
 
     error = af_face_globals_compute_style_coverage( globals );
@@ -405,8 +417,11 @@
       }
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-      hb( font_destroy )( globals->hb_font );
-      hb( buffer_destroy )( globals->hb_buf );
+      if ( ft_hb_enabled ( globals ) )
+      {
+        hb( font_destroy )( globals->hb_font );
+        hb( buffer_destroy )( globals->hb_buf );
+      }
 #endif
 
       /* no need to free `globals->glyph_styles'; */

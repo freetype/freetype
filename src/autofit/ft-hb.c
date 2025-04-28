@@ -153,11 +153,32 @@
     }
   }
 
+
+  FT_LOCAL_DEF( FT_Bool )
+  ft_hb_enabled( struct AF_FaceGlobalsRec_  *globals )
+  {
+    return globals->module->hb_funcs != NULL;
+  }
+
 #ifndef _WIN32
 #  if defined( __GNUC__ )
 #    pragma GCC diagnostic pop
 #  endif
 #endif
+
+#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ_DYNAMIC */
+
+  FT_LOCAL_DEF( FT_Bool )
+  ft_hb_enabled( struct AF_FaceGlobalsRec_  *globals )
+  {
+    FT_UNUSED( globals );
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    return TRUE;
+#else
+    return FALSE;
+#endif
+  }
 
 #endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ_DYNAMIC */
 

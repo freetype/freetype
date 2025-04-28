@@ -699,15 +699,17 @@
                           FT_Bool         default_script )
   {
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    return af_shaper_get_coverage_hb( globals,
-                                      style_class,
-                                      gstyles,
-                                      default_script );
-#endif
-    return af_shaper_get_coverage_nohb( globals,
+    if ( ft_hb_enabled( globals ) )
+      return af_shaper_get_coverage_hb( globals,
                                         style_class,
                                         gstyles,
                                         default_script );
+    else
+#endif
+      return af_shaper_get_coverage_nohb( globals,
+                                          style_class,
+                                          gstyles,
+                                          default_script );
   }
 
 
@@ -715,9 +717,11 @@
   af_shaper_buf_create( AF_FaceGlobals  globals )
   {
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    return af_shaper_buf_create_hb( globals );
+    if ( ft_hb_enabled( globals ) )
+      return af_shaper_buf_create_hb( globals );
+    else
 #endif
-    return af_shaper_buf_create_nohb( globals );
+      return af_shaper_buf_create_nohb( globals );
   }
 
 
@@ -726,9 +730,11 @@
                          void*           buf )
   {
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    af_shaper_buf_destroy_hb( globals, buf );
+    if ( ft_hb_enabled( globals ) )
+      af_shaper_buf_destroy_hb( globals, buf );
+    else
 #endif
-    af_shaper_buf_destroy_nohb( globals, buf );
+      af_shaper_buf_destroy_nohb( globals, buf );
   }
 
 
@@ -739,9 +745,11 @@
                          unsigned int*    count )
   {
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    return af_shaper_get_cluster_hb( p, metrics, buf_, count );
+    if ( ft_hb_enabled( metrics->globals ) )
+      return af_shaper_get_cluster_hb( p, metrics, buf_, count );
+    else
 #endif
-    return af_shaper_get_cluster_nohb( p, metrics, buf_, count );
+      return af_shaper_get_cluster_nohb( p, metrics, buf_, count );
   }
 
 
@@ -753,9 +761,18 @@
                       FT_Long*         y_offset )
   {
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    return af_shaper_get_elem_hb( metrics, buf_, idx, advance, y_offset );
+    if ( ft_hb_enabled( metrics->globals ) )
+      return af_shaper_get_elem_hb( metrics,
+                                    buf_,
+                                    idx,
+                                    advance,
+                                    y_offset );
 #endif
-    return af_shaper_get_elem_nohb( metrics, buf_, idx, advance, y_offset );
+      return af_shaper_get_elem_nohb( metrics,
+                                      buf_,
+                                      idx,
+                                      advance,
+                                      y_offset );
   }
 
 
