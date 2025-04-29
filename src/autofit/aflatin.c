@@ -3234,6 +3234,9 @@
     FT_Pos  target_height;
 
 
+    if ( min_y == max_y )
+      return 0;
+
     FT_TRACE4(( "af_latin_stretch_top_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
 
