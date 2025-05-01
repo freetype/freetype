@@ -399,6 +399,20 @@
             FT_TRACE5(( "long" ));
           }
 
+          if ( AF_LATIN_IS_CAPITAL_BOTTOM_BLUE( bs ) )
+          {
+            if ( have_flag )
+              FT_TRACE5(( ", " ));
+            FT_TRACE5(( "capital bottom" ));
+          }
+
+          if ( AF_LATIN_IS_SMALL_BOTTOM_BLUE( bs ) )
+          {
+            if ( have_flag )
+              FT_TRACE5(( ", " ));
+            FT_TRACE5(( "small bottom" ));
+          }
+
           FT_TRACE5(( ")" ));
         }
 
@@ -951,6 +965,10 @@
         blue->flags |= AF_LATIN_BLUE_SUB_TOP;
       if ( AF_LATIN_IS_NEUTRAL_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_NEUTRAL;
+      if ( AF_LATIN_IS_CAPITAL_BOTTOM_BLUE( bs ) )
+        blue->flags |= AF_LATIN_BLUE_BOTTOM;
+      if ( AF_LATIN_IS_SMALL_BOTTOM_BLUE( bs ) )
+        blue->flags |= AF_LATIN_BLUE_BOTTOM_SMALL;
 
       /*
        * The following flag is used later to adjust the y and x scales
