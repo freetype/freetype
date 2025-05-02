@@ -1597,6 +1597,7 @@
     exc->code     = range->base;
     exc->codeSize = range->size;
     exc->IP       = aIP;
+    exc->length   = 0;
     exc->curRange = aRange;
 
     return SUCCESS;
@@ -3427,7 +3428,7 @@
       return;
     }
 
-    exc->step_ins = FALSE;
+    exc->length = 0;
 
     if ( args[0] < 0 )
     {
@@ -3580,12 +3581,11 @@
 
     pRec->Cur_Count--;
 
-    exc->step_ins = FALSE;
-
     if ( pRec->Cur_Count > 0 )
     {
       exc->callTop++;
-      exc->IP = pRec->Def->start;
+      exc->IP     = pRec->Def->start;
+      exc->length = 0;
     }
     else
       /* Loop through the current function */
@@ -3673,8 +3673,6 @@
 
     Ins_Goto_CodeRange( exc, def->range, def->start );
 
-    exc->step_ins = FALSE;
-
     return;
 
   Fail:
@@ -3751,8 +3749,6 @@
       exc->callTop++;
 
       Ins_Goto_CodeRange( exc, def->range, def->start );
-
-      exc->step_ins = FALSE;
 
       exc->loopcall_counter += (FT_ULong)args[0];
       if ( exc->loopcall_counter > exc->loopcall_counter_max )
@@ -3902,7 +3898,7 @@
     for ( K = 0; K < L; K++ )
       args[K] = GetShortIns( exc );
 
-    exc->step_ins = FALSE;
+    exc->length   = 0;
     exc->new_top += L;
   }
 
@@ -3959,7 +3955,7 @@
     for ( K = 0; K < L; K++ )
       args[K] = GetShortIns( exc );
 
-    exc->step_ins = FALSE;
+    exc->length = 0;
   }
 
 
@@ -6871,7 +6867,6 @@
 
         Ins_Goto_CodeRange( exc, def->range, def->start );
 
-        exc->step_ins = FALSE;
         return;
       }
     }
@@ -7084,8 +7079,7 @@
         goto LErrorLabel_;
       }
 
-      exc->step_ins = TRUE;
-      exc->error    = FT_Err_Ok;
+      exc->error = FT_Err_Ok;
 
       {
         FT_Long*  args   = exc->stack + exc->args;
@@ -7686,9 +7680,7 @@
       }
 
       exc->top = exc->new_top;
-
-      if ( exc->step_ins )
-        exc->IP += exc->length;
+      exc->IP += exc->length;
 
       /* increment instruction counter and check if we didn't */
       /* run this program for too long (e.g. infinite loops). */

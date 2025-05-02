@@ -142,11 +142,9 @@ FT_BEGIN_HEADER
     FT_Long            IP;        /* current instruction pointer */
     FT_Long            codeSize;  /* size of current range       */
 
-    FT_Byte            opcode;    /* current opcode              */
-    FT_Int             length;    /* length of current opcode    */
+    FT_Byte            opcode;    /* current opcode             */
+    FT_Int             length;    /* opcode length or increment */
 
-    FT_Bool            step_ins;  /* true if the interpreter must */
-                                  /* increment IP after ins. exec */
     FT_ULong           cvtSize;   /* ! */
     FT_Long*           cvt;       /* ! */
     FT_ULong           glyfCvtSize;
