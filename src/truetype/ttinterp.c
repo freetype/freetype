@@ -1522,31 +1522,6 @@
   /**************************************************************************
    *
    * @Function:
-   *   GetShortIns
-   *
-   * @Description:
-   *   Returns a short integer taken from the instruction stream at
-   *   address IP.
-   *
-   * @Return:
-   *   Short read at code[IP].
-   *
-   * @Note:
-   *   This one could become a macro.
-   */
-  static FT_Short
-  GetShortIns( TT_ExecContext  exc )
-  {
-    /* Reading a byte stream so there is no endianness (DaveP) */
-    exc->IP += 2;
-    return (FT_Short)( ( exc->code[exc->IP - 2] << 8 ) +
-                         exc->code[exc->IP - 1]      );
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
    *   Ins_Goto_CodeRange
    *
    * @Description:
@@ -3303,8 +3278,7 @@
         exc->length = 2 - exc->length * exc->code[exc->IP + 1];
       }
 
-      if ( exc->IP + exc->length <= exc->codeSize )
-        return SUCCESS;
+      return SUCCESS;
     }
 
   Fail_Overflow:
@@ -3854,10 +3828,23 @@
   Ins_NPUSHB( TT_ExecContext  exc,
               FT_Long*        args )
   {
-    FT_UShort  L, K;
+    FT_Long  IP = exc->IP;
+    FT_Int   L, K;
 
 
-    L = (FT_UShort)exc->code[exc->IP + 1];
+    if ( ++IP > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
+
+    L = exc->code[IP];
+
+    if ( IP + L > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
 
     if ( BOUNDS( L, exc->stackSize + 1 - exc->top ) )
     {
@@ -3865,10 +3852,11 @@
       return;
     }
 
-    for ( K = 1; K <= L; K++ )
-      args[K - 1] = exc->code[exc->IP + K + 1];
+    for ( K = 0; K < L; K++ )
+      args[K] = exc->code[++IP];
 
     exc->new_top += L;
+    exc->IP       = IP;
   }
 
 
@@ -3882,10 +3870,23 @@
   Ins_NPUSHW( TT_ExecContext  exc,
               FT_Long*        args )
   {
-    FT_UShort  L, K;
+    FT_Long  IP = exc->IP;
+    FT_Int   L, K;
 
 
-    L = (FT_UShort)exc->code[exc->IP + 1];
+    if ( ++IP > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
+
+    L = exc->code[IP];
+
+    if ( IP + 2 * L > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
 
     if ( BOUNDS( L, exc->stackSize + 1 - exc->top ) )
     {
@@ -3893,13 +3894,12 @@
       return;
     }
 
-    exc->IP += 2;
+    /* note casting for sign-extension */
+    for ( K = 0; K < L; K++, IP += 2 )
+      args[K] = (FT_Short)( exc->code[IP + 1] << 8 ) | exc->code[IP + 2];
 
-    for ( K = 0; K < L; K++ )
-      args[K] = GetShortIns( exc );
-
-    exc->length   = 0;
     exc->new_top += L;
+    exc->IP       = IP;
   }
 
 
@@ -3913,10 +3913,17 @@
   Ins_PUSHB( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    FT_UShort  L, K;
+    FT_Long  IP = exc->IP;
+    FT_Int   L, K;
 
 
-    L = (FT_UShort)( exc->opcode - 0xB0 + 1 );
+    L = exc->opcode - 0xB0 + 1;
+
+    if ( IP + L > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
 
     if ( BOUNDS( L, exc->stackSize + 1 - exc->top ) )
     {
@@ -3924,8 +3931,10 @@
       return;
     }
 
-    for ( K = 1; K <= L; K++ )
-      args[K - 1] = exc->code[exc->IP + K];
+    for ( K = 0; K < L; K++ )
+      args[K] = exc->code[++IP];
+
+    exc->IP = IP;
   }
 
 
@@ -3939,10 +3948,17 @@
   Ins_PUSHW( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    FT_UShort  L, K;
+    FT_Long  IP = exc->IP;
+    FT_Int   L, K;
 
 
-    L = (FT_UShort)( exc->opcode - 0xB8 + 1 );
+    L = exc->opcode - 0xB8 + 1;
+
+    if ( IP + 2 * L > exc->codeSize )
+    {
+      exc->error = FT_THROW( Code_Overflow );
+      return;
+    }
 
     if ( BOUNDS( L, exc->stackSize + 1 - exc->top ) )
     {
@@ -3950,12 +3966,11 @@
       return;
     }
 
-    exc->IP++;
+    /* note casting for sign-extension */
+    for ( K = 0; K < L; K++, IP += 2 )
+      args[K] = (FT_Short)( exc->code[IP + 1] << 8 ) | exc->code[IP + 2];
 
-    for ( K = 0; K < L; K++ )
-      args[K] = GetShortIns( exc );
-
-    exc->length = 0;
+    exc->IP = IP;
   }
 
 
@@ -6817,6 +6832,8 @@
       for ( i = 0; i < num_axes; i++ )
         args[i] = 0;
     }
+
+    exc->new_top += num_axes;
   }
 
 
@@ -7000,7 +7017,17 @@
 
     do
     {
+      /* increment instruction counter and check if we didn't */
+      /* run this program for too long (e.g. infinite loops). */
+      if ( ++ins_counter > TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES )
+      {
+        exc->error = FT_THROW( Execution_Too_Long );
+        goto LErrorLabel_;
+      }
+
+      exc->error  = FT_Err_Ok;
       exc->opcode = exc->code[exc->IP];
+      exc->length = 1;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
       if ( ft_trace_levels[trace_ttinterp] >= 6 )
@@ -7024,17 +7051,6 @@
       }
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
-      if ( ( exc->length = opcode_length[exc->opcode] ) < 0 )
-      {
-        if ( exc->IP + 1 >= exc->codeSize )
-          goto LErrorCodeOverflow_;
-
-        exc->length = 2 - exc->length * exc->code[exc->IP + 1];
-      }
-
-      if ( exc->IP + exc->length > exc->codeSize )
-        goto LErrorCodeOverflow_;
-
       /* First, let's check for empty stack and overflow */
       exc->args = exc->top - ( Pop_Push_Count[exc->opcode] >> 4 );
 
@@ -7054,21 +7070,7 @@
         exc->args = 0;
       }
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      if ( exc->opcode == 0x91 )
-      {
-        /* this is very special: GETVARIATION returns */
-        /* a variable number of arguments             */
-
-        /* it is the job of the application to `activate' GX handling, */
-        /* that is, calling any of the GX API functions on the current */
-        /* font to select a variation instance                         */
-        if ( exc->face->blend )
-          exc->new_top = exc->args + exc->face->blend->num_axis;
-      }
-      else
-#endif
-        exc->new_top = exc->args + ( Pop_Push_Count[exc->opcode] & 15 );
+      exc->new_top = exc->args + ( Pop_Push_Count[exc->opcode] & 15 );
 
       /* `new_top' is the new top of the stack, after the instruction's */
       /* execution.  `top' will be set to `new_top' after the `switch'  */
@@ -7078,8 +7080,6 @@
         exc->error = FT_THROW( Stack_Overflow );
         goto LErrorLabel_;
       }
-
-      exc->error = FT_Err_Ok;
 
       {
         FT_Long*  args   = exc->stack + exc->args;
@@ -7624,13 +7624,13 @@
       {
         switch ( exc->error )
         {
-          /* looking for redefined instructions */
         case FT_ERR( Invalid_Opcode ):
           {
             TT_DefRecord*  def   = exc->IDefs;
             TT_DefRecord*  limit = FT_OFFSET( def, exc->numIDefs );
 
 
+            /* looking for redefined instructions */
             for ( ; def < limit; def++ )
             {
               if ( def->active && exc->opcode == (FT_Byte)def->opc )
@@ -7660,35 +7660,15 @@
               }
             }
           }
-
-          exc->error = FT_THROW( Invalid_Opcode );
-          goto LErrorLabel_;
-
-#if 0
-          break;   /* Unreachable code warning suppression.             */
-                   /* Leave to remind in case a later change the editor */
-                   /* to consider break;                                */
-#endif
+          FALL_THROUGH;
 
         default:
           goto LErrorLabel_;
-
-#if 0
-        break;
-#endif
         }
       }
 
       exc->top = exc->new_top;
       exc->IP += exc->length;
-
-      /* increment instruction counter and check if we didn't */
-      /* run this program for too long (e.g. infinite loops). */
-      if ( ++ins_counter > TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES )
-      {
-        exc->error = FT_THROW( Execution_Too_Long );
-        goto LErrorLabel_;
-      }
 
     LSuiteLabel_:
       if ( exc->IP >= exc->codeSize )
@@ -7709,9 +7689,6 @@
                 ins_counter == 1 ? "" : "s" ));
 
     return FT_Err_Ok;
-
-  LErrorCodeOverflow_:
-    exc->error = FT_THROW( Code_Overflow );
 
   LErrorLabel_:
     if ( exc->error && !exc->instruction_trap )
