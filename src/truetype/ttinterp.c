@@ -365,6 +365,9 @@
     exec->zp2 = exec->pts;
     exec->zp0 = exec->pts;
 
+    exec->callTop = 0;
+    exec->top     = 0;
+
     exec->instruction_trap = FALSE;
 
     return FT_Err_Ok;

@@ -116,7 +116,7 @@ FT_BEGIN_HEADER
 
     FT_Error           error;      /* last execution error */
 
-    FT_Long            top;        /* @ top of exec. stack */
+    FT_Long            top;        /* @! top of exec. stack */
 
     FT_Long            stackSize;  /* ! size of exec. stack */
     FT_Long*           stack;      /* ! current exec. stack */
@@ -164,9 +164,9 @@ FT_BEGIN_HEADER
     FT_UInt            maxFunc;   /* ! maximum function index    */
     FT_UInt            maxIns;    /* ! maximum instruction index */
 
-    FT_Int             callTop,    /* @ top of call stack during execution */
-                       callSize;   /*   size of call stack                 */
-    TT_CallStack       callStack;  /*   call stack                         */
+    FT_Int             callTop,    /* @! top of call stack during execution */
+                       callSize;   /*    size of call stack                 */
+    TT_CallStack       callStack;  /*    call stack                         */
 
     FT_UShort          maxPoints;    /* capacity of this context's `pts' */
     FT_Short           maxContours;  /* record, expressed in points and  */
@@ -187,8 +187,6 @@ FT_BEGIN_HEADER
     FT_Bool            instruction_trap; /* ! If `True', the interpreter   */
                                          /*   exits after each instruction */
 
-    TT_GraphicsState   default_GS;       /* graphics state resulting from   */
-                                         /* the prep program                */
     FT_Bool            is_composite;     /* true if the glyph is composite  */
     FT_Bool            pedantic_hinting; /* true if pedantic interpretation */
 

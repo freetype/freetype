@@ -906,17 +906,11 @@
     if ( error )
       return error;
 
-    exec->callTop = 0;
-    exec->top     = 0;
+    exec->pedantic_hinting = pedantic;
 
     exec->period    = 64;
     exec->phase     = 0;
     exec->threshold = 0;
-
-    exec->instruction_trap = FALSE;
-    exec->F_dot_P          = 0x4000L;
-
-    exec->pedantic_hinting = pedantic;
 
     {
       FT_Size_Metrics*  size_metrics = &exec->metrics;
@@ -1011,11 +1005,6 @@
     error = TT_Load_Context( exec, face, size );
     if ( error )
       return error;
-
-    exec->callTop = 0;
-    exec->top     = 0;
-
-    exec->instruction_trap = FALSE;
 
     exec->pedantic_hinting = pedantic;
 

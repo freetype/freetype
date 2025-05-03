@@ -2332,6 +2332,8 @@
           return error;
       }
 
+      exec->pedantic_hinting = pedantic;
+
       /* check whether the cvt program has disabled hinting */
       if ( exec->GS.instruct_control & 1 )
         load_flags |= FT_LOAD_NO_HINTING;
@@ -2362,7 +2364,6 @@
         exec->backward_compatibility = FALSE;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */
 
-      exec->pedantic_hinting = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
       loader->exec = exec;
       loader->instructions = exec->glyphIns;
 
