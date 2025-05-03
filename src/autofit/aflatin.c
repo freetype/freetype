@@ -2542,6 +2542,9 @@
       FT_Pos    best_dist;                 /* initial threshold */
 
 
+      if ( edge->flags & AF_EDGE_NO_BLUE )
+        continue;
+
       /* compute the initial threshold as a fraction of the EM size */
       /* (the value 40 is heuristic)                                */
       best_dist = FT_MulFix( metrics->units_per_em / 40, scale );
@@ -3155,6 +3158,119 @@
         } while ( p != first_point );
       }
     }
+  }
+
+
+  /* While aligning edges to blue zones, make the auto-hinter */
+  /* ignore the ones that are higher than `pos`.              */
+  static void
+  af_prevent_top_blue_alignment( AF_GlyphHints  hints,
+                                 FT_Pos         pos )
+  {
+    AF_AxisHints  axis = &hints->axis[AF_DIMENSION_VERT];
+
+    AF_Edge  edges      = axis->edges;
+    AF_Edge  edge_limit = FT_OFFSET( edges, axis->num_edges );
+    AF_Edge  edge;
+
+
+    for ( edge = edges; edge < edge_limit; edge++ )
+      if ( edge->pos > pos )
+        edge->flags |= AF_EDGE_NO_BLUE;
+  }
+
+
+  static void
+  af_prevent_bottom_blue_alignment( AF_GlyphHints  hints,
+                                    FT_Pos         pos )
+  {
+    AF_AxisHints  axis = &hints->axis[AF_DIMENSION_VERT];
+
+    AF_Edge  edges      = axis->edges;
+    AF_Edge  edge_limit = FT_OFFSET( edges, axis->num_edges );
+    AF_Edge  edge;
+
+
+    for ( edge = edges; edge < edge_limit; edge++ )
+      if ( edge->pos < pos )
+        edge->flags |= AF_EDGE_NO_BLUE;
+  }
+
+
+  static void
+  af_latin_get_base_glyph_blues( AF_GlyphHints  hints,
+                                 FT_Bool        is_capital,
+                                 AF_LatinBlue*  top,
+                                 AF_LatinBlue*  bottom )
+  {
+    AF_LatinMetrics  metrics = (AF_LatinMetrics)hints->metrics;
+    AF_LatinAxis     axis    = &metrics->axis[AF_DIMENSION_VERT];
+
+    FT_UInt  top_flag;
+    FT_UInt  bottom_flag;
+
+    FT_UInt  i;
+
+
+    top_flag  = is_capital ? AF_LATIN_BLUE_TOP
+                           : AF_LATIN_BLUE_ADJUSTMENT;
+    top_flag |= AF_LATIN_BLUE_ACTIVE;
+
+    for ( i = 0; i < axis->blue_count; i++ )
+      if ( ( axis->blues[i].flags & top_flag ) == top_flag )
+        break;
+    if ( i < axis->blue_count )
+      *top = &axis->blues[i];
+
+    bottom_flag  = is_capital ? AF_LATIN_BLUE_BOTTOM
+                              : AF_LATIN_BLUE_BOTTOM_SMALL;
+    bottom_flag |= AF_LATIN_BLUE_ACTIVE;
+
+    for ( i = 0; i < axis->blue_count; i++ )
+      if ( ( axis->blues[i].flags & bottom_flag ) == bottom_flag )
+        break;
+    if ( i < axis->blue_count )
+      *bottom = &axis->blues[i];
+  }
+
+
+  /* Make the auto-hinter ignore top blue zones while aligning edges. */
+  /* This affects everything that is higher than a vertical position  */
+  /* based on the lowercase or uppercase top and bottom blue zones    */
+  /* (depending on `is_capital`).                                     */
+  static void
+  af_latin_ignore_top( AF_GlyphHints  hints,
+                       AF_LatinBlue   top_blue,
+                       AF_LatinBlue   bottom_blue )
+  {
+    FT_Pos  base_glyph_height;
+    FT_Pos  limit;
+
+
+    /* Ignore blue zones that are higher than a heuristic threshold     */
+    /* (value 7 corresponds to approx. 14%, which should be sufficient  */
+    /* to exceed the height of uppercase serifs.  We also add a quarter */
+    /* of a pixel as a safety measure.                                  */
+    base_glyph_height = top_blue->shoot.cur - bottom_blue->shoot.cur;
+    limit             = top_blue->shoot.cur + base_glyph_height / 7 + 16;
+
+    af_prevent_top_blue_alignment( hints, limit );
+  }
+
+
+  static void
+  af_latin_ignore_bottom( AF_GlyphHints  hints,
+                          AF_LatinBlue   top_blue,
+                          AF_LatinBlue   bottom_blue )
+  {
+    FT_Pos  base_glyph_height;
+    FT_Pos  limit;
+
+
+    base_glyph_height = top_blue->shoot.cur - bottom_blue->shoot.cur;
+    limit             = bottom_blue->shoot.cur - base_glyph_height / 7 - 16;
+
+    af_prevent_bottom_blue_alignment( hints, limit );
   }
 
 
@@ -4718,11 +4834,23 @@
       FT_Int  below_top_tilde_contour    = 0;
       FT_Int  above_bottom_tilde_contour = 0;
 
+      AF_LatinBlue  capital_top_blue    = NULL;
+      AF_LatinBlue  capital_bottom_blue = NULL;
+
+      AF_LatinBlue  small_top_blue    = NULL;
+      AF_LatinBlue  small_bottom_blue = NULL;
+
       FT_Bool  is_top_tilde    = FALSE;
       FT_Bool  is_bottom_tilde = FALSE;
 
       FT_Bool  is_below_top_tilde    = FALSE;
       FT_Bool  is_above_bottom_tilde = FALSE;
+
+      FT_Bool  ignore_capital_top    = FALSE;
+      FT_Bool  ignore_capital_bottom = FALSE;
+
+      FT_Bool  ignore_small_top    = FALSE;
+      FT_Bool  ignore_small_bottom = FALSE;
 
       FT_Pos  limit;
       FT_Pos  y_offset;
@@ -4738,11 +4866,25 @@
         db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
         {
-          is_top_tilde    = db_entry->flags & AF_ADJUST_TILDE_TOP;
-          is_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
+          is_top_tilde    = !!( db_entry->flags     &
+                                AF_ADJUST_TILDE_TOP );
+          is_bottom_tilde = !!( db_entry->flags        &
+                                AF_ADJUST_TILDE_BOTTOM );
 
-          is_below_top_tilde    = db_entry->flags & AF_ADJUST_TILDE_TOP2;
-          is_above_bottom_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM2;
+          is_below_top_tilde    = !!( db_entry->flags      &
+                                      AF_ADJUST_TILDE_TOP2 );
+          is_above_bottom_tilde = !!( db_entry->flags         &
+                                      AF_ADJUST_TILDE_BOTTOM2 );
+
+          ignore_capital_top    = !!( db_entry->flags       &
+                                      AF_IGNORE_CAPITAL_TOP );
+          ignore_capital_bottom = !!( db_entry->flags          &
+                                      AF_IGNORE_CAPITAL_BOTTOM );
+
+          ignore_small_top    = !!( db_entry->flags     &
+                                    AF_IGNORE_SMALL_TOP );
+          ignore_small_bottom = !!( db_entry->flags        &
+                                    AF_IGNORE_SMALL_BOTTOM );
         }
       }
 
@@ -4796,6 +4938,36 @@
                                               axis->width_count,
                                               axis->widths,
                                               AF_DIMENSION_VERT );
+
+      if ( ignore_capital_top || ignore_capital_bottom )
+        af_latin_get_base_glyph_blues( hints,
+                                       TRUE,
+                                       &capital_top_blue,
+                                       &capital_bottom_blue );
+      if ( ignore_small_top || ignore_small_bottom )
+        af_latin_get_base_glyph_blues( hints,
+                                       FALSE,
+                                       &small_top_blue,
+                                       &small_bottom_blue );
+
+      if ( capital_top_blue && capital_bottom_blue )
+      {
+        if ( ignore_capital_top )
+          af_latin_ignore_top( hints,
+                               capital_top_blue, capital_bottom_blue );
+        if ( ignore_capital_bottom )
+          af_latin_ignore_bottom( hints,
+                                  capital_top_blue, capital_bottom_blue );
+      }
+      if ( small_top_blue && small_bottom_blue )
+      {
+        if ( ignore_small_top )
+          af_latin_ignore_top( hints,
+                               small_top_blue, small_bottom_blue );
+        if ( ignore_small_bottom )
+          af_latin_ignore_bottom( hints,
+                                  small_top_blue, small_bottom_blue );
+      }
 
       /* Second part of making everything of a top tilde and above (or */
       /* a bottom tilde and below) be ignored by the auto-hinter.      */

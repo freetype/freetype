@@ -229,6 +229,7 @@ FT_BEGIN_HEADER
 #define AF_EDGE_SERIF    ( 1U << 1 )
 #define AF_EDGE_DONE     ( 1U << 2 )
 #define AF_EDGE_NEUTRAL  ( 1U << 3 ) /* edge aligns to a neutral blue zone */
+#define AF_EDGE_NO_BLUE  ( 1U << 4 ) /* do not align edge to blue zone     */
 
 
   typedef struct AF_PointRec_*    AF_Point;

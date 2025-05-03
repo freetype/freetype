@@ -1338,16 +1338,20 @@
           "down",        /* AF_ADJUST_DOWN  */
           "double up",   /* AF_ADJUST_UP2   */
           "double down", /* AF_ADJUST_DOWN2 */
-          "",
-          "",
+
           "top tilde",          /* AF_ADJUST_TILDE_TOP     */
           "bottom tilde",       /* AF_ADJUST_TILDE_BOTTOM  */
           "below-top tilde",    /* AF_ADJUST_TILDE_TOP2    */
           "above-bottom tilde", /* AF_ADJUST_TILDE_BOTTOM2 */
+
+          "ignore capital top",    /* AF_IGNORE_CAPITAL_TOP    */
+          "ignore capital bottom", /* AF_IGNORE_CAPITAL_BOTTOM */
+          "ignore small top",      /* AF_IGNORE_SMALL_TOP      */
+          "ignore small bottom",   /* AF_IGNORE_SMALL_BOTTOM   */
         };
         size_t  flag_names_size = sizeof ( flag_names ) / sizeof ( char* );
 
-        char  flag_str[128];
+        char  flag_str[256];
         int   need_comma;
 
         size_t  j;

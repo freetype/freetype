@@ -78,6 +78,26 @@ FT_BEGIN_HEADER
   /* to a horizontal line.                                                */
 #define AF_ADJUST_TILDE_BOTTOM2  0x80
 
+  /* Make the auto-hinter ignore any diacritic (either a separate contour */
+  /* or part of the base character outline) that is attached to the top   */
+  /* of an uppercase base character.                                      */
+#define AF_IGNORE_CAPITAL_TOP  0x100
+
+  /* Make the auto-hinter ignore any diacritic (either a separate contour */
+  /* or part of the base character outline) that is attached to the       */
+  /* bottom of an uppercase base character.                               */
+#define AF_IGNORE_CAPITAL_BOTTOM  0x200
+
+  /* Make the auto-hinter ignore any diacritic (either a separate contour */
+  /* or part of the base character outline) that is attached to the top   */
+  /* of a lowercase base character.                                       */
+#define AF_IGNORE_SMALL_TOP  0x400
+
+  /* Make the auto-hinter ignore any diacritic (either a separate contour */
+  /* or part of the base character outline) that is attached to the       */
+  /* bottom of a lowercase base character.                                */
+#define AF_IGNORE_SMALL_BOTTOM  0x800
+
   /* No adjustment, i.e., no flag is set. */
 #define AF_ADJUST_NONE  0x00
 
