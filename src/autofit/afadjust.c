@@ -37,14 +37,15 @@
     points.  The table entries are 3 numbers consisting of:
 
     - Unicode code point.
-    - The vertical adjustment type.  This should be one of the
-      AF_ADJUST_XXX macros.
+    - The vertical adjustment type.  This should be a combination of the
+      AF_ADJUST_XXX and AF_IGNORE_XXX macros.
   */
   FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
   adjustment_database[] =
   {
     /* C0 Controls and Basic Latin */
     { 0x21,  AF_ADJUST_UP }, /* ! */
+    { 0x51,  AF_IGNORE_CAPITAL_BOTTOM } , /* Q */
     { 0x3F,  AF_ADJUST_UP }, /* ? */
     { 0x69,  AF_ADJUST_UP }, /* i */
     { 0x6A,  AF_ADJUST_UP }, /* j */
@@ -66,6 +67,7 @@
     { 0xC3,  AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* Ã */
     { 0xC4,  AF_ADJUST_UP }, /* Ä */
     { 0xC5,  AF_ADJUST_UP }, /* Å */
+    { 0xC7,  AF_IGNORE_CAPITAL_BOTTOM }, /* Ç */
     { 0xC8,  AF_ADJUST_UP }, /* È */
     { 0xC9,  AF_ADJUST_UP }, /* É */
     { 0xCA,  AF_ADJUST_UP }, /* Ê */
@@ -81,6 +83,7 @@
     { 0xD4,  AF_ADJUST_UP }, /* Ô */
     { 0xD5,  AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* Õ */
     { 0xD6,  AF_ADJUST_UP }, /* Ö */
+    { 0xD8,  AF_IGNORE_CAPITAL_TOP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ø */
     { 0xD9,  AF_ADJUST_UP }, /* Ù */
     { 0xDA,  AF_ADJUST_UP }, /* Ú */
     { 0xDB,  AF_ADJUST_UP }, /* Û */
@@ -93,6 +96,7 @@
     { 0xE3,  AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* ã */
     { 0xE4,  AF_ADJUST_UP }, /* ä */
     { 0xE5,  AF_ADJUST_UP }, /* å */
+    { 0xE7,  AF_IGNORE_SMALL_BOTTOM }, /* ç */
     { 0xE8,  AF_ADJUST_UP }, /* è */
     { 0xE9,  AF_ADJUST_UP }, /* é */
     { 0xEA,  AF_ADJUST_UP }, /* ê */
@@ -108,6 +112,7 @@
     { 0xF4,  AF_ADJUST_UP }, /* ô */
     { 0xF5,  AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* õ */
     { 0xF6,  AF_ADJUST_UP }, /* ö */
+    { 0xF8,  AF_IGNORE_SMALL_TOP | AF_IGNORE_SMALL_BOTTOM }, /* ø */
     { 0xF9,  AF_ADJUST_UP }, /* ù */
     { 0xFA,  AF_ADJUST_UP }, /* ú */
     { 0xFB,  AF_ADJUST_UP }, /* û */
@@ -120,6 +125,8 @@
     { 0x101, AF_ADJUST_UP }, /* ā */
     { 0x102, AF_ADJUST_UP }, /* Ă */
     { 0x103, AF_ADJUST_UP }, /* ă */
+    { 0x104, AF_IGNORE_CAPITAL_BOTTOM }, /* Ą */
+    { 0x105, AF_IGNORE_SMALL_BOTTOM }, /* ą */
     { 0x106, AF_ADJUST_UP }, /* Ć */
     { 0x107, AF_ADJUST_UP }, /* ć */
     { 0x108, AF_ADJUST_UP }, /* Ĉ */
@@ -136,6 +143,8 @@
     { 0x115, AF_ADJUST_UP }, /* ĕ */
     { 0x116, AF_ADJUST_UP }, /* Ė */
     { 0x117, AF_ADJUST_UP }, /* ė */
+    { 0x118, AF_IGNORE_CAPITAL_BOTTOM }, /* Ę */
+    { 0x119, AF_IGNORE_SMALL_BOTTOM }, /* ę */
     { 0x11A, AF_ADJUST_UP }, /* Ě */
     { 0x11B, AF_ADJUST_UP }, /* ě */
     { 0x11C, AF_ADJUST_UP }, /* Ĝ */
@@ -155,7 +164,8 @@
     { 0x12B, AF_ADJUST_UP }, /* ī */
     { 0x12C, AF_ADJUST_UP }, /* Ĭ */
     { 0x12D, AF_ADJUST_UP }, /* ĭ */
-    { 0x12F, AF_ADJUST_UP }, /* į */
+    { 0x12E, AF_IGNORE_CAPITAL_BOTTOM }, /* Į */
+    { 0x12F, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* į */
 
     { 0x130, AF_ADJUST_UP }, /* İ */
     { 0x133, AF_ADJUST_UP }, /* ĳ */
@@ -191,9 +201,13 @@
     { 0x15B, AF_ADJUST_UP }, /* ś */
     { 0x15C, AF_ADJUST_UP }, /* Ŝ */
     { 0x15D, AF_ADJUST_UP }, /* ŝ */
+    { 0x15E, AF_IGNORE_CAPITAL_BOTTOM }, /* Ş */
+    { 0x15F, AF_IGNORE_SMALL_BOTTOM }, /* ş */
 
     { 0x160, AF_ADJUST_UP }, /* Š */
     { 0x161, AF_ADJUST_UP }, /* š */
+    { 0x162, AF_IGNORE_CAPITAL_BOTTOM }, /* Ţ */
+    { 0x163, AF_IGNORE_SMALL_BOTTOM }, /* ţ */
     { 0x164, AF_ADJUST_UP }, /* Ť */
     { 0x168, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* Ũ */
     { 0x169, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* ũ */
@@ -206,6 +220,8 @@
 
     { 0x170, AF_ADJUST_UP }, /* Ű */
     { 0x171, AF_ADJUST_UP }, /* ű */
+    { 0x172, AF_IGNORE_CAPITAL_BOTTOM }, /* Ų */
+    { 0x173, AF_IGNORE_SMALL_BOTTOM }, /* ų */
     { 0x174, AF_ADJUST_UP }, /* Ŵ */
     { 0x175, AF_ADJUST_UP }, /* ŵ */
     { 0x176, AF_ADJUST_UP }, /* Ŷ */
@@ -219,6 +235,19 @@
     { 0x17E, AF_ADJUST_UP }, /* ž */
 
     /* Latin Extended-B */
+    { 0x187, AF_IGNORE_CAPITAL_TOP }, /* Ƈ */
+    { 0x188, AF_IGNORE_SMALL_TOP }, /* ƈ */
+
+    { 0x1A0, AF_IGNORE_CAPITAL_TOP }, /* Ơ */
+    { 0x1A1, AF_IGNORE_SMALL_TOP }, /* ơ */
+    { 0x1A5, AF_IGNORE_SMALL_TOP }, /* ƥ */
+    { 0x1AB, AF_IGNORE_SMALL_BOTTOM }, /* ƫ */
+    { 0x1AE, AF_IGNORE_CAPITAL_BOTTOM }, /* Ʈ */
+    { 0x1AF, AF_IGNORE_CAPITAL_TOP }, /* Ư */
+
+    { 0x1B0, AF_IGNORE_SMALL_TOP }, /* ư */
+    { 0x1B4, AF_IGNORE_SMALL_TOP }, /* ƴ */
+
     { 0x1C3, AF_ADJUST_UP }, /* ǃ */
     { 0x1C4, AF_ADJUST_UP }, /* Ǆ */
 #if 0
@@ -227,8 +256,8 @@
     { 0x1C8, AF_ADJUST_UP }, /* ǈ */
     { 0x1C9, AF_ADJUST_UP }, /* ǉ */
     { 0x1CB, AF_ADJUST_UP }, /* ǋ */
-    { 0x1CC, AF_ADJUST_UP }, /* ǌ */
 #endif
+    { 0x1CC, AF_ADJUST_UP }, /* ǌ */
     { 0x1CD, AF_ADJUST_UP }, /* Ǎ */
     { 0x1CE, AF_ADJUST_UP }, /* ǎ */
     { 0x1CF, AF_ADJUST_UP }, /* Ǐ */
@@ -257,8 +286,10 @@
     { 0x1E7, AF_ADJUST_UP }, /* ǧ */
     { 0x1E8, AF_ADJUST_UP }, /* Ǩ */
     { 0x1E9, AF_ADJUST_UP }, /* ǩ */
-    { 0x1EC, AF_ADJUST_UP }, /* Ǭ */
-    { 0x1ED, AF_ADJUST_UP }, /* ǭ */
+    { 0x1EA, AF_IGNORE_CAPITAL_BOTTOM }, /* Ǫ */
+    { 0x1EB, AF_IGNORE_SMALL_BOTTOM }, /* ǫ */
+    { 0x1EC, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ǭ */
+    { 0x1ED, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ǭ */
     { 0x1EE, AF_ADJUST_UP }, /* Ǯ */
     { 0x1EF, AF_ADJUST_UP }, /* ǯ */
 
@@ -306,8 +337,12 @@
     { 0x21E, AF_ADJUST_UP }, /* Ȟ */
     { 0x21F, AF_ADJUST_UP }, /* ȟ */
 
+    { 0x224, AF_IGNORE_CAPITAL_BOTTOM }, /* Ȥ */
+    { 0x225, AF_IGNORE_SMALL_BOTTOM }, /* ȥ */
     { 0x226, AF_ADJUST_UP }, /* Ȧ */
     { 0x227, AF_ADJUST_UP }, /* ȧ */
+    { 0x228, AF_IGNORE_CAPITAL_BOTTOM }, /* Ȩ */
+    { 0x229, AF_IGNORE_SMALL_BOTTOM }, /* ȩ */
     { 0x22A, AF_ADJUST_UP2 }, /* Ȫ */
     { 0x22B, AF_ADJUST_UP2 }, /* ȫ */
     { 0x22C, AF_ADJUST_UP2 }, /* Ȭ */
@@ -319,14 +354,36 @@
     { 0x231, AF_ADJUST_UP2 }, /* ȱ */
     { 0x232, AF_ADJUST_UP }, /* Ȳ */
     { 0x233, AF_ADJUST_UP }, /* ȳ */
+    { 0x23A, AF_IGNORE_CAPITAL_TOP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ⱥ */
+    { 0x23B, AF_IGNORE_CAPITAL_TOP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ȼ */
+    { 0x23F, AF_IGNORE_SMALL_BOTTOM }, /* ȿ */
 
+    { 0x240, AF_IGNORE_SMALL_BOTTOM }, /* ɀ */
     { 0x249, AF_ADJUST_UP }, /* ɉ */
 
     /* IPA Extensions */
+    { 0x256, AF_IGNORE_SMALL_BOTTOM }, /* ɖ */
+
+    { 0x260, AF_IGNORE_SMALL_TOP }, /* ɠ */
+    { 0x267, AF_IGNORE_SMALL_BOTTOM }, /* ɧ */
     { 0x268, AF_ADJUST_UP }, /* ɨ */
+
+    { 0x272, AF_IGNORE_SMALL_BOTTOM }, /* ɲ */
+    { 0x273, AF_IGNORE_SMALL_BOTTOM }, /* ɳ */
+    { 0x27B, AF_IGNORE_SMALL_BOTTOM }, /* ɻ */
+    { 0x27D, AF_IGNORE_SMALL_BOTTOM }, /* ɽ */
+
+    { 0x282, AF_IGNORE_SMALL_BOTTOM }, /* ʂ */
+    { 0x288, AF_IGNORE_SMALL_BOTTOM }, /* ʈ */
+
+    { 0x290, AF_IGNORE_SMALL_BOTTOM }, /* ʐ */
+    { 0x29B, AF_IGNORE_SMALL_TOP }, /* ʛ */
+
+    { 0x2A0, AF_IGNORE_SMALL_TOP }, /* ʠ */
 
     /* Spacing Modifier Letters */
     { 0x2B2, AF_ADJUST_UP }, /* ʲ */
+    { 0x2B5, AF_IGNORE_SMALL_BOTTOM }, /* ʵ */
 
     /* Greek and Coptic */
     { 0x390, AF_ADJUST_UP2 }, /* ΐ */
@@ -345,8 +402,14 @@
     { 0x3CC, AF_ADJUST_UP }, /* ό */
     { 0x3CD, AF_ADJUST_UP }, /* ύ */
     { 0x3CE, AF_ADJUST_UP }, /* ώ */
+    { 0x3CF, AF_IGNORE_CAPITAL_BOTTOM }, /* Ϗ */
 
     { 0x3D4, AF_ADJUST_UP }, /* ϔ */
+    { 0x3D7, AF_IGNORE_SMALL_BOTTOM }, /* ϗ */
+    { 0x3D9, AF_IGNORE_SMALL_BOTTOM }, /* ϙ */
+
+    { 0x3E2, AF_IGNORE_CAPITAL_BOTTOM }, /* Ϣ */
+    { 0x3E3, AF_IGNORE_SMALL_BOTTOM }, /* ϣ */
 
     { 0x3F3, AF_ADJUST_UP }, /* ϳ */
 
@@ -358,10 +421,17 @@
     { 0x40C, AF_ADJUST_UP }, /* Ќ */
     { 0x40D, AF_ADJUST_UP }, /* Ѝ */
     { 0x40E, AF_ADJUST_UP }, /* Ў */
+    { 0x40F, AF_IGNORE_CAPITAL_BOTTOM }, /* Џ */
 
     { 0x419, AF_ADJUST_UP }, /* Й */
 
+    { 0x426, AF_IGNORE_CAPITAL_BOTTOM }, /* Ц */
+    { 0x429, AF_IGNORE_CAPITAL_BOTTOM }, /* Щ */
+
     { 0x439, AF_ADJUST_UP }, /* й */
+
+    { 0x446, AF_IGNORE_SMALL_BOTTOM }, /* ц */
+    { 0x449, AF_IGNORE_SMALL_BOTTOM }, /* щ */
 
     { 0x450, AF_ADJUST_UP }, /* ѐ */
     { 0x451, AF_ADJUST_UP }, /* ё */
@@ -372,6 +442,7 @@
     { 0x45C, AF_ADJUST_UP }, /* ќ */
     { 0x45D, AF_ADJUST_UP }, /* ѝ */
     { 0x45E, AF_ADJUST_UP }, /* ў */
+    { 0x45F, AF_IGNORE_SMALL_BOTTOM }, /* џ */
 
     { 0x476, AF_ADJUST_UP }, /* Ѷ */
     { 0x477, AF_ADJUST_UP }, /* ѷ */
@@ -380,11 +451,46 @@
     { 0x47E, AF_ADJUST_UP }, /* Ѿ */
     { 0x47F, AF_ADJUST_UP }, /* ѿ */
 
-    { 0x48A, AF_ADJUST_UP }, /* Ҋ */
-    { 0x48B, AF_ADJUST_UP }, /* ҋ */
+    { 0x480, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҁ */
+    { 0x481, AF_IGNORE_SMALL_BOTTOM }, /* ҁ */
+    { 0x48A, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ҋ */
+    { 0x48B, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ҋ */
+
+    { 0x490, AF_IGNORE_CAPITAL_TOP }, /* Ґ */
+    { 0x491, AF_IGNORE_SMALL_TOP }, /* ґ */
+    { 0x496, AF_IGNORE_CAPITAL_BOTTOM }, /* Җ */
+    { 0x497, AF_IGNORE_SMALL_BOTTOM }, /* җ */
+    { 0x498, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҙ */
+    { 0x499, AF_IGNORE_SMALL_BOTTOM }, /* ҙ */
+    { 0x49A, AF_IGNORE_CAPITAL_BOTTOM }, /* Қ */
+    { 0x49B, AF_IGNORE_SMALL_BOTTOM }, /* қ */
+
+    { 0x4A2, AF_IGNORE_CAPITAL_BOTTOM }, /* Ң */
+    { 0x4A3, AF_IGNORE_SMALL_BOTTOM }, /* ң */
+    { 0x4AA, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҫ */
+    { 0x4AB, AF_IGNORE_SMALL_BOTTOM }, /* ҫ */
+    { 0x4AC, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҭ */
+    { 0x4AD, AF_IGNORE_SMALL_BOTTOM }, /* ҭ */
+
+    { 0x4B2, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҳ */
+    { 0x4B3, AF_IGNORE_SMALL_BOTTOM }, /* ҳ */
+    { 0x4B4, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҵ */
+    { 0x4B5, AF_IGNORE_SMALL_BOTTOM }, /* ҵ */
+    { 0x4B6, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҷ */
+    { 0x4B7, AF_IGNORE_SMALL_BOTTOM }, /* ҷ */
+    { 0x4BE, AF_IGNORE_CAPITAL_BOTTOM }, /* Ҿ */
+    { 0x4BF, AF_IGNORE_SMALL_BOTTOM }, /* ҿ */
 
     { 0x4C1, AF_ADJUST_UP }, /* Ӂ */
     { 0x4C2, AF_ADJUST_UP }, /* ӂ */
+    { 0x4C5, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӆ */
+    { 0x4C6, AF_IGNORE_SMALL_BOTTOM }, /* ӆ */
+    { 0x4C9, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӊ */
+    { 0x4CA, AF_IGNORE_SMALL_BOTTOM }, /* ӊ */
+    { 0x4CB, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӌ */
+    { 0x4CC, AF_IGNORE_SMALL_BOTTOM }, /* ӌ */
+    { 0x4CD, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӎ */
+    { 0x4CE, AF_IGNORE_SMALL_BOTTOM }, /* ӎ */
 
     { 0x4D0, AF_ADJUST_UP }, /* Ӑ */
     { 0x4D1, AF_ADJUST_UP }, /* ӑ */
@@ -418,8 +524,23 @@
     { 0x4F3, AF_ADJUST_UP }, /* ӳ */
     { 0x4F4, AF_ADJUST_UP }, /* Ӵ */
     { 0x4F5, AF_ADJUST_UP }, /* ӵ */
+    { 0x4F6, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӷ */
+    { 0x4F7, AF_IGNORE_SMALL_BOTTOM }, /* ӷ */
     { 0x4F8, AF_ADJUST_UP }, /* Ӹ */
     { 0x4F9, AF_ADJUST_UP }, /* ӹ */
+    { 0x4FA, AF_IGNORE_CAPITAL_BOTTOM }, /* Ӻ */
+    { 0x4FB, AF_IGNORE_SMALL_BOTTOM }, /* ӻ */
+
+    /* Cyrillic Supplement */
+    { 0x506, AF_IGNORE_CAPITAL_BOTTOM }, /* Ԇ */
+    { 0x507, AF_IGNORE_SMALL_BOTTOM }, /* ԇ */
+
+    { 0x524, AF_IGNORE_CAPITAL_BOTTOM }, /* Ԥ */
+    { 0x525, AF_IGNORE_SMALL_BOTTOM }, /* ԥ */
+    { 0x526, AF_IGNORE_CAPITAL_BOTTOM }, /* Ԧ */
+    { 0x527, AF_IGNORE_SMALL_BOTTOM }, /* ԧ */
+    { 0x52E, AF_IGNORE_CAPITAL_BOTTOM }, /* Ԯ */
+    { 0x52F, AF_IGNORE_SMALL_BOTTOM }, /* ԯ */
 
     /* Cherokee */
     { 0x13A5, AF_ADJUST_UP }, /* Ꭵ */
@@ -429,11 +550,48 @@
 
     { 0x1D4E, AF_ADJUST_DOWN }, /* ᵎ */
 
+    { 0x1D51, AF_IGNORE_SMALL_BOTTOM }, /* ᵑ */
+
+    { 0x1D62, AF_ADJUST_UP }, /* ᵢ */
+
     /* Phonetic Extensions Supplement */
-    { 0x1D96, AF_ADJUST_UP }, /* ᶖ */
+    { 0x1D80, AF_IGNORE_SMALL_BOTTOM }, /* ᶀ */
+    { 0x1D81, AF_IGNORE_SMALL_BOTTOM }, /* ᶁ */
+    { 0x1D82, AF_IGNORE_SMALL_BOTTOM }, /* ᶂ */
+    { 0x1D84, AF_IGNORE_SMALL_BOTTOM }, /* ᶄ */
+    { 0x1D85, AF_IGNORE_SMALL_BOTTOM }, /* ᶅ */
+    { 0x1D86, AF_IGNORE_SMALL_BOTTOM }, /* ᶆ */
+    { 0x1D87, AF_IGNORE_SMALL_BOTTOM }, /* ᶇ */
+    { 0x1D89, AF_IGNORE_SMALL_BOTTOM }, /* ᶉ */
+    { 0x1D8A, AF_IGNORE_SMALL_BOTTOM }, /* ᶊ */
+    { 0x1D8C, AF_IGNORE_SMALL_BOTTOM }, /* ᶌ */
+    { 0x1D8D, AF_IGNORE_SMALL_BOTTOM }, /* ᶍ */
+    { 0x1D8E, AF_IGNORE_SMALL_BOTTOM }, /* ᶎ */
+    { 0x1D8F, AF_IGNORE_SMALL_BOTTOM }, /* ᶏ */
+
+    { 0x1D90, AF_IGNORE_SMALL_BOTTOM }, /* ᶐ */
+    { 0x1D91, AF_IGNORE_SMALL_BOTTOM }, /* ᶑ */
+    { 0x1D92, AF_IGNORE_SMALL_BOTTOM }, /* ᶒ */
+    { 0x1D93, AF_IGNORE_SMALL_BOTTOM }, /* ᶓ */
+    { 0x1D94, AF_IGNORE_SMALL_BOTTOM }, /* ᶔ */
+    { 0x1D95, AF_IGNORE_SMALL_BOTTOM }, /* ᶕ */
+    { 0x1D96, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ᶖ */
+    { 0x1D97, AF_IGNORE_SMALL_BOTTOM }, /* ᶗ */
+    { 0x1D98, AF_IGNORE_SMALL_BOTTOM }, /* ᶘ */
+    { 0x1D99, AF_IGNORE_SMALL_BOTTOM }, /* ᶙ */
+    { 0x1D9A, AF_IGNORE_SMALL_BOTTOM }, /* ᶚ */
 
     { 0x1DA4, AF_ADJUST_UP }, /* ᶤ */
     { 0x1DA8, AF_ADJUST_UP }, /* ᶨ */
+    { 0x1DA9, AF_IGNORE_SMALL_BOTTOM }, /* ᶩ */
+    { 0x1DAA, AF_IGNORE_SMALL_BOTTOM }, /* ᶪ */
+    { 0x1DAC, AF_IGNORE_SMALL_BOTTOM }, /* ᶬ */
+    { 0x1DAE, AF_IGNORE_SMALL_BOTTOM }, /* ᶮ */
+    { 0x1DAF, AF_IGNORE_SMALL_BOTTOM }, /* ᶯ */
+
+    { 0x1DB3, AF_IGNORE_SMALL_BOTTOM }, /* ᶳ */
+    { 0x1DB5, AF_IGNORE_SMALL_BOTTOM }, /* ᶵ */
+    { 0x1DBC, AF_IGNORE_SMALL_BOTTOM }, /* ᶼ */
 
     /* Latin Extended Additional */
     { 0x1E00, AF_ADJUST_DOWN }, /* Ḁ */
@@ -446,8 +604,8 @@
     { 0x1E05, AF_ADJUST_DOWN }, /* ḅ */
     { 0x1E06, AF_ADJUST_DOWN }, /* Ḇ */
     { 0x1E07, AF_ADJUST_DOWN }, /* ḇ */
-    { 0x1E08, AF_ADJUST_UP }, /* Ḉ */
-    { 0x1E09, AF_ADJUST_UP }, /* ḉ */
+    { 0x1E08, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ḉ */
+    { 0x1E09, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ḉ */
     { 0x1E0A, AF_ADJUST_UP }, /* Ḋ */
 #if 0
     { 0x1E0B, AF_ADJUST_NONE }, /* ḋ */
@@ -469,8 +627,8 @@
     { 0x1E19, AF_ADJUST_DOWN }, /* ḙ */
     { 0x1E1A, AF_ADJUST_DOWN | AF_ADJUST_TILDE_BOTTOM }, /* Ḛ */
     { 0x1E1B, AF_ADJUST_DOWN | AF_ADJUST_TILDE_BOTTOM }, /* ḛ */
-    { 0x1E1C, AF_ADJUST_UP }, /* Ḝ */
-    { 0x1E1D, AF_ADJUST_UP }, /* ḝ */
+    { 0x1E1C, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ḝ */
+    { 0x1E1D, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ḝ */
     { 0x1E1E, AF_ADJUST_UP }, /* Ḟ */
     { 0x1E1F, AF_ADJUST_UP }, /* ḟ */
 
@@ -482,6 +640,8 @@
     { 0x1E25, AF_ADJUST_DOWN }, /* ḥ */
     { 0x1E26, AF_ADJUST_UP }, /* Ḧ */
     { 0x1E27, AF_ADJUST_UP }, /* ḧ */
+    { 0x1E28, AF_IGNORE_CAPITAL_BOTTOM }, /* Ḩ */
+    { 0x1E29, AF_IGNORE_SMALL_BOTTOM }, /* ḩ */
     { 0x1E2A, AF_ADJUST_DOWN }, /* Ḫ */
     { 0x1E2B, AF_ADJUST_DOWN }, /* ḫ */
     { 0x1E2C, AF_ADJUST_DOWN | AF_ADJUST_TILDE_BOTTOM }, /* Ḭ */
@@ -665,32 +825,32 @@
     { 0x1ED7, AF_ADJUST_UP2 | AF_ADJUST_TILDE_TOP }, /* ỗ */
     { 0x1ED8, AF_ADJUST_UP | AF_ADJUST_DOWN }, /* Ộ */
     { 0x1ED9, AF_ADJUST_UP | AF_ADJUST_DOWN }, /* ộ */
-    { 0x1EDA, AF_ADJUST_UP }, /* Ớ */
-    { 0x1EDB, AF_ADJUST_UP }, /* ớ */
-    { 0x1EDC, AF_ADJUST_UP }, /* Ờ */
-    { 0x1EDD, AF_ADJUST_UP }, /* ờ */
-    { 0x1EDE, AF_ADJUST_UP }, /* Ở */
-    { 0x1EDF, AF_ADJUST_UP }, /* ở */
+    { 0x1EDA, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ớ */
+    { 0x1EDB, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ớ */
+    { 0x1EDC, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ờ */
+    { 0x1EDD, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ờ */
+    { 0x1EDE, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ở */
+    { 0x1EDF, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ở */
 
-    { 0x1EE0, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* Ỡ */
-    { 0x1EE1, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* ỡ */
-    { 0x1EE2, AF_ADJUST_DOWN }, /* Ợ */
-    { 0x1EE3, AF_ADJUST_DOWN }, /* ợ */
+    { 0x1EE0, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP | AF_IGNORE_CAPITAL_TOP }, /* Ỡ */
+    { 0x1EE1, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP | AF_IGNORE_SMALL_TOP }, /* ỡ */
+    { 0x1EE2, AF_ADJUST_DOWN | AF_IGNORE_CAPITAL_TOP }, /* Ợ */
+    { 0x1EE3, AF_ADJUST_DOWN | AF_IGNORE_SMALL_TOP }, /* ợ */
     { 0x1EE4, AF_ADJUST_DOWN }, /* Ụ */
     { 0x1EE5, AF_ADJUST_DOWN }, /* ụ */
     { 0x1EE6, AF_ADJUST_UP }, /* Ủ */
     { 0x1EE7, AF_ADJUST_UP }, /* ủ */
-    { 0x1EE8, AF_ADJUST_UP }, /* Ứ */
-    { 0x1EE9, AF_ADJUST_UP }, /* ứ */
-    { 0x1EEA, AF_ADJUST_UP }, /* Ừ */
-    { 0x1EEB, AF_ADJUST_UP }, /* ừ */
-    { 0x1EEC, AF_ADJUST_UP }, /* Ử */
-    { 0x1EED, AF_ADJUST_UP }, /* ử */
-    { 0x1EEE, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* Ữ */
-    { 0x1EEF, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* ữ */
+    { 0x1EE8, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ứ */
+    { 0x1EE9, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ứ */
+    { 0x1EEA, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ừ */
+    { 0x1EEB, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ừ */
+    { 0x1EEC, AF_ADJUST_UP | AF_IGNORE_CAPITAL_TOP }, /* Ử */
+    { 0x1EED, AF_ADJUST_UP | AF_IGNORE_SMALL_TOP }, /* ử */
+    { 0x1EEE, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP | AF_IGNORE_CAPITAL_TOP }, /* Ữ */
+    { 0x1EEF, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP | AF_IGNORE_SMALL_TOP }, /* ữ */
 
-    { 0x1EF0, AF_ADJUST_DOWN }, /* Ự */
-    { 0x1EF1, AF_ADJUST_DOWN }, /* ự */
+    { 0x1EF0, AF_ADJUST_DOWN | AF_IGNORE_CAPITAL_TOP }, /* Ự */
+    { 0x1EF1, AF_ADJUST_DOWN | AF_IGNORE_SMALL_TOP }, /* ự */
     { 0x1EF2, AF_ADJUST_UP }, /* Ỳ */
     { 0x1EF3, AF_ADJUST_UP }, /* ỳ */
     { 0x1EF4, AF_ADJUST_DOWN }, /* Ỵ */

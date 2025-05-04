@@ -25,9 +25,12 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     . Tilde accent  glyphs get vertically stretched at  small sizes so
       that they don't degenerate to horizontal lines.
 
-    Both  features use  a database,  which currently  has entries  for
-    Unicode characters up to U+1FFF.   This covers scripts like Latin,
-    Cyrillic, or  Greek (but not  Arabic or Indic  scripts).  FreeType
+    . Diacritics directly attached to a base glyph (like the ogonek in
+      character 'ę') no longer distort the shape of the base glyph.
+
+    These features  use a  database (which  currently has  entries for
+    Unicode  characters up  to U+1FFF),  handling scripts  like Latin,
+    Cyrillic, or  Greek, but  not Arabic  or Indic  scripts.  FreeType
     needs to access a proper Unicode character map (or must be able to
     construct such a cmap) of a given font to make this work.
 
