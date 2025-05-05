@@ -3714,6 +3714,7 @@
     AF_GlyphHints           hints,
     AF_Dimension            dim,
     FT_Int                  glyph_index,
+    FT_Pos                  accent_height_limit,
     AF_ReverseCharacterMap  reverse_charmap )
   {
     const AF_ReverseMapEntry          *entry;
@@ -3789,6 +3790,16 @@
 
       high_min_y = hints->contour_y_minima[high_contour];
       high_max_y = hints->contour_y_maxima[high_contour];
+
+      if ( high_max_y - high_min_y > accent_height_limit )
+      {
+        FT_TRACE4(( "    Top contour height (%.2f) exceeds accent height"
+                    " limit (%.2f).\n"
+                    "    Skipping adjustment.\n",
+                    (double)( high_max_y - high_min_y ) / 64,
+                    (double)accent_height_limit / 64 ));
+        return;
+      }
 
       /* If the difference between the vertical minimum of the high   */
       /* contour and the vertical maximum of another contour is less  */
@@ -3906,6 +3917,16 @@
 
       low_min_y = hints->contour_y_minima[low_contour];
       low_max_y = hints->contour_y_maxima[low_contour];
+
+      if ( low_max_y - low_min_y > accent_height_limit )
+      {
+        FT_TRACE4(( "    Bottom contour height (%.2f) exceeds accent height"
+                    " limit (%.2f).\n"
+                    "    Skipping adjustment.\n",
+                    (double)( low_max_y - low_min_y ) / 64,
+                    (double)accent_height_limit / 64 ));
+        return;
+      }
 
       for ( contour = 0; contour < hints->num_contours; contour++ )
       {
@@ -4807,6 +4828,8 @@
 
     AF_LatinAxis  axis;
 
+    FT_Pos  accent_height_limit = 0;
+
 
     error = af_glyph_hints_reload( hints, outline );
     if ( error )
@@ -4840,6 +4863,8 @@
       AF_LatinBlue  small_top_blue    = NULL;
       AF_LatinBlue  small_bottom_blue = NULL;
 
+      FT_Bool  have_flags = FALSE;
+
       FT_Bool  is_top_tilde    = FALSE;
       FT_Bool  is_bottom_tilde = FALSE;
 
@@ -4851,6 +4876,8 @@
 
       FT_Bool  ignore_small_top    = FALSE;
       FT_Bool  ignore_small_bottom = FALSE;
+
+      FT_Bool  do_height_check = TRUE;
 
       FT_Pos  limit;
       FT_Pos  y_offset;
@@ -4866,6 +4893,8 @@
         db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
         {
+          have_flags = !!db_entry->flags;
+
           is_top_tilde    = !!( db_entry->flags     &
                                 AF_ADJUST_TILDE_TOP );
           is_bottom_tilde = !!( db_entry->flags        &
@@ -4885,6 +4914,9 @@
                                     AF_IGNORE_SMALL_TOP );
           ignore_small_bottom = !!( db_entry->flags        &
                                     AF_IGNORE_SMALL_BOTTOM );
+
+          do_height_check = !( db_entry->flags           &
+                               AF_ADJUST_NO_HEIGHT_CHECK );
         }
       }
 
@@ -4939,16 +4971,39 @@
                                               axis->widths,
                                               AF_DIMENSION_VERT );
 
-      if ( ignore_capital_top || ignore_capital_bottom )
+      if ( have_flags )
+      {
         af_latin_get_base_glyph_blues( hints,
                                        TRUE,
                                        &capital_top_blue,
                                        &capital_bottom_blue );
-      if ( ignore_small_top || ignore_small_bottom )
         af_latin_get_base_glyph_blues( hints,
                                        FALSE,
                                        &small_top_blue,
                                        &small_bottom_blue );
+
+        if ( do_height_check )
+        {
+          /* Set a heuristic limit for the accent height so that    */
+          /* `af_glyph_hints_apply_vertical_separation_adjustments` */
+          /* can correctly ignore the case where an accent is       */
+          /* unexpectedly not the highest (or lowest) contour.      */
+
+          /* Either 2/3 of the lowercase blue zone height... */
+          if ( small_top_blue && small_bottom_blue )
+            accent_height_limit = 2 * ( small_top_blue->shoot.cur -
+                                        small_bottom_blue->shoot.cur ) / 3;
+          /* or 1/2 of the uppercase blue zone height... */
+          else if ( capital_top_blue && capital_bottom_blue )
+            accent_height_limit = ( capital_top_blue->shoot.cur -
+                                    capital_bottom_blue->shoot.cur ) / 2;
+          /* or half of the standard PostScript ascender value (8/10) */
+          /* of the EM value, scaled.                                 */
+          else
+            accent_height_limit = FT_MulFix( metrics->units_per_em * 4 / 10,
+                                             metrics->root.scaler.y_scale );
+        }
+      }
 
       if ( capital_top_blue && capital_bottom_blue )
       {
@@ -5004,6 +5059,7 @@
           hints,
           (AF_Dimension)dim,
           glyph_index,
+          accent_height_limit,
           metrics->root.reverse_charmap );
       }
     }

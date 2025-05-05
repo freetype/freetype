@@ -98,6 +98,11 @@ FT_BEGIN_HEADER
   /* bottom of a lowercase base character.                                */
 #define AF_IGNORE_SMALL_BOTTOM  0x800
 
+  /* By default, the AF_ADJUST_XXX flags are applied only if diacritics */
+  /* have a 'small' height (based on some heuristic checks).  If this   */
+  /* flag is set, no such check is performed.                           */
+#define AF_ADJUST_NO_HEIGHT_CHECK  0x1000
+
   /* No adjustment, i.e., no flag is set. */
 #define AF_ADJUST_NONE  0x00
 

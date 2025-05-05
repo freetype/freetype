@@ -44,9 +44,9 @@
   adjustment_database[] =
   {
     /* C0 Controls and Basic Latin */
-    { 0x21,  AF_ADJUST_UP }, /* ! */
+    { 0x21,  AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ! */
     { 0x51,  AF_IGNORE_CAPITAL_BOTTOM } , /* Q */
-    { 0x3F,  AF_ADJUST_UP }, /* ? */
+    { 0x3F,  AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ? */
     { 0x69,  AF_ADJUST_UP }, /* i */
     { 0x6A,  AF_ADJUST_UP }, /* j */
 #if 0
@@ -56,7 +56,7 @@
 
     /* C1 Controls and Latin-1 Supplement */
     { 0xA1,  AF_ADJUST_UP }, /* ¡ */
-    { 0xA6,  AF_ADJUST_UP }, /* ¦ */
+    { 0xA6,  AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ¦ */
     { 0xAA,  AF_ADJUST_UP }, /* ª */
     { 0xBA,  AF_ADJUST_UP }, /* º */
     { 0xBF,  AF_ADJUST_UP }, /* ¿ */
@@ -248,7 +248,7 @@
     { 0x1B0, AF_IGNORE_SMALL_TOP }, /* ư */
     { 0x1B4, AF_IGNORE_SMALL_TOP }, /* ƴ */
 
-    { 0x1C3, AF_ADJUST_UP }, /* ǃ */
+    { 0x1C3, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ǃ */
     { 0x1C4, AF_ADJUST_UP }, /* Ǆ */
 #if 0
     { 0x1C5, AF_ADJUST_UP }, /* ǅ */
@@ -597,9 +597,7 @@
     { 0x1E00, AF_ADJUST_DOWN }, /* Ḁ */
     { 0x1E01, AF_ADJUST_DOWN }, /* ḁ */
     { 0x1E02, AF_ADJUST_UP }, /* Ḃ */
-#if 0
     { 0x1E03, AF_ADJUST_NONE }, /* ḃ */
-#endif
     { 0x1E04, AF_ADJUST_DOWN }, /* Ḅ */
     { 0x1E05, AF_ADJUST_DOWN }, /* ḅ */
     { 0x1E06, AF_ADJUST_DOWN }, /* Ḇ */
@@ -607,9 +605,7 @@
     { 0x1E08, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ḉ */
     { 0x1E09, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ḉ */
     { 0x1E0A, AF_ADJUST_UP }, /* Ḋ */
-#if 0
     { 0x1E0B, AF_ADJUST_NONE }, /* ḋ */
-#endif
     { 0x1E0C, AF_ADJUST_DOWN }, /* Ḍ */
     { 0x1E0D, AF_ADJUST_DOWN }, /* ḍ */
     { 0x1E0E, AF_ADJUST_DOWN }, /* Ḏ */
