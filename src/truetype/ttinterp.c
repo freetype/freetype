@@ -1171,7 +1171,7 @@
     FT_Int64  ab = MUL_INT64( a, b );
 
 
-    ab += 0x2000 + ( ab >> 63 );  /* rounding phase */
+    ab = ADD_INT64( ab, 0x2000 + ( ab >> 63 ) );  /* rounding phase */
 
     return (FT_F26Dot6)( ab >> 14 );
   }
