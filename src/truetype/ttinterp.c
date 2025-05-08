@@ -5001,10 +5001,21 @@
    * Stack:        uint32... -->
    */
   static void
-  Ins_FLIPPT( TT_ExecContext  exc )
+  Ins_FLIPPT( TT_ExecContext  exc,
+              FT_Long*        args )
   {
+    FT_Long    loop = exc->GS.loop;
     FT_UShort  point;
 
+
+    if ( exc->new_top < loop )
+    {
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Too_Few_Arguments );
+      goto Fail;
+    }
+
+    exc->new_top -= loop;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     /* See `ttinterp.h' for details on backward compatibility mode. */
@@ -5015,18 +5026,9 @@
       goto Fail;
 #endif
 
-    if ( exc->top < exc->GS.loop )
+    while ( loop-- )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Too_Few_Arguments );
-      goto Fail;
-    }
-
-    while ( exc->GS.loop > 0 )
-    {
-      exc->args--;
-
-      point = (FT_UShort)exc->stack[exc->args];
+      point = (FT_UShort)*(--args);
 
       if ( BOUNDS( point, exc->pts.n_points ) )
       {
@@ -5038,13 +5040,10 @@
       }
       else
         exc->pts.tags[point] ^= FT_CURVE_TAG_ON;
-
-      exc->GS.loop--;
     }
 
   Fail:
     exc->GS.loop = 1;
-    exc->new_top = exc->args;
   }
 
 
@@ -5210,8 +5209,10 @@
    * Stack:        uint32... -->
    */
   static void
-  Ins_SHP( TT_ExecContext  exc )
+  Ins_SHP( TT_ExecContext  exc,
+           FT_Long*        args )
   {
+    FT_Long          loop = exc->GS.loop;
     TT_GlyphZoneRec  zp;
     FT_UShort        refp;
 
@@ -5219,20 +5220,21 @@
     FT_UShort        point;
 
 
-    if ( exc->top < exc->GS.loop )
+    if ( exc->new_top < loop )
     {
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
+    exc->new_top -= loop;
+
     if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
       return;
 
-    while ( exc->GS.loop > 0 )
+    while ( loop-- )
     {
-      exc->args--;
-      point = (FT_UShort)exc->stack[exc->args];
+      point = (FT_UShort)*(--args);
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
@@ -5244,13 +5246,10 @@
       }
       else
         Move_Zp2_Point( exc, point, dx, dy, TRUE );
-
-      exc->GS.loop--;
     }
 
   Fail:
     exc->GS.loop = 1;
-    exc->new_top = exc->args;
   }
 
 
@@ -5366,6 +5365,7 @@
   Ins_SHPIX( TT_ExecContext  exc,
              FT_Long*        args )
   {
+    FT_Long     loop = exc->GS.loop;
     FT_F26Dot6  dx, dy;
     FT_UShort   point;
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -5375,22 +5375,21 @@
 #endif
 
 
-
-    if ( exc->top < exc->GS.loop + 1 )
+    if ( exc->new_top < loop )
     {
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
+    exc->new_top -= loop;
+
     dx = TT_MulFix14( args[0], exc->GS.freeVector.x );
     dy = TT_MulFix14( args[0], exc->GS.freeVector.y );
 
-    while ( exc->GS.loop > 0 )
+    while ( loop-- )
     {
-      exc->args--;
-
-      point = (FT_UShort)exc->stack[exc->args];
+      point = (FT_UShort)*(--args);
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
@@ -5419,13 +5418,10 @@
       else
 #endif
         Move_Zp2_Point( exc, point, dx, dy, TRUE );
-
-      exc->GS.loop--;
     }
 
   Fail:
     exc->GS.loop = 1;
-    exc->new_top = exc->args;
   }
 
 
@@ -5879,13 +5875,15 @@
    * Stack:        uint32 uint32... -->
    */
   static void
-  Ins_ALIGNRP( TT_ExecContext  exc )
+  Ins_ALIGNRP( TT_ExecContext  exc,
+               FT_Long*        args )
   {
+    FT_Long     loop = exc->GS.loop;
     FT_UShort   point;
     FT_F26Dot6  distance;
 
 
-    if ( exc->top < exc->GS.loop                  ||
+    if ( exc->new_top < loop                      ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
       if ( exc->pedantic_hinting )
@@ -5893,11 +5891,11 @@
       goto Fail;
     }
 
-    while ( exc->GS.loop > 0 )
-    {
-      exc->args--;
+    exc->new_top -= loop;
 
-      point = (FT_UShort)exc->stack[exc->args];
+    while ( loop-- )
+    {
+      point = (FT_UShort)*(--args);
 
       if ( BOUNDS( point, exc->zp1.n_points ) )
       {
@@ -5914,13 +5912,10 @@
 
         exc->func_move( exc, &exc->zp1, point, NEG_LONG( distance ) );
       }
-
-      exc->GS.loop--;
     }
 
   Fail:
     exc->GS.loop = 1;
-    exc->new_top = exc->args;
   }
 
 
@@ -6062,20 +6057,24 @@
   /* SOMETIMES, DUMBER CODE IS BETTER CODE */
 
   static void
-  Ins_IP( TT_ExecContext  exc )
+  Ins_IP( TT_ExecContext  exc,
+          FT_Long*        args )
   {
+    FT_Long     loop = exc->GS.loop;
     FT_F26Dot6  old_range, cur_range;
     FT_Vector*  orus_base;
     FT_Vector*  cur_base;
     FT_Int      twilight;
 
 
-    if ( exc->top < exc->GS.loop )
+    if ( exc->new_top < loop )
     {
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
+
+    exc->new_top -= loop;
 
     /*
      * We need to deal in a special way with the twilight zone.
@@ -6134,9 +6133,9 @@
       cur_range = PROJECT( &exc->zp1.cur[exc->GS.rp2], cur_base );
     }
 
-    for ( ; exc->GS.loop > 0; exc->GS.loop-- )
+    while ( loop-- )
     {
-      FT_UInt     point = (FT_UInt)exc->stack[--exc->args];
+      FT_UInt     point = (FT_UInt)*(--args);
       FT_F26Dot6  org_dist, cur_dist, new_dist;
 
 
@@ -6208,7 +6207,6 @@
 
   Fail:
     exc->GS.loop = 1;
-    exc->new_top = exc->args;
   }
 
 
@@ -7266,7 +7264,7 @@
 
         case 0x32:  /* SHP */
         case 0x33:  /* SHP */
-          Ins_SHP( exc );
+          Ins_SHP( exc, args );
           break;
 
         case 0x34:  /* SHC */
@@ -7284,7 +7282,7 @@
           break;
 
         case 0x39:  /* IP    */
-          Ins_IP( exc );
+          Ins_IP( exc, args );
           break;
 
         case 0x3A:  /* MSIRP */
@@ -7293,7 +7291,7 @@
           break;
 
         case 0x3C:  /* AlignRP */
-          Ins_ALIGNRP( exc );
+          Ins_ALIGNRP( exc, args );
           break;
 
         case 0x3D:  /* RTDG */
@@ -7529,7 +7527,7 @@
           break;
 
         case 0x80:  /* FLIPPT */
-          Ins_FLIPPT( exc );
+          Ins_FLIPPT( exc, args );
           break;
 
         case 0x81:  /* FLIPRGON */
