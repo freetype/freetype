@@ -389,6 +389,10 @@ CHANGES BETWEEN 2.10.4 and 2.11.0 (2021-Jul-18)
         corresponding `FT_COLR_Paint`  object, which  contains details
         on how to draw the respective 'COLR' v1 `Paint` table.
 
+    Please note that FreeType does *not* provide rendering support for
+    'COLR' v1 but  only parsing of  this table.  You need  a dedicated
+    graphics library like Skia or Cairo for rendering.
+
 
   II. MISCELLANEOUS
 

@@ -3441,8 +3441,10 @@ FT_BEGIN_HEADER
    *     blending of the color glyph layers associated with the glyph index,
    *     using the same bitmap format as embedded color bitmap images.  This
    *     is mainly for convenience and works only for glyphs in 'COLR' v0
-   *     tables (or glyphs in 'COLR' v1 tables that exclusively use v0
-   *     features).  For full control of color layers use
+   *     tables.  **There is no rendering support for 'COLR' v1** (with the
+   *     exception of v1 tables that exclusively use v0 features)!  You need
+   *     a graphics library like Skia or Cairo to interpret the graphics
+   *     commands stored in v1 tables.  For full control of color layers use
    *     @FT_Get_Color_Glyph_Layer and FreeType's color functions like
    *     @FT_Palette_Select instead of setting @FT_LOAD_COLOR for rendering
    *     so that the client application can handle blending by itself.
