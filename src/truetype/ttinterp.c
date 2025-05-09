@@ -3178,13 +3178,11 @@
     }
     else
     {
-      K = exc->stack[exc->args - L];
+      K = args[-L];
 
-      FT_ARRAY_MOVE( &exc->stack[exc->args - L    ],
-                     &exc->stack[exc->args - L + 1],
-                     ( L - 1 ) );
+      FT_ARRAY_MOVE( args - L, args - L + 1, L - 1 );
 
-      exc->stack[exc->args - 1] = K;
+      args[-1] = K;
     }
   }
 
@@ -3211,7 +3209,7 @@
       args[0] = 0;
     }
     else
-      args[0] = exc->stack[exc->args - L];
+      args[0] = args[-L];
   }
 
 
@@ -6507,30 +6505,29 @@
   Ins_DELTAP( TT_ExecContext  exc,
               FT_Long*        args )
   {
-    FT_ULong   nump, k;
+    FT_Long    nump;
     FT_UShort  A;
     FT_ULong   C, P;
     FT_Long    B;
 
 
     P    = (FT_ULong)exc->func_cur_ppem( exc );
-    nump = (FT_ULong)args[0];   /* some points theoretically may occur more
-                                   than once, thus UShort isn't enough */
+    nump = args[0];  /* signed value for convenience */
 
-    for ( k = 1; k <= nump; k++ )
+    if ( nump < 0 || nump > exc->new_top / 2 )
     {
-      if ( exc->args < 2 )
-      {
-        if ( exc->pedantic_hinting )
-          exc->error = FT_THROW( Too_Few_Arguments );
-        exc->args = 0;
-        goto Fail;
-      }
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Too_Few_Arguments );
 
-      exc->args -= 2;
+      nump = exc->new_top / 2;
+    }
 
-      A = (FT_UShort)exc->stack[exc->args + 1];
-      B = exc->stack[exc->args];
+    exc->new_top -= 2 * nump;
+
+    while ( nump-- )
+    {
+      A = (FT_UShort)*(--args);
+      B = *(--args);
 
       /* XXX: Because some popular fonts contain some invalid DeltaP */
       /*      instructions, we simply ignore them when the stacked   */
@@ -6586,9 +6583,6 @@
         if ( exc->pedantic_hinting )
           exc->error = FT_THROW( Invalid_Reference );
     }
-
-  Fail:
-    exc->new_top = exc->args;
   }
 
 
@@ -6602,28 +6596,28 @@
   Ins_DELTAC( TT_ExecContext  exc,
               FT_Long*        args )
   {
-    FT_ULong  nump, k;
+    FT_Long   nump;
     FT_ULong  A, C, P;
     FT_Long   B;
 
 
     P    = (FT_ULong)exc->func_cur_ppem( exc );
-    nump = (FT_ULong)args[0];
+    nump = args[0];  /* signed value for convenience */
 
-    for ( k = 1; k <= nump; k++ )
+    if ( nump < 0 || nump > exc->new_top / 2 )
     {
-      if ( exc->args < 2 )
-      {
-        if ( exc->pedantic_hinting )
-          exc->error = FT_THROW( Too_Few_Arguments );
-        exc->args = 0;
-        goto Fail;
-      }
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Too_Few_Arguments );
 
-      exc->args -= 2;
+      nump = exc->new_top / 2;
+    }
 
-      A = (FT_ULong)exc->stack[exc->args + 1];
-      B = exc->stack[exc->args];
+    exc->new_top -= 2 * nump;
+
+    while ( nump-- )
+    {
+      A = (FT_ULong)*(--args);
+      B = *(--args);
 
       if ( BOUNDSL( A, exc->cvtSize ) )
       {
@@ -6664,9 +6658,6 @@
         }
       }
     }
-
-  Fail:
-    exc->new_top = exc->args;
   }
 
 
