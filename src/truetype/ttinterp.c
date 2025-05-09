@@ -1638,11 +1638,10 @@
                FT_UShort       point,
                FT_F26Dot6      distance )
   {
-    FT_F26Dot6  v;
+    FT_Fixed  v;
 
 
-    v = exc->GS.freeVector.x;
-
+    v = exc->moveVector.x;
     if ( v != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -1651,23 +1650,18 @@
       /* diagonal stems like on `Z' and `z' post-IUP.               */
       if ( SUBPIXEL_HINTING_MINIMAL && !exc->backward_compatibility )
         zone->cur[point].x = ADD_LONG( zone->cur[point].x,
-                                       FT_MulDiv( distance,
-                                                  v,
-                                                  exc->F_dot_P ) );
+                                       FT_MulFix( distance, v ) );
       else
 #endif
 
       if ( NO_SUBPIXEL_HINTING )
         zone->cur[point].x = ADD_LONG( zone->cur[point].x,
-                                       FT_MulDiv( distance,
-                                                  v,
-                                                  exc->F_dot_P ) );
+                                       FT_MulFix( distance, v ) );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
 
-    v = exc->GS.freeVector.y;
-
+    v = exc->moveVector.y;
     if ( v != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -1677,9 +1671,7 @@
               exc->iupy_called            ) )
 #endif
         zone->cur[point].y = ADD_LONG( zone->cur[point].y,
-                                       FT_MulDiv( distance,
-                                                  v,
-                                                  exc->F_dot_P ) );
+                                       FT_MulFix( distance, v ) );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
@@ -1712,24 +1704,20 @@
                     FT_UShort       point,
                     FT_F26Dot6      distance )
   {
-    FT_F26Dot6  v;
+    FT_Fixed  v;
 
 
-    v = exc->GS.freeVector.x;
+    v = exc->moveVector.x;
 
     if ( v != 0 )
       zone->org[point].x = ADD_LONG( zone->org[point].x,
-                                     FT_MulDiv( distance,
-                                                v,
-                                                exc->F_dot_P ) );
+                                     FT_MulFix( distance, v ) );
 
-    v = exc->GS.freeVector.y;
+    v = exc->moveVector.y;
 
     if ( v != 0 )
       zone->org[point].y = ADD_LONG( zone->org[point].y,
-                                     FT_MulDiv( distance,
-                                                v,
-                                                exc->F_dot_P ) );
+                                     FT_MulFix( distance, v ) );
   }
 
 
@@ -2448,14 +2436,45 @@
   static void
   Compute_Funcs( TT_ExecContext  exc )
   {
-    if ( exc->GS.freeVector.x == 0x4000 )
-      exc->F_dot_P = exc->GS.projVector.x;
-    else if ( exc->GS.freeVector.y == 0x4000 )
-      exc->F_dot_P = exc->GS.projVector.y;
+    FT_Long  F_dot_P =
+             ( (FT_Long)exc->GS.projVector.x * exc->GS.freeVector.x +
+               (FT_Long)exc->GS.projVector.y * exc->GS.freeVector.y +
+               0x2000L ) >> 14;
+
+
+    if ( F_dot_P >= 0x3FFEL )
+    {
+      /* commonly collinear */
+      exc->moveVector.x = exc->GS.freeVector.x << 2;
+      exc->moveVector.y = exc->GS.freeVector.y << 2;
+    }
+    else if ( -0x400L < F_dot_P && F_dot_P < 0x400L )
+    {
+      /* prohibitively orthogonal */
+      exc->moveVector.x = 0;
+      exc->moveVector.y = 0;
+    }
     else
-      exc->F_dot_P =
-        ( (FT_Long)exc->GS.projVector.x * exc->GS.freeVector.x +
-          (FT_Long)exc->GS.projVector.y * exc->GS.freeVector.y ) >> 14;
+    {
+      exc->moveVector.x = ( exc->GS.freeVector.x << 16 ) / F_dot_P;
+      exc->moveVector.y = ( exc->GS.freeVector.y << 16 ) / F_dot_P;
+    }
+
+    if ( F_dot_P >= 0x3FFEL && exc->GS.freeVector.x == 0x4000 )
+    {
+      exc->func_move      = (TT_Move_Func)Direct_Move_X;
+      exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_X;
+    }
+    else if ( F_dot_P >= 0x3FFEL && exc->GS.freeVector.y == 0x4000 )
+    {
+      exc->func_move      = (TT_Move_Func)Direct_Move_Y;
+      exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_Y;
+    }
+    else
+    {
+      exc->func_move      = (TT_Move_Func)Direct_Move;
+      exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig;
+    }
 
     if ( exc->GS.projVector.x == 0x4000 )
       exc->func_project = (TT_Project_Func)Project_x;
@@ -2470,29 +2489,6 @@
       exc->func_dualproj = (TT_Project_Func)Project_y;
     else
       exc->func_dualproj = (TT_Project_Func)Dual_Project;
-
-    exc->func_move      = (TT_Move_Func)Direct_Move;
-    exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig;
-
-    if ( exc->F_dot_P == 0x4000L )
-    {
-      if ( exc->GS.freeVector.x == 0x4000 )
-      {
-        exc->func_move      = (TT_Move_Func)Direct_Move_X;
-        exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_X;
-      }
-      else if ( exc->GS.freeVector.y == 0x4000 )
-      {
-        exc->func_move      = (TT_Move_Func)Direct_Move_Y;
-        exc->func_move_orig = (TT_Move_Func)Direct_Move_Orig_Y;
-      }
-    }
-
-    /* at small sizes, F_dot_P can become too small, resulting   */
-    /* in overflows and `spikes' in a number of glyphs like `w'. */
-
-    if ( FT_ABS( exc->F_dot_P ) < 0x400L )
-      exc->F_dot_P = 0x4000L;
 
     /* Disable cached aspect ratio */
     exc->tt_metrics.ratio = 0;
@@ -5157,8 +5153,8 @@
 
     d = PROJECT( zp.cur + p, zp.org + p );
 
-    *x = FT_MulDiv( d, (FT_Long)exc->GS.freeVector.x, exc->F_dot_P );
-    *y = FT_MulDiv( d, (FT_Long)exc->GS.freeVector.y, exc->F_dot_P );
+    *x = FT_MulFix( d, exc->moveVector.x );
+    *y = FT_MulFix( d, exc->moveVector.y );
 
     return SUCCESS;
   }

@@ -192,9 +192,9 @@ FT_BEGIN_HEADER
 
     /* latest interpreter additions */
 
-    FT_Long            F_dot_P;    /* dot product of freedom and projection */
-                                   /* vectors                               */
-    TT_Round_Func      func_round; /* current rounding function             */
+    TT_Round_Func      func_round;     /* current rounding function   */
+
+    FT_Vector          moveVector;     /* "projected" freedom vector  */
 
     TT_Project_Func    func_project,   /* current projection function */
                        func_dualproj,  /* current dual proj. function */
