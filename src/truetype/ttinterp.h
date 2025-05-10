@@ -323,6 +323,10 @@ FT_BEGIN_HEADER
      *
      */
 
+    /* Activate backward compatibility and track IUP.  If this is zero,  */
+    /* it implies the interpreter is in v35 or in native ClearType mode. */
+    FT_Int             backward_compatibility;
+
     /* Using v40 implies subpixel hinting, unless FT_RENDER_MODE_MONO has been
      * requested.  Used to detect interpreter */
     /* version switches.  `_lean' to differentiate from the Infinality */
@@ -333,16 +337,6 @@ FT_BEGIN_HEADER
     /* `_lean' to differentiate from the Infinality `vertical_lcd', which */
     /* is managed differently.                                            */
     FT_Bool            vertical_lcd_lean;
-
-    /* Default to backward compatibility mode in v40 interpreter.  If   */
-    /* this is false, it implies the interpreter is in v35 or in native */
-    /* ClearType mode.                                                  */
-    FT_Bool            backward_compatibility;
-
-    /* Useful for detecting and denying post-IUP trickery that is usually */
-    /* used to fix pixel patterns (`superhinting').                       */
-    FT_Bool            iupx_called;
-    FT_Bool            iupy_called;
 
     /* ClearType hinting and grayscale rendering, as used by Universal */
     /* Windows Platform apps (Windows 8 and above).  Like the standard */
