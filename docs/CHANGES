@@ -52,6 +52,9 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     modern 64-bit platforms  as  a result of better handling of fixed-
     point multiplication.
 
+  - The TrueType instruction interpreter was optimized further for 15%
+    additional gain in the glyph loading speed.
+
   - The BDF driver now loads fonts 75% faster.
 
 
