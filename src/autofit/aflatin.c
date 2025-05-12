@@ -3584,7 +3584,11 @@
     const AF_ReverseMapEntry          *entry;
     const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
 
-    FT_UInt32  adj_type = AF_ADJUST_NONE;
+    FT_Bool  adjust_top       = FALSE;
+    FT_Bool  adjust_below_top = FALSE;
+
+    FT_Bool  adjust_bottom       = FALSE;
+    FT_Bool  adjust_above_bottom = FALSE;
 
 
     FT_TRACE4(( "Entering"
@@ -3598,21 +3602,27 @@
     {
       db_entry = af_adjustment_database_lookup( entry->codepoint );
       if ( db_entry )
-        adj_type = db_entry->flags;
+      {
+        adjust_top       = !!( db_entry->flags & AF_ADJUST_UP );
+        adjust_below_top = !!( db_entry->flags & AF_ADJUST_UP2 );
+
+        adjust_bottom       = !!( db_entry->flags & AF_ADJUST_DOWN );
+        adjust_above_bottom = !!( db_entry->flags & AF_ADJUST_DOWN2 );
+      }
     }
 
-    if ( ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) )   &&
-           hints->num_contours >= 2                           ) ||
-         ( ( adj_type & ( AF_ADJUST_UP2 | AF_ADJUST_DOWN2 ) ) &&
-           hints->num_contours >= 3                           ) )
+    if ( ( ( adjust_top || adjust_bottom ) &&
+           hints->num_contours >= 2        )             ||
+         ( ( adjust_below_top || adjust_above_bottom ) &&
+           hints->num_contours >= 3                    ) )
     {
       /* Recompute vertical extrema, this time acting on already */
       /* auto-hinted outlines.                                   */
       af_compute_vertical_extrema( hints );
     }
 
-    if ( ( ( adj_type & AF_ADJUST_UP ) && hints->num_contours >= 2 )  ||
-         ( ( adj_type & AF_ADJUST_UP2 ) && hints->num_contours >= 3 ) )
+    if ( ( adjust_top && hints->num_contours >= 2 )       ||
+         ( adjust_below_top && hints->num_contours >= 3 ) )
     {
       FT_Int  high_contour = 0;
       FT_Pos  high_min_y;
@@ -3634,19 +3644,20 @@
         is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
-                  "  Applying vertical adjustment: AF_ADJUST_UP\n" ));
+                  "  Applying vertical adjustment: %s\n",
+                  adjust_top ? "AF_ADJUST_TOP" : "AF_ADJUST_TOP2" ));
 
-      high_contour = adj_type & AF_ADJUST_UP2
+      high_contour = adjust_below_top
                        ? af_find_second_highest_contour( hints )
                        : af_find_highest_contour( hints );
 
-      /* Check for a horizontal overlap between the top contour and the */
-      /* rest.  If there is no overlap, do not adjust.                  */
+      /* Check for a horizontal overlap between the high contour and the */
+      /* rest.  If there is no overlap, do not adjust.                   */
       horizontal_overlap =
         af_check_contour_horizontal_overlap( hints, high_contour );
       if ( !horizontal_overlap )
       {
-        FT_TRACE4(( "    Top contour does not horizontally overlap"
+        FT_TRACE4(( "    High contour does not horizontally overlap"
                     " with other contours.\n"
                     "    Skipping adjustment.\n" ));
         return;
@@ -3657,7 +3668,7 @@
 
       if ( high_max_y - high_min_y > accent_height_limit )
       {
-        FT_TRACE4(( "    Top contour height (%.2f) exceeds accent height"
+        FT_TRACE4(( "    High contour height (%.2f) exceeds accent height"
                     " limit (%.2f).\n"
                     "    Skipping adjustment.\n",
                     (double)( high_max_y - high_min_y ) / 64,
@@ -3713,21 +3724,19 @@
                     centering_adjustment ));
       }
 
-      FT_TRACE4(( "    Calculated adjustment amount: %ld\n",
-                  adjustment_amount ));
+      FT_TRACE4(( "    Calculated adjustment amount: %ld%s\n",
+                  adjustment_amount,
+                  ( adjustment_amount < 0 || adjustment_amount > 64 )
+                    ? " (out of range [0;64], not adjusting)" : "" ));
 
-      if ( adjustment_amount > 64 )
-        FT_TRACE4(( "    Calculated adjustment amount %ld"
-                    " was more than threshold of 64.  Not adjusting\n",
-                    adjustment_amount ));
-      else if ( adjustment_amount > 0 )
+      if ( adjustment_amount > 0 && adjustment_amount <= 64 )
       {
         /* Value 8 is heuristic. */
         FT_Pos  height_delta = ( high_max_y - high_min_y ) / 8;
         FT_Pos  min_y_limit  = high_min_y - height_delta;
 
 
-        FT_TRACE4(( "    Pushing top contour %ld units up\n",
+        FT_TRACE4(( "    Pushing high contour %ld units up\n",
                     adjustment_amount ));
 
         /* While we use only a single contour (the 'high' one) for    */
@@ -3740,8 +3749,8 @@
       }
     }
 
-    if ( ( ( adj_type & AF_ADJUST_DOWN ) && hints->num_contours >= 2 )  ||
-         ( ( adj_type & AF_ADJUST_DOWN2 ) && hints->num_contours >= 3 ) )
+    if ( ( adjust_bottom && hints->num_contours >= 2 )       ||
+         ( adjust_above_bottom && hints->num_contours >= 3 ) )
     {
       FT_Int  low_contour = 0;
       FT_Pos  low_min_y;
@@ -3763,9 +3772,10 @@
         is_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
-                  "  Applying vertical adjustment: AF_ADJUST_DOWN\n" ));
+                  "  Applying vertical adjustment: %s\n",
+                  adjust_bottom ? "AF_ADJUST_DOWN": "AF_ADJUST_DOWN2" ));
 
-      low_contour = adj_type & AF_ADJUST_DOWN2
+      low_contour = adjust_above_bottom
                       ? af_find_second_lowest_contour( hints )
                       : af_find_lowest_contour( hints );
 
@@ -3773,7 +3783,7 @@
         af_check_contour_horizontal_overlap( hints, low_contour );
       if ( !horizontal_overlap )
       {
-        FT_TRACE4(( "    Bottom contour does not horizontally overlap"
+        FT_TRACE4(( "    Low contour does not horizontally overlap"
                     " with other contours.\n"
                     "    Skipping adjustment.\n" ));
         return;
@@ -3784,7 +3794,7 @@
 
       if ( low_max_y - low_min_y > accent_height_limit )
       {
-        FT_TRACE4(( "    Bottom contour height (%.2f) exceeds accent height"
+        FT_TRACE4(( "    Low contour height (%.2f) exceeds accent height"
                     " limit (%.2f).\n"
                     "    Skipping adjustment.\n",
                     (double)( low_max_y - low_min_y ) / 64,
@@ -3829,20 +3839,19 @@
                     centering_adjustment ));
       }
 
-      FT_TRACE4(( "    Calculated adjustment amount: %ld\n",
-                  adjustment_amount ));
 
-      if ( adjustment_amount > 64 )
-        FT_TRACE4(( "    Calculated adjustment amount %ld"
-                    " was more than threshold of 64.  Not adjusting\n",
-                    adjustment_amount ));
-      else if ( adjustment_amount > 0 )
+      FT_TRACE4(( "    Calculated adjustment amount: %ld%s\n",
+                  adjustment_amount,
+                  ( adjustment_amount < 0 || adjustment_amount > 64 )
+                    ? " (out of range [0;64], not adjusting)" : "" ));
+
+      if ( adjustment_amount > 0 && adjustment_amount <= 64 )
       {
         FT_Pos  height_delta = ( low_max_y - low_min_y ) / 8;
         FT_Pos  max_y_limit  = low_max_y + height_delta;
 
 
-        FT_TRACE4(( "    Pushing bottom contour %ld units down\n",
+        FT_TRACE4(( "    Pushing low contour %ld units down\n",
                     adjustment_amount ));
 
         af_move_contours_down( hints, max_y_limit, adjustment_amount );
@@ -3850,10 +3859,10 @@
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-    if ( !( ( ( adj_type & ( AF_ADJUST_UP | AF_ADJUST_DOWN ) )   &&
-              hints->num_contours >= 2                           ) ||
-            ( ( adj_type & ( AF_ADJUST_UP2 | AF_ADJUST_DOWN2 ) ) &&
-              hints->num_contours >= 3                           ) ) )
+    if ( !( ( ( adjust_top || adjust_bottom ) &&
+              hints->num_contours >= 2        )             ||
+            ( ( adjust_below_top || adjust_above_bottom ) &&
+              hints->num_contours >= 3                    ) ) )
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  No vertical adjustment applied\n" ));
 #endif
