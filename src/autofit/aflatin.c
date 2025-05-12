@@ -1638,7 +1638,8 @@
       FT_Pos     prev_max_on_coord = max_on_coord;
 
 
-      if ( FT_ABS( last->out_dir )  == major_dir &&
+      if ( !( point->flags & AF_FLAG_IGNORE )    &&
+           FT_ABS( last->out_dir )  == major_dir &&
            FT_ABS( point->out_dir ) == major_dir )
       {
         /* we are already on an edge, try to locate its start */
@@ -1697,13 +1698,17 @@
               max_on_coord = v;
           }
 
-          if ( point->out_dir != segment_dir || point == last )
+          if ( point->flags & AF_FLAG_IGNORE ||
+               point->out_dir != segment_dir ||
+               point == last )
           {
             /* check whether the new segment's start point is identical to */
             /* the previous segment's end point; for example, this might   */
             /* happen for spikes                                           */
 
-            if ( !prev_segment || segment->first != prev_segment->last )
+            if ( point->flags & AF_FLAG_IGNORE        ||
+                 !prev_segment                        ||
+                 segment->first != prev_segment->last )
             {
               /* points are different: we are just leaving an edge, thus */
               /* record a new segment                                    */
@@ -1863,7 +1868,8 @@
         /* if we are not on an edge, check whether the major direction */
         /* coincides with the current point's `out' direction, or      */
         /* whether we have a single-point contour                      */
-        if ( !on_edge                                  &&
+        if ( !( point->flags & AF_FLAG_IGNORE )        &&
+             !on_edge                                  &&
              ( FT_ABS( point->out_dir ) == major_dir ||
                point == point->prev                  ) )
         {
@@ -3023,144 +3029,6 @@
   }
 
 
-  static void
-  af_remove_segments_containing_point( AF_GlyphHints  hints,
-                                       AF_Point       point )
-  {
-    AF_AxisHints  axis     = &hints->axis[AF_DIMENSION_VERT];
-    AF_Segment    segments = axis->segments;
-
-    FT_UInt  i;
-
-
-    for ( i = 0; i < axis->num_segments; i++ )
-    {
-      AF_Segment  seg = &segments[i];
-      AF_Point    p   = seg->first;
-
-      FT_Bool  remove = 0;
-
-
-      while ( 1 )
-      {
-        if ( p == point )
-        {
-          remove = 1;
-          break;
-        }
-
-        if ( p == seg->last )
-          break;
-
-        p = p->next;
-      }
-
-      if ( remove )
-      {
-        /* First, check the first and last segment of the edge. */
-        AF_Edge  edge = seg->edge;
-
-
-        if ( !edge )
-          continue;
-
-        if ( edge->first == seg && edge->last == seg )
-        {
-          /* The edge only consists of the segment to be removed. */
-          /* Remove the edge.                                     */
-          *edge = axis->edges[--axis->num_edges];
-        }
-        else
-        {
-          if ( edge->first == seg )
-            edge->first = seg->edge_next;
-
-          if ( edge->last == seg )
-          {
-            edge->last = edge->first;
-
-            while ( edge->last && edge->last->edge_next != seg )
-              edge->last = edge->last->edge_next;
-          }
-        }
-
-        /* Now, delete the segment. */
-        *seg = axis->segments[--axis->num_segments];
-
-        i--; /* We have to check the new segment at this position. */
-      }
-    }
-  }
-
-
-  /* Remove all segments containing points on `limit_contour` */
-  /* and all higher contours.                                 */
-  static void
-  af_remove_top_points_from_edges( AF_GlyphHints  hints,
-                                   FT_Int         limit_contour )
-  {
-    FT_Pos  limit = hints->contour_y_minima[limit_contour];
-
-    FT_Int  contour;
-
-
-    for ( contour = 0; contour < hints->num_contours; contour++ )
-    {
-      FT_Pos  min_y = hints->contour_y_minima[contour];
-      FT_Pos  max_y = hints->contour_y_maxima[contour];
-
-
-      if ( min_y < max_y  &&
-           min_y >= limit )
-      {
-        AF_Point  first_point = hints->contours[contour];
-        AF_Point  p           = first_point;
-
-
-        do
-        {
-          p = p->next;
-          af_remove_segments_containing_point( hints, p );
-
-        } while ( p != first_point );
-      }
-    }
-  }
-
-
-  static void
-  af_remove_bottom_points_from_edges( AF_GlyphHints  hints,
-                                      FT_Int         limit_contour )
-  {
-    FT_Pos  limit = hints->contour_y_maxima[limit_contour];
-
-    FT_Int  contour;
-
-
-    for ( contour = 0; contour < hints->num_contours; contour++ )
-    {
-      FT_Pos  min_y = hints->contour_y_minima[contour];
-      FT_Pos  max_y = hints->contour_y_maxima[contour];
-
-
-      if ( min_y < max_y  &&
-           max_y <= limit )
-      {
-        AF_Point  first_point = hints->contours[contour];
-        AF_Point  p           = first_point;
-
-
-        do
-        {
-          p = p->next;
-          af_remove_segments_containing_point( hints, p );
-
-        } while ( p != first_point );
-      }
-    }
-  }
-
-
   /* While aligning edges to blue zones, make the auto-hinter */
   /* ignore the ones that are higher than `pos`.              */
   static void
@@ -3285,6 +3153,8 @@
     do
     {
       p = p->next;
+
+      p->flags |= AF_FLAG_IGNORE;
       if ( !( p->flags & AF_FLAG_CONTROL ) )
         p->flags |= AF_FLAG_TOUCH_Y;
 
@@ -3424,15 +3294,10 @@
     FT_TRACE4(( "af_latin_stretch_top_tilde: min measurement %ld\n",
                 min_measurement ));
 
-    /* To preserve the stretched shape we suppress any         */
-    /* auto-hinting if the tilde height is less than 4 pixels; */
-    /* we do this for all contours equal or above the vertical */
-    /* minimum of `tilde_contour`.                             */
-    /*                                                         */
-    /* The second part is to remove the affected points from   */
-    /* edges, done in `af_latin_hints_apply`.                  */
-    if ( height < 64 * 4 )
-      af_touch_top_contours( hints, tilde_contour );
+    /* To preserve the stretched shape we prevent that the tilde */
+    /* gets auto-hinted; we do this for all contours equal or    */
+    /* above the vertical minimum of `tilde_contour`.            */
+    af_touch_top_contours( hints, tilde_contour );
 
     /* XXX This is an important element of the algorithm; */
     /*     we need a description.                         */
@@ -3529,8 +3394,7 @@
     FT_TRACE4(( "af_latin_stretch_bottom_tilde: min measurement %ld\n",
                 min_measurement ));
 
-    if ( height < 64 * 4 )
-      af_touch_bottom_contours( hints, tilde_contour );
+    af_touch_bottom_contours( hints, tilde_contour );
 
     target_height = min_measurement + 64;
     if ( height >= target_height )
@@ -5023,19 +4887,6 @@
           af_latin_ignore_bottom( hints,
                                   small_top_blue, small_bottom_blue );
       }
-
-      /* Second part of making everything of a top tilde and above (or */
-      /* a bottom tilde and below) be ignored by the auto-hinter.      */
-      if ( is_top_tilde || is_below_top_tilde )
-        af_remove_top_points_from_edges( hints,
-                                         is_top_tilde
-                                           ? top_tilde_contour
-                                           : below_top_tilde_contour );
-      if ( is_bottom_tilde || is_above_bottom_tilde )
-        af_remove_bottom_points_from_edges( hints,
-                                            is_bottom_tilde
-                                              ? bottom_tilde_contour
-                                              : above_bottom_tilde_contour );
 
       if ( error )
         goto Exit;

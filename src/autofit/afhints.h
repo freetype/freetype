@@ -222,6 +222,9 @@ FT_BEGIN_HEADER
   /* the distance to the next point is very small */
 #define AF_FLAG_NEAR  ( 1U << 5 )
 
+  /* prevent the auto-hinter from adding such a point to a segment */
+#define AF_FLAG_IGNORE  ( 1U << 6 )
+
 
   /* edge hint flags */
 #define AF_EDGE_NORMAL  0
