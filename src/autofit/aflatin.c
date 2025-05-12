@@ -4128,13 +4128,15 @@
   af_latin_hint_edges( AF_GlyphHints  hints,
                        AF_Dimension   dim )
   {
-    AF_AxisHints  axis       = &hints->axis[dim];
-    AF_Edge       edges      = axis->edges;
-    AF_Edge       edge_limit = FT_OFFSET( edges, axis->num_edges );
-    FT_PtrDist    n_edges;
-    AF_Edge       edge;
-    AF_Edge       anchor     = NULL;
-    FT_Int        has_serifs = 0;
+    AF_AxisHints  axis = &hints->axis[dim];
+
+    AF_Edge     edges      = axis->edges;
+    AF_Edge     edge_limit = FT_OFFSET( edges, axis->num_edges );
+    AF_Edge     edge;
+    FT_PtrDist  n_edges;
+
+    AF_Edge  anchor             = NULL;
+    FT_Bool  has_non_stem_edges = 0;
 
     AF_StyleClass   style_class  = hints->metrics->style_class;
     AF_ScriptClass  script_class = af_script_classes[style_class->script];
@@ -4261,7 +4263,7 @@
       edge2 = edge->link;
       if ( !edge2 )
       {
-        has_serifs++;
+        has_non_stem_edges = TRUE;
         continue;
       }
 
@@ -4538,7 +4540,7 @@
       }
     }
 
-    if ( has_serifs || !anchor )
+    if ( has_non_stem_edges || !anchor )
     {
       /*
        * now hint the remaining edges (serifs and single) in order
