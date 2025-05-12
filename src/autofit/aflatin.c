@@ -4558,9 +4558,72 @@
 
         if ( edge->serif )
         {
+          AF_Edge  e, top, bottom;
+          FT_Pos   min_pos, max_pos;
+
+
+          /* Check whether we have a real serif -- if there are  */
+          /* other edges with overlapping (or enclosed) segments */
+          /* between the primary and serif edge, we have not.    */
+          /*                                                     */
+          /* Such a situation might happen if an accent is very  */
+          /* near to its base glyph (for example, Vietnamese     */
+          /* uppercase letters with two accents in `arial.ttf`), */
+          /* and the segment detection algorithm classifies the  */
+          /* top of the accent incorrectly as a serif.           */
           delta = edge->serif->opos - edge->opos;
           if ( delta < 0 )
+          {
             delta = -delta;
+
+            top    = edge;
+            bottom = edge->serif;
+          }
+          else
+          {
+            top    = edge->serif;
+            bottom = edge;
+          }
+
+          /* take care of outline orientation while computing extrema */
+          min_pos = FT_MIN( FT_MIN( FT_MIN( top->first->first->v,
+                                            top->first->last->v ),
+                                    FT_MIN( top->last->first->v,
+                                            top->last->last->v ) ),
+                            FT_MIN( FT_MIN( bottom->first->first->v,
+                                            bottom->first->last->v ),
+                                    FT_MIN( bottom->last->first->v,
+                                            bottom->last->last->v ) ) );
+          max_pos = FT_MAX( FT_MAX( FT_MAX( top->first->first->v,
+                                            top->first->last->v ),
+                                    FT_MAX( top->last->first->v,
+                                            top->last->last->v ) ),
+                            FT_MAX( FT_MAX( bottom->first->first->v,
+                                            bottom->first->last->v ),
+                                    FT_MAX( bottom->last->first->v,
+                                            bottom->last->last->v ) ) );
+
+          for ( e = bottom + 1; e < top; e++ )
+          {
+            FT_Pos  e_min = FT_MIN( FT_MIN( e->first->first->v,
+                                            e->first->last->v ),
+                                    FT_MIN( e->last->first->v,
+                                            e->last->last->v ) );
+            FT_Pos  e_max = FT_MAX( FT_MAX( e->first->first->v,
+                                            e->first->last->v ),
+                                    FT_MAX( e->last->first->v,
+                                            e->last->last->v ) );
+
+            if ( !( ( e_min < min_pos && e_max < min_pos ) ||
+                    ( e_min > max_pos && e_max > max_pos ) ) )
+            {
+              delta = 1000;  /* not a real serif */
+              break;
+            }
+          }
+
+          if ( delta == 1000 )
+            continue;
         }
 
         if ( delta < 64 + 16 )
