@@ -140,6 +140,7 @@
     exec->codeSize = coderange->size;
     exec->IP       = IP;
     exec->curRange = range;
+    exec->iniRange = range;
   }
 
 
@@ -2971,7 +2972,7 @@
         FT_MEM_QRENEW_ARRAY( exc->glyfStorage,
                              exc->glyfStoreSize,
                              exc->storeSize );
-        exc->error  = error;
+        exc->error = error;
         if ( error )
           return;
 
@@ -3488,10 +3489,10 @@
       return;
     }
 
-    rec->range          = exc->curRange;
-    rec->opc            = (FT_UInt16)n;
-    rec->start          = exc->IP + 1;
-    rec->active         = TRUE;
+    rec->range  = exc->curRange;
+    rec->opc    = (FT_UInt16)n;
+    rec->start  = exc->IP + 1;
+    rec->active = TRUE;
 
     if ( n > exc->maxFunc )
       exc->maxFunc = (FT_UInt16)n;
@@ -3503,8 +3504,8 @@
     {
       switch ( exc->opcode )
       {
-      case 0x89:    /* IDEF */
-      case 0x2C:    /* FDEF */
+      case 0x89:   /* IDEF */
+      case 0x2C:   /* FDEF */
         exc->error = FT_THROW( Nested_DEFS );
         return;
 
@@ -3788,6 +3789,7 @@
       case 0x2C:   /* FDEF */
         exc->error = FT_THROW( Nested_DEFS );
         return;
+
       case 0x2D:   /* ENDF */
         def->end = exc->IP;
         return;
@@ -4126,15 +4128,12 @@
   Ins_SPVFS( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    FT_Short  S;
     FT_Long   X, Y;
 
 
     /* Only use low 16bits, then sign extend */
-    S = (FT_Short)args[1];
-    Y = (FT_Long)S;
-    S = (FT_Short)args[0];
-    X = (FT_Long)S;
+    Y = (FT_Short)args[1];
+    X = (FT_Short)args[0];
 
     Normalize( X, Y, &exc->GS.projVector );
 
@@ -4153,15 +4152,12 @@
   Ins_SFVFS( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    FT_Short  S;
     FT_Long   X, Y;
 
 
     /* Only use low 16bits, then sign extend */
-    S = (FT_Short)args[1];
-    Y = (FT_Long)S;
-    S = (FT_Short)args[0];
-    X = S;
+    Y = (FT_Short)args[1];
+    X = (FT_Short)args[0];
 
     Normalize( X, Y, &exc->GS.freeVector );
     Compute_Funcs( exc );
@@ -5808,7 +5804,7 @@
 
     if ( ( exc->opcode & 8 ) != 0 )
     {
-      FT_F26Dot6  minimum_distance    = exc->GS.minimum_distance;
+      FT_F26Dot6  minimum_distance = exc->GS.minimum_distance;
 
 
       if ( org_dist >= 0 )
@@ -6886,7 +6882,6 @@
 
     FT_ULong   ins_counter = 0;  /* executed instructions counter */
     FT_ULong   num_twilight_points;
-    FT_UShort  i;
 
 
     /* We restrict the number of twilight points to a reasonable,     */
@@ -6959,8 +6954,6 @@
       exc->func_move_cvt  = Move_CVT;
     }
 
-    exc->iniRange    = exc->curRange;
-
     Compute_Funcs( exc );
     Compute_Round( exc, (FT_Byte)exc->GS.round_state );
 
@@ -7007,6 +7000,9 @@
       /* One can also interpret it as the index of the last argument.    */
       if ( exc->args < 0 )
       {
+        FT_UShort  i;
+
+
         if ( exc->pedantic_hinting )
         {
           exc->error = FT_THROW( Too_Few_Arguments );

@@ -48,6 +48,9 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
 
   III. MISCELLANEOUS
 
+  - The TrueType instruction interpreter  was optimized to produce 15%
+    gain in the glyph loading speed.
+
   - TrueType and CFF glyph loading speed has been improved by 5-10% on
     modern 64-bit platforms  as  a result of better handling of fixed-
     point multiplication.
