@@ -70,12 +70,12 @@ FT_BEGIN_HEADER
 
   /* The contour below the topmost contour is a tilde.  Enlarge it        */
   /* vertically so that it stays legible at small sizes, not degenerating */
-  /* to a horizontal line.                                                */
+  /* to a horizontal line.  To be used with `AF_ADJUST_UP2` only.         */
 #define AF_ADJUST_TILDE_TOP2  0x40
 
   /* The contour above the bottommost contour is a tilde.  Enlarge it     */
   /* vertically so that it stays legible at small sizes, not degenerating */
-  /* to a horizontal line.                                                */
+  /* to a horizontal line.  To be used with `AF_ADJUST_DOWN2` only.       */
 #define AF_ADJUST_TILDE_BOTTOM2  0x80
 
   /* Make the auto-hinter ignore any diacritic (either a separate contour */

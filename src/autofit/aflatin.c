@@ -3624,24 +3624,30 @@
     if ( ( adjust_top && hints->num_contours >= 2 )       ||
          ( adjust_below_top && hints->num_contours >= 3 ) )
     {
-      FT_Int  high_contour = 0;
+      FT_Int  high_contour;
       FT_Pos  high_min_y;
       FT_Pos  high_max_y;
+      FT_Pos  high_height;
+
+      FT_Int  tilde_contour;
+      FT_Pos  tilde_min_y;
+      FT_Pos  tilde_max_y;
+      FT_Pos  tilde_height;
 
       FT_Int   contour;
       FT_Bool  horizontal_overlap;
 
-      FT_Pos  min_distance = 64;
+      FT_Pos  min_distance         = 64;
       FT_Pos  adjustment_amount;
+      FT_Pos  calculated_amount;
+      FT_Pos  centering_adjustment = 0;
+      FT_Pos  pos;
 
-      FT_Bool  is_tilde = FALSE;
+      FT_Bool  is_top_tilde =
+                 !!( db_entry->flags & AF_ADJUST_TILDE_TOP );
+      FT_Bool  is_below_top_tilde =
+                 !!( db_entry->flags & AF_ADJUST_TILDE_TOP2 );
 
-      FT_Bool  grid_aligned_after_adjustment;
-      FT_Pos   height;
-
-
-      if ( db_entry )
-        is_tilde = db_entry->flags & AF_ADJUST_TILDE_TOP;
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: %s\n",
@@ -3663,15 +3669,16 @@
         return;
       }
 
-      high_min_y = hints->contour_y_minima[high_contour];
-      high_max_y = hints->contour_y_maxima[high_contour];
+      high_min_y  = hints->contour_y_minima[high_contour];
+      high_max_y  = hints->contour_y_maxima[high_contour];
+      high_height = high_max_y - high_min_y;
 
-      if ( high_max_y - high_min_y > accent_height_limit )
+      if ( high_height > accent_height_limit )
       {
         FT_TRACE4(( "    High contour height (%.2f) exceeds accent height"
                     " limit (%.2f).\n"
                     "    Skipping adjustment.\n",
-                    (double)( high_max_y - high_min_y ) / 64,
+                    (double)high_height / 64,
                     (double)accent_height_limit / 64 ));
         return;
       }
@@ -3705,39 +3712,61 @@
 
       adjustment_amount = 64 - min_distance;
 
-      /* The vertical separation adjustment potentially undoes a tilde  */
-      /* center alignment.  If the vertical adjustment would grid-align */
-      /* a tilde less than 3 pixels in height, add an offset to the     */
-      /* vertical adjustment to re-center it.                           */
-      grid_aligned_after_adjustment =
-        ( ( high_min_y + adjustment_amount ) % 64 == 0 );
-      height                        = high_max_y - high_min_y;
-
-      if ( is_tilde && grid_aligned_after_adjustment && height < 3 * 64 )
+      if ( is_top_tilde || is_below_top_tilde )
       {
-        FT_Pos  centering_adjustment =
-                  ( FT_PIX_ROUND( height ) - height ) / 2;
+        tilde_contour = adjust_top
+                          ? high_contour
+                          : ( is_below_top_tilde
+                                ? high_contour
+                                : af_find_highest_contour( hints ) );
 
+        tilde_min_y  = hints->contour_y_minima[tilde_contour];
+        tilde_max_y  = hints->contour_y_maxima[tilde_contour];
+        tilde_height = tilde_max_y - tilde_min_y;
 
-        adjustment_amount += centering_adjustment;
-        FT_TRACE4(( "    Additional centering: %ld\n",
-                    centering_adjustment ));
+        /* The vertical separation adjustment potentially undoes a */
+        /* tilde center alignment.  If it would grid-align a tilde */
+        /* less than 3 pixels in height, shift additionally to     */
+        /* re-center the tilde.                                    */
+
+        pos = high_min_y + adjustment_amount;
+        if ( adjust_below_top && is_top_tilde )
+          pos += high_height;
+
+        if ( pos % 64 == 0 && tilde_height < 3 * 64 )
+        {
+          centering_adjustment = ( FT_PIX_ROUND( tilde_height ) -
+                                   tilde_height ) / 2;
+
+          FT_TRACE4(( "    Additional tilde centering adjustment: %ld\n",
+                      centering_adjustment ));
+        }
       }
 
-      FT_TRACE4(( "    Calculated adjustment amount: %ld%s\n",
-                  adjustment_amount,
-                  ( adjustment_amount < 0 || adjustment_amount > 64 )
-                    ? " (out of range [0;64], not adjusting)" : "" ));
+      if ( ( adjust_top && is_top_tilde )             ||
+           ( adjust_below_top && is_below_top_tilde ) )
+        calculated_amount = adjustment_amount + centering_adjustment;
+      else
+        calculated_amount = adjustment_amount;
 
-      if ( adjustment_amount > 0 && adjustment_amount <= 64 )
+      /* allow a delta of 2/64px to handle rounding differences */
+      FT_TRACE4(( "    Calculated adjustment amount: %ld%s\n",
+                  calculated_amount,
+                  ( calculated_amount < -2                               ||
+                    ( adjustment_amount > 66 && calculated_amount > 66 ) )
+                      ? " (out of range [-2;66], not adjusting)" : "" ));
+
+      if ( calculated_amount != 0                                 &&
+           calculated_amount >= -2                                &&
+           ( calculated_amount <= 66 || adjustment_amount <= 66 ) )
       {
         /* Value 8 is heuristic. */
-        FT_Pos  height_delta = ( high_max_y - high_min_y ) / 8;
+        FT_Pos  height_delta = high_height / 8;
         FT_Pos  min_y_limit  = high_min_y - height_delta;
 
 
         FT_TRACE4(( "    Pushing high contour %ld units up\n",
-                    adjustment_amount ));
+                    calculated_amount ));
 
         /* While we use only a single contour (the 'high' one) for    */
         /* computing `adjustment_amount`, we apply it to all contours */
@@ -3746,30 +3775,46 @@
         /* the Czech ring accent or the second acute accent in the    */
         /* Hungarian double acute accent.                             */
         af_move_contours_up( hints, min_y_limit, adjustment_amount );
+
+        if ( adjust_below_top && is_top_tilde )
+        {
+          FT_TRACE4(( "    Pushing top tilde %ld units up\n",
+                      centering_adjustment ));
+
+          af_move_contours_up( hints,
+                               min_y_limit + high_height,
+                               centering_adjustment );
+        }
       }
     }
 
     if ( ( adjust_bottom && hints->num_contours >= 2 )       ||
          ( adjust_above_bottom && hints->num_contours >= 3 ) )
     {
-      FT_Int  low_contour = 0;
+      FT_Int  low_contour;
       FT_Pos  low_min_y;
       FT_Pos  low_max_y;
+      FT_Pos  low_height;
+
+      FT_Int  tilde_contour;
+      FT_Pos  tilde_min_y;
+      FT_Pos  tilde_max_y;
+      FT_Pos  tilde_height;
 
       FT_Int   contour;
       FT_Bool  horizontal_overlap;
 
-      FT_Pos  min_distance = 64;
+      FT_Pos  min_distance         = 64;
       FT_Pos  adjustment_amount;
+      FT_Pos  calculated_amount;
+      FT_Pos  centering_adjustment = 0;
+      FT_Pos  pos;
 
-      FT_Bool  is_tilde = FALSE;
+      FT_Bool  is_bottom_tilde =
+                 !!( db_entry->flags & AF_ADJUST_TILDE_BOTTOM );
+      FT_Bool  is_above_bottom_tilde =
+                 !!( db_entry->flags & AF_ADJUST_TILDE_BOTTOM2 );
 
-      FT_Bool  grid_aligned_after_adjustment;
-      FT_Pos   height;
-
-
-      if ( db_entry )
-        is_tilde = db_entry->flags & AF_ADJUST_TILDE_BOTTOM;
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
                   "  Applying vertical adjustment: %s\n",
@@ -3789,15 +3834,16 @@
         return;
       }
 
-      low_min_y = hints->contour_y_minima[low_contour];
-      low_max_y = hints->contour_y_maxima[low_contour];
+      low_min_y  = hints->contour_y_minima[low_contour];
+      low_max_y  = hints->contour_y_maxima[low_contour];
+      low_height = low_max_y - low_min_y;
 
-      if ( low_max_y - low_min_y > accent_height_limit )
+      if ( low_height > accent_height_limit )
       {
         FT_TRACE4(( "    Low contour height (%.2f) exceeds accent height"
                     " limit (%.2f).\n"
                     "    Skipping adjustment.\n",
-                    (double)( low_max_y - low_min_y ) / 64,
+                    (double)low_height / 64,
                     (double)accent_height_limit / 64 ));
         return;
       }
@@ -3824,37 +3870,66 @@
 
       adjustment_amount = 64 - min_distance;
 
-      grid_aligned_after_adjustment =
-        ( ( low_max_y - adjustment_amount ) % 64 == 0 );
-      height                        = low_max_y - low_min_y;
-
-      if ( is_tilde && grid_aligned_after_adjustment && height < 3 * 64 )
+      if ( is_bottom_tilde || is_above_bottom_tilde )
       {
-        FT_Pos  centering_adjustment =
-                  ( FT_PIX_ROUND( height ) - height ) / 2;
+        tilde_contour = adjust_bottom
+                          ? low_contour
+                          : ( is_above_bottom_tilde
+                                ? low_contour
+                                : af_find_lowest_contour( hints ) );
 
+        tilde_min_y  = hints->contour_y_minima[tilde_contour];
+        tilde_max_y  = hints->contour_y_maxima[tilde_contour];
+        tilde_height = tilde_max_y - tilde_min_y;
 
-        adjustment_amount += centering_adjustment;
-        FT_TRACE4(( "    Additional centering: %ld\n",
-                    centering_adjustment ));
+        pos = low_max_y - adjustment_amount;
+        if ( adjust_above_bottom && is_bottom_tilde )
+          pos -= low_height;
+
+        if ( pos % 64 == 0 && tilde_height < 3 * 64 )
+        {
+          centering_adjustment = ( FT_PIX_ROUND( tilde_height ) -
+                                   tilde_height ) / 2;
+
+          FT_TRACE4(( "    Additional tilde centering adjustment: %ld\n",
+                      centering_adjustment ));
+        }
       }
 
+      if ( ( adjust_bottom && is_bottom_tilde )             ||
+           ( adjust_above_bottom && is_above_bottom_tilde ) )
+        calculated_amount = adjustment_amount + centering_adjustment;
+      else
+        calculated_amount = adjustment_amount;
 
       FT_TRACE4(( "    Calculated adjustment amount: %ld%s\n",
-                  adjustment_amount,
-                  ( adjustment_amount < 0 || adjustment_amount > 64 )
-                    ? " (out of range [0;64], not adjusting)" : "" ));
+                  calculated_amount,
+                  ( calculated_amount < -2                               ||
+                    ( adjustment_amount > 66 && calculated_amount > 66 ) )
+                      ? " (out of range [-2;66], not adjusting)" : "" ));
 
-      if ( adjustment_amount > 0 && adjustment_amount <= 64 )
+      if ( calculated_amount != 0                                 &&
+           calculated_amount >= -2                                &&
+           ( calculated_amount <= 66 || adjustment_amount <= 66 ) )
       {
-        FT_Pos  height_delta = ( low_max_y - low_min_y ) / 8;
+        FT_Pos  height_delta = low_height / 8;
         FT_Pos  max_y_limit  = low_max_y + height_delta;
 
 
         FT_TRACE4(( "    Pushing low contour %ld units down\n",
-                    adjustment_amount ));
+                    calculated_amount ));
 
         af_move_contours_down( hints, max_y_limit, adjustment_amount );
+
+        if ( adjust_above_bottom && is_bottom_tilde )
+        {
+          FT_TRACE4(( "    Pushing bottom tilde %ld units down\n",
+                      centering_adjustment ));
+
+          af_move_contours_down( hints,
+                                 max_y_limit - low_height,
+                                 centering_adjustment );
+        }
       }
     }
 
