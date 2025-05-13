@@ -597,7 +597,7 @@
     { 0x1E00, AF_ADJUST_DOWN }, /* Ḁ */
     { 0x1E01, AF_ADJUST_DOWN }, /* ḁ */
     { 0x1E02, AF_ADJUST_UP }, /* Ḃ */
-    { 0x1E03, AF_ADJUST_NONE }, /* ḃ */
+    { 0x1E03, AF_ADJUST_UP }, /* ḃ */
     { 0x1E04, AF_ADJUST_DOWN }, /* Ḅ */
     { 0x1E05, AF_ADJUST_DOWN }, /* ḅ */
     { 0x1E06, AF_ADJUST_DOWN }, /* Ḇ */
@@ -605,7 +605,7 @@
     { 0x1E08, AF_ADJUST_UP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ḉ */
     { 0x1E09, AF_ADJUST_UP | AF_IGNORE_SMALL_BOTTOM }, /* ḉ */
     { 0x1E0A, AF_ADJUST_UP }, /* Ḋ */
-    { 0x1E0B, AF_ADJUST_NONE }, /* ḋ */
+    { 0x1E0B, AF_ADJUST_UP }, /* ḋ */
     { 0x1E0C, AF_ADJUST_DOWN }, /* Ḍ */
     { 0x1E0D, AF_ADJUST_DOWN }, /* ḍ */
     { 0x1E0E, AF_ADJUST_DOWN }, /* Ḏ */
@@ -1025,6 +1025,113 @@
     { 0x1FF6, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP }, /* ῶ */
     { 0x1FF7, AF_ADJUST_UP | AF_ADJUST_TILDE_TOP | AF_ADJUST_DOWN }, /* ῷ */
     { 0x1FFC, AF_ADJUST_DOWN }, /* ῼ */
+
+    /* General Punctuation */
+    { 0x203C, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ‼ */
+    { 0x203D, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ‽ */
+
+    { 0x2047, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ⁇ */
+    { 0x2048, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ⁈ */
+    { 0x2049, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ⁉ */
+
+    /* Superscripts and Subscripts */
+    { 0x2071, AF_ADJUST_UP }, /* ⁱ */
+
+    /* Currency Symbols */
+    { 0x20AB, AF_ADJUST_DOWN }, /* ₫ */
+
+    { 0x20C0, AF_ADJUST_DOWN }, /* ⃀ */
+
+    /* Number Forms */
+    { 0x2170, AF_ADJUST_UP }, /* ⅰ */
+    { 0x2171, AF_ADJUST_UP }, /* ⅱ */
+    { 0x2172, AF_ADJUST_UP }, /* ⅲ */
+    { 0x2173, AF_ADJUST_UP }, /* ⅳ */
+    { 0x2175, AF_ADJUST_UP }, /* ⅵ */
+    { 0x2176, AF_ADJUST_UP }, /* ⅶ */
+    { 0x2177, AF_ADJUST_UP }, /* ⅷ */
+    { 0x2178, AF_ADJUST_UP }, /* ⅸ */
+    { 0x217A, AF_ADJUST_UP }, /* ⅺ */
+    { 0x217B, AF_ADJUST_UP }, /* ⅻ */
+
+    /* Latin Extended-C */
+    { 0x2C64, AF_IGNORE_CAPITAL_BOTTOM } , /* Ɽ */
+    { 0x2C67, AF_IGNORE_CAPITAL_BOTTOM } , /* Ⱨ */
+    { 0x2C68, AF_IGNORE_SMALL_BOTTOM } , /* ⱨ */
+    { 0x2C69, AF_IGNORE_CAPITAL_BOTTOM } , /* Ⱪ */
+    { 0x2C6A, AF_IGNORE_SMALL_BOTTOM } , /* ⱪ */
+    { 0x2C6B, AF_IGNORE_CAPITAL_BOTTOM } , /* Ⱬ */
+    { 0x2C6C, AF_IGNORE_SMALL_BOTTOM } , /* ⱬ */
+    { 0x2C6E, AF_IGNORE_CAPITAL_BOTTOM } , /* Ɱ */
+
+    { 0x2C7C, AF_ADJUST_UP }, /* ⱼ */
+    { 0x2C7E, AF_IGNORE_CAPITAL_BOTTOM } , /* Ȿ */
+    { 0x2C7F, AF_IGNORE_CAPITAL_BOTTOM } , /* Ɀ */
+
+    /* Coptic */
+    { 0x2CC2, AF_ADJUST_UP }, /* Ⳃ */
+    { 0x2CC3, AF_ADJUST_UP }, /* ⳃ */
+
+    /* Supplemental Punctuation */
+    { 0x2E18, AF_ADJUST_UP }, /* ⸘ */
+
+    { 0x2E2E, AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ⸮ */
+
+    /* Cyrillic Extended-B */
+    { 0xA640, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꙁ */
+    { 0xA641, AF_IGNORE_SMALL_BOTTOM } , /* ꙁ */
+    { 0xA642, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꙃ */
+    { 0xA643, AF_IGNORE_SMALL_BOTTOM } , /* ꙃ */
+
+    { 0xA680, AF_IGNORE_CAPITAL_TOP } , /* Ꚁ */
+    { 0xA681, AF_IGNORE_SMALL_TOP } , /* ꚁ */
+    { 0xA688, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꚉ */
+    { 0xA689, AF_IGNORE_SMALL_BOTTOM } , /* ꚉ */
+    { 0xA68A, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꚋ */
+    { 0xA68B, AF_IGNORE_SMALL_BOTTOM } , /* ꚋ */
+    { 0xA68E, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꚏ */
+    { 0xA68F, AF_IGNORE_SMALL_BOTTOM } , /* ꚏ */
+
+    { 0xA690, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꚑ */
+    { 0xA691, AF_IGNORE_SMALL_BOTTOM } , /* ꚑ */
+    { 0xA696, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꚗ */
+    { 0xA697, AF_IGNORE_SMALL_BOTTOM } , /* ꚗ */
+
+    /* Latin Extended-D */
+    { 0xA726, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꜧ */
+    { 0xA727, AF_IGNORE_SMALL_BOTTOM } , /* ꜧ */
+
+    { 0xA756, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꝗ */
+    { 0xA758, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꝙ */
+
+    { 0xA771, AF_IGNORE_SMALL_BOTTOM } , /* ꝱ */
+    { 0xA772, AF_IGNORE_SMALL_BOTTOM } , /* ꝲ */
+    { 0xA773, AF_IGNORE_SMALL_BOTTOM } , /* ꝳ */
+    { 0xA774, AF_IGNORE_SMALL_BOTTOM } , /* ꝴ */
+    { 0xA776, AF_IGNORE_SMALL_BOTTOM } , /* ꝶ */
+
+    { 0xA790, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꞑ */
+    { 0xA791, AF_IGNORE_SMALL_BOTTOM } , /* ꞑ */
+    { 0xA794, AF_IGNORE_SMALL_BOTTOM } , /* ꞔ */
+    { 0xA795, AF_IGNORE_SMALL_BOTTOM } , /* ꞕ */
+
+    { 0xA7C0, AF_IGNORE_CAPITAL_TOP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ꟁ */
+    { 0xA7C1, AF_IGNORE_SMALL_TOP | AF_IGNORE_SMALL_BOTTOM }, /* ꟁ */
+    { 0xA7C4, AF_IGNORE_CAPITAL_BOTTOM } , /* Ꞔ */
+    { 0xA7C5, AF_IGNORE_CAPITAL_BOTTOM } , /* Ʂ */
+    { 0xA7C6, AF_IGNORE_CAPITAL_BOTTOM } , /* Ᶎ */
+    { 0xA7CC, AF_IGNORE_CAPITAL_TOP | AF_IGNORE_CAPITAL_BOTTOM }, /* Ꟍ */
+    { 0xA7CD, AF_IGNORE_SMALL_TOP | AF_IGNORE_SMALL_BOTTOM }, /* ꟍ */
+
+    /* Latin Extended-E */
+    { 0xAB3C, AF_IGNORE_SMALL_BOTTOM } , /* ꬼ */
+
+    { 0xAB46, AF_IGNORE_SMALL_BOTTOM } , /* ꭆ */
+
+    { 0xAB5C, AF_IGNORE_SMALL_BOTTOM } , /* ꭜ */
+
+    { 0xAB66, AF_IGNORE_SMALL_BOTTOM } , /* ꭦ */
+    { 0xAB67, AF_IGNORE_SMALL_BOTTOM } , /* ꭧ */
   };
 
 

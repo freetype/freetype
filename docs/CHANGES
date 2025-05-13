@@ -29,10 +29,11 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
       character 'ę') no longer distort the shape of the base glyph.
 
     These features  use a  database (which  currently has  entries for
-    Unicode  characters up  to U+1FFF),  handling scripts  like Latin,
-    Cyrillic, or  Greek, but  not Arabic  or Indic  scripts.  FreeType
-    needs to access a proper Unicode character map (or must be able to
-    construct such a cmap) of a given font to make this work.
+    Unicode characters up to U+FFFF,  based on Unicode 17.0), handling
+    scripts like  Latin, Cyrillic, or  Greek, but not Arabic  or Indic
+    scripts.  FreeType needs to access  a proper Unicode character map
+    (or must be able to construct such a cmap) of a given font to make
+    this work.
 
     You need HarfBuzz 7.2.0 or newer for the new diacritic support.
 
