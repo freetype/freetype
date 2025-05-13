@@ -777,11 +777,6 @@
   TT_Hint_Glyph( TT_Loader  loader,
                  FT_Bool    is_composite )
   {
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    TT_Face    face   = loader->face;
-    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
-#endif
-
     TT_GlyphZone  zone = &loader->zone;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -854,8 +849,7 @@
     /* to change bearings or advance widths.                               */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-         exec->backward_compatibility )
+    if ( exec->backward_compatibility )
       return FT_Err_Ok;
 #endif
 
@@ -2359,9 +2353,9 @@
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
            subpixel_hinting_lean                                    &&
            !FT_IS_TRICKY( glyph->face )                             )
-        exec->backward_compatibility = !( exec->GS.instruct_control & 4 );
+        exec->backward_compatibility = ( exec->GS.instruct_control & 4 ) ^ 4;
       else
-        exec->backward_compatibility = FALSE;
+        exec->backward_compatibility = 0;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */
 
       loader->exec = exec;
@@ -2371,13 +2365,12 @@
       /* is set or backward compatibility mode of the v38 or v40  */
       /* interpreters is active.  See `ttinterp.h' for details on */
       /* backward compatibility mode.                             */
-      if ( IS_HINTED( loader->load_flags )                                &&
-           !( loader->load_flags & FT_LOAD_COMPUTE_METRICS )              &&
+      if ( IS_HINTED( loader->load_flags )                   &&
+           !( loader->load_flags & FT_LOAD_COMPUTE_METRICS ) &&
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-           !( driver->interpreter_version == TT_INTERPRETER_VERSION_40  &&
-              exec->backward_compatibility                              ) &&
+           !exec->backward_compatibility                     &&
 #endif
-           !face->postscript.isFixedPitch                                 )
+           !face->postscript.isFixedPitch                    )
       {
         loader->widthp = size->widthp;
       }
