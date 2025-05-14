@@ -3819,7 +3819,7 @@
     FT_Int   L, K;
 
 
-    if ( ++IP > exc->codeSize )
+    if ( ++IP >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
@@ -3827,7 +3827,7 @@
 
     L = exc->code[IP];
 
-    if ( IP + L > exc->codeSize )
+    if ( IP + L >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
@@ -3861,7 +3861,7 @@
     FT_Int   L, K;
 
 
-    if ( ++IP > exc->codeSize )
+    if ( ++IP >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
@@ -3869,7 +3869,7 @@
 
     L = exc->code[IP];
 
-    if ( IP + 2 * L > exc->codeSize )
+    if ( IP + 2 * L >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
@@ -3906,7 +3906,7 @@
 
     L = exc->opcode - 0xB0 + 1;
 
-    if ( IP + L > exc->codeSize )
+    if ( IP + L >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
@@ -3941,7 +3941,7 @@
 
     L = exc->opcode - 0xB8 + 1;
 
-    if ( IP + 2 * L > exc->codeSize )
+    if ( IP + 2 * L >= exc->codeSize )
     {
       exc->error = FT_THROW( Code_Overflow );
       return;
