@@ -2434,8 +2434,8 @@
     if ( F_dot_P >= 0x3FFEL )
     {
       /* commonly collinear */
-      exc->moveVector.x = exc->GS.freeVector.x << 2;
-      exc->moveVector.y = exc->GS.freeVector.y << 2;
+      exc->moveVector.x = exc->GS.freeVector.x * 4;
+      exc->moveVector.y = exc->GS.freeVector.y * 4;
     }
     else if ( -0x400L < F_dot_P && F_dot_P < 0x400L )
     {
@@ -2445,8 +2445,8 @@
     }
     else
     {
-      exc->moveVector.x = ( exc->GS.freeVector.x << 16 ) / F_dot_P;
-      exc->moveVector.y = ( exc->GS.freeVector.y << 16 ) / F_dot_P;
+      exc->moveVector.x = exc->GS.freeVector.x * 0x10000L / F_dot_P;
+      exc->moveVector.y = exc->GS.freeVector.y * 0x10000L / F_dot_P;
     }
 
     if ( F_dot_P >= 0x3FFEL && exc->GS.freeVector.x == 0x4000 )
