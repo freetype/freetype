@@ -1487,14 +1487,14 @@
     if ( FT_QALLOC( buf, buf_size ) )
       goto Exit;
 
-    lineno  = 1;
-    start   = 0;
-    cursor  = 0;
+    lineno = 1;
+    start  = 0;
+    cursor = 0;
 
   Refill:
-    bytes  = FT_Stream_TryRead( stream,
-                                (FT_Byte*)buf + cursor, buf_size - cursor );
-    avail  = cursor + bytes;
+    bytes = FT_Stream_TryRead( stream,
+                               (FT_Byte*)buf + cursor, buf_size - cursor );
+    avail = cursor + bytes;
 
     while ( bytes )
     {

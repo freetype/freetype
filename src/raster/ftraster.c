@@ -657,7 +657,7 @@
       ras.cProfile->height = 0;
     }
 
-    ras.cProfile->flags  = ras.dropOutControl;
+    ras.cProfile->flags = ras.dropOutControl;
 
     switch ( aState )
     {
@@ -1094,8 +1094,8 @@
     PLong  top;
 
 
-    y1  = arc[degree].y;
-    y2  = arc[0].y;
+    y1 = arc[degree].y;
+    y2 = arc[0].y;
 
     if ( y2 < miny || y1 > maxy )
       return SUCCESS;

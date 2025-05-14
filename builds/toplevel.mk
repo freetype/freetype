@@ -274,8 +274,8 @@ dist:
 # GNU `config' git repository), relative to the `tmp' directory used during
 # `make dist'.
 #
-# GNU_CONFIG_GIT_URL = git://git.savannah.gnu.org/config.git 
-GNU_CONFIG_GIT_URL = https://git.savannah.gnu.org/git/config.git 
+# GNU_CONFIG_GIT_URL = git://git.savannah.gnu.org/config.git
+GNU_CONFIG_GIT_URL = https://git.savannah.gnu.org/git/config.git
 GNU_CONFIG_DESTDIR = $(TOP_DIR)/subprojects/gnu-config
 
 CONFIG_GUESS = $(GNU_CONFIG_DESTDIR)/config.guess

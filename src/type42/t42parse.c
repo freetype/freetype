@@ -310,7 +310,7 @@
     FT_Byte*    cur;
     FT_Byte*    limit   = parser->root.limit;
 
-    PSAux_Service  psaux  = (PSAux_Service)t42face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)t42face->psaux;
 
 
     T1_Skip_Spaces( parser );

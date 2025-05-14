@@ -1273,7 +1273,7 @@
               max_height = FT_MAX( max_height, -Axis->blues[nn].descender );
             }
 
-            dist  = FT_MulFix( max_height, new_scale - scale );
+            dist = FT_MulFix( max_height, new_scale - scale );
 
             if ( -128 < dist && dist < 128 )
             {

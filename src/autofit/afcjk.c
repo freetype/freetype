@@ -697,7 +697,7 @@
         FT_Pos  delta1, delta2;
 
 
-        blue->ref.fit  = FT_PIX_ROUND( blue->ref.cur );
+        blue->ref.fit = FT_PIX_ROUND( blue->ref.cur );
 
         /* shoot is under shoot for cjk */
         delta1 = FT_DivFix( blue->ref.fit, scale ) - blue->shoot.org;
@@ -2172,7 +2172,7 @@
   af_cjk_align_edge_points( AF_GlyphHints  hints,
                             AF_Dimension   dim )
   {
-    AF_AxisHints  axis       = & hints->axis[dim];
+    AF_AxisHints  axis       = &hints->axis[dim];
     AF_Edge       edges      = axis->edges;
     AF_Edge       edge_limit = FT_OFFSET( edges, axis->num_edges );
     AF_Edge       edge;
