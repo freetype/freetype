@@ -6468,11 +6468,9 @@
   {
     FT_Long    nump;
     FT_UShort  A;
-    FT_ULong   C, P;
-    FT_Long    B;
+    FT_Long    B, P, F;
 
 
-    P    = (FT_ULong)exc->func_cur_ppem( exc );
     nump = args[0];  /* signed value for convenience */
 
     if ( nump < 0 || nump > exc->new_top / 2 )
@@ -6484,6 +6482,29 @@
     }
 
     exc->new_top -= 2 * nump;
+
+    P = exc->func_cur_ppem( exc ) - exc->GS.delta_base;
+
+    switch ( exc->opcode )
+    {
+    case 0x5D:
+      break;
+
+    case 0x71:
+      P -= 16;
+      break;
+
+    case 0x72:
+      P -= 32;
+      break;
+    }
+
+    /* check adjusted ppem range */
+    if ( P < 0 || P > 15 )
+      return;
+
+    P <<= 4;
+    F   = 1L << ( 6 - exc->GS.delta_shift );
 
     while ( nump-- )
     {
@@ -6498,30 +6519,12 @@
 
       if ( !BOUNDS( A, exc->zp0.n_points ) )
       {
-        C = ( (FT_ULong)B & 0xF0 ) >> 4;
-
-        switch ( exc->opcode )
+        if ( ( B & 0xF0 ) == P )
         {
-        case 0x5D:
-          break;
-
-        case 0x71:
-          C += 16;
-          break;
-
-        case 0x72:
-          C += 32;
-          break;
-        }
-
-        C += exc->GS.delta_base;
-
-        if ( P == C )
-        {
-          B = ( (FT_ULong)B & 0xF ) - 8;
+          B = ( B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B *= 1L << ( 6 - exc->GS.delta_shift );
+          B *= F;
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -6556,11 +6559,10 @@
               FT_Long*        args )
   {
     FT_Long   nump;
-    FT_ULong  A, C, P;
-    FT_Long   B;
+    FT_ULong  A;
+    FT_Long   B, P, F;
 
 
-    P    = (FT_ULong)exc->func_cur_ppem( exc );
     nump = args[0];  /* signed value for convenience */
 
     if ( nump < 0 || nump > exc->new_top / 2 )
@@ -6572,6 +6574,29 @@
     }
 
     exc->new_top -= 2 * nump;
+
+    P = exc->func_cur_ppem( exc ) - exc->GS.delta_base;
+
+    switch ( exc->opcode )
+    {
+    case 0x73:
+      break;
+
+    case 0x74:
+      P -= 16;
+      break;
+
+    case 0x75:
+      P -= 32;
+      break;
+    }
+
+    /* check adjusted ppem range */
+    if ( P < 0 || P > 15 )
+      return;
+
+    P <<= 4;
+    F   = 1L << ( 6 - exc->GS.delta_shift );
 
     while ( nump-- )
     {
@@ -6588,30 +6613,12 @@
       }
       else
       {
-        C = ( (FT_ULong)B & 0xF0 ) >> 4;
-
-        switch ( exc->opcode )
+        if ( ( B & 0xF0 ) == P )
         {
-        case 0x73:
-          break;
-
-        case 0x74:
-          C += 16;
-          break;
-
-        case 0x75:
-          C += 32;
-          break;
-        }
-
-        C += exc->GS.delta_base;
-
-        if ( P == C )
-        {
-          B = ( (FT_ULong)B & 0xF ) - 8;
+          B = ( B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B *= 1L << ( 6 - exc->GS.delta_shift );
+          B *= F;
 
           exc->func_move_cvt( exc, A, B );
         }
