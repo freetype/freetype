@@ -1327,7 +1327,7 @@
     FT_Int64  c = ADD_INT64( MUL_INT64( ax, bx ), MUL_INT64( ay, by ) );
 
 
-    c += 0x2000 + ( c >> 63 );  /* rounding phase */
+    c = ADD_INT64( c, 0x2000 + ( c >> 63 ) );  /* rounding phase */
 
     return (FT_F26Dot6)( c >> 14 );
   }
