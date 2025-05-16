@@ -35,6 +35,7 @@
 
 #include <freetype/freetype.h>
 #include <freetype/ftoutln.h>
+#include <freetype/internal/fthash.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
 
@@ -439,7 +440,7 @@ extern void*  af_debug_hints_;
 
     AF_FaceGlobals  globals;    /* to access properties */
 
-    AF_ReverseCharacterMap  reverse_charmap;
+    FT_Hash  reverse_charmap;
 
   } AF_StyleMetricsRec;
 

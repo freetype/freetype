@@ -3575,13 +3575,12 @@
 
   static void
   af_glyph_hints_apply_vertical_separation_adjustments(
-    AF_GlyphHints           hints,
-    AF_Dimension            dim,
-    FT_Int                  glyph_index,
-    FT_Pos                  accent_height_limit,
-    AF_ReverseCharacterMap  reverse_charmap )
+    AF_GlyphHints  hints,
+    AF_Dimension   dim,
+    FT_Int         glyph_index,
+    FT_Pos         accent_height_limit,
+    FT_Hash        reverse_charmap )
   {
-    const AF_ReverseMapEntry          *entry;
     const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
 
     FT_Bool  adjust_top       = FALSE;
@@ -3590,6 +3589,8 @@
     FT_Bool  adjust_bottom       = FALSE;
     FT_Bool  adjust_above_bottom = FALSE;
 
+    size_t*  val;
+
 
     FT_TRACE4(( "Entering"
                 " af_glyph_hints_apply_vertical_separation_adjustments\n" ));
@@ -3597,10 +3598,13 @@
     if ( dim != AF_DIMENSION_VERT )
       return;
 
-    entry = af_reverse_character_map_lookup( reverse_charmap, glyph_index );
-    if ( entry )
+    val = ft_hash_num_lookup( glyph_index, reverse_charmap );
+    if ( val )
     {
-      db_entry = af_adjustment_database_lookup( entry->codepoint );
+      FT_Int  codepoint = *val;
+
+
+      db_entry = af_adjustment_database_lookup( codepoint );
       if ( db_entry )
       {
         adjust_top       = !!( db_entry->flags & AF_ADJUST_UP );
@@ -4865,7 +4869,7 @@
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
-      const AF_ReverseMapEntry  *entry;
+      size_t*  val;
 
       FT_Int  top_tilde_contour    = 0;
       FT_Int  bottom_tilde_contour = 0;
@@ -4899,12 +4903,14 @@
       FT_Pos  y_offset;
 
 
-      entry = af_reverse_character_map_lookup( metrics->root.reverse_charmap,
-                                               glyph_index );
-      if ( entry )
+      val = ft_hash_num_lookup( glyph_index,
+                                metrics->root.reverse_charmap );
+      if ( val )
       {
+        FT_Int  codepoint = *val;
+
         const AF_AdjustmentDatabaseEntry  *db_entry =
-          af_adjustment_database_lookup( entry->codepoint );
+          af_adjustment_database_lookup( codepoint );
 
 
         if ( db_entry )

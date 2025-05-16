@@ -1390,8 +1390,8 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_reverse_character_map_new( AF_ReverseCharacterMap  *map,
-                                AF_FaceGlobals           globals )
+  af_reverse_character_map_new( FT_Hash        *map,
+                                AF_FaceGlobals  globals )
   {
     FT_Error  error;
 
@@ -1399,8 +1399,6 @@
     FT_Memory  memory = face->memory;
 
     FT_CharMap  old_charmap;
-
-    FT_Long  capacity;
 
 
     /* Search for a unicode charmap.           */
@@ -1416,14 +1414,11 @@
       goto Exit;
 
     *map = NULL;
-    if ( FT_NEW( *map ) )
+    if ( FT_QNEW( *map ) )
       goto Exit;
 
-    /* Start with a capacity of 10 entries. */
-    capacity         = 10;
-    ( *map )->length = 0;
-
-    if ( FT_NEW_ARRAY( ( *map )->entries, capacity ) )
+    error = ft_hash_num_init( *map, memory );
+    if ( error )
       goto Exit;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
@@ -1444,9 +1439,6 @@
       FT_UInt    glyph_index;
 
       FT_ULong  i;
-
-      AF_ReverseMapEntry  *map_limit;
-
 
       /* Compute set of all GSUB lookups. */
       hb( ot_layout_collect_lookups )( hb_face,
@@ -1474,31 +1466,13 @@
 
         glyph = HB_SET_VALUE_INVALID;
         while ( hb( set_next )( result_set, &glyph ) )
-        {
-          FT_Long  insert_point;
-
-
-          error = af_reverse_character_map_expand( *map, &capacity, memory );
-          if ( error )
-            goto Exit;
-
-          insert_point = ( *map )->length;
-
-          ( *map )->length++;
-          ( *map )->entries[insert_point].glyph_index = glyph;
-          ( *map )->entries[insert_point].codepoint   = codepoint;
-        }
+          ft_hash_num_insert( glyph, codepoint, *map, memory );
 
         hb( set_clear )( result_set );
       }
 
       hb( set_destroy )( result_set );
       hb( set_destroy )( gsub_lookups );
-
-      ft_qsort( ( *map )->entries,
-                ( *map )->length,
-                sizeof ( AF_ReverseMapEntry ),
-                af_reverse_character_map_entry_compare );
 
       /* OpenType features like 'unic' map lowercase letter glyphs to    */
       /* uppercase forms (and vice versa), which could lead to the use   */
@@ -1514,26 +1488,10 @@
       /* a topological analysis to do the right thing.                   */
 
       codepoint = FT_Get_First_Char( face, &glyph_index );
-      map_limit = ( *map )->entries + ( *map )->length;
       while ( glyph_index )
       {
-        AF_ReverseMapEntry  *entry;
-
-
-        entry = (AF_ReverseMapEntry*)
-                  af_reverse_character_map_lookup( *map, glyph_index );
-        if ( entry )
-        {
-          FT_Int  idx = entry->glyph_index;
-
-
-          while ( entry < map_limit         &&
-                  entry->glyph_index == idx )
-          {
-            entry->codepoint = codepoint;
-            entry++;
-          }
-        }
+        if ( ft_hash_num_lookup( glyph_index, *map ) )
+          ft_hash_num_insert( glyph_index, codepoint, *map, memory );
 
         codepoint = FT_Get_Next_Char( face, codepoint, &glyph_index );
       }
@@ -1544,7 +1502,6 @@
 
     {
       FT_UInt  i;
-      FT_Long  insert_point;
 
 
       for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
@@ -1556,44 +1513,28 @@
         if ( glyph == 0 )
           continue;
 
-        error = af_reverse_character_map_expand( *map, &capacity, memory );
-        if ( error )
-          goto Exit;
-
-        insert_point = ( *map )-> length;
-
-        ( *map )->length++;
-        ( *map )->entries[insert_point].glyph_index = glyph;
-        ( *map )->entries[insert_point].codepoint   = codepoint;
+        ft_hash_num_insert( glyph, codepoint, *map, memory );
       }
-
-      ft_qsort( ( *map )->entries,
-                ( *map )->length,
-                sizeof ( AF_ReverseMapEntry ),
-                af_reverse_character_map_entry_compare );
     }
 
     FT_TRACE4(( "    reverse character map built successfully"
-                " with %ld entries\n", ( *map )->length ));
+                " with %d entries\n", ( *map )->used ));
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
     {
-      FT_Long  i;
+      FT_UInt  i;
 
 
       FT_TRACE7(( "       gidx   code    flags\n" ));
                /* "      XXXXX  0xXXXX  XXXXXXXXXXX..." */
       FT_TRACE7(( "     ------------------------------\n" ));
 
-      for ( i = 0; i < ( *map )->length; i++ )
+      for ( i = 0; i < globals->glyph_count; i++ )
       {
-        FT_Long  glyph_index = ( *map )->entries[i].glyph_index;
-        FT_Int   codepoint   = ( *map )->entries[i].codepoint;
-
-        const AF_AdjustmentDatabaseEntry  *db_entry =
-          af_adjustment_database_lookup( codepoint );
-        FT_UInt32                          adj_type;
+        size_t*    val;
+        FT_Int     codepoint;
+        FT_UInt32  adj_type;
 
         const char*  flag_names[] =
         {
@@ -1620,10 +1561,21 @@
         size_t  j;
 
 
-        if ( !db_entry )
+        val = ft_hash_num_lookup( i, *map );
+        if ( !val )
           continue;
+        codepoint = *val;
 
-        adj_type = db_entry->flags;
+        {
+          const AF_AdjustmentDatabaseEntry  *db_entry =
+            af_adjustment_database_lookup( codepoint );
+
+
+          if ( !db_entry )
+            continue;
+
+          adj_type = db_entry->flags;
+        }
 
         flag_str[0] = '\0';
         need_comma  = 0;
@@ -1640,8 +1592,7 @@
           }
         }
 
-        FT_TRACE7(( "      %5ld  0x%04X  %s\n",
-                    glyph_index, codepoint, flag_str ));
+        FT_TRACE7(( "      %5d  0x%04X  %s\n", i, codepoint, flag_str ));
       }
     }
 
@@ -1657,7 +1608,7 @@
                   " Using blank map.\n" ));
 
       if ( *map )
-        FT_FREE( ( *map )->entries );
+        ft_hash_num_free( *map, memory );
 
       FT_FREE( *map );
       *map = NULL;
@@ -1669,11 +1620,11 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_reverse_character_map_done( AF_ReverseCharacterMap  map,
-                                 FT_Memory               memory )
+  af_reverse_character_map_done( FT_Hash    map,
+                                 FT_Memory  memory )
   {
     if ( map )
-      FT_FREE( map->entries );
+      ft_hash_num_free( map, memory );
     FT_FREE( map );
 
     return FT_Err_Ok;

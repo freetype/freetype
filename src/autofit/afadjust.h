@@ -125,13 +125,13 @@ FT_BEGIN_HEADER
   /* Allocate and populate the reverse character map, */
   /* using the character map within the face.         */
   FT_LOCAL( FT_Error )
-  af_reverse_character_map_new( AF_ReverseCharacterMap  *map,
-                                AF_FaceGlobals           globals );
+  af_reverse_character_map_new( FT_Hash        *map,
+                                AF_FaceGlobals  globals );
 
   /* Free the reverse character map. */
   FT_LOCAL( FT_Error )
-  af_reverse_character_map_done( AF_ReverseCharacterMap  map,
-                                 FT_Memory               memory );
+  af_reverse_character_map_done( FT_Hash    map,
+                                 FT_Memory  memory );
 
 
 FT_END_HEADER
