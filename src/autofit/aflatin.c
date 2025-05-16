@@ -4903,36 +4903,30 @@
                                                glyph_index );
       if ( entry )
       {
-        const AF_AdjustmentDatabaseEntry  *db_entry;
+        const AF_AdjustmentDatabaseEntry  *db_entry =
+          af_adjustment_database_lookup( entry->codepoint );
 
 
-        db_entry = af_adjustment_database_lookup( entry->codepoint );
         if ( db_entry )
         {
-          have_flags = !!db_entry->flags;
+          FT_UInt32  adj_type = db_entry->flags;
 
-          is_top_tilde    = !!( db_entry->flags     &
-                                AF_ADJUST_TILDE_TOP );
-          is_bottom_tilde = !!( db_entry->flags        &
-                                AF_ADJUST_TILDE_BOTTOM );
 
-          is_below_top_tilde    = !!( db_entry->flags      &
-                                      AF_ADJUST_TILDE_TOP2 );
-          is_above_bottom_tilde = !!( db_entry->flags         &
-                                      AF_ADJUST_TILDE_BOTTOM2 );
+          have_flags = !!adj_type;
 
-          ignore_capital_top    = !!( db_entry->flags       &
-                                      AF_IGNORE_CAPITAL_TOP );
-          ignore_capital_bottom = !!( db_entry->flags          &
-                                      AF_IGNORE_CAPITAL_BOTTOM );
+          is_top_tilde    = !!( adj_type & AF_ADJUST_TILDE_TOP );
+          is_bottom_tilde = !!( adj_type & AF_ADJUST_TILDE_BOTTOM );
 
-          ignore_small_top    = !!( db_entry->flags     &
-                                    AF_IGNORE_SMALL_TOP );
-          ignore_small_bottom = !!( db_entry->flags        &
-                                    AF_IGNORE_SMALL_BOTTOM );
+          is_below_top_tilde    = !!( adj_type & AF_ADJUST_TILDE_TOP2 );
+          is_above_bottom_tilde = !!( adj_type & AF_ADJUST_TILDE_BOTTOM2 );
 
-          do_height_check = !( db_entry->flags           &
-                               AF_ADJUST_NO_HEIGHT_CHECK );
+          ignore_capital_top    = !!( adj_type & AF_IGNORE_CAPITAL_TOP );
+          ignore_capital_bottom = !!( adj_type & AF_IGNORE_CAPITAL_BOTTOM );
+
+          ignore_small_top    = !!( adj_type & AF_IGNORE_SMALL_TOP );
+          ignore_small_bottom = !!( adj_type & AF_IGNORE_SMALL_BOTTOM );
+
+          do_height_check = !( adj_type & AF_ADJUST_NO_HEIGHT_CHECK );
         }
       }
 
