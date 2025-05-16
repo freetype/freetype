@@ -6517,7 +6517,15 @@
       /*      error.  As a delta instruction doesn't change a glyph  */
       /*      in great ways, this shouldn't be a problem.            */
 
-      if ( !BOUNDS( A, exc->zp0.n_points ) )
+      if ( BOUNDS( A, exc->zp0.n_points ) )
+      {
+        if ( exc->pedantic_hinting )
+        {
+          exc->error = FT_THROW( Invalid_Reference );
+          return;
+        }
+      }
+      else
       {
         if ( ( B & 0xF0 ) == P )
         {
@@ -6525,7 +6533,6 @@
           if ( B >= 0 )
             B++;
           B *= F;
-
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
           /* See `ttinterp.h' for details on backward compatibility mode. */
@@ -6541,9 +6548,6 @@
             exc->func_move( exc, &exc->zp0, A, B );
         }
       }
-      else
-        if ( exc->pedantic_hinting )
-          exc->error = FT_THROW( Invalid_Reference );
     }
   }
 
