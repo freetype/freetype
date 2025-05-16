@@ -1147,13 +1147,13 @@
   af_adjustment_database_lookup( FT_UInt32  codepoint )
   {
     /* Binary search for database entry */
-    FT_Int  low  = 0;
-    FT_Int  high = AF_ADJUSTMENT_DATABASE_LENGTH - 1;
+    FT_Offset  low  = 0;
+    FT_Offset  high = AF_ADJUSTMENT_DATABASE_LENGTH - 1;
 
 
     while ( high >= low )
     {
-      FT_Int     mid           = ( low + high ) / 2;
+      FT_Offset  mid           = ( low + high ) / 2;
       FT_UInt32  mid_codepoint = adjustment_database[mid].codepoint;
 
 
@@ -1358,7 +1358,7 @@
       FT_UInt32  codepoint;
       FT_UInt    glyph_index;
 
-      FT_ULong  i;
+      FT_Offset  i;
 
       /* Compute set of all GSUB lookups. */
       hb( ot_layout_collect_lookups )( hb_face,
@@ -1421,7 +1421,7 @@
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     {
-      FT_UInt  i;
+      FT_Offset  i;
 
 
       for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
