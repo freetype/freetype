@@ -118,10 +118,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( const AF_AdjustmentDatabaseEntry* )
   af_adjustment_database_lookup( FT_UInt32  codepoint );
 
-  FT_LOCAL( const AF_ReverseMapEntry* )
-  af_reverse_character_map_lookup( AF_ReverseCharacterMap  map,
-                                   FT_Int                  glyph_index );
-
   /* Allocate and populate the reverse character map, */
   /* using the character map within the face.         */
   FT_LOCAL( FT_Error )
