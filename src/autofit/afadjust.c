@@ -32,6 +32,14 @@
 #define FT_COMPONENT  afadjust
 
 
+  typedef struct  AF_AdjustmentDatabaseEntry_
+  {
+    FT_UInt32  codepoint;
+    FT_UInt32  flags;
+
+  } AF_AdjustmentDatabaseEntry;
+
+
   /*
     All entries in this list must be sorted by ascending Unicode code
     points.  The table entries are 3 numbers consisting of:
@@ -1135,7 +1143,7 @@
   };
 
 
-  FT_LOCAL_DEF( const AF_AdjustmentDatabaseEntry* )
+  FT_LOCAL_DEF( FT_UInt32 )
   af_adjustment_database_lookup( FT_UInt32  codepoint )
   {
     /* Binary search for database entry */
@@ -1154,10 +1162,10 @@
       else if ( mid_codepoint > codepoint )
         high = mid - 1;
       else
-        return &adjustment_database[mid];
+        return adjustment_database[mid].flags;
     }
 
-    return NULL;
+    return 0;
   }
 
 
@@ -1478,16 +1486,9 @@
           continue;
         codepoint = *val;
 
-        {
-          const AF_AdjustmentDatabaseEntry  *db_entry =
-            af_adjustment_database_lookup( codepoint );
-
-
-          if ( !db_entry )
-            continue;
-
-          adj_type = db_entry->flags;
-        }
+        adj_type = af_adjustment_database_lookup( codepoint );
+        if ( !adj_type )
+          continue;
 
         flag_str[0] = '\0';
         need_comma  = 0;

@@ -107,15 +107,7 @@ FT_BEGIN_HEADER
 #define AF_ADJUST_NONE  0x00
 
 
-  typedef struct  AF_AdjustmentDatabaseEntry_
-  {
-    FT_UInt32  codepoint;
-    FT_UInt32  flags;
-
-  } AF_AdjustmentDatabaseEntry;
-
-
-  FT_LOCAL( const AF_AdjustmentDatabaseEntry* )
+  FT_LOCAL( FT_UInt32 )
   af_adjustment_database_lookup( FT_UInt32  codepoint );
 
   /* Allocate and populate the reverse character map, */

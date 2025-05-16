@@ -3581,15 +3581,14 @@
     FT_Pos         accent_height_limit,
     FT_Hash        reverse_charmap )
   {
-    const AF_AdjustmentDatabaseEntry  *db_entry = NULL;
-
     FT_Bool  adjust_top       = FALSE;
     FT_Bool  adjust_below_top = FALSE;
 
     FT_Bool  adjust_bottom       = FALSE;
     FT_Bool  adjust_above_bottom = FALSE;
 
-    size_t*  val;
+    size_t*    val;
+    FT_UInt32  adj_type = AF_ADJUST_NONE;
 
 
     FT_TRACE4(( "Entering"
@@ -3604,14 +3603,15 @@
       FT_Int  codepoint = *val;
 
 
-      db_entry = af_adjustment_database_lookup( codepoint );
-      if ( db_entry )
-      {
-        adjust_top       = !!( db_entry->flags & AF_ADJUST_UP );
-        adjust_below_top = !!( db_entry->flags & AF_ADJUST_UP2 );
+      adj_type = af_adjustment_database_lookup( codepoint );
 
-        adjust_bottom       = !!( db_entry->flags & AF_ADJUST_DOWN );
-        adjust_above_bottom = !!( db_entry->flags & AF_ADJUST_DOWN2 );
+      if ( adj_type )
+      {
+        adjust_top       = !!( adj_type & AF_ADJUST_UP );
+        adjust_below_top = !!( adj_type & AF_ADJUST_UP2 );
+
+        adjust_bottom       = !!( adj_type & AF_ADJUST_DOWN );
+        adjust_above_bottom = !!( adj_type & AF_ADJUST_DOWN2 );
       }
     }
 
@@ -3647,10 +3647,8 @@
       FT_Pos  centering_adjustment = 0;
       FT_Pos  pos;
 
-      FT_Bool  is_top_tilde =
-                 !!( db_entry->flags & AF_ADJUST_TILDE_TOP );
-      FT_Bool  is_below_top_tilde =
-                 !!( db_entry->flags & AF_ADJUST_TILDE_TOP2 );
+      FT_Bool  is_top_tilde       = !!( adj_type & AF_ADJUST_TILDE_TOP );
+      FT_Bool  is_below_top_tilde = !!( adj_type & AF_ADJUST_TILDE_TOP2 );
 
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
@@ -3815,9 +3813,9 @@
       FT_Pos  pos;
 
       FT_Bool  is_bottom_tilde =
-                 !!( db_entry->flags & AF_ADJUST_TILDE_BOTTOM );
+                 !!( adj_type & AF_ADJUST_TILDE_BOTTOM );
       FT_Bool  is_above_bottom_tilde =
-                 !!( db_entry->flags & AF_ADJUST_TILDE_BOTTOM2 );
+                 !!( adj_type & AF_ADJUST_TILDE_BOTTOM2 );
 
 
       FT_TRACE4(( "af_glyph_hints_apply_vertical_separation_adjustments:\n"
@@ -4907,17 +4905,12 @@
                                 metrics->root.reverse_charmap );
       if ( val )
       {
-        FT_Int  codepoint = *val;
-
-        const AF_AdjustmentDatabaseEntry  *db_entry =
-          af_adjustment_database_lookup( codepoint );
+        FT_Int     codepoint = *val;
+        FT_UInt32  adj_type  = af_adjustment_database_lookup( codepoint );
 
 
-        if ( db_entry )
+        if ( adj_type )
         {
-          FT_UInt32  adj_type = db_entry->flags;
-
-
           have_flags = !!adj_type;
 
           is_top_tilde    = !!( adj_type & AF_ADJUST_TILDE_TOP );
