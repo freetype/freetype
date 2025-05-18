@@ -1439,14 +1439,14 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
     {
-      FT_UInt  i;
+      FT_UInt  cnt;
 
 
       FT_TRACE7(( "       gidx   code    flags\n" ));
                /* "      XXXXX  0xXXXX  XXXXXXXXXXX..." */
       FT_TRACE7(( "     ------------------------------\n" ));
 
-      for ( i = 0; i < globals->glyph_count; i++ )
+      for ( cnt = 0; cnt < globals->glyph_count; cnt++ )
       {
         size_t*    val;
         FT_Int     codepoint;
@@ -1477,7 +1477,7 @@
         size_t  j;
 
 
-        val = ft_hash_num_lookup( i, *map );
+        val = ft_hash_num_lookup( cnt, *map );
         if ( !val )
           continue;
         codepoint = *val;
@@ -1501,7 +1501,7 @@
           }
         }
 
-        FT_TRACE7(( "      %5d  0x%04X  %s\n", i, codepoint, flag_str ));
+        FT_TRACE7(( "      %5d  0x%04X  %s\n", cnt, codepoint, flag_str ));
       }
     }
 
