@@ -2543,12 +2543,12 @@
    */
 
 
-#define ARRAY_BOUND_ERROR                         \
-    do                                            \
-    {                                             \
-      exc->error = FT_THROW( Invalid_Reference ); \
-      return;                                     \
-    } while (0)
+#define TT_PEDANTIC( err )          \
+    do if ( exc->pedantic_hinting ) \
+    {                               \
+      exc->error = FT_THROW( err ); \
+      return;                       \
+    } while ( 0 )
 
 
   /**************************************************************************
@@ -2932,10 +2932,8 @@
 
     if ( BOUNDSL( I, exc->storeSize ) )
     {
-      if ( exc->pedantic_hinting )
-        ARRAY_BOUND_ERROR;
-      else
-        args[0] = 0;
+      TT_PEDANTIC( Invalid_Reference );
+      args[0] = 0;
     }
     else
       args[0] = exc->storage[I];
@@ -2957,8 +2955,7 @@
 
     if ( BOUNDSL( I, exc->storeSize ) )
     {
-      if ( exc->pedantic_hinting )
-        ARRAY_BOUND_ERROR;
+      TT_PEDANTIC( Invalid_Reference );
     }
     else
     {
@@ -3001,8 +2998,7 @@
 
     if ( BOUNDSL( I, exc->cvtSize ) )
     {
-      if ( exc->pedantic_hinting )
-        ARRAY_BOUND_ERROR;
+      TT_PEDANTIC( Invalid_Reference );
     }
     else
       exc->func_write_cvt( exc, I, args[1] );
@@ -3024,8 +3020,7 @@
 
     if ( BOUNDSL( I, exc->cvtSize ) )
     {
-      if ( exc->pedantic_hinting )
-        ARRAY_BOUND_ERROR;
+      TT_PEDANTIC( Invalid_Reference );
     }
     else
       exc->cvt[I] = FT_MulFix( args[1], exc->tt_metrics.scale );
@@ -3047,10 +3042,8 @@
 
     if ( BOUNDSL( I, exc->cvtSize ) )
     {
-      if ( exc->pedantic_hinting )
-        ARRAY_BOUND_ERROR;
-      else
-        args[0] = 0;
+      TT_PEDANTIC( Invalid_Reference );
+      args[0] = 0;
     }
     else
       args[0] = exc->func_read_cvt( exc, I );
@@ -3158,8 +3151,7 @@
 
     if ( L <= 0 || L > exc->args )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
     }
     else
     {
@@ -3189,8 +3181,7 @@
 
     if ( L <= 0 || L > exc->args )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       args[0] = 0;
     }
     else
@@ -4500,8 +4491,7 @@
 
     if ( BOUNDSL( L, exc->zp2.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       R = 0;
     }
     else
@@ -4538,8 +4528,7 @@
 
     if ( BOUNDS( L, exc->zp2.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -4583,8 +4572,7 @@
     if ( BOUNDS( L, exc->zp0.n_points ) ||
          BOUNDS( K, exc->zp1.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       D = 0;
     }
     else
@@ -4655,8 +4643,7 @@
     if ( BOUNDS( p2, exc->zp1.n_points ) ||
          BOUNDS( p1, exc->zp2.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -4737,8 +4724,7 @@
       break;
 
     default:
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Bad_Argument );
       return;
     }
 
@@ -4767,8 +4753,7 @@
       break;
 
     default:
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Bad_Argument );
       return;
     }
 
@@ -4797,8 +4782,7 @@
       break;
 
     default:
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Bad_Argument );
       return;
     }
 
@@ -4827,8 +4811,7 @@
       break;
 
     default:
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Bad_Argument );
       return;
     }
 
@@ -4861,8 +4844,7 @@
     /* they are indices starting with index 1, not flags */
     if ( K < 1 || K > 3 )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Bad_Argument );
       return;
     }
 
@@ -4874,9 +4856,8 @@
       /* arguments to selectors look like flag values */
       if ( L != Kf )
       {
-        if ( exc->pedantic_hinting )
-          exc->error = FT_THROW( Invalid_Reference );
-        return;
+        TT_PEDANTIC( Bad_Argument );
+        L &= Kf;
       }
     }
 
@@ -4898,8 +4879,8 @@
         exc->backward_compatibility = ( L & 4 ) ^ 4;
 #endif
     }
-    else if ( exc->pedantic_hinting )
-      exc->error = FT_THROW( Invalid_Reference );
+    else
+      TT_PEDANTIC( Bad_Argument );
   }
 
 
@@ -4988,9 +4969,8 @@
 
     if ( exc->new_top < loop )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Too_Few_Arguments );
-      goto Fail;
+      TT_PEDANTIC( Too_Few_Arguments );
+      loop = exc->new_top;
     }
 
     exc->new_top -= loop;
@@ -5007,11 +4987,7 @@
 
       if ( BOUNDS( point, exc->pts.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
         exc->pts.tags[point] ^= FT_CURVE_TAG_ON;
@@ -5047,8 +5023,7 @@
     if ( BOUNDS( K, exc->pts.n_points ) ||
          BOUNDS( L, exc->pts.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5082,8 +5057,7 @@
     if ( BOUNDS( K, exc->pts.n_points ) ||
          BOUNDS( L, exc->pts.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5189,9 +5163,8 @@
 
     if ( exc->new_top < loop )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      goto Fail;
+      TT_PEDANTIC( Too_Few_Arguments );
+      loop = exc->new_top;
     }
 
     exc->new_top -= loop;
@@ -5205,17 +5178,12 @@
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
         Move_Zp2_Point( exc, point, dx, dy, TRUE );
     }
 
-  Fail:
     exc->GS.loop = 1;
   }
 
@@ -5247,8 +5215,7 @@
 
     if ( BOUNDS( contour, bounds ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5294,8 +5261,7 @@
 
     if ( BOUNDS( args[0], 2 ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5344,9 +5310,8 @@
 
     if ( exc->new_top < loop )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      goto Fail;
+      TT_PEDANTIC( Too_Few_Arguments );
+      loop = exc->new_top;
     }
 
     exc->new_top -= loop;
@@ -5360,11 +5325,7 @@
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -5386,7 +5347,6 @@
         Move_Zp2_Point( exc, point, dx, dy, TRUE );
     }
 
-  Fail:
     exc->GS.loop = 1;
   }
 
@@ -5410,8 +5370,7 @@
     if ( BOUNDS( point,       exc->zp1.n_points ) ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5458,8 +5417,7 @@
 
     if ( BOUNDS( point, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -5500,8 +5458,7 @@
     if ( BOUNDS( point,     exc->zp0.n_points ) ||
          BOUNDSL( cvtEntry, exc->cvtSize )      )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       goto Fail;
     }
 
@@ -5581,8 +5538,7 @@
     if ( BOUNDS( point,       exc->zp1.n_points ) ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       goto Fail;
     }
 
@@ -5713,8 +5669,7 @@
          BOUNDSL( cvtEntry,   exc->cvtSize + 1 )  ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       goto Fail;
     }
 
@@ -5852,8 +5807,7 @@
     if ( exc->new_top < loop                      ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       goto Fail;
     }
 
@@ -5865,11 +5819,7 @@
 
       if ( BOUNDS( point, exc->zp1.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
       {
@@ -5923,8 +5873,7 @@
          BOUNDS( a1,    exc->zp1.n_points ) ||
          BOUNDS( point, exc->zp2.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -6001,8 +5950,7 @@
     if ( BOUNDS( p1, exc->zp1.n_points ) ||
          BOUNDS( p2, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -6035,12 +5983,17 @@
 
     if ( exc->new_top < loop )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      goto Fail;
+      TT_PEDANTIC( Too_Few_Arguments );
+      loop = exc->new_top;
     }
 
     exc->new_top -= loop;
+
+    if ( BOUNDS( exc->GS.rp1, exc->zp0.n_points ) )
+    {
+      TT_PEDANTIC( Invalid_Reference );
+      goto Fail;
+    }
 
     /*
      * We need to deal in a special way with the twilight zone.
@@ -6050,13 +6003,6 @@
     twilight = ( exc->GS.gep0 == 0 ||
                  exc->GS.gep1 == 0 ||
                  exc->GS.gep2 == 0 );
-
-    if ( BOUNDS( exc->GS.rp1, exc->zp0.n_points ) )
-    {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      goto Fail;
-    }
 
     if ( twilight )
       orus_base = &exc->zp0.org[exc->GS.rp1];
@@ -6108,11 +6054,7 @@
       /* check point bounds */
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
         continue;
       }
 
@@ -6194,8 +6136,7 @@
 
     if ( BOUNDS( point, exc->zp0.n_points ) )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
+      TT_PEDANTIC( Invalid_Reference );
       return;
     }
 
@@ -6475,9 +6416,7 @@
 
     if ( nump < 0 || nump > exc->new_top / 2 )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Too_Few_Arguments );
-
+      TT_PEDANTIC( Bad_Argument );
       nump = exc->new_top / 2;
     }
 
@@ -6519,11 +6458,7 @@
 
       if ( BOUNDS( A, exc->zp0.n_points ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
       {
@@ -6571,9 +6506,7 @@
 
     if ( nump < 0 || nump > exc->new_top / 2 )
     {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Too_Few_Arguments );
-
+      TT_PEDANTIC( Bad_Argument );
       nump = exc->new_top / 2;
     }
 
@@ -6609,11 +6542,7 @@
 
       if ( BOUNDSL( A, exc->cvtSize ) )
       {
-        if ( exc->pedantic_hinting )
-        {
-          exc->error = FT_THROW( Invalid_Reference );
-          return;
-        }
+        TT_PEDANTIC( Invalid_Reference );
       }
       else
       {
