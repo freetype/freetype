@@ -148,8 +148,8 @@
       script_tags[2] = tags_count > 2 ? tags[2] : HB_TAG_NONE;
     }
 
-    /* If the second tag is HB_OT_TAG_DEFAULT_SCRIPT, change that to     */
-    /* HB_TAG_NONE except for the default script.                        */
+    /* If the second tag is HB_OT_TAG_DEFAULT_SCRIPT, change that to */
+    /* HB_TAG_NONE except for the default script.                    */
     if ( default_script )
     {
       if ( script_tags[0] == HB_TAG_NONE )
@@ -204,7 +204,7 @@
                                              NULL,
                                              NULL,
                                              NULL,
-                                          gsub_glyphs );
+                                             gsub_glyphs );
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
