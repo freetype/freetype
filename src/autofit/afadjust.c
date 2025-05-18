@@ -1320,6 +1320,8 @@
 
     FT_CharMap  old_charmap;
 
+    FT_Offset  i;
+
 
     /* Search for a unicode charmap.           */
     /* If there isn't one, create a blank map. */
@@ -1341,6 +1343,21 @@
     if ( error )
       goto Exit;
 
+    /* Insert all glyphs from the database that have entries in the cmap. */
+    for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+    {
+      FT_UInt32  codepoint = adjustment_database[i].codepoint;
+      FT_Int     glyph     = FT_Get_Char_Index( face, codepoint );
+
+
+      if ( glyph == 0 )
+        continue;
+
+      error = ft_hash_num_insert( glyph, codepoint, *map, memory );
+      if ( error )
+        goto Exit;
+    }
+
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
     if ( hb( version_atleast )( 7, 2, 0 ) )
@@ -1356,9 +1373,7 @@
       hb_set_t  *gsub_lookups = hb( set_create )();
 
       FT_UInt32  codepoint;
-      FT_UInt    glyph_index;
 
-      FT_Offset  i;
 
       /* Compute set of all GSUB lookups. */
       hb( ot_layout_collect_lookups )( hb_face,
@@ -1386,56 +1401,37 @@
 
         glyph = HB_SET_VALUE_INVALID;
         while ( hb( set_next )( result_set, &glyph ) )
-          ft_hash_num_insert( glyph, codepoint, *map, memory );
+        {
+          /* OpenType features like 'unic' map lowercase letter glyphs  */
+          /* to uppercase forms (and vice versa), which could lead to   */
+          /* the use of a wrong entry in the adjustment database.  For  */
+          /* this reason we prioritize cmap entries.                    */
+          /*                                                            */
+          /* XXX Note, however, that this cannot cover all cases since  */
+          /* there might be contradictory entries for glyphs not in the */
+          /* cmap.  A possible solution might be to specially mark      */
+          /* pairs of related lowercase and uppercase characters in the */
+          /* adjustment database that have diacritics on different      */
+          /* vertical sides (for example, U+0122 'Ģ' and U+0123 'ģ').   */
+          /* The auto-hinter could then perform a topological analysis  */
+          /* to do the right thing.                                     */
+
+          if ( !( globals->glyph_styles[glyph] & AF_HAS_CMAP_ENTRY ) )
+          {
+            error = ft_hash_num_insert( glyph, codepoint, *map, memory );
+            if ( error )
+              goto Exit;
+          }
+        }
 
         hb( set_clear )( result_set );
       }
 
       hb( set_destroy )( result_set );
       hb( set_destroy )( gsub_lookups );
-
-      /* OpenType features like 'unic' map lowercase letter glyphs to    */
-      /* uppercase forms (and vice versa), which could lead to the use   */
-      /* of a wrong entry in the adjustment database.  For this reason   */
-      /* we prioritize cmap entries.                                     */
-      /*                                                                 */
-      /* XXX Note, however, that this cannot cover all cases since there */
-      /* might be contradictory entries for glyphs not in the cmap.  A   */
-      /* possible solution might be to specially mark pairs of related   */
-      /* lowercase and uppercase characters in the adjustment database   */
-      /* that have diacritics on different vertical sides (for example,  */
-      /* U+0122 'Ģ' and U+0123 'ģ').  The auto-hinter could then perform */
-      /* a topological analysis to do the right thing.                   */
-
-      codepoint = FT_Get_First_Char( face, &glyph_index );
-      while ( glyph_index )
-      {
-        if ( ft_hash_num_lookup( glyph_index, *map ) )
-          ft_hash_num_insert( glyph_index, codepoint, *map, memory );
-
-        codepoint = FT_Get_Next_Char( face, codepoint, &glyph_index );
-      }
     }
-    else
 
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-    {
-      FT_Offset  i;
-
-
-      for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
-      {
-        FT_UInt32  codepoint = adjustment_database[i].codepoint;
-        FT_Int     glyph     = FT_Get_Char_Index( face, codepoint );
-
-
-        if ( glyph == 0 )
-          continue;
-
-        ft_hash_num_insert( glyph, codepoint, *map, memory );
-      }
-    }
 
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %d entries\n", ( *map )->used ));

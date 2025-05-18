@@ -188,7 +188,7 @@
           if ( gindex != 0                                                &&
                gindex < globals->glyph_count                              &&
                ( gstyles[gindex] & AF_STYLE_MASK ) == AF_STYLE_UNASSIGNED )
-            gstyles[gindex] = ss;
+            gstyles[gindex] = ss | AF_HAS_CMAP_ENTRY;
 
           for (;;)
           {
@@ -199,7 +199,7 @@
 
             if ( gindex < globals->glyph_count                              &&
                  ( gstyles[gindex] & AF_STYLE_MASK ) == AF_STYLE_UNASSIGNED )
-              gstyles[gindex] = ss;
+              gstyles[gindex] = ss | AF_HAS_CMAP_ENTRY;
           }
         }
 
