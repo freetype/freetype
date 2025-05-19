@@ -4669,45 +4669,48 @@
             bottom = edge;
           }
 
-          /* take care of outline orientation while computing extrema */
-          min_pos = FT_MIN( FT_MIN( FT_MIN( top->first->first->v,
-                                            top->first->last->v ),
-                                    FT_MIN( top->last->first->v,
-                                            top->last->last->v ) ),
-                            FT_MIN( FT_MIN( bottom->first->first->v,
-                                            bottom->first->last->v ),
-                                    FT_MIN( bottom->last->first->v,
-                                            bottom->last->last->v ) ) );
-          max_pos = FT_MAX( FT_MAX( FT_MAX( top->first->first->v,
-                                            top->first->last->v ),
-                                    FT_MAX( top->last->first->v,
-                                            top->last->last->v ) ),
-                            FT_MAX( FT_MAX( bottom->first->first->v,
-                                            bottom->first->last->v ),
-                                    FT_MAX( bottom->last->first->v,
-                                            bottom->last->last->v ) ) );
-
-          for ( e = bottom + 1; e < top; e++ )
+          if ( delta < 64 + 32 )
           {
-            FT_Pos  e_min = FT_MIN( FT_MIN( e->first->first->v,
-                                            e->first->last->v ),
-                                    FT_MIN( e->last->first->v,
-                                            e->last->last->v ) );
-            FT_Pos  e_max = FT_MAX( FT_MAX( e->first->first->v,
-                                            e->first->last->v ),
-                                    FT_MAX( e->last->first->v,
-                                            e->last->last->v ) );
+            /* take care of outline orientation while computing extrema */
+            min_pos = FT_MIN( FT_MIN( FT_MIN( top->first->first->v,
+                                              top->first->last->v ),
+                                      FT_MIN( top->last->first->v,
+                                              top->last->last->v ) ),
+                              FT_MIN( FT_MIN( bottom->first->first->v,
+                                              bottom->first->last->v ),
+                                      FT_MIN( bottom->last->first->v,
+                                              bottom->last->last->v ) ) );
+            max_pos = FT_MAX( FT_MAX( FT_MAX( top->first->first->v,
+                                              top->first->last->v ),
+                                      FT_MAX( top->last->first->v,
+                                              top->last->last->v ) ),
+                              FT_MAX( FT_MAX( bottom->first->first->v,
+                                              bottom->first->last->v ),
+                                      FT_MAX( bottom->last->first->v,
+                                              bottom->last->last->v ) ) );
 
-            if ( !( ( e_min < min_pos && e_max < min_pos ) ||
-                    ( e_min > max_pos && e_max > max_pos ) ) )
+            for ( e = bottom + 1; e < top; e++ )
             {
-              delta = 1000;  /* not a real serif */
-              break;
-            }
-          }
+              FT_Pos  e_min = FT_MIN( FT_MIN( e->first->first->v,
+                                              e->first->last->v ),
+                                      FT_MIN( e->last->first->v,
+                                              e->last->last->v ) );
+              FT_Pos  e_max = FT_MAX( FT_MAX( e->first->first->v,
+                                              e->first->last->v ),
+                                      FT_MAX( e->last->first->v,
+                                              e->last->last->v ) );
 
-          if ( delta == 1000 )
-            continue;
+              if ( !( ( e_min < min_pos && e_max < min_pos ) ||
+                      ( e_min > max_pos && e_max > max_pos ) ) )
+              {
+                delta = 1000;  /* not a real serif */
+                break;
+              }
+            }
+
+            if ( delta == 1000 )
+              continue;
+          }
         }
 
         if ( delta < 64 + 16 )
