@@ -1309,25 +1309,47 @@
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
+  static FT_Bool
+  in_range( FT_UInt32           codepoint,
+            AF_Script_UniRange  ranges )
+  {
+    AF_Script_UniRange  range;
+
+
+    for ( range = ranges; range->first != 0; range++ )
+      if ( codepoint >= range->first && codepoint <= range->last )
+        return TRUE;
+
+    return FALSE;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
-  af_reverse_character_map_new( FT_Hash        *map,
-                                AF_FaceGlobals  globals )
+  af_reverse_character_map_new( FT_Hash         *map,
+                                AF_StyleMetrics  metrics )
   {
     FT_Error  error;
 
-    FT_Face    face   = globals->face;
-    FT_Memory  memory = face->memory;
+    AF_FaceGlobals  globals = metrics->globals;
+    FT_Face         face    = globals->face;
+    FT_Memory       memory  = face->memory;
+
+    AF_ScriptClass      script_class =
+                          af_script_classes[metrics->style_class->script];
+    AF_Script_UniRange  ranges       = script_class->script_uni_ranges;
 
     FT_CharMap  old_charmap;
 
+    FT_UInt32  codepoint;
     FT_Offset  i;
 
 
+    FT_TRACE4(( "af_reverse_character_map_new:"
+                " building reverse character map (style `%s')\n",
+                af_style_names[metrics->style_class->style] ));
+
     /* Search for a unicode charmap.           */
     /* If there isn't one, create a blank map. */
-
-    FT_TRACE4(( "af_reverse_character_map_new:"
-                " building reverse character map\n" ));
 
     /* Back up `face->charmap` because `find_unicode_charmap` sets it. */
     old_charmap = face->charmap;
@@ -1346,10 +1368,14 @@
     /* Insert all glyphs from the database that have entries in the cmap. */
     for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
     {
-      FT_UInt32  codepoint = adjustment_database[i].codepoint;
-      FT_Int     glyph     = FT_Get_Char_Index( face, codepoint );
+      FT_Int  glyph;
 
 
+      codepoint = adjustment_database[i].codepoint;
+      if ( !in_range( codepoint, ranges ) )
+        continue;
+
+      glyph = FT_Get_Char_Index( face, codepoint );
       if ( glyph == 0 )
         continue;
 
@@ -1372,7 +1398,6 @@
       hb_set_t  *result_set   = hb( set_create )();
       hb_set_t  *gsub_lookups = hb( set_create )();
 
-      FT_UInt32  codepoint;
 
 
       /* Compute set of all GSUB lookups. */
@@ -1390,8 +1415,13 @@
         hb_codepoint_t  glyph;
 
 
-        codepoint  = adjustment_database[i].codepoint;
+        codepoint = adjustment_database[i].codepoint;
+        if ( !in_range( codepoint, ranges ) )
+          continue;
+
         cmap_glyph = FT_Get_Char_Index( face, codepoint );
+        if ( cmap_glyph == 0 )
+          continue;
 
         af_get_glyph_alternates( globals,
                                  hb_font,
@@ -1449,7 +1479,6 @@
       for ( cnt = 0; cnt < globals->glyph_count; cnt++ )
       {
         size_t*    val;
-        FT_Int     codepoint;
         FT_UInt32  adj_type;
 
         const char*  flag_names[] =

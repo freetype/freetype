@@ -1163,7 +1163,7 @@
     }
 
     af_reverse_character_map_new( &metrics->root.reverse_charmap,
-                                  metrics->root.globals );
+                                  &metrics->root );
 
   Exit:
     face->charmap = oldmap;
