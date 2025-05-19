@@ -89,7 +89,8 @@
 #define SCRIPT( s, S, d, h, H, ss )  h,
 
 
-  static const hb_script_t  scripts[] =
+  FT_LOCAL_ARRAY_DEF( hb_script_t )
+  af_hb_scripts[] =
   {
 #include "afscript.h"
   };
@@ -127,7 +128,7 @@
     face = hb( font_get_face )( globals->hb_font );
 
     coverage_tags = coverages[style_class->coverage];
-    script        = scripts[style_class->script];
+    script        = af_hb_scripts[style_class->script];
 
     /* Convert a HarfBuzz script tag into the corresponding OpenType */
     /* tag or tags -- some Indic scripts like Devanagari have an old */

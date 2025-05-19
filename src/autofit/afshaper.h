@@ -25,6 +25,12 @@
 
 FT_BEGIN_HEADER
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+  FT_LOCAL_ARRAY( hb_script_t )
+  af_hb_scripts[];
+#endif
+
+
   FT_Error
   af_shaper_get_coverage( AF_FaceGlobals  globals,
                           AF_StyleClass   style_class,

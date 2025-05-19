@@ -1398,12 +1398,21 @@
       hb_set_t  *result_set   = hb( set_create )();
       hb_set_t  *gsub_lookups = hb( set_create )();
 
+      hb_script_t  script = af_hb_scripts[metrics->style_class->script];
+
+      unsigned int  script_count = 1;
+      hb_tag_t      script_tags[2];
 
 
-      /* Compute set of all GSUB lookups. */
+      hb( ot_tags_from_script_and_language )( script, NULL,
+                                              &script_count, script_tags,
+                                              NULL, NULL );
+      script_tags[1] = HB_TAG_NONE;
+
+      /* Compute set of all script-specific GSUB lookups. */
       hb( ot_layout_collect_lookups )( hb_face,
                                        HB_OT_TAG_GSUB,
-                                       NULL, NULL, NULL,
+                                       script_tags, NULL, NULL,
                                        gsub_lookups );
 
       /* Find all glyph alternates of the code points in  */
