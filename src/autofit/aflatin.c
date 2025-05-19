@@ -3218,7 +3218,7 @@
     FT_Pos  min_y = hints->contour_y_minima[tilde_contour];
     FT_Pos  max_y = hints->contour_y_maxima[tilde_contour];
 
-    FT_Pos   min_measurement;
+    FT_Pos   min_measurement   = FT_LONG_MAX;
     FT_Bool  measurement_taken = FALSE;
 
     FT_Pos  height;
@@ -3331,7 +3331,7 @@
     FT_Pos  min_y = hints->contour_y_minima[tilde_contour];
     FT_Pos  max_y = hints->contour_y_maxima[tilde_contour];
 
-    FT_Pos   min_measurement;
+    FT_Pos   min_measurement   = FT_LONG_MAX;
     FT_Bool  measurement_taken = FALSE;
 
     FT_Pos  height;
