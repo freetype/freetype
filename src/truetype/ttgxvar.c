@@ -1909,6 +1909,13 @@
 
       FT_TRACE6(( "    axis %d coordinate %.5f:\n", i, (double)ncv / 65536 ));
 
+      if ( ncv == 0 )
+      {
+        FT_TRACE6(( "      axis coordinate is zero, stop\n" ));
+        apply = 0;
+        break;
+      }
+
       if ( tuple_coords[i] == ncv )
       {
         FT_TRACE6(( "      tuple coordinate %.5f fits perfectly\n",
