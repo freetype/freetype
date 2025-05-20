@@ -1343,6 +1343,22 @@
     FT_UInt32  codepoint;
     FT_Offset  i;
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    /* The next four variables are initialized to avoid compiler warnings. */
+    hb_font_t  *hb_font = NULL;
+    hb_face_t  *hb_face = NULL;
+
+    hb_set_t  *result_set   = NULL;
+    hb_set_t  *gsub_lookups = NULL;
+
+    hb_script_t  script;
+
+    unsigned int  script_count   = 1;
+    hb_tag_t      script_tags[2] = { HB_TAG_NONE, HB_TAG_NONE };
+
+    hb_codepoint_t  glyph;
+#endif
+
 
     FT_TRACE4(( "af_reverse_character_map_new:"
                 " building reverse character map (style `%s')\n",
@@ -1365,73 +1381,56 @@
     if ( error )
       goto Exit;
 
-    /* Insert all glyphs from the database that have entries in the cmap. */
-    for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
-    {
-      FT_Int  glyph;
-
-
-      codepoint = adjustment_database[i].codepoint;
-      if ( !in_range( codepoint, ranges ) )
-        continue;
-
-      glyph = FT_Get_Char_Index( face, codepoint );
-      if ( glyph == 0 )
-        continue;
-
-      error = ft_hash_num_insert( glyph, codepoint, *map, memory );
-      if ( error )
-        goto Exit;
-    }
-
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-
     if ( hb( version_atleast )( 7, 2, 0 ) )
     {
       /* No need to check whether HarfBuzz has allocation issues; */
       /* it continues to work in such cases and simply returns    */
       /* 'empty' objects that do nothing.                         */
 
-      hb_font_t  *hb_font = globals->hb_font;
-      hb_face_t  *hb_face = hb( font_get_face )( hb_font );
+      hb_font = globals->hb_font;
+      hb_face = hb( font_get_face )( hb_font );
 
-      hb_set_t  *result_set   = hb( set_create )();
-      hb_set_t  *gsub_lookups = hb( set_create )();
+      result_set   = hb( set_create )();
+      gsub_lookups = hb( set_create )();
 
-      hb_script_t  script = af_hb_scripts[metrics->style_class->script];
-
-      unsigned int  script_count = 1;
-      hb_tag_t      script_tags[2];
-
+      script = af_hb_scripts[metrics->style_class->script];
 
       hb( ot_tags_from_script_and_language )( script, NULL,
                                               &script_count, script_tags,
                                               NULL, NULL );
-      script_tags[1] = HB_TAG_NONE;
 
       /* Compute set of all script-specific GSUB lookups. */
       hb( ot_layout_collect_lookups )( hb_face,
                                        HB_OT_TAG_GSUB,
                                        script_tags, NULL, NULL,
                                        gsub_lookups );
+    }
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
-      /* Find all glyph alternates of the code points in  */
-      /* the adjustment database and put them into `map`. */
-      for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+    /* Insert all glyphs from the database that have entries in the cmap. */
+    for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+    {
+      FT_Int  cmap_glyph;
+
+
+      codepoint = adjustment_database[i].codepoint;
+      if ( !in_range( codepoint, ranges ) )
+        continue;
+
+      cmap_glyph = FT_Get_Char_Index( face, codepoint );
+      if ( cmap_glyph == 0 )
+        continue;
+
+      error = ft_hash_num_insert( cmap_glyph, codepoint, *map, memory );
+      if ( error )
+        goto Exit;
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+      if ( hb( version_atleast )( 7, 2, 0 ) )
       {
-        FT_UInt  cmap_glyph;
-
-        hb_codepoint_t  glyph;
-
-
-        codepoint = adjustment_database[i].codepoint;
-        if ( !in_range( codepoint, ranges ) )
-          continue;
-
-        cmap_glyph = FT_Get_Char_Index( face, codepoint );
-        if ( cmap_glyph == 0 )
-          continue;
-
+        /* Find all glyph alternates of the code points in  */
+        /* the adjustment database and put them into `map`. */
         af_get_glyph_alternates( globals,
                                  hb_font,
                                  cmap_glyph,
@@ -1465,12 +1464,17 @@
 
         hb( set_clear )( result_set );
       }
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
+    }
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    if ( hb( version_atleast )( 7, 2, 0 ) )
+    {
       hb( set_destroy )( result_set );
       hb( set_destroy )( gsub_lookups );
     }
-
-#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
+#endif
 
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %d entries\n", ( *map )->used ));
