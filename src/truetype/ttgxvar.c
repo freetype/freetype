@@ -4147,7 +4147,8 @@
       points_org[j].y = FT_intToFixed( outline->points[j].y );
     }
 
-    for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
+    tupleCount &= GX_TC_TUPLE_COUNT_MASK;
+    for ( i = 0; i < tupleCount; i++ )
     {
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
