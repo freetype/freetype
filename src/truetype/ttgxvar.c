@@ -4157,8 +4157,16 @@
 
       FT_TRACE6(( "  tuple %d:\n", i ));
 
-      tupleDataSize = FT_GET_USHORT();
-      tupleIndex    = FT_GET_USHORT();
+      /* Enter frame for four bytes. */
+      if ( stream->limit - stream->cursor < 4 )
+      {
+        FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                    " invalid glyph variation array header\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+      tupleDataSize = FT_NEXT_USHORT( stream->cursor );
+      tupleIndex    = FT_NEXT_USHORT( stream->cursor );
 
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
