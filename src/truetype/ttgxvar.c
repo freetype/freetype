@@ -1896,15 +1896,23 @@
 
     for ( i = 0; i < blend->num_axis; i++ )
     {
-      FT_Fixed  ncv = blend->normalizedcoords[i];
+      FT_Fixed  ncv;
 
-
-      FT_TRACE6(( "    axis %d coordinate %.5f:\n", i, (double)ncv / 65536 ));
 
       /* It's not clear why (for intermediate tuples) we don't need     */
       /* to check against start/end -- the documentation says we don't. */
       /* Similarly, it's unclear why we don't need to scale along the   */
       /* axis.                                                          */
+
+      if ( tuple_coords[i] == 0 )
+      {
+        FT_TRACE6(( "      tuple coordinate is zero, ignore\n" ));
+        continue;
+      }
+
+      ncv = blend->normalizedcoords[i];
+
+      FT_TRACE6(( "    axis %d coordinate %.5f:\n", i, (double)ncv / 65536 ));
 
       if ( tuple_coords[i] == ncv )
       {
