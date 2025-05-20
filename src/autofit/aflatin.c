@@ -460,9 +460,9 @@
         }
 
         if ( AF_LATIN_IS_TOP_BLUE( bs ) )
-          best_y_extremum = FT_INT_MIN;
+          best_y_extremum = FT_LONG_MIN;
         else
-          best_y_extremum = FT_INT_MAX;
+          best_y_extremum = FT_LONG_MAX;
 
         /* iterate over all glyph elements of the character cluster */
         /* and get the data of the `biggest' one                    */
@@ -885,8 +885,8 @@
 
         } /* end for loop */
 
-        if ( !( best_y_extremum == FT_INT_MIN ||
-                best_y_extremum == FT_INT_MAX ) )
+        if ( !( best_y_extremum == FT_LONG_MIN ||
+                best_y_extremum == FT_LONG_MAX ) )
         {
           if ( best_round )
             rounds[num_rounds++] = best_y_extremum;
@@ -2846,8 +2846,8 @@
 
     for ( contour = 0; contour < hints->num_contours; contour++ )
     {
-      FT_Pos  min_y = FT_INT_MAX;
-      FT_Pos  max_y = FT_INT_MIN;
+      FT_Pos  min_y = FT_LONG_MAX;
+      FT_Pos  max_y = FT_LONG_MIN;
 
       AF_Point  first_point = hints->contours[contour];
       AF_Point  point       = first_point;
@@ -2878,8 +2878,8 @@
   af_find_highest_contour( AF_GlyphHints  hints )
   {
     FT_Int  highest_contour = 0;
-    FT_Pos  highest_min_y   = FT_INT_MAX;
-    FT_Pos  highest_max_y   = FT_INT_MIN;
+    FT_Pos  highest_min_y   = FT_LONG_MAX;
+    FT_Pos  highest_max_y   = FT_LONG_MIN;
 
     FT_Int  contour;
 
@@ -2919,7 +2919,7 @@
     FT_Pos  highest_min_y;
 
     FT_Int  second_highest_contour = 0;
-    FT_Pos  second_highest_max_y   = FT_INT_MIN;
+    FT_Pos  second_highest_max_y   = FT_LONG_MIN;
 
     FT_Int  contour;
 
@@ -2961,8 +2961,8 @@
   af_find_lowest_contour( AF_GlyphHints  hints )
   {
     FT_Int  lowest_contour = 0;
-    FT_Pos  lowest_min_y   = FT_INT_MAX;
-    FT_Pos  lowest_max_y   = FT_INT_MIN;
+    FT_Pos  lowest_min_y   = FT_LONG_MAX;
+    FT_Pos  lowest_max_y   = FT_LONG_MIN;
 
     FT_Int  contour;
 
@@ -2994,7 +2994,7 @@
     FT_Pos  lowest_max_y;
 
     FT_Int  second_lowest_contour = 0;
-    FT_Pos  second_lowest_min_y   = FT_INT_MAX;
+    FT_Pos  second_lowest_min_y   = FT_LONG_MAX;
 
     FT_Int  contour;
 
@@ -3522,10 +3522,10 @@
   af_check_contour_horizontal_overlap( AF_GlyphHints  hints,
                                        FT_Int         contour_index )
   {
-    FT_Pos  contour_max_x = FT_INT_MIN;
-    FT_Pos  contour_min_x = FT_INT_MAX;
-    FT_Pos  others_max_x  = FT_INT_MIN;
-    FT_Pos  others_min_x  = FT_INT_MAX;
+    FT_Pos  contour_max_x = FT_LONG_MIN;
+    FT_Pos  contour_min_x = FT_LONG_MAX;
+    FT_Pos  others_max_x  = FT_LONG_MIN;
+    FT_Pos  others_min_x  = FT_LONG_MAX;
 
     FT_Int  contour;
 
