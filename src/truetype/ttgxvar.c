@@ -1899,11 +1899,6 @@
       FT_Fixed  ncv;
 
 
-      /* It's not clear why (for intermediate tuples) we don't need     */
-      /* to check against start/end -- the documentation says we don't. */
-      /* Similarly, it's unclear why we don't need to scale along the   */
-      /* axis.                                                          */
-
       if ( tuple_coords[i] == 0 )
       {
         FT_TRACE6(( "      tuple coordinate is zero, ignore\n" ));
