@@ -4057,6 +4057,15 @@
     FT_ULong  here;
     FT_UInt   i, j;
 
+    FT_UInt   peak_coords_size;
+    FT_UInt   point_deltas_x_size;
+    FT_UInt   points_org_size;
+    FT_UInt   points_out_size;
+    FT_UInt   has_delta_size;
+    FT_UInt   pool_size;
+    FT_Byte*  pool;
+    FT_Byte*  p;
+
     FT_Fixed*  peak_coords = NULL;
     FT_Fixed*  tuple_coords;
     FT_Fixed*  im_start_coords;
@@ -4140,12 +4149,35 @@
                 tupleCount & GX_TC_TUPLE_COUNT_MASK,
                 ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
-    if ( FT_QNEW_ARRAY( peak_coords, 3 * blend->num_axis ) ||
-         FT_NEW_ARRAY( point_deltas_x, 2 * n_points )      ||
-         FT_QNEW_ARRAY( points_org, n_points )             ||
-         FT_QNEW_ARRAY( points_out, n_points )             ||
-         FT_QNEW_ARRAY( has_delta, n_points )              )
+    peak_coords_size    = ALIGN_SIZE( 3 * blend->num_axis );
+    point_deltas_x_size = ALIGN_SIZE( 2 * n_points * sizeof ( FT_Fixed ) );
+    points_org_size     = ALIGN_SIZE( n_points * sizeof ( points_org[0] ) );
+    points_out_size     = ALIGN_SIZE( n_points * sizeof ( points_out[0] ) );
+    has_delta_size      = ALIGN_SIZE( n_points * sizeof ( has_delta[0] ) );
+
+    pool_size = peak_coords_size    +
+                point_deltas_x_size +
+                points_org_size     +
+                points_out_size     +
+                has_delta_size;
+
+    if ( FT_ALLOC( pool, pool_size ) )
       goto Exit;
+
+    p               = pool;
+    peak_coords     = (FT_Fixed*)p;
+    p              += peak_coords_size;
+    point_deltas_x  = (FT_Fixed*)p;
+    p              += point_deltas_x_size;
+    points_org      = (FT_Vector*)p;
+    p              += points_org_size;
+    points_out      = (FT_Vector*)p;
+    p              += points_out_size;
+    has_delta       = (FT_Bool*)p;
+
+    FT_MEM_SET( point_deltas_x,
+                0,
+                2 * n_points * sizeof ( point_deltas_x[0] ) );
 
     im_start_coords = peak_coords + blend->num_axis;
     im_end_coords   = im_start_coords + blend->num_axis;
@@ -4421,11 +4453,7 @@
   Exit:
     if ( sharedpoints != ALL_POINTS )
       FT_FREE( sharedpoints );
-    FT_FREE( points_org );
-    FT_FREE( points_out );
-    FT_FREE( has_delta );
-    FT_FREE( peak_coords );
-    FT_FREE( point_deltas_x );
+    FT_FREE( pool );
 
   FExit:
     FT_FRAME_EXIT();
