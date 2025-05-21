@@ -4064,7 +4064,7 @@
     FT_UInt   points_out_size;
     FT_UInt   has_delta_size;
     FT_UInt   pool_size;
-    FT_Byte*  pool;
+    FT_Byte*  pool = NULL;
     FT_Byte*  p;
 
     FT_Fixed*  peak_coords = NULL;
@@ -4150,11 +4150,13 @@
                 tupleCount & GX_TC_TUPLE_COUNT_MASK,
                 ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
-    peak_coords_size    = ALIGN_SIZE( 3 * blend->num_axis );
-    point_deltas_x_size = ALIGN_SIZE( 2 * n_points * sizeof ( FT_Fixed ) );
-    points_org_size     = ALIGN_SIZE( n_points * sizeof ( points_org[0] ) );
-    points_out_size     = ALIGN_SIZE( n_points * sizeof ( points_out[0] ) );
-    has_delta_size      = ALIGN_SIZE( n_points * sizeof ( has_delta[0] ) );
+    peak_coords_size    = ALIGN_SIZE( 3 * blend->num_axis *
+                                      sizeof ( *peak_coords ) );
+    point_deltas_x_size = ALIGN_SIZE( 2 * n_points *
+                                      sizeof ( *point_deltas_x ) );
+    points_org_size     = ALIGN_SIZE( n_points * sizeof ( *points_org ) );
+    points_out_size     = ALIGN_SIZE( n_points * sizeof ( *points_out ) );
+    has_delta_size      = ALIGN_SIZE( n_points * sizeof ( *has_delta ) );
 
     pool_size = peak_coords_size    +
                 point_deltas_x_size +
