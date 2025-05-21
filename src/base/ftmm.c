@@ -292,6 +292,9 @@
     if ( num_coords && !coords )
       return FT_THROW( Invalid_Argument );
 
+    if ( !num_coords && !FT_IS_VARIATION( face ) )
+      return FT_Err_Ok;  /* nothing to be done */
+
     error = ft_face_get_mm_service( face, &service_mm );
     if ( !error )
     {
