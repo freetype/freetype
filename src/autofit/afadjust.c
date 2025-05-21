@@ -1222,7 +1222,7 @@
                                   hb_face_t      *hb_face,
                                   hb_codepoint_t  glyph,
                                   hb_set_t       *gsub_lookups,
-                                  hb_set_t       *result )
+                                  hb_set_t       *helper_result )
   {
     hb_codepoint_t  lookup_index = HB_SET_VALUE_INVALID;
 
@@ -1256,7 +1256,7 @@
           lookup_done = TRUE;
 
         for ( n = 0; n < alternates_count; n++ )
-          hb( set_add )( result, alternates[n] );
+          hb( set_add )( helper_result, alternates[n] );
       }
     }
   }
@@ -1270,15 +1270,17 @@
                            hb_codepoint_t  glyph,
                            hb_set_t       *gsub_lookups,
                            hb_set_t       *helper_result,
-                           hb_set_t       *result )
+                           hb_set_t       *glyph_alternates )
   {
     hb_face_t  *hb_face = hb( font_get_face )( hb_font );
 
 
+    hb( set_clear )( helper_result );
+    hb( set_clear )( glyph_alternates );
+
     /* Seed `helper_result` with `glyph` itself, then get all possible */
     /* values.  Note that we can't use `hb_set_next` to control the    */
     /* loop because we modify `helper_result` during iteration.        */
-    hb( set_clear )( helper_result );
     hb( set_add )( helper_result, glyph );
     while ( !hb( set_is_empty )( helper_result ) )
     {
@@ -1290,7 +1292,7 @@
       hb( set_next )( helper_result, &elem );
 
       /* Don't process already handled glyphs again. */
-      if ( !hb( set_has )( result, elem ) )
+      if ( !hb( set_has )( glyph_alternates, elem ) )
       {
         /* This call updates the glyph set in `helper_result`. */
         af_get_glyph_alternates_helper( globals,
@@ -1298,7 +1300,7 @@
                                         elem,
                                         gsub_lookups,
                                         helper_result );
-        hb( set_add )( result, elem );
+        hb( set_add )( glyph_alternates, elem );
       }
 
       hb( set_del )( helper_result, elem );
@@ -1347,9 +1349,9 @@
     hb_font_t  *hb_font = NULL;
     hb_face_t  *hb_face = NULL;
 
-    hb_set_t  *result_set    = NULL;
-    hb_set_t  *gsub_lookups  = NULL;
-    hb_set_t  *helper_result = NULL;
+    hb_set_t  *glyph_alternates = NULL;
+    hb_set_t  *gsub_lookups     = NULL;
+    hb_set_t  *helper_result    = NULL;
 
     hb_script_t  script;
 
@@ -1391,9 +1393,9 @@
       hb_font = globals->hb_font;
       hb_face = hb( font_get_face )( hb_font );
 
-      result_set    = hb( set_create )();
-      gsub_lookups  = hb( set_create )();
-      helper_result = hb( set_create )();
+      glyph_alternates = hb( set_create )();
+      gsub_lookups     = hb( set_create )();
+      helper_result    = hb( set_create )();
 
       script = af_hb_scripts[metrics->style_class->script];
 
@@ -1437,10 +1439,10 @@
                                  cmap_glyph,
                                  gsub_lookups,
                                  helper_result,
-                                 result_set );
+                                 glyph_alternates );
 
         glyph = HB_SET_VALUE_INVALID;
-        while ( hb( set_next )( result_set, &glyph ) )
+        while ( hb( set_next )( glyph_alternates, &glyph ) )
         {
           /* OpenType features like 'unic' map lowercase letter glyphs  */
           /* to uppercase forms (and vice versa), which could lead to   */
@@ -1463,8 +1465,6 @@
               goto Exit;
           }
         }
-
-        hb( set_clear )( result_set );
       }
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
@@ -1473,7 +1473,7 @@
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     if ( hb( version_atleast )( 7, 2, 0 ) )
     {
-      hb( set_destroy )( result_set );
+      hb( set_destroy )( glyph_alternates );
       hb( set_destroy )( gsub_lookups );
       hb( set_destroy )( helper_result );
     }
