@@ -5826,11 +5826,10 @@
 
   Fail:
     exc->GS.rp1 = exc->GS.rp0;
+    exc->GS.rp2 = point;
 
     if ( ( exc->opcode & 16 ) != 0 )
       exc->GS.rp0 = point;
-
-    exc->GS.rp2 = point;
   }
 
 
@@ -6504,8 +6503,8 @@
       break;
     }
 
-    /* check adjusted ppem range */
-    if ( P < 0 || P > 15 )
+    /* check applicable range of adjusted ppem */
+    if ( P & ~0xF )         /* P < 0 || P > 15 */
       return;
 
     P <<= 4;
@@ -6600,8 +6599,8 @@
       break;
     }
 
-    /* check adjusted ppem range */
-    if ( P < 0 || P > 15 )
+    /* check applicable range of adjusted ppem */
+    if ( P & ~0xF )         /* P < 0 || P > 15 */
       return;
 
     P <<= 4;
