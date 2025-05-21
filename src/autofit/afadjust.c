@@ -1269,15 +1269,16 @@
                            hb_font_t      *hb_font,
                            hb_codepoint_t  glyph,
                            hb_set_t       *gsub_lookups,
+                           hb_set_t       *helper_result,
                            hb_set_t       *result )
   {
-    hb_face_t  *hb_face       = hb( font_get_face )( hb_font );
-    hb_set_t   *helper_result = hb( set_create )();
+    hb_face_t  *hb_face = hb( font_get_face )( hb_font );
 
 
     /* Seed `helper_result` with `glyph` itself, then get all possible */
     /* values.  Note that we can't use `hb_set_next` to control the    */
     /* loop because we modify `helper_result` during iteration.        */
+    hb( set_clear )( helper_result );
     hb( set_add )( helper_result, glyph );
     while ( !hb( set_is_empty )( helper_result ) )
     {
@@ -1302,8 +1303,6 @@
 
       hb( set_del )( helper_result, elem );
     }
-
-    hb( set_destroy )( helper_result );
   }
 
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
@@ -1348,8 +1347,9 @@
     hb_font_t  *hb_font = NULL;
     hb_face_t  *hb_face = NULL;
 
-    hb_set_t  *result_set   = NULL;
-    hb_set_t  *gsub_lookups = NULL;
+    hb_set_t  *result_set    = NULL;
+    hb_set_t  *gsub_lookups  = NULL;
+    hb_set_t  *helper_result = NULL;
 
     hb_script_t  script;
 
@@ -1391,8 +1391,9 @@
       hb_font = globals->hb_font;
       hb_face = hb( font_get_face )( hb_font );
 
-      result_set   = hb( set_create )();
-      gsub_lookups = hb( set_create )();
+      result_set    = hb( set_create )();
+      gsub_lookups  = hb( set_create )();
+      helper_result = hb( set_create )();
 
       script = af_hb_scripts[metrics->style_class->script];
 
@@ -1435,6 +1436,7 @@
                                  hb_font,
                                  cmap_glyph,
                                  gsub_lookups,
+                                 helper_result,
                                  result_set );
 
         glyph = HB_SET_VALUE_INVALID;
@@ -1473,6 +1475,7 @@
     {
       hb( set_destroy )( result_set );
       hb( set_destroy )( gsub_lookups );
+      hb( set_destroy )( helper_result );
     }
 #endif
 
