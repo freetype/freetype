@@ -1928,12 +1928,6 @@
         continue;
       }
 
-      if ( tuple_coords[i] == 0 )
-      {
-        FT_TRACE6(( "      tuple coordinate is zero, ignore\n" ));
-        continue;
-      }
-
       if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
       {
         /* not an intermediate tuple */
