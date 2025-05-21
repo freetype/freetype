@@ -1831,6 +1831,10 @@
         FT_TRACE5(( "]\n" ));
       }
 
+      if ( FT_NEW_ARRAY( blend->tuplescalars,
+                         gvar_head.globalCoordCount ) )
+        goto Fail2;
+
       blend->tuplecount = gvar_head.globalCoordCount;
 
       FT_TRACE5(( "\n" ));
@@ -2950,6 +2954,9 @@
         break;
       }
     }
+
+    for ( i = 0 ; i < blend->tuplecount ; i++ )
+      blend->tuplescalars[i] = (FT_Fixed)-0x20000L;
 
   Exit:
     return error;
@@ -4192,12 +4199,15 @@
     tupleCount &= GX_TC_TUPLE_COUNT_MASK;
     for ( i = 0; i < tupleCount; i++ )
     {
-      FT_UInt   tupleDataSize;
-      FT_UInt   tupleIndex;
-      FT_Fixed  apply;
+      FT_UInt    tupleDataSize;
+      FT_UInt    tupleIndex;
+      FT_Fixed   apply;
+      FT_Fixed*  tupleScalars;
 
 
       FT_TRACE6(( "  tuple %d:\n", i ));
+
+      tupleScalars = blend->tuplescalars;
 
       /* Enter frame for four bytes. */
       if ( stream->limit - stream->cursor < 4 )
@@ -4214,11 +4224,24 @@
       {
         for ( j = 0; j < blend->num_axis; j++ )
           peak_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
+
         tuple_coords = peak_coords;
+        tupleScalars = NULL;
       }
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) < blend->tuplecount )
+      {
+        FT_Fixed  scalar = tupleScalars[tupleIndex & GX_TI_TUPLE_INDEX_MASK];
+
+
+        if ( scalar != (FT_Fixed)-0x20000 )
+        {
+          apply = scalar;
+          goto apply_found;
+        }
+
         tuple_coords = blend->tuplecoords +
             ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) * blend->num_axis;
+      }
       else
       {
         FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
@@ -4234,6 +4257,8 @@
           im_start_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
         for ( j = 0; j < blend->num_axis; j++ )
           im_end_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
+
+        tupleScalars = NULL;
       }
 
       apply = ft_var_apply_tuple( blend,
@@ -4241,6 +4266,11 @@
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );
+
+      if ( tupleScalars )
+        tupleScalars[tupleIndex & GX_TI_TUPLE_INDEX_MASK] = apply;
+
+    apply_found:
 
       if ( apply == 0 )              /* tuple isn't active for our blend */
       {
@@ -4624,6 +4654,7 @@
         FT_FREE( blend->mvar_table );
       }
 
+      FT_FREE( blend->tuplescalars );
       FT_FREE( blend->tuplecoords );
       FT_FREE( blend->glyphoffsets );
       FT_FREE( blend );
