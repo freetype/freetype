@@ -489,8 +489,9 @@
     FT_UShort  axis_count;
     FT_UInt    region_count;
 
-    FT_UInt  i, j;
-    FT_Bool  long_words;
+    FT_UInt   i, j;
+    FT_Byte*  bytes;
+    FT_Bool   long_words;
 
     GX_Blend   blend           = ttface->blend;
     FT_ULong*  dataOffsetArray = NULL;
@@ -526,11 +527,15 @@
     if ( FT_QNEW_ARRAY( dataOffsetArray, data_count ) )
       goto Exit;
 
+    if ( FT_FRAME_ENTER( data_count * 4 ) )
+      goto Exit;
+
+    bytes = stream->cursor;
+
     for ( i = 0; i < data_count; i++ )
-    {
-      if ( FT_READ_ULONG( dataOffsetArray[i] ) )
-        goto Exit;
-    }
+      dataOffsetArray[i] = FT_NEXT_ULONG( bytes );
+
+    FT_FRAME_EXIT();
 
     /* parse array of region records (region list) */
     if ( FT_STREAM_SEEK( offset + region_offset ) )
@@ -564,13 +569,26 @@
       goto Exit;
     itemStore->regionCount = region_count;
 
-    for ( i = 0; i < itemStore->regionCount; i++ )
+    if ( FT_FRAME_ENTER( (FT_Long)region_count * axis_count * 6 ) )
+    {
+      FT_TRACE2(( "tt_var_load_item_variation_store:"
+                  " not enough data for variation regions\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    bytes = stream->cursor;
+
+    for ( i = 0; i < region_count; i++ )
     {
       GX_AxisCoords  axisCoords;
 
 
       if ( FT_NEW_ARRAY( itemStore->varRegionList[i].axisList, axis_count ) )
+      {
+        FT_FRAME_EXIT();
         goto Exit;
+      }
 
       axisCoords = itemStore->varRegionList[i].axisList;
 
@@ -579,10 +597,9 @@
         FT_Int  start, peak, end;
 
 
-        if ( FT_READ_SHORT( start ) ||
-             FT_READ_SHORT( peak )  ||
-             FT_READ_SHORT( end )   )
-          goto Exit;
+        start = FT_NEXT_SHORT( bytes );
+        peak  = FT_NEXT_SHORT( bytes );
+        end   = FT_NEXT_SHORT( bytes );
 
         /* immediately tag invalid ranges with special peak = 0 */
         if ( ( start < 0 && end > 0 ) || start > peak || peak > end )
@@ -593,6 +610,8 @@
         axisCoords[j].endCoord   = FT_fdot14ToFixed( end );
       }
     }
+
+    FT_FRAME_EXIT();
 
     /* end of region list parse */
 
@@ -648,19 +667,31 @@
       varData->wordDeltaCount = word_delta_count;
       varData->longWords      = long_words;
 
+      if ( FT_FRAME_ENTER( region_idx_count * 2 ) )
+      {
+        FT_TRACE2(( "tt_var_load_item_variation_store:"
+                    " not enough data for region indices\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+
+      bytes = stream->cursor;
+
       for ( j = 0; j < varData->regionIdxCount; j++ )
       {
-        if ( FT_READ_USHORT( varData->regionIndices[j] ) )
-          goto Exit;
+        varData->regionIndices[j] = FT_NEXT_USHORT( bytes );
 
         if ( varData->regionIndices[j] >= itemStore->regionCount )
         {
           FT_TRACE2(( "bad region index %d\n",
                       varData->regionIndices[j] ));
+          FT_FRAME_EXIT();
           error = FT_THROW( Invalid_Table );
           goto Exit;
         }
       }
+
+      FT_FRAME_EXIT();
 
       per_region_size = word_delta_count + region_idx_count;
       if ( long_words )
@@ -706,6 +737,7 @@
     FT_UInt   innerIndexMask;
     FT_ULong  i;
     FT_UInt   j;
+    FT_Byte*  bytes;
 
 
     if ( FT_STREAM_SEEK( offset )    ||
@@ -757,6 +789,16 @@
     if ( FT_NEW_ARRAY( map->outerIndex, map->mapCount ) )
       goto Exit;
 
+    if ( FT_FRAME_ENTER( map->mapCount * entrySize ) )
+    {
+      FT_TRACE2(( "tt_var_load_delta_set_index_mapping:"
+                  " invalid number of delta-set index mappings\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    bytes = stream->cursor;
+
     for ( i = 0; i < map->mapCount; i++ )
     {
       FT_UInt  mapData = 0;
@@ -769,9 +811,7 @@
         FT_Byte  data;
 
 
-        if ( FT_READ_BYTE( data ) )
-          goto Exit;
-
+        data    = FT_NEXT_BYTE( bytes );
         mapData = ( mapData << 8 ) | data;
       }
 
@@ -811,6 +851,8 @@
 
       map->innerIndex[i] = innerIndex;
     }
+
+    FT_FRAME_EXIT();
 
   Exit:
     return error;
@@ -1643,6 +1685,7 @@
     GX_Blend      blend  = face->blend;
     FT_Error      error;
     FT_UInt       i, j;
+    FT_Byte*      bytes;
     FT_ULong      table_len;
     FT_ULong      gvar_start;
     FT_ULong      offsetToData;
@@ -1734,6 +1777,8 @@
     if ( FT_FRAME_ENTER( offsets_len ) )
       goto Exit;
 
+    bytes = stream->cursor;
+
     /* offsets (one more offset than glyphs, to mark size of last) */
     if ( FT_QNEW_ARRAY( blend->glyphoffsets, gvar_head.glyphCount + 1 ) )
       goto Fail2;
@@ -1744,9 +1789,17 @@
       FT_ULong  max_offset = 0;
 
 
+      if ( stream->limit - stream->cursor < gvar_head.glyphCount * 4 )
+      {
+        FT_TRACE2(( "ft_var_load_gvar:"
+                    " glyph variation data offset not enough\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Fail;
+      }
+
       for ( i = 0; i <= gvar_head.glyphCount; i++ )
       {
-        blend->glyphoffsets[i] = offsetToData + FT_GET_ULONG();
+        blend->glyphoffsets[i] = offsetToData + FT_NEXT_ULONG( bytes );
 
         if ( max_offset <= blend->glyphoffsets[i] )
           max_offset = blend->glyphoffsets[i];
@@ -1774,9 +1827,17 @@
       FT_ULong  max_offset = 0;
 
 
+      if ( stream->limit - stream->cursor < gvar_head.glyphCount * 2 )
+      {
+        FT_TRACE2(( "ft_var_load_gvar:"
+                    " glyph variation data offset not enough\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Fail;
+      }
+
       for ( i = 0; i <= gvar_head.glyphCount; i++ )
       {
-        blend->glyphoffsets[i] = offsetToData + FT_GET_USHORT() * 2;
+        blend->glyphoffsets[i] = offsetToData + FT_NEXT_USHORT( bytes ) * 2;
 
         if ( max_offset <= blend->glyphoffsets[i] )
           max_offset = blend->glyphoffsets[i];
@@ -1814,6 +1875,8 @@
         goto Fail;
       }
 
+      bytes = stream->cursor;
+
       if ( FT_QNEW_ARRAY( blend->tuplecoords,
                           gvar_head.axisCount * gvar_head.globalCoordCount ) )
         goto Fail2;
@@ -1824,7 +1887,7 @@
         for ( j = 0; j < (FT_UInt)gvar_head.axisCount; j++ )
         {
           blend->tuplecoords[i * gvar_head.axisCount + j] =
-            FT_fdot14ToFixed( FT_GET_SHORT() );
+            FT_fdot14ToFixed( FT_NEXT_SHORT( bytes ) );
           FT_TRACE5(( "%.5f ",
             (double)blend->tuplecoords[i * gvar_head.axisCount + j] / 65536 ));
         }
@@ -4213,8 +4276,8 @@
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
-      tupleDataSize = FT_NEXT_USHORT( stream->cursor );
-      tupleIndex    = FT_NEXT_USHORT( stream->cursor );
+      tupleDataSize = FT_GET_USHORT();
+      tupleIndex    = FT_GET_USHORT();
 
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
