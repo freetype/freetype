@@ -440,6 +440,12 @@ FT_BEGIN_HEADER
    *   the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field
    *   (i.e., @FT_IS_VARIATION will return true).  If `num_coords` is zero,
    *   this bit flag gets unset.
+   *
+   *   [Since 2.14] This function also sets the @FT_FACE_FLAG_VARIATION bit
+   *   in @FT_Face's `face_flags` field (i.e., @FT_IS_VARIATION will return
+   *   true) if any of the provided coordinates is different from the face's
+   *   default value for the corresponding axis, that is, the set up face is
+   *   not at its default position.
    */
   FT_EXPORT( FT_Error )
   FT_Set_Var_Design_Coordinates( FT_Face    face,
@@ -526,6 +532,12 @@ FT_BEGIN_HEADER
    *   the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field
    *   (i.e., @FT_IS_VARIATION will return true).  If `num_coords` is zero,
    *   this bit flag gets unset.
+   *
+   *   [Since 2.14] This function also sets the @FT_FACE_FLAG_VARIATION bit
+   *   in @FT_Face's `face_flags` field (i.e., @FT_IS_VARIATION will return
+   *   true) if any of the provided coordinates is different from the face's
+   *   default value for the corresponding axis, that is, the set up face is
+   *   not at its default position.
    */
   FT_EXPORT( FT_Error )
   FT_Set_MM_Blend_Coordinates( FT_Face    face,

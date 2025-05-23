@@ -49,6 +49,13 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
 
   III. MISCELLANEOUS
 
+  - `FT_Set_Var_Design_Coordinates`  and `FT_Set_MM_Blend_Coordinates`
+    now set the `FT_FACE_FLAG_VARIATION`  bit in the `face_flag` field
+    of `FT_Face` (i.e., the  macro `FT_IS_VARIATION` will return true)
+    also  if any  of the  provided coordinates  is different  from the
+    face's default value for the  corresponding axis, that is, the set
+    up face is not at its default position.
+
   - The TrueType instruction interpreter  was optimized to produce 15%
     gain in the glyph loading speed.
 

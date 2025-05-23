@@ -3157,7 +3157,24 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    return tt_set_mm_blend( (TT_Face)face, num_coords, coords, 1 );
+    FT_Error  error = FT_Err_Ok;
+
+
+    error = tt_set_mm_blend( (TT_Face)face, num_coords, coords, 1 );
+    if ( error == FT_Err_Ok )
+    {
+      FT_UInt  i;
+
+
+      for ( i = 0; i < num_coords; i++ )
+        if ( coords[i] )
+        {
+          error = -2; /* -2 means is_variable. */
+          break;
+        }
+    }
+
+    return error;
   }
 
 
@@ -3378,6 +3395,15 @@
     if ( error )
       goto Exit;
 
+    for ( i = 0; i < num_coords; i++ )
+    {
+      if ( normalized[i] )
+      {
+        error = -2; /* -2 means is_variable. */
+        break;
+      }
+    }
+
   Exit:
     FT_FREE( normalized );
     return error;
@@ -3549,6 +3575,9 @@
         goto Exit;
       error = TT_Set_Var_Design( face, 0, NULL );
     }
+
+    if ( error == -1 || error == -2 )
+      error = FT_Err_Ok;
 
   Exit:
     return error;

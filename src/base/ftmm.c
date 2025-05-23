@@ -302,15 +302,18 @@
       if ( service_mm->set_var_design )
         error = service_mm->set_var_design( face, num_coords, coords );
 
-      if ( !error || error == -1 )
+      if ( !error || error == -1 || error == -2 )
       {
         FT_Bool  is_variation_old = FT_IS_VARIATION( face );
 
 
-        if ( num_coords )
-          face->face_flags |= FT_FACE_FLAG_VARIATION;
-        else
-          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+	if ( error != -1 )
+	{
+	  if ( error == -2 ) /* -2 means is_variable. */
+	    face->face_flags |= FT_FACE_FLAG_VARIATION;
+	  else
+	    face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+	}
 
         if ( service_mm->construct_ps_name )
         {
@@ -477,15 +480,18 @@
       if ( service_mm->set_mm_blend )
         error = service_mm->set_mm_blend( face, num_coords, coords );
 
-      if ( !error || error == -1 )
+      if ( !error || error == -1 || error == -2 )
       {
         FT_Bool  is_variation_old = FT_IS_VARIATION( face );
 
 
-        if ( num_coords )
-          face->face_flags |= FT_FACE_FLAG_VARIATION;
-        else
-          face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+	if ( error != -1 )
+	{
+	  if ( error == -2 ) /* -2 means is_variable. */
+	    face->face_flags |= FT_FACE_FLAG_VARIATION;
+	  else
+	    face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+	}
 
         if ( service_mm->construct_ps_name )
         {
