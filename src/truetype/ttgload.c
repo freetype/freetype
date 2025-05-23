@@ -1571,8 +1571,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
-           FT_IS_VARIATION( FT_FACE( face ) )      )
+      if ( !IS_DEFAULT_INSTANCE( FT_FACE( face ) ) )
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
@@ -1725,8 +1724,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
-           FT_IS_VARIATION( FT_FACE( face ) )      )
+      if ( !IS_DEFAULT_INSTANCE( FT_FACE( face ) ) )
       {
         FT_UShort    i, limit;
         FT_SubGlyph  subglyph;
