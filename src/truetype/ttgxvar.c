@@ -4399,6 +4399,8 @@
       points_org[j].y = FT_intToFixed( outline->points[j].y );
     }
 
+    p = stream->cursor;
+
     tupleCount &= GX_TC_TUPLE_COUNT_MASK;
     for ( i = 0; i < tupleCount; i++ )
     {
@@ -4413,20 +4415,29 @@
       tupleScalars = blend->tuplescalars;
 
       /* Enter frame for four bytes. */
-      if ( stream->limit - stream->cursor < 4 )
+      if ( 4 > stream->limit - p )
       {
         FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                     " invalid glyph variation array header\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
-      tupleDataSize = FT_GET_USHORT();
-      tupleIndex    = FT_GET_USHORT();
+
+      tupleDataSize = FT_NEXT_USHORT( p );
+      tupleIndex    = FT_NEXT_USHORT( p );
 
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
+        if ( 2 * blend->num_axis > (FT_UInt)( stream->limit - p ) )
+        {
+          FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                      " invalid glyph variation array header\n" ));
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
+        }
+
         for ( j = 0; j < blend->num_axis; j++ )
-          peak_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
+          peak_coords[j] = FT_fdot14ToFixed( FT_NEXT_SHORT( p ) );
 
         tuple_coords = peak_coords;
         tupleScalars = NULL;
@@ -4443,7 +4454,8 @@
         }
 
         tuple_coords = blend->tuplecoords +
-            ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) * blend->num_axis;
+                         ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) *
+                         blend->num_axis;
       }
       else
       {
@@ -4456,10 +4468,18 @@
 
       if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
       {
+        if ( 4 * blend->num_axis > (FT_UInt)( stream->limit - p ) )
+        {
+          FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                      " invalid glyph variation array header\n" ));
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
+        }
+
         for ( j = 0; j < blend->num_axis; j++ )
-          im_start_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
+          im_start_coords[j] = FT_fdot14ToFixed( FT_NEXT_SHORT( p ) );
         for ( j = 0; j < blend->num_axis; j++ )
-          im_end_coords[j] = FT_fdot14ToFixed( FT_GET_SHORT() );
+          im_end_coords[j] = FT_fdot14ToFixed( FT_NEXT_SHORT( p ) );
 
         tupleScalars = NULL;
       }
