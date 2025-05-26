@@ -3232,7 +3232,7 @@
     FT_TRACE4(( "af_latin_stretch_top_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
 
-    height             = max_y - min_y;
+    height             = SUB_LONG( max_y, min_y );
     extremum_threshold = height / 8;    /* Value 8 is heuristic. */
 
     /* Find points that are local vertical round extrema, and which   */
@@ -3345,7 +3345,7 @@
     FT_TRACE4(( "af_latin_stretch_bottom_tilde: min y: %ld, max y: %ld\n",
                 min_y, max_y ));
 
-    height             = max_y - min_y;
+    height             = SUB_LONG( max_y, min_y );
     extremum_threshold = height / 8;
 
     do
