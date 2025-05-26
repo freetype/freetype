@@ -1007,6 +1007,51 @@
   }
 
 
+  static FT_Fixed
+  tt_calculate_scalar( GX_AxisCoords  axis,
+                       FT_UInt        axisCount,
+                       FT_Fixed*      normalizedcoords )
+  {
+    FT_Fixed  scalar = 0x10000L;
+    FT_UInt   j;
+
+
+    /* Inner loop steps through axes in this region. */
+    for ( j = 0; j < axisCount; j++, axis++ )
+    {
+      FT_Fixed  ncv = normalizedcoords[j];
+
+
+      /* Compute the scalar contribution of this axis, */
+      /* with peak of 0 used for invalid axes.         */
+      if ( axis->peakCoord == ncv ||
+           axis->peakCoord == 0   )
+        continue;
+
+      /* Ignore this region if coordinates are out of range. */
+      else if ( ncv <= axis->startCoord ||
+                ncv >= axis->endCoord   )
+      {
+        scalar = 0;
+        break;
+      }
+
+      /* Cumulative product of all the axis scalars. */
+      else if ( ncv < axis->peakCoord )
+        scalar = FT_MulDiv( scalar,
+                            ncv - axis->startCoord,
+                            axis->peakCoord - axis->startCoord );
+      else   /* ncv > axis->peakCoord */
+        scalar = FT_MulDiv( scalar,
+                            axis->endCoord - ncv,
+                            axis->endCoord - axis->peakCoord );
+
+    } /* per-axis loop */
+
+    return scalar;
+  }
+
+
   FT_LOCAL_DEF( FT_ItemVarDelta )
   tt_var_get_item_delta( FT_Face          face,        /* TT_Face */
                          GX_ItemVarStore  itemStore,
@@ -1025,7 +1070,7 @@
     FT_Fixed*  scalars = NULL;
     FT_Fixed   scalarsStack[16];
 
-    FT_UInt          master, j;
+    FT_UInt          master;
     FT_ItemVarDelta  returnValue = 0;
     FT_UInt          per_region_size;
     FT_Byte*         bytes;
@@ -1094,48 +1139,17 @@
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
     {
-      FT_Fixed  scalar      = 0x10000L;
-      FT_UInt   regionIndex = varData->regionIndices[master];
+      FT_UInt  regionIndex = varData->regionIndices[master];
 
       GX_AxisCoords  axis = itemStore->varRegionList[regionIndex].axisList;
 
 
-      /* inner loop steps through axes in this region */
-      for ( j = 0; j < itemStore->axisCount; j++, axis++ )
-      {
-        FT_Fixed  ncv = ttface->blend->normalizedcoords[j];
-
-
-        /* compute the scalar contribution of this axis */
-        /* with peak of 0 used for invalid axes         */
-        if ( axis->peakCoord == ncv ||
-             axis->peakCoord == 0   )
-          continue;
-
-        /* ignore this region if coords are out of range */
-        else if ( ncv <= axis->startCoord ||
-                  ncv >= axis->endCoord   )
-        {
-          scalar = 0;
-          break;
-        }
-
-        /* cumulative product of all the axis scalars */
-        else if ( ncv < axis->peakCoord )
-          scalar = FT_MulDiv( scalar,
-                              ncv - axis->startCoord,
-                              axis->peakCoord - axis->startCoord );
-        else   /* ncv > axis->peakCoord */
-          scalar = FT_MulDiv( scalar,
-                              axis->endCoord - ncv,
-                              axis->endCoord - axis->peakCoord );
-
-      } /* per-axis loop */
-
-      scalars[master] = scalar;
+      scalars[master] = tt_calculate_scalar(
+                          axis,
+                          itemStore->axisCount,
+                          ttface->blend->normalizedcoords );
 
     } /* per-region loop */
-
 
     /* Compute the scaled delta for this region.
      *
