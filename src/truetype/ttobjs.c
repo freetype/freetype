@@ -924,7 +924,6 @@
 
       tt_metrics->ppem  = 0;
       tt_metrics->scale = 0;
-      tt_metrics->ratio = 0x10000L;
     }
 
     /* allow font program execution */

@@ -5530,7 +5530,7 @@
     if ( exc->GS.gep0 == 0 )   /* If in twilight zone */
     {
       exc->zp0.org[point].x = TT_MulFix14( distance,
-                                             exc->GS.freeVector.x );
+                                           exc->GS.freeVector.x );
       exc->zp0.org[point].y = TT_MulFix14( distance,
                                            exc->GS.freeVector.y );
       exc->zp0.cur[point]   = exc->zp0.org[point];
@@ -6951,7 +6951,6 @@
                 " to %ld\n", exc->neg_jump_counter_max ));
 
     /* set PPEM and CVT functions */
-    exc->tt_metrics.ratio = 0;
     if ( exc->metrics.x_ppem != exc->metrics.y_ppem )
     {
       /* non-square pixels, use the stretched routines */
