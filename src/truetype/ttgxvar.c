@@ -1173,22 +1173,15 @@
                          FT_UInt          outerIndex,
                          FT_UInt          innerIndex )
   {
-    TT_Face    ttface = (TT_Face)face;
-    FT_Stream  stream = FT_FACE_STREAM( face );
-    FT_Memory  memory = stream->memory;
-    FT_Error   error  = FT_Err_Ok;
+    TT_Face  ttface = (TT_Face)face;
 
-    GX_ItemVarData    varData;
-    FT_ItemVarDelta*  deltaSet = NULL;
-    FT_ItemVarDelta   deltaSetStack[16];
+    GX_ItemVarData  varData;
 
-    FT_Fixed*  scalars = NULL;
-    FT_Fixed   scalarsStack[16];
-
-    FT_UInt          master;
-    FT_ItemVarDelta  returnValue = 0;
-    FT_UInt          per_region_size;
-    FT_Byte*         bytes;
+    FT_UInt   master;
+    FT_Int64  returnValue = FT_INT64_ZERO;
+    FT_UInt   shift_base  = 1;
+    FT_UInt   per_region_size;
+    FT_Byte*  bytes;
 
 
     if ( !ttface->blend || !ttface->blend->normalizedcoords )
@@ -1213,43 +1206,18 @@
     if ( varData->regionIdxCount == 0 )
       return 0; /* Avoid "applying zero offset to null pointer". */
 
-    if ( varData->regionIdxCount < 16 )
-    {
-      deltaSet = deltaSetStack;
-      scalars  = scalarsStack;
-    }
-    else
-    {
-      if ( FT_QNEW_ARRAY( deltaSet, varData->regionIdxCount ) )
-        goto Exit;
-      if ( FT_QNEW_ARRAY( scalars, varData->regionIdxCount ) )
-        goto Exit;
-    }
-
     /* Parse delta set.                                            */
     /*                                                             */
     /* Deltas are (word_delta_count + region_idx_count) bytes each */
     /* if `longWords` isn't set, and twice as much otherwise.      */
     per_region_size = varData->wordDeltaCount + varData->regionIdxCount;
     if ( varData->longWords )
+    {
+      shift_base       = 2;
       per_region_size *= 2;
+    }
 
     bytes = varData->deltaSet + per_region_size * innerIndex;
-
-    if ( varData->longWords )
-    {
-      for ( master = 0; master < varData->wordDeltaCount; master++ )
-        deltaSet[master] = FT_NEXT_LONG( bytes );
-      for ( ; master < varData->regionIdxCount; master++ )
-        deltaSet[master] = FT_NEXT_SHORT( bytes );
-    }
-    else
-    {
-      for ( master = 0; master < varData->wordDeltaCount; master++ )
-        deltaSet[master] = FT_NEXT_SHORT( bytes );
-      for ( ; master < varData->regionIdxCount; master++ )
-        deltaSet[master] = FT_NEXT_CHAR( bytes );
-    }
 
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
@@ -1258,37 +1226,43 @@
 
       GX_AxisCoords  axis = itemStore->varRegionList[regionIndex].axisList;
 
+      FT_Fixed  scalar = tt_calculate_scalar(
+                           axis,
+                           itemStore->axisCount,
+                           ttface->blend->normalizedcoords );
 
-      scalars[master] = tt_calculate_scalar(
-                          axis,
-                          itemStore->axisCount,
-                          ttface->blend->normalizedcoords );
+
+      if ( scalar )
+      {
+        FT_Int  delta;
+
+
+        if ( varData->longWords )
+        {
+          if ( master < varData->wordDeltaCount )
+            delta = FT_NEXT_LONG( bytes );
+          else
+            delta = FT_NEXT_SHORT( bytes );
+        }
+        else
+        {
+          if ( master < varData->wordDeltaCount )
+            delta = FT_NEXT_SHORT( bytes );
+          else
+            delta = FT_NEXT_CHAR( bytes );
+        }
+
+        returnValue = ft_mul_add_delta_scalar( returnValue, delta, scalar );
+      }
+      else
+      {
+        /* Branch-free, yay. */
+        bytes += shift_base << ( master < varData->wordDeltaCount );
+      }
 
     } /* per-region loop */
 
-    /* Compute the scaled delta for this region.
-     *
-     * From: https://docs.microsoft.com/en-us/typography/opentype/spec/otvarcommonformats#item-variation-store-header-and-item-variation-data-subtables:
-     *
-     *   `Fixed` is a 32-bit (16.16) type and, in the general case, requires
-     *   32-bit deltas.  As described above, the `DeltaSet` record can
-     *   accommodate deltas that are, logically, either 16-bit or 32-bit.
-     *   When scaled deltas are applied to `Fixed` values, the `Fixed` value
-     *   is treated like a 32-bit integer.
-     *
-     * `FT_MulAddFix` internally uses 64-bit precision; it thus can handle
-     * deltas ranging from small 8-bit to large 32-bit values that are
-     * applied to 16.16 `FT_Fixed` / OpenType `Fixed` values.
-     */
-    returnValue = FT_MulAddFix( scalars, deltaSet, varData->regionIdxCount );
-
-  Exit:
-    if ( scalars != scalarsStack )
-      FT_FREE( scalars );
-    if ( deltaSet != deltaSetStack )
-      FT_FREE( deltaSet );
-
-    return returnValue;
+    return ft_round_and_shift16( returnValue );
   }
 
 
