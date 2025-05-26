@@ -43,18 +43,6 @@
 #undef FT_MulFix
 #endif
 
-  /* we need to emulate a 64-bit data type if one isn't available */
-#ifndef FT_INT64
-
-  typedef struct  FT_Int64_
-  {
-    FT_UInt32  lo;
-    FT_UInt32  hi;
-
-  } FT_Int64;
-
-#endif /* !FT_INT64 */
-
 
   /**************************************************************************
    *
