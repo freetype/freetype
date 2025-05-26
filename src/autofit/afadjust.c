@@ -1310,21 +1310,6 @@
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
-  static FT_Bool
-  in_range( FT_UInt32           codepoint,
-            AF_Script_UniRange  ranges )
-  {
-    AF_Script_UniRange  range;
-
-
-    for ( range = ranges; range->first != 0; range++ )
-      if ( codepoint >= range->first && codepoint <= range->last )
-        return TRUE;
-
-    return FALSE;
-  }
-
-
   FT_LOCAL_DEF( FT_Error )
   af_reverse_character_map_new( FT_Hash         *map,
                                 AF_StyleMetrics  metrics )
@@ -1334,10 +1319,6 @@
     AF_FaceGlobals  globals = metrics->globals;
     FT_Face         face    = globals->face;
     FT_Memory       memory  = face->memory;
-
-    AF_ScriptClass      script_class =
-                          af_script_classes[metrics->style_class->script];
-    AF_Script_UniRange  ranges       = script_class->script_uni_ranges;
 
     FT_CharMap  old_charmap;
 
@@ -1417,9 +1398,33 @@
       FT_Int  cmap_glyph;
 
 
+      /*
+        We cannot restrict `codepoint` to character ranges; we have no
+        control what data the script-specific portion of the GSUB table
+        actually holds.
+
+        An example is `arial.ttf` version 7.00; in this font, there are
+        lookups for Cyrillic (lookup 43), Greek (lookup 44), and Latin
+        (lookup 45) that map capital letter glyphs to small capital glyphs.
+        It is tempting to expect that script-specific versions of the 'c2sc'
+        feature only use script-specific lookups.  However, this is not the
+        case in this font: the feature uses all three lookups regardless of
+        the script.
+
+        The auto-hinter, while assigning glyphs to styles, uses the first
+        coverage result it encounters for a particular glyph.  For example,
+        if the coverage for Cyrillic is tested before Latin (as is currently
+        the case), glyphs without a cmap entry that are covered in 'c2sc'
+        are treated as Cyrillic.
+
+        If we now look at glyph 3498, which is a small-caps version of the
+        Latin character 'A grave' (U+00C0, glyph 172), we can see that it is
+        registered as belonging to a Cyrillic style due to the algorithm
+        just described.  As a result, checking only for characters from the
+        Latin range would miss this glyph; we thus have to test all
+        character codes in the database.
+      */
       codepoint = adjustment_database[i].codepoint;
-      if ( !in_range( codepoint, ranges ) )
-        continue;
 
       cmap_glyph = FT_Get_Char_Index( face, codepoint );
       if ( cmap_glyph == 0 )
