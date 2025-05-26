@@ -153,7 +153,11 @@
 
 
 #define ft_strtol  strtol
-#define ft_getenv  getenv
+#ifdef FT_DISABLE_GETENV
+#define ft_getenv( name ) ( (void)( name ), (const char*)NULL )
+#else
+#define ft_getenv getenv
+#endif
 
 
   /**************************************************************************

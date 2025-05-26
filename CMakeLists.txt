@@ -222,6 +222,8 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     "  cmake -E remove_directory CMakeFiles")
 endif ()
 
+option(FT_DISABLE_GETENV
+  "Disable support of getenv" OFF)
 
 # Add local cmake modules
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/builds/cmake)
@@ -540,6 +542,10 @@ if (BROTLIDEC_FOUND)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "libbrotlidec")
 endif ()
 
+target_compile_definitions(freetype
+  PRIVATE
+    $<$<BOOL:${FT_DISABLE_GETENV}>:FT_DISABLE_GETENV>
+)
 
 # Installation
 include(GNUInstallDirs)
