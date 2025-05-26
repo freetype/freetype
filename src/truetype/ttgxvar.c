@@ -1052,6 +1052,121 @@
   }
 
 
+  static FT_Int64
+  ft_mul_add_delta_scalar( FT_Int64  returnValue,
+                           FT_Int32  delta,
+                           FT_Int32  scalar )
+  {
+
+#ifdef FT_INT64
+
+    return returnValue + (FT_Int64)delta * scalar;
+
+#else /* !FT_INT64 */
+
+    if ( (FT_UInt32)( delta + 0x8000 ) <= 0x20000 )
+    {
+      /* Fast path: multiplication result fits into 32 bits. */
+
+      FT_Int32  lo = delta * scalar;
+
+
+      returnValue.lo += (FT_UInt32)lo;
+
+      if ( returnValue.lo < (FT_UInt32)lo )
+        returnValue.hi += ( lo < 0 ) ? 0 : 1;
+
+      if ( lo < 0 )
+        returnValue.hi -= 1;
+
+      return returnValue;
+    }
+    else
+    {
+      /* Slow path: full 32x32 -> 64-bit signed multiplication. */
+
+      FT_Int64 product;
+
+      /* Get absolute values. */
+      FT_UInt32  a = ( delta < 0 ) ? -delta : delta;
+      FT_UInt32  b = ( scalar < 0 ) ? -scalar : scalar;
+
+      /* Prepare unsigned multiplication. */
+      FT_UInt32  a_lo = a & 0xFFFF;
+      FT_UInt32  a_hi = a >> 16;
+
+      FT_UInt32  b_lo = b & 0xFFFF;
+      FT_UInt32  b_hi = b >> 16;
+
+      /* Partial products. */
+      FT_UInt32  p0 = a_lo * b_lo;
+      FT_UInt32  p1 = a_lo * b_hi;
+      FT_UInt32  p2 = a_hi * b_lo;
+      FT_UInt32  p3 = a_hi * b_hi;
+
+      /* Combine: result = p3 << 32 + (p1 + p2) << 16 + p0 */
+      FT_UInt32  mid       = p1 + p2;
+      FT_UInt32  mid_carry = ( mid < p1 );
+
+      FT_UInt32  carry;
+
+
+      product.lo = ( mid << 16 ) + ( p0 & 0xFFFF );
+      carry      = ( product.lo < ( p0 & 0xFFFF ) ) ? 1 : 0;
+      product.hi = p3 + ( mid >> 16 ) + mid_carry + carry;
+
+      /* If result should be negative, negate. */
+      if ( ( delta < 0 ) ^ ( scalar < 0 ) )
+      {
+        product.lo = ~product.lo + 1;
+        product.hi = ~product.hi + ( product.lo == 0 ? 1 : 0 );
+      }
+
+      /* Add to `returnValue`. */
+      returnValue.lo += product.lo;
+      if ( returnValue.lo < product.lo )
+        returnValue.hi++;
+      returnValue.hi += product.hi;
+
+      return returnValue;
+    }
+
+#endif /* !FT_INT64 */
+
+  }
+
+
+  static FT_ItemVarDelta
+  ft_round_and_shift16( FT_Int64  returnValue )
+  {
+
+#ifdef FT_INT64
+
+    return (FT_ItemVarDelta)( returnValue + 0x8000L ) >> 16;
+
+#else /* !FT_INT64 */
+
+    FT_UInt hi = returnValue.hi;
+    FT_UInt lo = returnValue.lo;
+
+    FT_UInt delta;
+
+
+    /* Add 0x8000 to round. */
+    lo += 0x8000;
+    if ( lo < 0x8000 )  /* overflow occurred */
+      hi += 1;
+
+    /* Shift right by 16 bits. */
+    delta = ( hi << 16 ) | ( lo >> 16 );
+
+    return (FT_ItemVarDelta)delta;
+
+#endif /* !FT_INT64 */
+
+  }
+
+
   FT_LOCAL_DEF( FT_ItemVarDelta )
   tt_var_get_item_delta( FT_Face          face,        /* TT_Face */
                          GX_ItemVarStore  itemStore,
