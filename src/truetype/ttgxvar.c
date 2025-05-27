@@ -2940,10 +2940,14 @@
     } manageCvt;
 
 
-    face->doblend = FALSE;
-
     if ( !face->blend )
     {
+      if ( !num_coords )
+      {
+        face->doblend = FALSE;
+        goto Exit;
+      }
+
       if ( FT_SET_ERROR( TT_Get_MM_Var( FT_FACE( face ), NULL ) ) )
         goto Exit;
     }
@@ -3056,11 +3060,7 @@
 
       /* return value -1 indicates `no change' */
       if ( !have_diff )
-      {
-        face->doblend = TRUE;
-
         return -1;
-      }
 
       for ( ; i < mmvar->num_axis; i++ )
       {
@@ -3089,7 +3089,15 @@
                         blend->normalizedcoords,
                         blend->coords );
 
-    face->doblend = TRUE;
+    face->doblend = FALSE;
+    for ( i = 0; i < blend->num_axis; i++ )
+    {
+      if ( blend->normalizedcoords[i] )
+      {
+        face->doblend = TRUE;
+        break;
+      }
+    }
 
     if ( face->cvt )
     {
@@ -3440,10 +3448,12 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    TT_Face   ttface = (TT_Face)face;
-    FT_Error  error  = FT_Err_Ok;
-    GX_Blend  blend;
-    FT_UInt   i, nc;
+    TT_Face       ttface = (TT_Face)face;
+    FT_Error      error  = FT_Err_Ok;
+    GX_Blend      blend;
+    FT_MM_Var*    mmvar;
+    FT_Var_Axis*  a;
+    FT_UInt       i, nc;
 
 
     if ( !ttface->blend )
@@ -3471,19 +3481,21 @@
       nc = blend->num_axis;
     }
 
+    mmvar = blend->mmvar;
+    a     = mmvar->axis;
     if ( ttface->doblend )
     {
-      for ( i = 0; i < nc; i++ )
+      for ( i = 0; i < nc; i++, a++ )
         coords[i] = blend->coords[i];
     }
     else
     {
-      for ( i = 0; i < nc; i++ )
-        coords[i] = 0;
+      for ( i = 0; i < nc; i++, a++ )
+        coords[i] = a->def;
     }
 
-    for ( ; i < num_coords; i++ )
-      coords[i] = 0;
+    for ( ; i < num_coords; i++, a++ )
+      coords[i] = a->def;
 
     return FT_Err_Ok;
   }
