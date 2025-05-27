@@ -348,7 +348,7 @@
 
     /* XXX: We reserve a little more elements on the stack to deal safely */
     /*      with broken fonts like arialbs, courbs, timesbs, etc.         */
-    stackSize = face->max_profile.maxStackElements + 32.
+    stackSize = face->max_profile.maxStackElements + 32;
     if ( FT_QRENEW_ARRAY( exec->stack, exec->stackSize, stackSize ) )
       return error;
     exec->stackSize = stackSize;
