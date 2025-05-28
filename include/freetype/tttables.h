@@ -705,6 +705,9 @@ FT_BEGIN_HEADER
    *     definitions found in the @FT_TRUETYPE_TAGS_H file, or forge a new
    *     one with @FT_MAKE_TAG.
    *
+   *     [Since 2.14] Use value~1 if you want to access the table directory
+   *     of the (currently selected) font.
+   *
    *   offset ::
    *     The starting offset in the table (or file if tag~==~0).
    *

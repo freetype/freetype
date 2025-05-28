@@ -56,6 +56,8 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     face's default value for the  corresponding axis, that is, the set
     up face is not at its default position.
 
+  - `FT_Load_Sfnt_Table` can now also load a font's table directory.
+
   - The TrueType instruction interpreter  was optimized to produce 15%
     gain in the glyph loading speed.
 
