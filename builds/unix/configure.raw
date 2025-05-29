@@ -468,21 +468,30 @@ fi
 have_harfbuzz_dynamic=no
 if test x"$have_harfbuzz" = xno; then
   if test x"$with_harfbuzz" = xdynamic -o x"$with_harfbuzz" = xauto; then
-    # Check for libdl
-    AC_CHECK_LIB([c],
-                 [dlopen],
-                 [have_harfbuzz_dynamic=yes],
-                 AC_CHECK_LIB([dl],
-                              [dlopen],
-                              [have_harfbuzz_dynamic=yes
-                               need_libdl=yes]))
-    if test x"$have_harfbuzz_dynamic" = xyes; then
+    case "$host" in
+    *-*-mingw*)
+      # Windows uses its own LoadLibrary(), set variables to dynamic.
+      have_harfbuzz_dynamic=yes
       have_harfbuzz="yes (dynamic)"
-      HARFBUZZ_CFLAGS=
-      if test x"$need_libdl" = xyes; then
-        HARFBUZZ_LIBS="-ldl"
+      ;;
+    *)
+      # Check for libdl
+      AC_CHECK_LIB([c],
+                   [dlopen],
+                   [have_harfbuzz_dynamic=yes],
+                   AC_CHECK_LIB([dl],
+                                [dlopen],
+                                [have_harfbuzz_dynamic=yes
+                                 need_libdl=yes]))
+      if test x"$have_harfbuzz_dynamic" = xyes; then
+        have_harfbuzz="yes (dynamic)"
+        HARFBUZZ_CFLAGS=
+        if test x"$need_libdl" = xyes; then
+          HARFBUZZ_LIBS="-ldl"
+        fi
       fi
-    fi
+      ;;
+    esac
   fi
 fi
 
