@@ -2942,11 +2942,15 @@
 
     if ( !face->blend )
     {
-      if ( !num_coords )
-      {
-        face->doblend = FALSE;
+      face->doblend = FALSE;
+      for ( i = 0; i < num_coords; i++ )
+        if ( coords[i] )
+	{
+	  face->doblend = TRUE;
+	  break;
+	}
+      if ( !face->doblend )
         goto Exit;
-      }
 
       if ( FT_SET_ERROR( TT_Get_MM_Var( FT_FACE( face ), NULL ) ) )
         goto Exit;
@@ -4294,14 +4298,17 @@
     FT_Fixed*  point_deltas_y = NULL;
 
 
-    if ( !face->doblend || !blend )
-      return FT_THROW( Invalid_Argument );
-
     for ( i = 0; i < n_points; i++ )
     {
       unrounded[i].x = INT_TO_F26DOT6( outline->points[i].x );
       unrounded[i].y = INT_TO_F26DOT6( outline->points[i].y );
     }
+
+    if ( !face->doblend  )
+      goto Exit;
+
+    if ( !blend )
+      return FT_THROW( Invalid_Argument );
 
     if ( glyph_index >= blend->gv_glyphcnt      ||
          blend->glyphoffsets[glyph_index] ==
