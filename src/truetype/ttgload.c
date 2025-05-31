@@ -781,6 +781,7 @@
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     TT_ExecContext  exec  = loader->exec;
+    TT_Size         size  = loader->size;
     FT_Long         n_ins = exec->glyphSize;
 #else
     FT_UNUSED( is_composite );
@@ -791,9 +792,6 @@
     /* save original point positions in `org' array */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
-
-    /* Reset graphics state. */
-    exec->GS = loader->size->GS;
 
     /* XXX: UNDOCUMENTED! Hinting instructions of a composite glyph */
     /*      completely refer to the (already) hinted subglyphs.     */
@@ -806,8 +804,8 @@
     }
     else
     {
-      exec->metrics.x_scale = loader->size->metrics->x_scale;
-      exec->metrics.y_scale = loader->size->metrics->y_scale;
+      exec->metrics.x_scale = size->metrics->x_scale;
+      exec->metrics.y_scale = size->metrics->y_scale;
     }
 #endif
 
@@ -833,7 +831,7 @@
       exec->is_composite = is_composite;
       exec->pts          = *zone;
 
-      error = TT_Run_Context( exec );
+      error = TT_Run_Context( exec, size );
       if ( error && exec->pedantic_hinting )
         return error;
 
@@ -2330,9 +2328,9 @@
       if ( exec->GS.instruct_control & 1 )
         load_flags |= FT_LOAD_NO_HINTING;
 
-      /* load default graphics state -- if needed */
+      /* check whether GS modifications should be reverted */
       if ( exec->GS.instruct_control & 2 )
-        exec->GS = tt_default_graphics_state;
+        size->GS = tt_default_graphics_state;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       /*
