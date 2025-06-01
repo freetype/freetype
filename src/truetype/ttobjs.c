@@ -908,24 +908,6 @@
 
     exec->pedantic_hinting = pedantic;
 
-    exec->period    = 64;
-    exec->phase     = 0;
-    exec->threshold = 0;
-
-    {
-      FT_Size_Metrics*  size_metrics = &exec->metrics;
-      TT_Size_Metrics*  tt_metrics   = &exec->tt_metrics;
-
-
-      size_metrics->x_ppem   = 0;
-      size_metrics->y_ppem   = 0;
-      size_metrics->x_scale  = 0;
-      size_metrics->y_scale  = 0;
-
-      tt_metrics->ppem  = 0;
-      tt_metrics->scale = 0;
-    }
-
     /* allow font program execution */
     TT_Set_CodeRange( exec,
                       tt_coderange_font,
@@ -1028,30 +1010,8 @@
 
     size->cvt_ready = error;
 
-    /* UNDOCUMENTED!  The MS rasterizer doesn't allow the following */
-    /* graphics state variables to be modified by the CVT program.  */
-
-    exec->GS.dualVector.x = 0x4000;
-    exec->GS.dualVector.y = 0;
-    exec->GS.projVector.x = 0x4000;
-    exec->GS.projVector.y = 0x0;
-    exec->GS.freeVector.x = 0x4000;
-    exec->GS.freeVector.y = 0x0;
-
-    exec->GS.rp0 = 0;
-    exec->GS.rp1 = 0;
-    exec->GS.rp2 = 0;
-
-    exec->GS.gep0 = 1;
-    exec->GS.gep1 = 1;
-    exec->GS.gep2 = 1;
-
-    exec->GS.loop = 1;
-
-    /* save as default graphics state */
-    size->GS = exec->GS;
-
-    TT_Save_Context( exec, size );
+    if ( !error )
+      TT_Save_Context( exec, size );
 
     return error;
   }
