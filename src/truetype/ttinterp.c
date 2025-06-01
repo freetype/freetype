@@ -99,54 +99,6 @@
   /**************************************************************************
    *
    * @Function:
-   *   TT_Goto_CodeRange
-   *
-   * @Description:
-   *   Switches to a new code range (updates the code related elements in
-   *   `exec', and `IP').
-   *
-   * @Input:
-   *   range ::
-   *     The new execution code range.
-   *
-   *   IP ::
-   *     The new IP in the new code range.
-   *
-   * @InOut:
-   *   exec ::
-   *     The target execution context.
-   */
-  FT_LOCAL_DEF( void )
-  TT_Goto_CodeRange( TT_ExecContext  exec,
-                     FT_Int          range,
-                     FT_Long         IP )
-  {
-    TT_CodeRange*  coderange;
-
-
-    FT_ASSERT( range >= 1 && range <= 3 );
-
-    coderange = &exec->codeRangeTable[range - 1];
-
-    FT_ASSERT( coderange->base );
-
-    /* NOTE: Because the last instruction of a program may be a CALL */
-    /*       which will return to the first byte *after* the code    */
-    /*       range, we test for IP <= Size instead of IP < Size.     */
-    /*                                                               */
-    FT_ASSERT( IP <= coderange->size );
-
-    exec->code     = coderange->base;
-    exec->codeSize = coderange->size;
-    exec->IP       = IP;
-    exec->curRange = range;
-    exec->iniRange = range;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
    *   TT_Set_CodeRange
    *
    * @Description:
@@ -169,13 +121,19 @@
   FT_LOCAL_DEF( void )
   TT_Set_CodeRange( TT_ExecContext  exec,
                     FT_Int          range,
-                    void*           base,
+                    FT_Byte*        base,
                     FT_Long         length )
   {
     FT_ASSERT( range >= 1 && range <= 3 );
 
-    exec->codeRangeTable[range - 1].base = (FT_Byte*)base;
+    exec->codeRangeTable[range - 1].base = base;
     exec->codeRangeTable[range - 1].size = length;
+
+    exec->code     = base;
+    exec->codeSize = length;
+    exec->IP       = 0;
+    exec->curRange = range;
+    exec->iniRange = range;
   }
 
 
@@ -343,23 +301,6 @@
     exec->tt_metrics = size->ttmetrics;
     exec->metrics    = *size->metrics;
 
-    /* set graphics state */
-    exec->GS = size->GS;
-
-    exec->twilight = size->twilight;
-
-    exec->pts.n_points   = 0;
-    exec->pts.n_contours = 0;
-
-    exec->zp1 = exec->pts;
-    exec->zp2 = exec->pts;
-    exec->zp0 = exec->pts;
-
-    exec->callTop = 0;
-    exec->top     = 0;
-
-    exec->instruction_trap = FALSE;
-
     return FT_Err_Ok;
   }
 
@@ -434,11 +375,11 @@
   TT_Run_Context( TT_ExecContext  exec,
                   TT_Size         size )
   {
-    TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 );
-
     exec->zp0 = exec->pts;
     exec->zp1 = exec->pts;
     exec->zp2 = exec->pts;
+
+    exec->twilight = size->twilight;
 
     /* reset graphics state */
     exec->GS = size->GS;
@@ -447,6 +388,8 @@
     /* before a new execution.                                  */
     exec->top     = 0;
     exec->callTop = 0;
+
+    exec->instruction_trap = FALSE;
 
     return exec->face->interpreter( exec );
   }
