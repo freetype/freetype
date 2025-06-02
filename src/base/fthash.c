@@ -335,4 +335,68 @@
   }
 
 
+  FT_Bool
+  ft_hash_num_iterator( FT_UInt  *idx,
+                        FT_Int   *key,
+                        size_t   *value,
+                        FT_Hash   hash )
+  {
+    FT_Hashnode  nn = NULL;
+
+
+    while ( 1 )
+    {
+      if ( *idx >= hash->size )
+        return 0;
+
+      nn = hash->table[*idx];
+      if ( nn )
+        break;
+
+      (*idx)++;
+    }
+
+    if ( key )
+      *key = nn->key.num;
+    if ( value )
+      *value = nn->data;
+
+    (*idx)++;
+
+    return 1;
+  }
+
+
+  FT_Bool
+  ft_hash_str_iterator( FT_UInt      *idx,
+                        const char*  *key,
+                        size_t       *value,
+                        FT_Hash       hash )
+  {
+    FT_Hashnode  nn = NULL;
+
+
+    while ( 1 )
+    {
+      if ( *idx >= hash->size )
+        return 0;
+
+      nn = hash->table[*idx];
+      if ( nn )
+        break;
+
+      (*idx)++;
+    }
+
+    if ( key )
+      *key = nn->key.str;
+    if ( value )
+      *value = nn->data;
+
+    (*idx)++;
+
+    return 1;
+  }
+
+
 /* END */

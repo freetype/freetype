@@ -125,6 +125,17 @@ FT_BEGIN_HEADER
   ft_hash_num_lookup( FT_Int   num,
                       FT_Hash  hash );
 
+  FT_Bool
+  ft_hash_num_iterator( FT_UInt  *idx,
+                        FT_Int   *key,
+                        size_t   *value,
+                        FT_Hash   hash );
+
+  FT_Bool
+  ft_hash_str_iterator( FT_UInt      *idx,
+                        const char*  *key,
+                        size_t       *value,
+                        FT_Hash       hash );
 
 FT_END_HEADER
 
