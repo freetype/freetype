@@ -3078,7 +3078,7 @@ FT_BEGIN_HEADER
    *   is dependent entirely on how the size is defined in the source face.
    *   The font designer chooses the final size of each glyph relative to
    *   this size.  For more information refer to
-   *   'https://www.freetype.org/freetype2/docs/glyphs/glyphs-2.html'.
+   *   'https://freetype.org/freetype2/docs/glyphs/glyphs-2.html'.
    *
    *   Contrary to @FT_Set_Char_Size, this function doesn't have special code
    *   to normalize zero-valued widths, heights, or resolutions, which are
