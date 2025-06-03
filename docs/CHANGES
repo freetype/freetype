@@ -4,10 +4,10 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
 
   - A new  configuration macro `FT_CONFIG_OPTION_USE_HARFBUZZ_DYNAMIC`
     is available to load the HarfBuzz library dynamically (in addition
-    to the standard static and  dynamic linking modes); both meson and
-    autotools  support have  been updated  accordingly (but  not CMake
-    yet).   Using this  new feature  makes  it possible  to avoid  the
-    circular dependency between HarfBuzz and FreeType.
+    to the standard static and  dynamic linking modes);  cmake,  meson
+    and autotools support have  been updated  accordingly.  Using this
+    new feature  makes  it possible  to avoid  the circular dependency
+    between HarfBuzz and FreeType.
 
     A  side effect  of this  change is  that FreeType  no longer  uses
     HarfBuzz header files (if HarfBuzz support is activated).  To make

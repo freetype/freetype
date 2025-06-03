@@ -87,6 +87,11 @@
 #                    -D FT_REQUIRE_HARFBUZZ=TRUE \
 #                    -D FT_REQUIRE_BROTLI=TRUE [...]
 #
+# - Set the `FT_DYNAMIC_HARFBUZZ' CMake variable to `ON' or `TRUE' to load
+#   the HarfBuzz library dynamically at runtime, if possible.  Example:
+#
+#     cmake -B build -D FT_DYNAMIC_HARFBUZZ=TRUE [...]
+#
 # - Set `FT_DISABLE_XXX=TRUE' to disable a dependency completely (where
 #   `XXX' is a CMake package name like `BZip2').  Example for disabling all
 #   dependencies:
@@ -197,6 +202,9 @@ cmake_dependent_option(FT_REQUIRE_PNG
 
 option(FT_DISABLE_HARFBUZZ
   "Disable HarfBuzz (used for improving auto-hinting of OpenType fonts)." OFF)
+cmake_dependent_option(FT_DYNAMIC_HARFBUZZ
+  "Load HarfBuzz library dynamically at runtime, if possible." ON
+  "NOT FT_DISABLE_HARFBUZZ" OFF)
 cmake_dependent_option(FT_REQUIRE_HARFBUZZ
   "Require HarfBuzz for improving auto-hinting of OpenType fonts." OFF
   "NOT FT_DISABLE_HARFBUZZ" OFF)
@@ -239,10 +247,36 @@ endif ()
 
 # Find dependencies
 include(FindPkgConfig)
+include(CMakePushCheckState)
+include(CheckSymbolExists)
 
 if (NOT FT_DISABLE_HARFBUZZ)
   set(HARFBUZZ_MIN_VERSION "2.6.8")
-  if (FT_REQUIRE_HARFBUZZ)
+
+  if (FT_DYNAMIC_HARFBUZZ)
+    if (WIN32)  # Windows uses its own LoadLibrary()
+      set(FT_DYNAMIC_HARFBUZZ_ENABLED TRUE)
+    else()
+      cmake_push_check_state(RESET)
+      check_symbol_exists(dlopen "dlfcn.h" HAVE_DLOPEN_IN_LIBC)
+      if (NOT HAVE_DLOPEN_IN_LIBC)
+        set(CMAKE_REQUIRED_LIBRARIES dl)
+        check_symbol_exists(dlopen "dlfcn.h" HAVE_DLOPEN_IN_LIBDL)
+      endif()
+      cmake_pop_check_state()
+
+      if (HAVE_DLOPEN_IN_LIBC OR HAVE_DLOPEN_IN_LIBDL)
+        set(FT_DYNAMIC_HARFBUZZ_ENABLED TRUE)
+        if (HAVE_DLOPEN_IN_LIBDL)
+          set(FT_NEED_LIBDL TRUE)
+        endif()
+      endif()
+    endif()
+  endif()
+
+  if (FT_DYNAMIC_HARFBUZZ_ENABLED)
+    message(STATUS "Enabled dynamic loading of HarfBuzz library at runtime.")
+  elseif (FT_REQUIRE_HARFBUZZ)
     find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION} REQUIRED)
   else ()
     find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION})
@@ -339,10 +373,15 @@ if (PNG_FOUND)
     "/\\* +(#define +FT_CONFIG_OPTION_USE_PNG) +\\*/" "\\1"
     FTOPTION_H "${FTOPTION_H}")
 endif ()
-if (HARFBUZZ_FOUND)
+if (HARFBUZZ_FOUND OR FT_DYNAMIC_HARFBUZZ_ENABLED)
   string(REGEX REPLACE
     "/\\* +(#define +FT_CONFIG_OPTION_USE_HARFBUZZ) +\\*/" "\\1"
     FTOPTION_H "${FTOPTION_H}")
+  if (FT_DYNAMIC_HARFBUZZ_ENABLED)
+    string(REGEX REPLACE
+      "/\\* +(#define +FT_CONFIG_OPTION_USE_HARFBUZZ_DYNAMIC) +\\*/" "\\1"
+      FTOPTION_H "${FTOPTION_H}")
+  endif ()
 endif ()
 if (BROTLIDEC_FOUND)
   string(REGEX REPLACE
@@ -529,7 +568,11 @@ if (PNG_FOUND)
   target_link_libraries(freetype PRIVATE PNG::PNG)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "libpng")
 endif ()
-if (HarfBuzz_FOUND)
+if (FT_DYNAMIC_HARFBUZZ_ENABLED AND FT_NEED_LIBDL)
+  target_link_libraries(freetype PRIVATE dl)
+  list(APPEND PKGCONFIG_LIBS_PRIVATE " -ldl")
+endif ()
+if (HarfBuzz_FOUND AND (NOT FT_DYNAMIC_HARFBUZZ_ENABLED))
   target_link_libraries(freetype PRIVATE HarfBuzz::HarfBuzz)
   list(APPEND PKGCONFIG_REQUIRES_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
 endif ()
