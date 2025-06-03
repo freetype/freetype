@@ -45,6 +45,7 @@
 
 #else /* !_WIN32 */
 
+#  define  _GNU_SOURCE  1  /* for RTLD_DEFAULT */
 #  include <dlfcn.h>
 
   /* The GCC pragma suppresses the warning "ISO C forbids     */
@@ -96,8 +97,11 @@
 
 #else /* !_WIN32 */
 
-    lib = RTLD_DEFAULT;
+#  ifdef RTLD_DEFAULT
+    lib             = RTLD_DEFAULT;
     version_atleast = DLSYM( lib, hb_version_atleast );
+#  endif
+
     if ( !version_atleast )
     {
       /* Load the HarfBuzz library.
