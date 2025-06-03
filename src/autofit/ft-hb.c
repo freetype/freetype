@@ -16,6 +16,10 @@
  */
 
 
+#if !defined( _WIN32 ) && !defined( _GNU_SOURCE )
+#  define _GNU_SOURCE  1  /* for RTLD_DEFAULT */
+#endif
+
 #include <freetype/freetype.h>
 #include <freetype/internal/ftmemory.h>
 
@@ -45,7 +49,6 @@
 
 #else /* !_WIN32 */
 
-#  define  _GNU_SOURCE  1  /* for RTLD_DEFAULT */
 #  include <dlfcn.h>
 
   /* The GCC pragma suppresses the warning "ISO C forbids     */
