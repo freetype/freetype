@@ -489,10 +489,6 @@ add_library(freetype
   ${BASE_SRCS}
 )
 
-set_target_properties(
-  freetype PROPERTIES
-    C_VISIBILITY_PRESET hidden)
-
 target_compile_definitions(
   freetype PRIVATE FT2_BUILD_LIBRARY)
 
@@ -503,6 +499,10 @@ if (WIN32)
     target_compile_definitions(
       freetype PRIVATE DLL_EXPORT)
   endif ()
+else ()
+  # Windows handles exports with DLL_EXPORT defined above.
+  set_target_properties(freetype PROPERTIES
+    C_VISIBILITY_PRESET hidden)
 endif ()
 
 if (BUILD_SHARED_LIBS)
