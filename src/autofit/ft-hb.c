@@ -120,11 +120,12 @@
       if ( !lib )
         goto Fail;
       version_atleast = DLSYM( lib, hb_version_atleast );
-      if ( !version_atleast )
-        goto Fail;
     }
 
 #endif /* !_WIN32 */
+
+    if ( !version_atleast )
+      goto Fail;
 
     /* Load all symbols we use. */
 #define HB_EXTERN( ret, name, args )  \
