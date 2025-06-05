@@ -2197,14 +2197,6 @@
     TT_Face    face   = (TT_Face)glyph->face;
     FT_Stream  stream = face->root.stream;
 
-#ifdef TT_USE_BYTECODE_INTERPRETER
-    FT_Error   error;
-    FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    TT_Driver  driver   = (TT_Driver)FT_FACE_DRIVER( glyph->face );
-#endif
-#endif
-
 
     FT_ZERO( loader );
 
@@ -2213,11 +2205,14 @@
     /* load execution context */
     if ( IS_HINTED( load_flags ) && !glyf_table_only )
     {
+      FT_Error        error;
       TT_ExecContext  exec;
+      FT_Bool         pedantic  = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
       FT_Bool         grayscale = TRUE;
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       FT_Bool         subpixel_hinting_lean;
       FT_Bool         grayscale_cleartype;
+      TT_Driver       driver = (TT_Driver)FT_FACE_DRIVER( glyph->face );
 #endif
 
       FT_Bool  reexecute = FALSE;
@@ -2239,6 +2234,8 @@
       if ( !exec )
         return FT_THROW( Could_Not_Find_Context );
 
+      exec->pedantic_hinting = pedantic;
+
       grayscale = FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
                              FT_RENDER_MODE_MONO             );
 
@@ -2259,57 +2256,45 @@
                    ( load_flags           &
                      FT_LOAD_TARGET_LCD_V ) );
         grayscale = FT_BOOL( grayscale && !subpixel_hinting_lean );
+
+        /* a change from mono to subpixel rendering (and vice versa) */
+        /* requires a re-execution of the CVT program                */
+        if ( subpixel_hinting_lean != exec->subpixel_hinting_lean )
+        {
+          FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
+                      " re-executing `prep' table\n" ));
+
+          exec->subpixel_hinting_lean = subpixel_hinting_lean;
+          reexecute                   = TRUE;
+        }
+
+        /* a change from colored to grayscale subpixel rendering (and */
+        /* vice versa) requires a re-execution of the CVT program     */
+        if ( grayscale_cleartype != exec->grayscale_cleartype )
+        {
+          FT_TRACE4(( "tt_loader_init: grayscale subpixel hinting change,"
+                      " re-executing `prep' table\n" ));
+
+          exec->grayscale_cleartype = grayscale_cleartype;
+          reexecute                 = TRUE;
+        }
       }
       else
       {
         subpixel_hinting_lean   = FALSE;
-        grayscale_cleartype     = FALSE;
         exec->vertical_lcd_lean = FALSE;
       }
 #endif
 
-      error = TT_Load_Context( exec, face, size );
-      if ( error )
-        return error;
-
+      /* a change from mono to grayscale rendering (and vice versa) */
+      /* requires a re-execution of the CVT program                 */
+      if ( grayscale != exec->grayscale )
       {
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-        if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
-        {
-          /* a change from mono to subpixel rendering (and vice versa) */
-          /* requires a re-execution of the CVT program                */
-          if ( subpixel_hinting_lean != exec->subpixel_hinting_lean )
-          {
-            FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
-                        " re-executing `prep' table\n" ));
+        FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
+                    " re-executing `prep' table\n" ));
 
-            exec->subpixel_hinting_lean = subpixel_hinting_lean;
-            reexecute                   = TRUE;
-          }
-
-          /* a change from colored to grayscale subpixel rendering (and */
-          /* vice versa) requires a re-execution of the CVT program     */
-          if ( grayscale_cleartype != exec->grayscale_cleartype )
-          {
-            FT_TRACE4(( "tt_loader_init: grayscale subpixel hinting change,"
-                        " re-executing `prep' table\n" ));
-
-            exec->grayscale_cleartype = grayscale_cleartype;
-            reexecute                 = TRUE;
-          }
-        }
-#endif
-
-        /* a change from mono to grayscale rendering (and vice versa) */
-        /* requires a re-execution of the CVT program                 */
-        if ( grayscale != exec->grayscale )
-        {
-          FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
-                      " re-executing `prep' table\n" ));
-
-          exec->grayscale = grayscale;
-          reexecute       = TRUE;
-        }
+        exec->grayscale = grayscale;
+        reexecute       = TRUE;
       }
 
       if ( reexecute )
@@ -2317,12 +2302,11 @@
         error = tt_size_run_prep( size, pedantic );
         if ( error )
           return error;
-        error = TT_Load_Context( exec, face, size );
-        if ( error )
-          return error;
       }
 
-      exec->pedantic_hinting = pedantic;
+      error = TT_Load_Context( exec, face, size );
+      if ( error )
+        return error;
 
       /* check whether the cvt program has disabled hinting */
       if ( size->GS.instruct_control & 1 )
@@ -2355,7 +2339,6 @@
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */
 
       loader->exec = exec;
-      loader->instructions = exec->glyphIns;
 
       /* Use the hdmx table if any unless FT_LOAD_COMPUTE_METRICS */
       /* is set or backward compatibility mode of the v38 or v40  */

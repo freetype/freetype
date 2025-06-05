@@ -1714,7 +1714,6 @@ FT_BEGIN_HEADER
     TT_GlyphZoneRec  zone;
 
     TT_ExecContext   exec;
-    FT_Byte*         instructions;
     FT_ULong         ins_pos;
 
     /* for possible extensibility in other formats */
