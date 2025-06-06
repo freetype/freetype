@@ -391,7 +391,7 @@
 
     exec->instruction_trap = FALSE;
 
-    return exec->face->interpreter( exec );
+    return exec->interpreter( exec );
   }
 
 
@@ -423,7 +423,8 @@
     FT_Memory  memory;
     FT_Error   error;
 
-    TT_ExecContext  exec = NULL;
+    TT_ExecContext     exec = NULL;
+    FT_DebugHook_Func  interp;
 
 
     if ( !driver )
@@ -434,6 +435,15 @@
     /* allocate object and zero everything inside */
     if ( FT_NEW( exec ) )
       goto Fail;
+
+    /* set `exec->interpreter' according to the debug hook present, */
+    /* which is used by 'ttdebug'.                                  */
+    interp = driver->root.root.library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
+
+    if ( interp )
+      exec->interpreter = (TT_Interpreter)interp;
+    else
+      exec->interpreter = (TT_Interpreter)TT_RunIns;
 
     /* create callStack here, other allocations delayed */
     exec->memory   = memory;

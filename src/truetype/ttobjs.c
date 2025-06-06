@@ -1143,17 +1143,6 @@
 
     size->GS = tt_default_graphics_state;
 
-    /* set `face->interpreter' according to the debug hook present */
-    {
-      FT_Library  library = face->root.driver->root.library;
-
-
-      face->interpreter = (TT_Interpreter)
-                            library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
-      if ( !face->interpreter )
-        face->interpreter = (TT_Interpreter)TT_RunIns;
-    }
-
     /* Fine, now run the font program! */
 
     /* In case of an error while executing `fpgm', we intentionally don't */
