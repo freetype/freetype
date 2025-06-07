@@ -109,354 +109,6 @@
 
   /**************************************************************************
    *
-   *                       CODERANGE FUNCTIONS
-   *
-   */
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Set_CodeRange
-   *
-   * @Description:
-   *   Sets a code range.
-   *
-   * @Input:
-   *   range ::
-   *     The code range index.
-   *
-   *   base ::
-   *     The new code base.
-   *
-   *   length ::
-   *     The range size in bytes.
-   *
-   * @InOut:
-   *   exec ::
-   *     The target execution context.
-   */
-  FT_LOCAL_DEF( void )
-  TT_Set_CodeRange( TT_ExecContext  exec,
-                    FT_Int          range,
-                    FT_Byte*        base,
-                    FT_Long         length )
-  {
-    FT_ASSERT( range >= 1 && range <= 3 );
-
-    exec->codeRangeTable[range - 1].base = base;
-    exec->codeRangeTable[range - 1].size = length;
-
-    exec->code     = base;
-    exec->codeSize = length;
-    exec->IP       = 0;
-    exec->curRange = range;
-    exec->iniRange = range;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Clear_CodeRange
-   *
-   * @Description:
-   *   Clears a code range.
-   *
-   * @Input:
-   *   range ::
-   *     The code range index.
-   *
-   * @InOut:
-   *   exec ::
-   *     The target execution context.
-   */
-  FT_LOCAL_DEF( void )
-  TT_Clear_CodeRange( TT_ExecContext  exec,
-                      FT_Int          range )
-  {
-    FT_ASSERT( range >= 1 && range <= 3 );
-
-    exec->codeRangeTable[range - 1].base = NULL;
-    exec->codeRangeTable[range - 1].size = 0;
-  }
-
-
-  /**************************************************************************
-   *
-   *                  EXECUTION CONTEXT ROUTINES
-   *
-   */
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Done_Context
-   *
-   * @Description:
-   *   Destroys a given context.
-   *
-   * @Input:
-   *   exec ::
-   *     A handle to the target execution context.
-   *
-   *   memory ::
-   *     A handle to the parent memory object.
-   *
-   * @Note:
-   *   Only the glyph loader and debugger should call this function.
-   */
-  FT_LOCAL_DEF( void )
-  TT_Done_Context( TT_ExecContext  exec )
-  {
-    FT_Memory  memory = exec->memory;
-
-
-    /* points zone */
-    exec->maxPoints   = 0;
-    exec->maxContours = 0;
-
-    /* free stack */
-    FT_FREE( exec->stack );
-    exec->stackSize = 0;
-
-    /* free glyf cvt working area */
-    FT_FREE( exec->glyfCvt );
-    exec->glyfCvtSize = 0;
-
-    /* free glyf storage working area */
-    FT_FREE( exec->glyfStorage );
-    exec->glyfStoreSize = 0;
-
-    /* free call stack */
-    FT_FREE( exec->callStack );
-    exec->callSize = 0;
-    exec->callTop  = 0;
-
-    /* free glyph code range */
-    FT_FREE( exec->glyphIns );
-    exec->glyphSize = 0;
-
-    exec->size = NULL;
-    exec->face = NULL;
-
-    FT_FREE( exec );
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Load_Context
-   *
-   * @Description:
-   *   Prepare an execution context for glyph hinting.
-   *
-   * @Input:
-   *   face ::
-   *     A handle to the source face object.
-   *
-   *   size ::
-   *     A handle to the source size object.
-   *
-   * @InOut:
-   *   exec ::
-   *     A handle to the target execution context.
-   *
-   * @Return:
-   *   FreeType error code.  0 means success.
-   *
-   * @Note:
-   *   Only the glyph loader and debugger should call this function.
-   *
-   *   Note that not all members of `TT_ExecContext` get initialized.
-   */
-  FT_LOCAL_DEF( FT_Error )
-  TT_Load_Context( TT_ExecContext  exec,
-                   TT_Face         face,
-                   TT_Size         size )
-  {
-    FT_Int     i;
-    FT_Long    stackSize;
-    FT_Error   error;
-    FT_Memory  memory = exec->memory;
-
-
-    exec->face = face;
-    exec->size = size;
-
-    exec->cvtSize = size->cvt_size;
-    exec->cvt     = size->cvt;
-
-    exec->storeSize = size->storage_size;
-    exec->storage   = size->storage;
-
-    /* XXX: We reserve a little more elements on the stack to deal safely */
-    /*      with broken fonts like arialbs, courbs, timesbs, etc.         */
-    stackSize = face->max_profile.maxStackElements + 32;
-    if ( FT_QRENEW_ARRAY( exec->stack, exec->stackSize, stackSize ) )
-      return error;
-    exec->stackSize = stackSize;
-
-    /* free previous glyph code range */
-    FT_FREE( exec->glyphIns );
-    exec->glyphSize = 0;
-
-    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
-      exec->codeRangeTable[i] = size->codeRangeTable[i];
-
-    exec->numFDefs   = size->num_function_defs;
-    exec->maxFDefs   = size->max_function_defs;
-    exec->numIDefs   = size->num_instruction_defs;
-    exec->maxIDefs   = size->max_instruction_defs;
-    exec->FDefs      = size->function_defs;
-    exec->IDefs      = size->instruction_defs;
-    exec->maxFunc    = size->max_func;
-    exec->maxIns     = size->max_ins;
-
-    exec->pointSize  = size->point_size;
-    exec->tt_metrics = size->ttmetrics;
-    exec->metrics    = *size->metrics;
-
-    return FT_Err_Ok;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Save_Context
-   *
-   * @Description:
-   *   Saves the code ranges in a `size' object.
-   *
-   * @Input:
-   *   exec ::
-   *     A handle to the source execution context.
-   *
-   * @InOut:
-   *   size ::
-   *     A handle to the target size object.
-   *
-   * @Note:
-   *   Only the glyph loader and debugger should call this function.
-   */
-  FT_LOCAL_DEF( void )
-  TT_Save_Context( TT_ExecContext  exec,
-                   TT_Size         size )
-  {
-    FT_Int  i;
-
-
-    /* UNDOCUMENTED!                                            */
-    /* Only these GS values can be modified by the CVT program. */
-
-    size->GS.minimum_distance    = exec->GS.minimum_distance;
-    size->GS.control_value_cutin = exec->GS.control_value_cutin;
-    size->GS.single_width_cutin  = exec->GS.single_width_cutin;
-    size->GS.single_width_value  = exec->GS.single_width_value;
-    size->GS.delta_base          = exec->GS.delta_base;
-    size->GS.delta_shift         = exec->GS.delta_shift;
-    size->GS.auto_flip           = exec->GS.auto_flip;
-    size->GS.instruct_control    = exec->GS.instruct_control;
-    size->GS.scan_control        = exec->GS.scan_control;
-    size->GS.scan_type           = exec->GS.scan_type;
-
-    size->num_function_defs    = exec->numFDefs;
-    size->num_instruction_defs = exec->numIDefs;
-
-    size->max_func = exec->maxFunc;
-    size->max_ins  = exec->maxIns;
-
-    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
-      size->codeRangeTable[i] = exec->codeRangeTable[i];
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Run_Context
-   *
-   * @Description:
-   *   Executes one or more instructions in the execution context.
-   *
-   * @Input:
-   *   exec ::
-   *     A handle to the target execution context.
-   *
-   * @Return:
-   *   TrueType error code.  0 means success.
-   */
-  FT_LOCAL_DEF( FT_Error )
-  TT_Run_Context( TT_ExecContext  exec,
-                  TT_Size         size )
-  {
-    exec->zp0 = exec->pts;
-    exec->zp1 = exec->pts;
-    exec->zp2 = exec->pts;
-
-    exec->twilight = size->twilight;
-
-    /* reset graphics state */
-    exec->GS = size->GS;
-
-    /* some glyphs leave something on the stack. so we clean it */
-    /* before a new execution.                                  */
-    exec->top     = 0;
-    exec->callTop = 0;
-
-    exec->instruction_trap = FALSE;
-
-    return exec->interpreter( exec );
-  }
-
-
-  /* documentation is in ttinterp.h */
-
-  FT_EXPORT_DEF( TT_ExecContext )
-  TT_New_Context( TT_Driver  driver )
-  {
-    FT_Memory  memory;
-    FT_Error   error;
-
-    TT_ExecContext     exec = NULL;
-    FT_DebugHook_Func  interp;
-
-
-    if ( !driver )
-      goto Fail;
-
-    memory = driver->root.root.memory;
-
-    /* allocate object and zero everything inside */
-    if ( FT_NEW( exec ) )
-      goto Fail;
-
-    /* set `exec->interpreter' according to the debug hook present, */
-    /* which is used by 'ttdebug'.                                  */
-    interp = driver->root.root.library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
-
-    if ( interp )
-      exec->interpreter = (TT_Interpreter)interp;
-    else
-      exec->interpreter = (TT_Interpreter)TT_RunIns;
-
-    /* create callStack here, other allocations delayed */
-    exec->memory   = memory;
-    exec->callSize = 32;
-
-    if ( FT_QNEW_ARRAY( exec->callStack, exec->callSize ) )
-      FT_FREE( exec );
-
-  Fail:
-    return exec;
-  }
-
-
-  /**************************************************************************
-   *
    * Before an opcode is executed, the interpreter verifies that there are
    * enough arguments on the stack, with the help of the `Pop_Push_Count'
    * table.
@@ -2110,59 +1762,6 @@
     }
 
     return val;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   Compute_Round
-   *
-   * @Description:
-   *   Sets the rounding mode.
-   *
-   * @Input:
-   *   round_mode ::
-   *     The rounding mode to be used.
-   */
-  static void
-  Compute_Round( TT_ExecContext  exc,
-                 FT_Byte         round_mode )
-  {
-    switch ( round_mode )
-    {
-    case TT_Round_Off:
-      exc->func_round = (TT_Round_Func)Round_None;
-      break;
-
-    case TT_Round_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Grid;
-      break;
-
-    case TT_Round_Up_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_Up_To_Grid;
-      break;
-
-    case TT_Round_Down_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_Down_To_Grid;
-      break;
-
-    case TT_Round_To_Half_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Half_Grid;
-      break;
-
-    case TT_Round_To_Double_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Double_Grid;
-      break;
-
-    case TT_Round_Super:
-      exc->func_round = (TT_Round_Func)Round_Super;
-      break;
-
-    case TT_Round_Super_45:
-      exc->func_round = (TT_Round_Func)Round_Super_45;
-      break;
-    }
   }
 
 
@@ -6836,82 +6435,8 @@
   TT_RunIns( void*  exec )
   {
     TT_ExecContext  exc = (TT_ExecContext)exec;
+    FT_ULong        ins_counter = 0;
 
-    FT_ULong   ins_counter = 0;  /* executed instructions counter */
-    FT_ULong   num_twilight_points;
-
-
-    /* We restrict the number of twilight points to a reasonable,     */
-    /* heuristic value to avoid slow execution of malformed bytecode. */
-    num_twilight_points = FT_MAX( 30,
-                                  2 * ( exc->pts.n_points + exc->cvtSize ) );
-    if ( exc->twilight.n_points > num_twilight_points )
-    {
-      if ( num_twilight_points > 0xFFFFU )
-        num_twilight_points = 0xFFFFU;
-
-      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
-      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
-                  exc->twilight.n_points,
-                  num_twilight_points ));
-      exc->twilight.n_points = (FT_UShort)num_twilight_points;
-    }
-
-    /* Set up loop detectors.  We restrict the number of LOOPCALL loops */
-    /* and the number of JMPR, JROT, and JROF calls with a negative     */
-    /* argument to values that depend on various parameters like the    */
-    /* size of the CVT table or the number of points in the current     */
-    /* glyph (if applicable).                                           */
-    /*                                                                  */
-    /* The idea is that in real-world bytecode you either iterate over  */
-    /* all CVT entries (in the `prep' table), or over all points (or    */
-    /* contours, in the `glyf' table) of a glyph, and such iterations   */
-    /* don't happen very often.                                         */
-    exc->loopcall_counter = 0;
-    exc->neg_jump_counter = 0;
-
-    /* The maximum values are heuristic. */
-    if ( exc->pts.n_points )
-      exc->loopcall_counter_max = FT_MAX( 50,
-                                          10 * exc->pts.n_points ) +
-                                  FT_MAX( 50,
-                                          exc->cvtSize / 10 );
-    else
-      exc->loopcall_counter_max = 300 + 22 * exc->cvtSize;
-
-    /* as a protection against an unreasonable number of CVT entries  */
-    /* we assume at most 100 control values per glyph for the counter */
-    if ( exc->loopcall_counter_max >
-         100 * (FT_ULong)exc->face->root.num_glyphs )
-      exc->loopcall_counter_max = 100 * (FT_ULong)exc->face->root.num_glyphs;
-
-    FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
-                " to %ld\n", exc->loopcall_counter_max ));
-
-    exc->neg_jump_counter_max = exc->loopcall_counter_max;
-    FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
-                " to %ld\n", exc->neg_jump_counter_max ));
-
-    /* set PPEM and CVT functions */
-    if ( exc->metrics.x_ppem != exc->metrics.y_ppem )
-    {
-      /* non-square pixels, use the stretched routines */
-      exc->func_cur_ppem  = Current_Ppem_Stretched;
-      exc->func_read_cvt  = Read_CVT_Stretched;
-      exc->func_write_cvt = Write_CVT_Stretched;
-      exc->func_move_cvt  = Move_CVT_Stretched;
-    }
-    else
-    {
-      /* square pixels, use normal routines */
-      exc->func_cur_ppem  = Current_Ppem;
-      exc->func_read_cvt  = Read_CVT;
-      exc->func_write_cvt = Write_CVT;
-      exc->func_move_cvt  = Move_CVT;
-    }
-
-    Compute_Funcs( exc );
-    Compute_Round( exc, (FT_Byte)exc->GS.round_state );
 
     do
     {
@@ -7596,6 +7121,428 @@
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", exc->error ));
 
     return exc->error;
+  }
+
+
+  /**************************************************************************
+   *
+   *                       CODERANGE FUNCTIONS
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Set_CodeRange
+   *
+   * @Description:
+   *   Sets a code range.
+   *
+   * @Input:
+   *   range ::
+   *     The code range index.
+   *
+   *   base ::
+   *     The new code base.
+   *
+   *   length ::
+   *     The range size in bytes.
+   *
+   * @InOut:
+   *   exec ::
+   *     The target execution context.
+   */
+  FT_LOCAL_DEF( void )
+  TT_Set_CodeRange( TT_ExecContext  exec,
+                    FT_Int          range,
+                    FT_Byte*        base,
+                    FT_Long         length )
+  {
+    FT_ASSERT( range >= 1 && range <= 3 );
+
+    exec->codeRangeTable[range - 1].base = base;
+    exec->codeRangeTable[range - 1].size = length;
+
+    exec->code     = base;
+    exec->codeSize = length;
+    exec->IP       = 0;
+    exec->curRange = range;
+    exec->iniRange = range;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Clear_CodeRange
+   *
+   * @Description:
+   *   Clears a code range.
+   *
+   * @Input:
+   *   range ::
+   *     The code range index.
+   *
+   * @InOut:
+   *   exec ::
+   *     The target execution context.
+   */
+  FT_LOCAL_DEF( void )
+  TT_Clear_CodeRange( TT_ExecContext  exec,
+                      FT_Int          range )
+  {
+    FT_ASSERT( range >= 1 && range <= 3 );
+
+    exec->codeRangeTable[range - 1].base = NULL;
+    exec->codeRangeTable[range - 1].size = 0;
+  }
+
+
+  /**************************************************************************
+   *
+   *                  EXECUTION CONTEXT ROUTINES
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Done_Context
+   *
+   * @Description:
+   *   Destroys a given context.
+   *
+   * @Input:
+   *   exec ::
+   *     A handle to the target execution context.
+   *
+   *   memory ::
+   *     A handle to the parent memory object.
+   *
+   * @Note:
+   *   Only the glyph loader and debugger should call this function.
+   */
+  FT_LOCAL_DEF( void )
+  TT_Done_Context( TT_ExecContext  exec )
+  {
+    FT_Memory  memory = exec->memory;
+
+
+    /* points zone */
+    exec->maxPoints   = 0;
+    exec->maxContours = 0;
+
+    /* free stack */
+    FT_FREE( exec->stack );
+    exec->stackSize = 0;
+
+    /* free glyf cvt working area */
+    FT_FREE( exec->glyfCvt );
+    exec->glyfCvtSize = 0;
+
+    /* free glyf storage working area */
+    FT_FREE( exec->glyfStorage );
+    exec->glyfStoreSize = 0;
+
+    /* free call stack */
+    FT_FREE( exec->callStack );
+    exec->callSize = 0;
+    exec->callTop  = 0;
+
+    /* free glyph code range */
+    FT_FREE( exec->glyphIns );
+    exec->glyphSize = 0;
+
+    exec->size = NULL;
+    exec->face = NULL;
+
+    FT_FREE( exec );
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Load_Context
+   *
+   * @Description:
+   *   Prepare an execution context for glyph hinting.
+   *
+   * @Input:
+   *   face ::
+   *     A handle to the source face object.
+   *
+   *   size ::
+   *     A handle to the source size object.
+   *
+   * @InOut:
+   *   exec ::
+   *     A handle to the target execution context.
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   *
+   * @Note:
+   *   Only the glyph loader and debugger should call this function.
+   *
+   *   Note that not all members of `TT_ExecContext` get initialized.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Load_Context( TT_ExecContext  exec,
+                   TT_Face         face,
+                   TT_Size         size )
+  {
+    FT_Int     i;
+    FT_Long    stackSize;
+    FT_Error   error;
+    FT_Memory  memory = exec->memory;
+
+
+    exec->face = face;
+    exec->size = size;
+
+    exec->cvtSize = size->cvt_size;
+    exec->cvt     = size->cvt;
+
+    exec->storeSize = size->storage_size;
+    exec->storage   = size->storage;
+
+    /* XXX: We reserve a little more elements on the stack to deal safely */
+    /*      with broken fonts like arialbs, courbs, timesbs, etc.         */
+    stackSize = face->max_profile.maxStackElements + 32;
+    if ( FT_QRENEW_ARRAY( exec->stack, exec->stackSize, stackSize ) )
+      return error;
+    exec->stackSize = stackSize;
+
+    /* free previous glyph code range */
+    FT_FREE( exec->glyphIns );
+    exec->glyphSize = 0;
+
+    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
+      exec->codeRangeTable[i] = size->codeRangeTable[i];
+
+    exec->numFDefs   = size->num_function_defs;
+    exec->maxFDefs   = size->max_function_defs;
+    exec->numIDefs   = size->num_instruction_defs;
+    exec->maxIDefs   = size->max_instruction_defs;
+    exec->FDefs      = size->function_defs;
+    exec->IDefs      = size->instruction_defs;
+    exec->maxFunc    = size->max_func;
+    exec->maxIns     = size->max_ins;
+
+    exec->pointSize  = size->point_size;
+    exec->tt_metrics = size->ttmetrics;
+    exec->metrics    = *size->metrics;
+
+    return FT_Err_Ok;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Save_Context
+   *
+   * @Description:
+   *   Saves the code ranges in a `size' object.
+   *
+   * @Input:
+   *   exec ::
+   *     A handle to the source execution context.
+   *
+   * @InOut:
+   *   size ::
+   *     A handle to the target size object.
+   *
+   * @Note:
+   *   Only the glyph loader and debugger should call this function.
+   */
+  FT_LOCAL_DEF( void )
+  TT_Save_Context( TT_ExecContext  exec,
+                   TT_Size         size )
+  {
+    FT_Int  i;
+
+
+    /* UNDOCUMENTED!                                            */
+    /* Only these GS values can be modified by the CVT program. */
+
+    size->GS.minimum_distance    = exec->GS.minimum_distance;
+    size->GS.control_value_cutin = exec->GS.control_value_cutin;
+    size->GS.single_width_cutin  = exec->GS.single_width_cutin;
+    size->GS.single_width_value  = exec->GS.single_width_value;
+    size->GS.delta_base          = exec->GS.delta_base;
+    size->GS.delta_shift         = exec->GS.delta_shift;
+    size->GS.auto_flip           = exec->GS.auto_flip;
+    size->GS.instruct_control    = exec->GS.instruct_control;
+    size->GS.scan_control        = exec->GS.scan_control;
+    size->GS.scan_type           = exec->GS.scan_type;
+
+    size->num_function_defs    = exec->numFDefs;
+    size->num_instruction_defs = exec->numIDefs;
+
+    size->max_func = exec->maxFunc;
+    size->max_ins  = exec->maxIns;
+
+    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
+      size->codeRangeTable[i] = exec->codeRangeTable[i];
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Run_Context
+   *
+   * @Description:
+   *   Executes one or more instructions in the execution context.
+   *
+   * @Input:
+   *   exec ::
+   *     A handle to the target execution context.
+   *
+   * @Return:
+   *   TrueType error code.  0 means success.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Run_Context( TT_ExecContext  exec,
+                  TT_Size         size )
+  {
+    FT_ULong   num_twilight_points;
+
+
+    exec->zp0 = exec->pts;
+    exec->zp1 = exec->pts;
+    exec->zp2 = exec->pts;
+
+    exec->twilight = size->twilight;
+
+    /* We restrict the number of twilight points to a reasonable,     */
+    /* heuristic value to avoid slow execution of malformed bytecode. */
+    num_twilight_points = FT_MAX( 30,
+                                  2 * ( exec->pts.n_points + exec->cvtSize ) );
+    if ( exec->twilight.n_points > num_twilight_points )
+    {
+      if ( num_twilight_points > 0xFFFFU )
+        num_twilight_points = 0xFFFFU;
+
+      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
+      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
+                  exec->twilight.n_points,
+                  num_twilight_points ));
+      exec->twilight.n_points = (FT_UShort)num_twilight_points;
+    }
+
+    /* Set up loop detectors.  We restrict the number of LOOPCALL loops */
+    /* and the number of JMPR, JROT, and JROF calls with a negative     */
+    /* argument to values that depend on various parameters like the    */
+    /* size of the CVT table or the number of points in the current     */
+    /* glyph (if applicable).                                           */
+    /*                                                                  */
+    /* The idea is that in real-world bytecode you either iterate over  */
+    /* all CVT entries (in the `prep' table), or over all points (or    */
+    /* contours, in the `glyf' table) of a glyph, and such iterations   */
+    /* don't happen very often.                                         */
+    exec->loopcall_counter = 0;
+    exec->neg_jump_counter = 0;
+
+    /* The maximum values are heuristic. */
+    if ( exec->pts.n_points )
+      exec->loopcall_counter_max = FT_MAX( 50,
+                                          10 * exec->pts.n_points ) +
+                                  FT_MAX( 50,
+                                          exec->cvtSize / 10 );
+    else
+      exec->loopcall_counter_max = 300 + 22 * exec->cvtSize;
+
+    /* as a protection against an unreasonable number of CVT entries  */
+    /* we assume at most 100 control values per glyph for the counter */
+    if ( exec->loopcall_counter_max >
+         100 * (FT_ULong)exec->face->root.num_glyphs )
+      exec->loopcall_counter_max = 100 * (FT_ULong)exec->face->root.num_glyphs;
+
+    FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
+                " to %ld\n", exec->loopcall_counter_max ));
+
+    exec->neg_jump_counter_max = exec->loopcall_counter_max;
+    FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
+                " to %ld\n", exec->neg_jump_counter_max ));
+
+    /* set PPEM and CVT functions */
+    if ( exec->metrics.x_ppem != exec->metrics.y_ppem )
+    {
+      /* non-square pixels, use the stretched routines */
+      exec->func_cur_ppem  = Current_Ppem_Stretched;
+      exec->func_read_cvt  = Read_CVT_Stretched;
+      exec->func_write_cvt = Write_CVT_Stretched;
+      exec->func_move_cvt  = Move_CVT_Stretched;
+    }
+    else
+    {
+      /* square pixels, use normal routines */
+      exec->func_cur_ppem  = Current_Ppem;
+      exec->func_read_cvt  = Read_CVT;
+      exec->func_write_cvt = Write_CVT;
+      exec->func_move_cvt  = Move_CVT;
+    }
+
+    /* reset graphics state */
+    exec->GS         = size->GS;
+    exec->func_round = (TT_Round_Func)Round_To_Grid;
+    Compute_Funcs( exec );
+
+    /* some glyphs leave something on the stack. so we clean it */
+    /* before a new execution.                                  */
+    exec->top     = 0;
+    exec->callTop = 0;
+
+    exec->instruction_trap = FALSE;
+
+    return exec->interpreter( exec );
+  }
+
+
+  /* documentation is in ttinterp.h */
+
+  FT_EXPORT_DEF( TT_ExecContext )
+  TT_New_Context( TT_Driver  driver )
+  {
+    FT_Memory  memory;
+    FT_Error   error;
+
+    TT_ExecContext     exec = NULL;
+    FT_DebugHook_Func  interp;
+
+
+    if ( !driver )
+      goto Fail;
+
+    memory = driver->root.root.memory;
+
+    /* allocate object and zero everything inside */
+    if ( FT_NEW( exec ) )
+      goto Fail;
+
+    /* set `exec->interpreter' according to the debug hook present, */
+    /* which is used by 'ttdebug'.                                  */
+    interp = driver->root.root.library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
+
+    if ( interp )
+      exec->interpreter = (TT_Interpreter)interp;
+    else
+      exec->interpreter = (TT_Interpreter)TT_RunIns;
+
+    /* create callStack here, other allocations delayed */
+    exec->memory   = memory;
+    exec->callSize = 32;
+
+    if ( FT_QNEW_ARRAY( exec->callStack, exec->callSize ) )
+      FT_FREE( exec );
+
+  Fail:
+    return exec;
   }
 
 #else /* !TT_USE_BYTECODE_INTERPRETER */
