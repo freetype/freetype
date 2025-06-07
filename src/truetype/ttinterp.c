@@ -89,6 +89,24 @@
 #define FAILURE  1
 
 
+  /* The default value for `scan_control' is documented as FALSE in the */
+  /* TrueType specification.  This is confusing since it implies a      */
+  /* Boolean value.  However, this is not the case, thus both the       */
+  /* default values of our `scan_type' and `scan_control' fields (which */
+  /* the documentation's `scan_control' variable is split into) are     */
+  /* zero.                                                              */
+
+  const TT_GraphicsState  tt_default_graphics_state =
+  {
+    0, 0, 0,  1, 1, 1,
+    { 0x4000, 0 }, { 0x4000, 0 }, { 0x4000, 0 },
+    1, 1,
+
+    64, 68, 0, 0, 9, 3,
+    TRUE, 0, FALSE, 0
+  };
+
+
   /**************************************************************************
    *
    *                       CODERANGE FUNCTIONS
@@ -335,12 +353,12 @@
     /* Only these GS values can be modified by the CVT program. */
 
     size->GS.minimum_distance    = exec->GS.minimum_distance;
-    size->GS.auto_flip           = exec->GS.auto_flip;
     size->GS.control_value_cutin = exec->GS.control_value_cutin;
     size->GS.single_width_cutin  = exec->GS.single_width_cutin;
     size->GS.single_width_value  = exec->GS.single_width_value;
     size->GS.delta_base          = exec->GS.delta_base;
     size->GS.delta_shift         = exec->GS.delta_shift;
+    size->GS.auto_flip           = exec->GS.auto_flip;
     size->GS.instruct_control    = exec->GS.instruct_control;
     size->GS.scan_control        = exec->GS.scan_control;
     size->GS.scan_type           = exec->GS.scan_type;
@@ -393,26 +411,6 @@
 
     return exec->interpreter( exec );
   }
-
-
-  /* The default value for `scan_control' is documented as FALSE in the */
-  /* TrueType specification.  This is confusing since it implies a      */
-  /* Boolean value.  However, this is not the case, thus both the       */
-  /* default values of our `scan_type' and `scan_control' fields (which */
-  /* the documentation's `scan_control' variable is split into) are     */
-  /* zero.                                                              */
-
-  const TT_GraphicsState  tt_default_graphics_state =
-  {
-    0, 0, 0,
-    { 0x4000, 0 },
-    { 0x4000, 0 },
-    { 0x4000, 0 },
-
-    1, 64, 1,
-    TRUE, 68, 0, 0, 9, 3,
-    0, FALSE, 0, 1, 1, 1
-  };
 
 
   /* documentation is in ttinterp.h */
