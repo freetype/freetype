@@ -67,21 +67,26 @@ FT_BEGIN_HEADER
     FT_UShort      rp1;
     FT_UShort      rp2;
 
+    FT_UShort      gep0;
+    FT_UShort      gep1;
+    FT_UShort      gep2;
+
     FT_UnitVector  dualVector;
     FT_UnitVector  projVector;
     FT_UnitVector  freeVector;
 
     FT_Long        loop;
-    FT_F26Dot6     minimum_distance;
     FT_Int         round_state;
 
-    FT_Bool        auto_flip;
+    /* default values below can be modified by 'fpgm' and 'prep' */
+    FT_F26Dot6     minimum_distance;
     FT_F26Dot6     control_value_cutin;
     FT_F26Dot6     single_width_cutin;
     FT_F26Dot6     single_width_value;
     FT_UShort      delta_base;
     FT_UShort      delta_shift;
 
+    FT_Bool        auto_flip;
     FT_Byte        instruct_control;
     /* According to Greg Hitchcock from Microsoft, the `scan_control'     */
     /* variable as documented in the TrueType specification is a 32-bit   */
@@ -89,10 +94,6 @@ FT_BEGIN_HEADER
     /* part the SCANCTRL value.  We separate it into two fields.          */
     FT_Bool        scan_control;
     FT_Int         scan_type;
-
-    FT_UShort      gep0;
-    FT_UShort      gep1;
-    FT_UShort      gep2;
 
   } TT_GraphicsState;
 
