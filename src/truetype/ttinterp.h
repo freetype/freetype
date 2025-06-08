@@ -111,6 +111,7 @@ FT_BEGIN_HEADER
     TT_Face            face;       /* ! */
     TT_Size            size;       /* ! */
     FT_Memory          memory;
+    TT_Interpreter     interpreter;
 
     /* instructions state */
 
