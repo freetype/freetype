@@ -2325,11 +2325,11 @@
       exec->pedantic_hinting = pedantic;
 
       /* check whether the cvt program has disabled hinting */
-      if ( exec->GS.instruct_control & 1 )
+      if ( size->GS.instruct_control & 1 )
         load_flags |= FT_LOAD_NO_HINTING;
 
       /* check whether GS modifications should be reverted */
-      if ( exec->GS.instruct_control & 2 )
+      if ( size->GS.instruct_control & 2 )
         size->GS = tt_default_graphics_state;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
@@ -2349,7 +2349,7 @@
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
            subpixel_hinting_lean                                    &&
            !FT_IS_TRICKY( glyph->face )                             )
-        exec->backward_compatibility = ( exec->GS.instruct_control & 4 ) ^ 4;
+        exec->backward_compatibility = ( size->GS.instruct_control & 4 ) ^ 4;
       else
         exec->backward_compatibility = 0;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */

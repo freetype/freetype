@@ -360,14 +360,9 @@ FT_BEGIN_HEADER
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
   FT_LOCAL( void )
-  TT_Goto_CodeRange( TT_ExecContext  exec,
-                     FT_Int          range,
-                     FT_Long         IP );
-
-  FT_LOCAL( void )
   TT_Set_CodeRange( TT_ExecContext  exec,
                     FT_Int          range,
-                    void*           base,
+                    FT_Byte*        base,
                     FT_Long         length );
 
   FT_LOCAL( void )

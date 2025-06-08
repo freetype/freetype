@@ -908,22 +908,23 @@
 
     exec->pedantic_hinting = pedantic;
 
-    /* allow font program execution */
-    TT_Set_CodeRange( exec,
-                      tt_coderange_font,
-                      face->font_program,
-                      (FT_Long)face->font_program_size );
-
     /* disable CVT and glyph programs coderange */
     TT_Clear_CodeRange( exec, tt_coderange_cvt );
     TT_Clear_CodeRange( exec, tt_coderange_glyph );
 
     if ( face->font_program_size > 0 )
     {
-      TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
+      /* allow font program execution */
+      TT_Set_CodeRange( exec,
+                        tt_coderange_font,
+                        face->font_program,
+                        (FT_Long)face->font_program_size );
+
+      exec->pts.n_points   = 0;
+      exec->pts.n_contours = 0;
 
       FT_TRACE4(( "Executing `fpgm' table.\n" ));
-      error = face->interpreter( exec );
+      error = TT_Run_Context( exec, size );
       FT_TRACE4(( error ? "  failed (error code 0x%x)\n" : "",
                   error ));
     }
@@ -989,19 +990,21 @@
 
     exec->pedantic_hinting = pedantic;
 
-    TT_Set_CodeRange( exec,
-                      tt_coderange_cvt,
-                      face->cvt_program,
-                      (FT_Long)face->cvt_program_size );
-
     TT_Clear_CodeRange( exec, tt_coderange_glyph );
 
     if ( face->cvt_program_size > 0 )
     {
-      TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
+      /* allow CV program execution */
+      TT_Set_CodeRange( exec,
+                        tt_coderange_cvt,
+                        face->cvt_program,
+                        (FT_Long)face->cvt_program_size );
+
+      exec->pts.n_points   = 0;
+      exec->pts.n_contours = 0;
 
       FT_TRACE4(( "Executing `prep' table.\n" ));
-      error = face->interpreter( exec );
+      error = TT_Run_Context( exec, size );
       FT_TRACE4(( error ? "  failed (error code 0x%x)\n" : "",
                   error ));
     }
