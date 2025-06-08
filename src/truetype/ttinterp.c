@@ -374,45 +374,6 @@
   }
 
 
-  /**************************************************************************
-   *
-   * @Function:
-   *   TT_Run_Context
-   *
-   * @Description:
-   *   Executes one or more instructions in the execution context.
-   *
-   * @Input:
-   *   exec ::
-   *     A handle to the target execution context.
-   *
-   * @Return:
-   *   TrueType error code.  0 means success.
-   */
-  FT_LOCAL_DEF( FT_Error )
-  TT_Run_Context( TT_ExecContext  exec,
-                  TT_Size         size )
-  {
-    exec->zp0 = exec->pts;
-    exec->zp1 = exec->pts;
-    exec->zp2 = exec->pts;
-
-    exec->twilight = size->twilight;
-
-    /* reset graphics state */
-    exec->GS = size->GS;
-
-    /* some glyphs leave something on the stack. so we clean it */
-    /* before a new execution.                                  */
-    exec->top     = 0;
-    exec->callTop = 0;
-
-    exec->instruction_trap = FALSE;
-
-    return exec->interpreter( exec );
-  }
-
-
   /* documentation is in ttinterp.h */
 
   FT_EXPORT_DEF( TT_ExecContext )
@@ -2110,59 +2071,6 @@
     }
 
     return val;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   Compute_Round
-   *
-   * @Description:
-   *   Sets the rounding mode.
-   *
-   * @Input:
-   *   round_mode ::
-   *     The rounding mode to be used.
-   */
-  static void
-  Compute_Round( TT_ExecContext  exc,
-                 FT_Byte         round_mode )
-  {
-    switch ( round_mode )
-    {
-    case TT_Round_Off:
-      exc->func_round = (TT_Round_Func)Round_None;
-      break;
-
-    case TT_Round_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Grid;
-      break;
-
-    case TT_Round_Up_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_Up_To_Grid;
-      break;
-
-    case TT_Round_Down_To_Grid:
-      exc->func_round = (TT_Round_Func)Round_Down_To_Grid;
-      break;
-
-    case TT_Round_To_Half_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Half_Grid;
-      break;
-
-    case TT_Round_To_Double_Grid:
-      exc->func_round = (TT_Round_Func)Round_To_Double_Grid;
-      break;
-
-    case TT_Round_Super:
-      exc->func_round = (TT_Round_Func)Round_Super;
-      break;
-
-    case TT_Round_Super_45:
-      exc->func_round = (TT_Round_Func)Round_Super_45;
-      break;
-    }
   }
 
 
@@ -6836,82 +6744,8 @@
   TT_RunIns( void*  exec )
   {
     TT_ExecContext  exc = (TT_ExecContext)exec;
+    FT_ULong        ins_counter = 0;
 
-    FT_ULong   ins_counter = 0;  /* executed instructions counter */
-    FT_ULong   num_twilight_points;
-
-
-    /* We restrict the number of twilight points to a reasonable,     */
-    /* heuristic value to avoid slow execution of malformed bytecode. */
-    num_twilight_points = FT_MAX( 30,
-                                  2 * ( exc->pts.n_points + exc->cvtSize ) );
-    if ( exc->twilight.n_points > num_twilight_points )
-    {
-      if ( num_twilight_points > 0xFFFFU )
-        num_twilight_points = 0xFFFFU;
-
-      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
-      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
-                  exc->twilight.n_points,
-                  num_twilight_points ));
-      exc->twilight.n_points = (FT_UShort)num_twilight_points;
-    }
-
-    /* Set up loop detectors.  We restrict the number of LOOPCALL loops */
-    /* and the number of JMPR, JROT, and JROF calls with a negative     */
-    /* argument to values that depend on various parameters like the    */
-    /* size of the CVT table or the number of points in the current     */
-    /* glyph (if applicable).                                           */
-    /*                                                                  */
-    /* The idea is that in real-world bytecode you either iterate over  */
-    /* all CVT entries (in the `prep' table), or over all points (or    */
-    /* contours, in the `glyf' table) of a glyph, and such iterations   */
-    /* don't happen very often.                                         */
-    exc->loopcall_counter = 0;
-    exc->neg_jump_counter = 0;
-
-    /* The maximum values are heuristic. */
-    if ( exc->pts.n_points )
-      exc->loopcall_counter_max = FT_MAX( 50,
-                                          10 * exc->pts.n_points ) +
-                                  FT_MAX( 50,
-                                          exc->cvtSize / 10 );
-    else
-      exc->loopcall_counter_max = 300 + 22 * exc->cvtSize;
-
-    /* as a protection against an unreasonable number of CVT entries  */
-    /* we assume at most 100 control values per glyph for the counter */
-    if ( exc->loopcall_counter_max >
-         100 * (FT_ULong)exc->face->root.num_glyphs )
-      exc->loopcall_counter_max = 100 * (FT_ULong)exc->face->root.num_glyphs;
-
-    FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
-                " to %ld\n", exc->loopcall_counter_max ));
-
-    exc->neg_jump_counter_max = exc->loopcall_counter_max;
-    FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
-                " to %ld\n", exc->neg_jump_counter_max ));
-
-    /* set PPEM and CVT functions */
-    if ( exc->metrics.x_ppem != exc->metrics.y_ppem )
-    {
-      /* non-square pixels, use the stretched routines */
-      exc->func_cur_ppem  = Current_Ppem_Stretched;
-      exc->func_read_cvt  = Read_CVT_Stretched;
-      exc->func_write_cvt = Write_CVT_Stretched;
-      exc->func_move_cvt  = Move_CVT_Stretched;
-    }
-    else
-    {
-      /* square pixels, use normal routines */
-      exc->func_cur_ppem  = Current_Ppem;
-      exc->func_read_cvt  = Read_CVT;
-      exc->func_write_cvt = Write_CVT;
-      exc->func_move_cvt  = Move_CVT;
-    }
-
-    Compute_Funcs( exc );
-    Compute_Round( exc, (FT_Byte)exc->GS.round_state );
 
     do
     {
@@ -7596,6 +7430,119 @@
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", exc->error ));
 
     return exc->error;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Run_Context
+   *
+   * @Description:
+   *   Executes one or more instructions in the execution context.
+   *
+   * @Input:
+   *   exec ::
+   *     A handle to the target execution context.
+   *
+   * @Return:
+   *   TrueType error code.  0 means success.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Run_Context( TT_ExecContext  exec,
+                  TT_Size         size )
+  {
+    FT_ULong   num_twilight_points;
+
+
+    exec->zp0 = exec->pts;
+    exec->zp1 = exec->pts;
+    exec->zp2 = exec->pts;
+
+    exec->twilight = size->twilight;
+
+    /* We restrict the number of twilight points to a reasonable,     */
+    /* heuristic value to avoid slow execution of malformed bytecode. */
+    num_twilight_points = FT_MAX( 30,
+                                  2 * ( exec->pts.n_points + exec->cvtSize ) );
+    if ( exec->twilight.n_points > num_twilight_points )
+    {
+      if ( num_twilight_points > 0xFFFFU )
+        num_twilight_points = 0xFFFFU;
+
+      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
+      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
+                  exec->twilight.n_points,
+                  num_twilight_points ));
+      exec->twilight.n_points = (FT_UShort)num_twilight_points;
+    }
+
+    /* Set up loop detectors.  We restrict the number of LOOPCALL loops */
+    /* and the number of JMPR, JROT, and JROF calls with a negative     */
+    /* argument to values that depend on various parameters like the    */
+    /* size of the CVT table or the number of points in the current     */
+    /* glyph (if applicable).                                           */
+    /*                                                                  */
+    /* The idea is that in real-world bytecode you either iterate over  */
+    /* all CVT entries (in the `prep' table), or over all points (or    */
+    /* contours, in the `glyf' table) of a glyph, and such iterations   */
+    /* don't happen very often.                                         */
+    exec->loopcall_counter = 0;
+    exec->neg_jump_counter = 0;
+
+    /* The maximum values are heuristic. */
+    if ( exec->pts.n_points )
+      exec->loopcall_counter_max = FT_MAX( 50,
+                                           10 * exec->pts.n_points ) +
+                                   FT_MAX( 50,
+                                           exec->cvtSize / 10 );
+    else
+      exec->loopcall_counter_max = 300 + 22 * exec->cvtSize;
+
+    /* as a protection against an unreasonable number of CVT entries  */
+    /* we assume at most 100 control values per glyph for the counter */
+    if ( exec->loopcall_counter_max >
+         100 * (FT_ULong)exec->face->root.num_glyphs )
+      exec->loopcall_counter_max = 100 * (FT_ULong)exec->face->root.num_glyphs;
+
+    FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
+                " to %ld\n", exec->loopcall_counter_max ));
+
+    exec->neg_jump_counter_max = exec->loopcall_counter_max;
+    FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
+                " to %ld\n", exec->neg_jump_counter_max ));
+
+    /* set PPEM and CVT functions */
+    if ( exec->metrics.x_ppem != exec->metrics.y_ppem )
+    {
+      /* non-square pixels, use the stretched routines */
+      exec->func_cur_ppem  = Current_Ppem_Stretched;
+      exec->func_read_cvt  = Read_CVT_Stretched;
+      exec->func_write_cvt = Write_CVT_Stretched;
+      exec->func_move_cvt  = Move_CVT_Stretched;
+    }
+    else
+    {
+      /* square pixels, use normal routines */
+      exec->func_cur_ppem  = Current_Ppem;
+      exec->func_read_cvt  = Read_CVT;
+      exec->func_write_cvt = Write_CVT;
+      exec->func_move_cvt  = Move_CVT;
+    }
+
+    /* reset graphics state */
+    exec->GS         = size->GS;
+    exec->func_round = (TT_Round_Func)Round_To_Grid;
+    Compute_Funcs( exec );
+
+    /* some glyphs leave something on the stack, */
+    /* so we clean it before a new execution.    */
+    exec->top     = 0;
+    exec->callTop = 0;
+
+    exec->instruction_trap = FALSE;
+
+    return exec->interpreter( exec );
   }
 
 #else /* !TT_USE_BYTECODE_INTERPRETER */
