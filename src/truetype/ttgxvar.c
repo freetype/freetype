@@ -4249,7 +4249,7 @@
                               FT_Outline*  outline,
                               FT_Vector*   unrounded )
   {
-    FT_Error   error;
+    FT_Error   error       = FT_Err_Ok;
     TT_Face    face        = loader->face;
     FT_Stream  stream      = face->root.stream;
     FT_Memory  memory      = stream->memory;
