@@ -436,7 +436,7 @@ FT_BEGIN_HEADER
    *
    *   The canonical source for Microsoft's IDs is
    *
-   *     https://docs.microsoft.com/en-us/windows/desktop/Intl/language-identifier-constants-and-strings ,
+   *     https://learn.microsoft.com/windows/win32/intl/language-identifier-constants-and-strings ,
    *
    *   however, we only provide macros for language identifiers present in
    *   the OpenType specification: Microsoft has abandoned the concept of

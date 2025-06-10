@@ -368,7 +368,7 @@ FT_BEGIN_HEADER
    *   iteratively retrieve the colored glyph layers associated with the
    *   current glyph slot.
    *
-   *     https://docs.microsoft.com/en-us/typography/opentype/spec/colr
+   *     https://learn.microsoft.com/typography/opentype/spec/colr
    *
    *   The glyph layer data for a given glyph index, if present, provides an
    *   alternative, multi-color glyph representation: Instead of rendering

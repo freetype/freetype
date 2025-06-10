@@ -178,7 +178,7 @@ CHANGES BETWEEN 2.12.1 and 2.13.0 (2023-Feb-09)
 
   - The 'COLR' v1 API is now considered as stable.
 
-      https://learn.microsoft.com/en-us/typography/opentype/spec/colr
+      https://learn.microsoft.com/typography/opentype/spec/colr
 
 
   II. MISCELLANEOUS
@@ -2091,7 +2091,7 @@ CHANGES BETWEEN 2.4.10 and 2.4.11 (2012-Dec-20)
     - Subpixel  hinting support  has been  contributed by  Infinality,
       based on Greg Hitchcock's whitepaper at
 
-        https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
+        https://learn.microsoft.com/typography/cleartype/truetypecleartype
 
       Originally, it was a separate patch available from
 

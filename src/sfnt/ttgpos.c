@@ -10,7 +10,7 @@
  *   https://github.com/nothings/stb/blob/master/stb_truetype.h
  *
  *   GPOS spec reference available at:
- *   https://learn.microsoft.com/en-us/typography/opentype/spec/gpos
+ *   https://learn.microsoft.com/typography/opentype/spec/gpos
  *
  * Copyright (C) 2024 by
  * David Saltzman
