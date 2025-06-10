@@ -3897,8 +3897,10 @@ FT_BEGIN_HEADER
    *
    *   This process can cost performance.  There is an approximation that
    *   does not need to know about the background color; see
-   *   https://bel.fi/alankila/lcd/ and
-   *   https://bel.fi/alankila/lcd/alpcor.html for details.
+   *   https://web.archive.org/web/20211019204945/https://bel.fi/alankila/lcd/
+   *   and
+   *   https://web.archive.org/web/20210211002939/https://bel.fi/alankila/lcd/alpcor.html
+   *   for details.
    *
    *   **ATTENTION**: Linear blending is even more important when dealing
    *   with subpixel-rendered glyphs to prevent color-fringing!  A
