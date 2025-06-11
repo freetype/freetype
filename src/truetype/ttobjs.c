@@ -80,9 +80,9 @@
       FT_FREE( zone->org );
       FT_FREE( zone->orus );
 
-      zone->max_points   = zone->n_points   = 0;
-      zone->max_contours = zone->n_contours = 0;
-      zone->memory       = NULL;
+      zone->n_points   = 0;
+      zone->n_contours = 0;
+      zone->memory     = NULL;
     }
   }
 
@@ -134,8 +134,8 @@
     }
     else
     {
-      zone->max_points   = maxPoints;
-      zone->max_contours = maxContours;
+      zone->n_points   = maxPoints;
+      zone->n_contours = maxContours;
     }
 
     return error;
@@ -1137,8 +1137,6 @@
     error = tt_glyphzone_new( memory, n_twilight, 0, &size->twilight );
     if ( error )
       goto Exit;
-
-    size->twilight.n_points = n_twilight;
 
     size->GS = tt_default_graphics_state;
 

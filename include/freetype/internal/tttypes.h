@@ -1616,12 +1616,6 @@ FT_BEGIN_HEADER
    *   memory ::
    *     A handle to the memory manager.
    *
-   *   max_points ::
-   *     The maximum size in points of the zone.
-   *
-   *   max_contours ::
-   *     Max size in links contours of the zone.
-   *
    *   n_points ::
    *     The current number of points in the zone.
    *
@@ -1646,8 +1640,6 @@ FT_BEGIN_HEADER
   typedef struct  TT_GlyphZoneRec_
   {
     FT_Memory   memory;
-    FT_UShort   max_points;
-    FT_UShort   max_contours;
     FT_UShort   n_points;    /* number of points in zone    */
     FT_UShort   n_contours;  /* number of contours          */
 
