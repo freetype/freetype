@@ -4392,9 +4392,7 @@
     p              += points_out_size;
     has_delta       = (FT_Bool*)p;
 
-    FT_MEM_SET( point_deltas_x,
-                0,
-                2 * n_points * sizeof ( point_deltas_x[0] ) );
+    FT_ARRAY_ZERO( point_deltas_x, 2 * n_points );
 
     im_start_coords = peak_coords + blend->num_axis;
     im_end_coords   = im_start_coords + blend->num_axis;

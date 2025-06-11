@@ -488,8 +488,7 @@
     int        j, k;
 
 
-    FT_MEM_SET( num_matched_ids, 0,
-                sizeof ( int ) * TRICK_SFNT_IDS_NUM_FACES );
+    FT_ARRAY_ZERO( num_matched_ids, TRICK_SFNT_IDS_NUM_FACES );
     has_cvt  = FALSE;
     has_fpgm = FALSE;
     has_prep = FALSE;
@@ -1180,21 +1179,12 @@
     /* rescale CVT when needed */
     if ( size->cvt_ready < 0 )
     {
-      FT_UShort  i;
-
-
       /* all twilight points are originally zero */
-      for ( i = 0; i < size->twilight.n_points; i++ )
-      {
-        size->twilight.org[i].x = 0;
-        size->twilight.org[i].y = 0;
-        size->twilight.cur[i].x = 0;
-        size->twilight.cur[i].y = 0;
-      }
+      FT_ARRAY_ZERO( size->twilight.org, size->twilight.n_points );
+      FT_ARRAY_ZERO( size->twilight.cur, size->twilight.n_points );
 
       /* clear storage area */
-      for ( i = 0; i < size->storage_size; i++ )
-        size->storage[i] = 0;
+      FT_ARRAY_ZERO( size->storage, size->storage_size );
 
       size->GS = tt_default_graphics_state;
 
