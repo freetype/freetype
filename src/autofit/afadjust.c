@@ -1463,7 +1463,11 @@
           /* The auto-hinter could then perform a topological analysis  */
           /* to do the right thing.                                     */
 
-          if ( !( globals->glyph_styles[glyph] & AF_HAS_CMAP_ENTRY ) )
+          /* A glyph index in a lookup might be virtual (i.e., its */
+          /* value might be larger than the number of glyphs); we  */
+          /* ignore such cases.                                    */
+          if ( !( glyph < face->num_glyphs                             &&
+                  ( globals->glyph_styles[glyph] & AF_HAS_CMAP_ENTRY ) ) )
           {
             error = ft_hash_num_insert( glyph, codepoint, *map, memory );
             if ( error )
