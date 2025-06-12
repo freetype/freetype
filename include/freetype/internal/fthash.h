@@ -117,6 +117,18 @@ FT_BEGIN_HEADER
                       FT_Hash    hash,
                       FT_Memory  memory );
 
+  FT_Error
+  ft_hash_str_insert_no_overwrite( const char*  key,
+                                   size_t       data,
+                                   FT_Hash      hash,
+                                   FT_Memory    memory );
+
+  FT_Error
+  ft_hash_num_insert_no_overwrite( FT_Int     num,
+                                   size_t     data,
+                                   FT_Hash    hash,
+                                   FT_Memory  memory );
+
   size_t*
   ft_hash_str_lookup( const char*  key,
                       FT_Hash      hash );

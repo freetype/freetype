@@ -233,7 +233,8 @@
   hash_insert( FT_Hashkey  key,
                size_t      data,
                FT_Hash     hash,
-               FT_Memory   memory )
+               FT_Memory   memory,
+               FT_Bool     overwrite )
   {
     FT_Hashnode   nn;
     FT_Hashnode*  bp    = hash_bucket( key, hash );
@@ -259,7 +260,7 @@
 
       hash->used++;
     }
-    else
+    else if ( overwrite )
       nn->data = data;
 
   Exit:
@@ -278,7 +279,7 @@
 
     hk.str = key;
 
-    return hash_insert( hk, data, hash, memory );
+    return hash_insert( hk, data, hash, memory, TRUE );
   }
 
 
@@ -293,7 +294,37 @@
 
     hk.num = num;
 
-    return hash_insert( hk, data, hash, memory );
+    return hash_insert( hk, data, hash, memory, TRUE );
+  }
+
+
+  FT_Error
+  ft_hash_str_insert_no_overwrite( const char*  key,
+                                   size_t       data,
+                                   FT_Hash      hash,
+                                   FT_Memory    memory )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.str = key;
+
+    return hash_insert( hk, data, hash, memory, FALSE );
+  }
+
+
+  FT_Error
+  ft_hash_num_insert_no_overwrite( FT_Int     num,
+                                   size_t     data,
+                                   FT_Hash    hash,
+                                   FT_Memory  memory )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.num = num;
+
+    return hash_insert( hk, data, hash, memory, FALSE );
   }
 
 
