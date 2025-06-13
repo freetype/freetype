@@ -1226,8 +1226,6 @@
   {
     hb_codepoint_t  lookup_index = HB_SET_VALUE_INVALID;
 
-    FT_UNUSED( globals );
-
 
     /* Iterate over all lookups. */
     while ( hb( set_next )( gsub_lookups, &lookup_index ) )
@@ -1235,6 +1233,9 @@
       FT_Bool       lookup_done  = FALSE;
       unsigned int  start_offset = 0;
 
+
+      if ( !globals->gsub_lookups_single_alternate[lookup_index] )
+        continue;
 
       while ( !lookup_done )
       {
@@ -1389,7 +1390,33 @@
                                        HB_OT_TAG_GSUB,
                                        script_tags, NULL, NULL,
                                        gsub_lookups );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+      {
+        hb_codepoint_t  idx;
+        FT_Bool         have_idx = FALSE;
+
+
+        FT_TRACE4(( "  GSUB lookups to check:\n" ));
+
+        FT_TRACE4(( "  " ));
+        idx = HB_SET_VALUE_INVALID;
+        while ( hb( set_next )( gsub_lookups, &idx ) )
+          if ( globals->gsub_lookups_single_alternate[idx] )
+          {
+            have_idx = TRUE;
+            FT_TRACE4(( "  %u", idx ));
+          }
+        if ( !have_idx )
+          FT_TRACE4(( "  (none)" ));
+        FT_TRACE4(( "\n" ));
+
+        FT_TRACE4(( "\n" ));
+      }
+#endif
+
     }
+
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     /* Insert all glyphs from the database that have entries in the cmap. */
