@@ -1,10 +1,10 @@
 /****************************************************************************
  *
- * autofit.c
+ * afgsub.h
  *
- *   Auto-fitter module (body).
+ *   Auto-fitter routines to parse the GSUB table (header).
  *
- * Copyright (C) 2003-2024 by
+ * Copyright (C) 2025 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -15,24 +15,24 @@
  *
  */
 
+#ifndef AFGSUB_H_
+#define AFGSUB_H_
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
+#include "afglobal.h"
 
-#include "ft-hb.c"
-#include "ft-hb-ft.c"
-#include "afadjust.c"
-#include "afblue.c"
-#include "afcjk.c"
-#include "afdummy.c"
-#include "afglobal.c"
-#include "afgsub.c"
-#include "afhints.c"
-#include "afindic.c"
-#include "aflatin.c"
-#include "afloader.c"
-#include "afmodule.c"
-#include "afranges.c"
-#include "afshaper.c"
 
+FT_BEGIN_HEADER
+
+  FT_LOCAL( void )
+  af_parse_gsub( AF_FaceGlobals  globals );
+
+  FT_LOCAL( FT_Error )
+  af_map_lookup( AF_FaceGlobals  globals,
+                 FT_Hash         map,
+                 FT_UInt32       lookup_offset );
+
+FT_END_HEADER
+
+#endif /* AFGSUB_H_ */
 
 /* END */
