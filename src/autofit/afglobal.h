@@ -113,6 +113,13 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     hb_font_t*       hb_font;
     hb_buffer_t*     hb_buf;           /* for feature comparison */
+
+    /* The GSUB table. */
+    FT_ULong         gsub_length;
+    FT_Byte*         gsub;
+
+    /* Lookup offsets, with only SingleSubst and AlternateSubst non-NULL. */
+    FT_UInt32*       gsub_lookups_single_alternate;
 #endif
 
     /* per-face auto-hinter properties */
