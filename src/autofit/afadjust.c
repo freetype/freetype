@@ -18,6 +18,9 @@
  */
 
 #include "afadjust.h"
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+#  include "afgsub.h"
+#endif
 
 #include <freetype/freetype.h>
 #include <freetype/internal/ftobjs.h>
@@ -1169,6 +1172,108 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+
+  static FT_Error
+  add_substitute( FT_UInt    glyph_idx,
+                  size_t     value,
+                  FT_UInt32  codepoint,
+                  FT_Hash    reverse_map,
+                  FT_Hash    subst_map,
+                  FT_Memory  memory )
+  {
+    FT_Error  error;
+
+    FT_UInt  first_substitute = value & 0xFFFF;
+
+    FT_UInt  used = reverse_map->used;
+
+
+    /*
+      OpenType features like 'unic' map lowercase letter glyphs to uppercase
+      forms (and vice versa), which could lead to the use of wrong entries
+      in the adjustment database.  For this reason we don't overwrite,
+      prioritizing cmap entries.
+
+      XXX Note, however, that this cannot cover all cases since there might
+      be contradictory entries for glyphs not in the cmap.  A possible
+      solution might be to specially mark pairs of related lowercase and
+      uppercase characters in the adjustment database that have diacritics
+      on different vertical sides (for example, U+0122 'Ģ' and U+0123 'ģ'). 
+      The auto-hinter could then perform a topological analysis to do the
+      right thing.
+    */
+    error = ft_hash_num_insert_no_overwrite( first_substitute, codepoint,
+                                             reverse_map, memory );
+    if ( error )
+      return error;
+
+    if ( reverse_map->used > used )
+    {
+      size_t*  subst = ft_hash_num_lookup( first_substitute, subst_map );
+
+
+      if ( subst )
+      {
+        error = add_substitute( first_substitute, *subst, codepoint,
+                                reverse_map, subst_map, memory );
+        if ( error )
+          return error;
+      }
+    }
+
+    /* The remaining substitutes. */
+    if ( value & 0xFFFF0000U )
+    {
+      FT_UInt  num_substitutes = value >> 16;
+
+      FT_UInt  i;
+
+
+      for ( i = 1; i <= num_substitutes; i++ )
+      {
+        size_t*  substitute = ft_hash_num_lookup( glyph_idx + ( i << 16 ),
+                                                  subst_map );
+
+
+        used = reverse_map->used;
+
+        error = ft_hash_num_insert_no_overwrite( *substitute,
+                                                 codepoint,
+                                                 reverse_map,
+                                                 memory );
+        if ( error )
+          return error;
+
+        if ( reverse_map->used > used )
+        {
+          size_t*  subst = ft_hash_num_lookup( *substitute, subst_map );
+
+
+          if ( subst )
+          {
+            error = add_substitute( *substitute, *subst, codepoint,
+                                    reverse_map, subst_map, memory );
+            if ( error )
+              return error;
+          }
+        }
+      }
+    }
+
+    return FT_Err_Ok;
+  }
+
+#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
+
+
+  /* Construct a 'reverse cmap' (i.e., a mapping from glyph indices to   */
+  /* character codes) for all glyphs that an input code point could turn */
+  /* into.                                                               */
+  /*                                                                     */
+  /* If HarfBuzz support is not available, this is the direct inversion  */
+  /* of the cmap table, otherwise the mapping gets extended with data    */
+  /* from the 'GSUB' table.                                              */
   FT_LOCAL_DEF( FT_Error )
   af_reverse_character_map_new( FT_Hash         *map,
                                 AF_StyleMetrics  metrics )
@@ -1183,19 +1288,6 @@
 
     FT_UInt32  codepoint;
     FT_Offset  i;
-
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    /* The next four variables are initialized to avoid compiler warnings. */
-    hb_font_t  *hb_font = NULL;
-    hb_face_t  *hb_face = NULL;
-
-    hb_set_t  *gsub_lookups = NULL;
-
-    hb_script_t  script;
-
-    unsigned int  script_count   = 1;
-    hb_tag_t      script_tags[2] = { HB_TAG_NONE, HB_TAG_NONE };
-#endif
 
 
     FT_TRACE4(( "af_reverse_character_map_new:"
@@ -1219,9 +1311,69 @@
     if ( error )
       goto Exit;
 
+    /* Initialize reverse cmap with data directly from the cmap table. */
+    for ( i = 0; i < AF_ADJUSTMENT_DATABASE_LENGTH; i++ )
+    {
+      FT_Int  cmap_glyph;
+
+
+      /*
+        We cannot restrict `codepoint` to character ranges; we have no
+        control what data the script-specific portion of the GSUB table
+        actually holds.
+
+        An example is `arial.ttf` version 7.00; in this font, there are
+        lookups for Cyrillic (lookup 43), Greek (lookup 44), and Latin
+        (lookup 45) that map capital letter glyphs to small capital glyphs.
+        It is tempting to expect that script-specific versions of the 'c2sc'
+        feature only use script-specific lookups.  However, this is not the
+        case in this font: the feature uses all three lookups regardless of
+        the script.
+
+        The auto-hinter, while assigning glyphs to styles, uses the first
+        coverage result it encounters for a particular glyph.  For example,
+        if the coverage for Cyrillic is tested before Latin (as is currently
+        the case), glyphs without a cmap entry that are covered in 'c2sc'
+        are treated as Cyrillic.
+
+        If we now look at glyph 3498, which is a small-caps version of the
+        Latin character 'A grave' (U+00C0, glyph 172), we can see that it is
+        registered as belonging to a Cyrillic style due to the algorithm
+        just described.  As a result, checking only for characters from the
+        Latin range would miss this glyph; we thus have to test all
+        character codes in the database.
+      */
+      codepoint = adjustment_database[i].codepoint;
+
+      cmap_glyph = FT_Get_Char_Index( face, codepoint );
+      if ( cmap_glyph == 0 )
+        continue;
+
+      error = ft_hash_num_insert( cmap_glyph, codepoint, *map, memory );
+      if ( error )
+        goto Exit;
+    }
+
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
     {
+      hb_font_t  *hb_font;
+      hb_face_t  *hb_face;
+
+      hb_set_t    *gsub_lookups;
+      hb_script_t  script;
+
+      unsigned int  script_count   = 1;
+      hb_tag_t      script_tags[2] = { HB_TAG_NONE, HB_TAG_NONE };
+
+      FT_Hash  subst_map = NULL;
+
+      hb_codepoint_t  idx;
+      FT_UInt         hash_idx;
+      FT_Int          glyph_idx;
+      size_t          value;
+
+
       /* No need to check whether HarfBuzz has allocation issues; */
       /* it continues to work in such cases and simply returns    */
       /* 'empty' objects that do nothing.                         */
@@ -1245,8 +1397,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
       {
-        hb_codepoint_t  idx;
-        FT_Bool         have_idx = FALSE;
+        FT_Bool  have_idx = FALSE;
 
 
         FT_TRACE4(( "  GSUB lookups to check:\n" ));
@@ -1267,16 +1418,90 @@
       }
 #endif
 
+      if ( FT_QNEW( subst_map ) )
+        goto Exit_HarfBuzz;
+
+      error = ft_hash_num_init( subst_map, memory );
+      if ( error )
+        goto Exit_HarfBuzz;
+
+      idx = HB_SET_VALUE_INVALID;
+      while ( hb( set_next )( gsub_lookups, &idx ) )
+      {
+        FT_UInt32  offset = globals->gsub_lookups_single_alternate[idx];
+
+
+        /* Put all substitutions into a single hash table.  Note that   */
+        /* the hash values usually contain more than a single character */
+        /* code; this can happen if different 'SingleSubst' subtables   */
+        /* map a given glyph index to different substitutions, or if    */
+        /* 'AlternateSubst' subtable entries are present.               */
+        if ( offset )
+          af_map_lookup( globals, subst_map, offset );
+      }
+
+      /*
+        Now iterate over the collected substitution data in `subst_map`
+        (using recursion to resolve one-to-many mappings) and insert the
+        data into the reverse cmap.
+
+        As an example, suppose we have the following cmap and substitution
+        data:
+
+          cmap: X -> a
+                Y -> b
+                Z -> c
+
+          substitutions: a -> b
+                         b -> c, d
+                         d -> e
+
+        The reverse map now becomes as follows.
+
+          a -> X
+          b -> Y
+          c -> Z (via cmap, ignoring mapping from 'b')
+          d -> Y (via 'b')
+          e -> Y (via 'b' and 'd')
+      */
+
+      hash_idx = 0;
+      while ( ft_hash_num_iterator( &hash_idx,
+                                    &glyph_idx,
+                                    &value,
+                                    subst_map ) )
+      {
+        size_t*  val;
+
+
+        /* Ignore keys that do not point to the first substitute. */
+        if ( glyph_idx & 0xFFFF0000 )
+          continue;
+
+        /* Ignore glyph indices that are not related to accents. */
+        val = ft_hash_num_lookup( glyph_idx, *map );
+        if ( !val )
+          continue;
+
+        codepoint = *val;
+
+        error = add_substitute( glyph_idx, value, codepoint,
+                                *map, subst_map, memory );
+        if ( error )
+          break;
+      }
+
+    Exit_HarfBuzz:
+      hb( set_destroy )( gsub_lookups );
+
+      ft_hash_num_free( subst_map, memory );
+      FT_FREE( subst_map );
+
+      if ( error )
+        goto Exit;
     }
 
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-    if ( hb( version_atleast )( 7, 2, 0 ) )
-    {
-      hb( set_destroy )( gsub_lookups );
-    }
-#endif
 
     FT_TRACE4(( "    reverse character map built successfully"
                 " with %d entries\n", ( *map )->used ));
