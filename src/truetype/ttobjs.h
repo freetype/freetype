@@ -384,8 +384,8 @@ FT_BEGIN_HEADER
                     FT_Bool  pedantic );
 
   FT_LOCAL( FT_Error )
-  tt_size_ready_bytecode( TT_Size  size,
-                          FT_Bool  pedantic );
+  tt_size_init_bytecode( TT_Size  size,
+                         FT_Bool  pedantic );
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 

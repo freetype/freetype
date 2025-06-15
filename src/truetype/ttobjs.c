@@ -1031,11 +1031,9 @@
 
 
   static void
-  tt_size_done_bytecode( FT_Size  ftsize )
+  tt_size_done_bytecode( TT_Size  size )
   {
-    TT_Size    size   = (TT_Size)ftsize;
-    TT_Face    face   = (TT_Face)ftsize->face;
-    FT_Memory  memory = face->root.memory;
+    FT_Memory  memory = size->root.face->memory;
 
     if ( size->context )
     {
@@ -1071,14 +1069,13 @@
 
   /* Initialize bytecode-related fields in the size object.       */
   /* We do this only if bytecode interpretation is really needed. */
-  static FT_Error
-  tt_size_init_bytecode( FT_Size  ftsize,
+  FT_LOCAL_DEF( FT_Error )
+  tt_size_init_bytecode( TT_Size  size,
                          FT_Bool  pedantic )
   {
     FT_Error   error;
-    TT_Size    size = (TT_Size)ftsize;
-    TT_Face    face = (TT_Face)ftsize->face;
-    FT_Memory  memory = face->root.memory;
+    TT_Face    face = (TT_Face)size->root.face;
+    FT_Memory  memory = size->root.face->memory;
 
     FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
@@ -1098,6 +1095,8 @@
     size->cvt_ready      = -1;
 
     size->context = TT_New_Context( (TT_Driver)face->root.driver );
+    if ( !size->context )
+      return FT_THROW( Could_Not_Find_Context );
 
     size->max_function_defs    = maxp->maxFunctionDefs;
     size->max_instruction_defs = maxp->maxInstructionDefs;
@@ -1165,33 +1164,8 @@
 
   Exit:
     if ( error )
-      tt_size_done_bytecode( ftsize );
+      tt_size_done_bytecode( size );
 
-    return error;
-  }
-
-
-  FT_LOCAL_DEF( FT_Error )
-  tt_size_ready_bytecode( TT_Size  size,
-                          FT_Bool  pedantic )
-  {
-    FT_Error  error = FT_Err_Ok;
-
-
-    if ( size->bytecode_ready < 0 )
-      error = tt_size_init_bytecode( (FT_Size)size, pedantic );
-    else
-      error = size->bytecode_ready;
-
-    if ( error )
-      goto Exit;
-
-    if ( size->cvt_ready < 0 )
-      error = tt_size_run_prep( size, pedantic );
-    else
-      error = size->cvt_ready;
-
-  Exit:
     return error;
   }
 
@@ -1251,7 +1225,7 @@
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    tt_size_done_bytecode( ttsize );
+    tt_size_done_bytecode( size );
 #endif
 
     size->ttmetrics.valid = FALSE;
