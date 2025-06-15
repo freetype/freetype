@@ -210,8 +210,7 @@ FT_BEGIN_HEADER
     TT_Set_CVT_Func    func_write_cvt; /* write a cvt entry (in pixels) */
     TT_Set_CVT_Func    func_move_cvt;  /* incr a cvt entry (in pixels)  */
 
-    FT_Bool            grayscale;      /* bi-level hinting and */
-                                       /* grayscale rendering  */
+    FT_Render_Mode     mode;           /* target render mode */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     /*
@@ -329,20 +328,6 @@ FT_BEGIN_HEADER
     /* or in native ClearType mode.                                      */
     FT_Int             backward_compatibility;
 
-    /* Using v40 implies subpixel hinting, unless FT_RENDER_MODE_MONO    */
-    /* has been requested.  Used to detect interpreter version switches. */
-    FT_Bool            subpixel_hinting_lean;
-
-    /* Long side of a LCD subpixel is vertical (e.g., screen is rotated). */
-    FT_Bool            vertical_lcd_lean;
-
-    /* ClearType hinting and grayscale rendering, as used by Universal */
-    /* Windows Platform apps (Windows 8 and above).  Like the standard */
-    /* colorful ClearType mode, it utilizes a vastly increased virtual */
-    /* resolution on the x axis.  Different from bi-level hinting and  */
-    /* grayscale rendering, the old mode from Win9x days that roughly  */
-    /* adheres to the physical pixel grid on both axes.                */
-    FT_Bool            grayscale_cleartype;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL */
 
     /* We maintain two counters (in addition to the instruction counter) */

@@ -1370,8 +1370,9 @@
 
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
            loader->exec                                             &&
-           loader->exec->subpixel_hinting_lean                      &&
-           loader->exec->grayscale_cleartype                        )
+           loader->exec->mode != FT_RENDER_MODE_MONO                &&
+           loader->exec->mode != FT_RENDER_MODE_LCD                 &&
+           loader->exec->mode != FT_RENDER_MODE_LCD_V               )
       {
         loader->pp3.x = loader->advance / 2;
         loader->pp4.x = loader->advance / 2;
@@ -2207,15 +2208,9 @@
     {
       FT_Error        error;
       TT_ExecContext  exec;
-      FT_Bool         pedantic  = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
-      FT_Bool         grayscale = TRUE;
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      FT_Bool         subpixel_hinting_lean;
-      FT_Bool         grayscale_cleartype;
-      TT_Driver       driver = (TT_Driver)FT_FACE_DRIVER( glyph->face );
-#endif
-
-      FT_Bool  reexecute = FALSE;
+      FT_Render_Mode  mode     = FT_LOAD_TARGET_MODE( load_flags );
+      FT_Bool         pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
+      TT_Driver       driver   = (TT_Driver)FT_FACE_DRIVER( glyph->face );
 
 
       if ( size->bytecode_ready < 0 || size->cvt_ready < 0 )
@@ -2236,73 +2231,21 @@
 
       exec->pedantic_hinting = pedantic;
 
-      grayscale = FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                             FT_RENDER_MODE_MONO             );
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
+      /* we likely need to re-execute the CV program if the mode changed */
+      if ( mode != exec->mode                                           &&
+           ( driver->interpreter_version != TT_INTERPRETER_VERSION_35 ||
+             ( exec->mode == FT_RENDER_MODE_MONO ) !=
+                   ( mode == FT_RENDER_MODE_MONO )                    ) )
       {
-        subpixel_hinting_lean =
-          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
-                   FT_RENDER_MODE_MONO               );
-        grayscale_cleartype =
-          FT_BOOL( subpixel_hinting_lean         &&
-                   !( ( load_flags         &
-                        FT_LOAD_TARGET_LCD )   ||
-                      ( load_flags           &
-                        FT_LOAD_TARGET_LCD_V ) ) );
-        exec->vertical_lcd_lean =
-          FT_BOOL( subpixel_hinting_lean    &&
-                   ( load_flags           &
-                     FT_LOAD_TARGET_LCD_V ) );
-        grayscale = FT_BOOL( grayscale && !subpixel_hinting_lean );
-
-        /* a change from mono to subpixel rendering (and vice versa) */
-        /* requires a re-execution of the CVT program                */
-        if ( subpixel_hinting_lean != exec->subpixel_hinting_lean )
-        {
-          FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
-                      " re-executing `prep' table\n" ));
-
-          exec->subpixel_hinting_lean = subpixel_hinting_lean;
-          reexecute                   = TRUE;
-        }
-
-        /* a change from colored to grayscale subpixel rendering (and */
-        /* vice versa) requires a re-execution of the CVT program     */
-        if ( grayscale_cleartype != exec->grayscale_cleartype )
-        {
-          FT_TRACE4(( "tt_loader_init: grayscale subpixel hinting change,"
-                      " re-executing `prep' table\n" ));
-
-          exec->grayscale_cleartype = grayscale_cleartype;
-          reexecute                 = TRUE;
-        }
-      }
-      else
-      {
-        subpixel_hinting_lean   = FALSE;
-        exec->vertical_lcd_lean = FALSE;
-      }
-#endif
-
-      /* a change from mono to grayscale rendering (and vice versa) */
-      /* requires a re-execution of the CVT program                 */
-      if ( grayscale != exec->grayscale )
-      {
-        FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
+        FT_TRACE4(( "tt_loader_init: rendering mode change,"
                     " re-executing `prep' table\n" ));
 
-        exec->grayscale = grayscale;
-        reexecute       = TRUE;
-      }
-
-      if ( reexecute )
-      {
         error = tt_size_run_prep( size, pedantic );
         if ( error )
           return error;
       }
+
+      exec->mode = mode;
 
       error = TT_Load_Context( exec, face, size );
       if ( error )
@@ -2331,7 +2274,7 @@
        *
        */
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-           subpixel_hinting_lean                                    &&
+           mode != FT_RENDER_MODE_MONO                              &&
            !FT_IS_TRICKY( glyph->face )                             )
         exec->backward_compatibility = ( size->GS.instruct_control & 4 ) ^ 4;
       else
