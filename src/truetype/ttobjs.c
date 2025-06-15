@@ -967,6 +967,17 @@
     FT_UInt         i;
 
 
+    /* set default GS, twilight points, and storage */
+    /* before CV program can modify them.           */
+    size->GS = tt_default_graphics_state;
+
+    /* all twilight points are originally zero */
+    FT_ARRAY_ZERO( size->twilight.org, size->twilight.n_points );
+    FT_ARRAY_ZERO( size->twilight.cur, size->twilight.n_points );
+
+    /* clear storage area */
+    FT_ARRAY_ZERO( size->storage, size->storage_size );
+
     /* Scale the cvt values to the new ppem.            */
     /* By default, we use the y ppem value for scaling. */
     FT_TRACE6(( "CVT values:\n" ));
@@ -1128,7 +1139,8 @@
          FT_NEW_ARRAY( size->storage,          size->storage_size         ) )
       goto Exit;
 
-    /* reserve twilight zone */
+    /* reserve twilight zone and set GS before fpgm is executed, */
+    /* just in case, even though fpgm should not touch them      */
     n_twilight = maxp->maxTwilightPoints;
 
     /* there are 4 phantom points (do we need this?) */
@@ -1174,20 +1186,8 @@
     if ( error )
       goto Exit;
 
-    /* rescale CVT when needed */
     if ( size->cvt_ready < 0 )
-    {
-      /* all twilight points are originally zero */
-      FT_ARRAY_ZERO( size->twilight.org, size->twilight.n_points );
-      FT_ARRAY_ZERO( size->twilight.cur, size->twilight.n_points );
-
-      /* clear storage area */
-      FT_ARRAY_ZERO( size->storage, size->storage_size );
-
-      size->GS = tt_default_graphics_state;
-
       error = tt_size_run_prep( size, pedantic );
-    }
     else
       error = size->cvt_ready;
 
