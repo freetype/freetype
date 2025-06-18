@@ -251,7 +251,7 @@ include(CMakePushCheckState)
 include(CheckSymbolExists)
 
 if (NOT FT_DISABLE_HARFBUZZ)
-  set(HARFBUZZ_MIN_VERSION "2.6.8")
+  set(HARFBUZZ_MIN_VERSION "2.0.0")
 
   if (FT_DYNAMIC_HARFBUZZ)
     if (WIN32)  # Windows uses its own LoadLibrary()

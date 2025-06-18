@@ -447,7 +447,7 @@ AC_ARG_WITH([harfbuzz],
 
 have_harfbuzz=no
 if test x"$with_harfbuzz" = xyes -o x"$with_harfbuzz" = xauto; then
-  harfbuzz_pkg="harfbuzz >= 2.6.8"
+  harfbuzz_pkg="harfbuzz >= 2.0.0"
   have_harfbuzz_pkg=no
 
   if test x"$HARFBUZZ_CFLAGS" = x -a x"$HARFBUZZ_LIBS" = x; then
