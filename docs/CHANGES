@@ -10,9 +10,7 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     between HarfBuzz and FreeType.
 
     A  side effect  of this  change is  that FreeType  no longer  uses
-    HarfBuzz header files (if HarfBuzz support is activated).  To make
-    this  work,  we  now  require at  least  HarfBuzz  version  2.6.8,
-    released in June 2020.
+    HarfBuzz header files (if HarfBuzz support is activated).
 
     This code was contributed by Behdad Esfahbod.
 
@@ -34,8 +32,6 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     scripts.  FreeType needs to access  a proper Unicode character map
     (or must be able to construct such a cmap) of a given font to make
     this work.
-
-    You need HarfBuzz 7.2.0 or newer for the new diacritic support.
 
     The central algorithm and the foundation of this feature was Craig
     White's GSoC 2023 project.

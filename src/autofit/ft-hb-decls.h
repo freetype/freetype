@@ -135,14 +135,6 @@ hb_ot_layout_lookup_collect_glyphs,(hb_face_t    *face,
 				    hb_set_t     *glyphs_after,  /* OUT.  May be NULL */
 				    hb_set_t     *glyphs_output  /* OUT.  May be NULL */))
 
-HB_EXTERN(unsigned,
-hb_ot_layout_lookup_get_glyph_alternates,(hb_face_t      *face,
-					  unsigned        lookup_index,
-					  hb_codepoint_t  glyph,
-					  unsigned        start_offset,
-					  unsigned       *alternate_count /* IN/OUT */,
-					  hb_codepoint_t *alternate_glyphs /* OUT */))
-
 HB_EXTERN(hb_bool_t,
 hb_ot_layout_lookup_would_substitute,(hb_face_t            *face,
 				      unsigned int          lookup_index,

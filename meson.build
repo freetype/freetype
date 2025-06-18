@@ -354,7 +354,7 @@ harfbuzz_dep = disabler()
 
 if harfbuzz_opt == 'enabled' or harfbuzz_opt == 'auto'
   harfbuzz_dep = dependency('harfbuzz',
-    version: '>= 2.6.8',
+    version: '>= 2.0.0',
     required: harfbuzz_opt == 'enabled',
     default_options: ['freetype=disabled'])
   if harfbuzz_dep.found()
