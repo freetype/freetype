@@ -2205,7 +2205,6 @@
     {
       FT_Error        error;
       TT_ExecContext  exec;
-      FT_Bool         pedantic  = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
       FT_Bool         grayscale = TRUE;
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       FT_Bool         subpixel_hinting_lean;
@@ -2216,23 +2215,19 @@
       FT_Bool  reexecute = FALSE;
 
 
-      if ( size->bytecode_ready < 0 || size->cvt_ready < 0 )
+      if ( size->bytecode_ready > 0 )
+        return size->bytecode_ready;
+      if ( size->bytecode_ready < 0 )
       {
-        error = tt_size_ready_bytecode( size, pedantic );
+        FT_Bool  pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
+
+
+        error = tt_size_init_bytecode( size, pedantic );
         if ( error )
           return error;
       }
-      else if ( size->bytecode_ready )
-        return size->bytecode_ready;
-      else if ( size->cvt_ready )
-        return size->cvt_ready;
 
-      /* query new execution context */
       exec = size->context;
-      if ( !exec )
-        return FT_THROW( Could_Not_Find_Context );
-
-      exec->pedantic_hinting = pedantic;
 
       grayscale = FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
                              FT_RENDER_MODE_MONO             );
@@ -2295,9 +2290,11 @@
         reexecute       = TRUE;
       }
 
-      if ( reexecute )
+      if ( size->cvt_ready > 0 )
+        return size->cvt_ready;
+      if ( size->cvt_ready < 0 || reexecute )
       {
-        error = tt_size_run_prep( size, pedantic );
+        error = tt_size_run_prep( size );
         if ( error )
           return error;
       }

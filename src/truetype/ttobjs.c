@@ -880,8 +880,7 @@
    *   FreeType error code.  0 means success.
    */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_run_fpgm( TT_Size  size,
-                    FT_Bool  pedantic )
+  tt_size_run_fpgm( TT_Size  size )
   {
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
@@ -893,8 +892,6 @@
     error = TT_Load_Context( exec, face, size );
     if ( error )
       return error;
-
-    exec->pedantic_hinting = pedantic;
 
     /* disable CVT and glyph programs coderange */
     TT_Clear_CodeRange( exec, tt_coderange_cvt );
@@ -947,8 +944,7 @@
    *   FreeType error code.  0 means success.
    */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_run_prep( TT_Size  size,
-                    FT_Bool  pedantic )
+  tt_size_run_prep( TT_Size  size )
   {
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
@@ -987,8 +983,6 @@
     if ( error )
       return error;
 
-    exec->pedantic_hinting = pedantic;
-
     TT_Clear_CodeRange( exec, tt_coderange_glyph );
 
     if ( face->cvt_program_size > 0 )
@@ -1020,11 +1014,10 @@
 
 
   static void
-  tt_size_done_bytecode( FT_Size  ftsize )
+  tt_size_done_bytecode( TT_Size  size )
   {
-    TT_Size    size   = (TT_Size)ftsize;
-    TT_Face    face   = (TT_Face)ftsize->face;
-    FT_Memory  memory = face->root.memory;
+    FT_Memory  memory = size->root.face->memory;
+
 
     if ( size->context )
     {
@@ -1052,25 +1045,22 @@
 
     size->max_func = 0;
     size->max_ins  = 0;
-
-    size->bytecode_ready = -1;
-    size->cvt_ready      = -1;
   }
 
 
   /* Initialize bytecode-related fields in the size object.       */
   /* We do this only if bytecode interpretation is really needed. */
   static FT_Error
-  tt_size_init_bytecode( FT_Size  ftsize,
+  tt_size_init_bytecode( TT_Size  size,
                          FT_Bool  pedantic )
   {
     FT_Error   error;
-    TT_Size    size = (TT_Size)ftsize;
-    TT_Face    face = (TT_Face)ftsize->face;
-    FT_Memory  memory = face->root.memory;
+    TT_Face    face = (TT_Face)size->root.face;
+    FT_Memory  memory = size->root.face->memory;
 
     FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
+    TT_ExecContext  exec = size->context;
 
 
     /* clean up bytecode related data */
@@ -1078,15 +1068,17 @@
     FT_FREE( size->instruction_defs );
     FT_FREE( size->cvt );
     FT_FREE( size->storage );
-
-    if ( size->context )
-      TT_Done_Context( size->context );
     tt_glyphzone_done( memory, &size->twilight );
 
-    size->bytecode_ready = -1;
-    size->cvt_ready      = -1;
+    if ( exec )
+      TT_Done_Context( exec );
 
-    size->context = TT_New_Context( (TT_Driver)face->root.driver );
+    exec = TT_New_Context( (TT_Driver)face->root.driver );
+    if ( !exec )
+      return FT_THROW( Could_Not_Find_Context );
+
+    exec->pedantic_hinting = pedantic;
+    size->context          = exec;
 
     size->max_function_defs    = maxp->maxFunctionDefs;
     size->max_instruction_defs = maxp->maxInstructionDefs;
@@ -1097,6 +1089,7 @@
     size->max_func = 0;
     size->max_ins  = 0;
 
+    size->cvt_ready    = -1;
     size->cvt_size     = face->cvt_size;
     size->storage_size = maxp->maxStorage;
 
@@ -1149,40 +1142,16 @@
     /* to be executed just once; calling it again is completely useless   */
     /* and might even lead to extremely slow behaviour if it is malformed */
     /* (containing an infinite loop, for example).                        */
-    error = tt_size_run_fpgm( size, pedantic );
+    error = tt_size_run_fpgm( size );
     return error;
 
   Exit:
     if ( error )
-      tt_size_done_bytecode( ftsize );
+      tt_size_done_bytecode( size );
 
     return error;
   }
 
-
-  FT_LOCAL_DEF( FT_Error )
-  tt_size_ready_bytecode( TT_Size  size,
-                          FT_Bool  pedantic )
-  {
-    FT_Error  error = FT_Err_Ok;
-
-
-    if ( size->bytecode_ready < 0 )
-      error = tt_size_init_bytecode( (FT_Size)size, pedantic );
-    else
-      error = size->bytecode_ready;
-
-    if ( error )
-      goto Exit;
-
-    if ( size->cvt_ready < 0 )
-      error = tt_size_run_prep( size, pedantic );
-    else
-      error = size->cvt_ready;
-
-  Exit:
-    return error;
-  }
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
@@ -1211,7 +1180,6 @@
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     size->bytecode_ready = -1;
-    size->cvt_ready      = -1;
 #endif
 
     size->ttmetrics.valid = FALSE;
@@ -1240,7 +1208,7 @@
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    tt_size_done_bytecode( ttsize );
+    tt_size_done_bytecode( size );
 #endif
 
     size->ttmetrics.valid = FALSE;

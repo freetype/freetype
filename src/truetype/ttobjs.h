@@ -377,16 +377,14 @@ FT_BEGIN_HEADER
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
   FT_LOCAL( FT_Error )
-  tt_size_run_fpgm( TT_Size  size,
-                    FT_Bool  pedantic );
+  tt_size_run_fpgm( TT_Size  size );
 
   FT_LOCAL( FT_Error )
-  tt_size_run_prep( TT_Size  size,
-                    FT_Bool  pedantic );
+  tt_size_run_prep( TT_Size  size );
 
   FT_LOCAL( FT_Error )
-  tt_size_ready_bytecode( TT_Size  size,
-                          FT_Bool  pedantic );
+  tt_size_init_bytecode( TT_Size  size,
+                         FT_Bool  pedantic );
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
