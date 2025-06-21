@@ -101,7 +101,8 @@ FT_BEGIN_HEADER
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
   FT_LOCAL( void )
-  tt_glyphzone_done( TT_GlyphZone  zone );
+  tt_glyphzone_done( FT_Memory     memory,
+                     TT_GlyphZone  zone );
 
   FT_LOCAL( FT_Error )
   tt_glyphzone_new( FT_Memory     memory,

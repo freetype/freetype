@@ -1613,9 +1613,6 @@ FT_BEGIN_HEADER
    *   coordinates.
    *
    * @fields:
-   *   memory ::
-   *     A handle to the memory manager.
-   *
    *   n_points ::
    *     The current number of points in the zone.
    *
@@ -1639,7 +1636,6 @@ FT_BEGIN_HEADER
    */
   typedef struct  TT_GlyphZoneRec_
   {
-    FT_Memory   memory;
     FT_UShort   n_points;    /* number of points in zone    */
     FT_UShort   n_contours;  /* number of contours          */
 
