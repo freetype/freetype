@@ -201,9 +201,6 @@
    *   exec ::
    *     A handle to the target execution context.
    *
-   *   memory ::
-   *     A handle to the parent memory object.
-   *
    * @Note:
    *   Only the glyph loader and debugger should call this function.
    */

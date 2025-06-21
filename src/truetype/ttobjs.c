@@ -873,9 +873,6 @@
    *   size ::
    *     A handle to the size object.
    *
-   *   pedantic ::
-   *     Set if bytecode execution should be pedantic.
-   *
    * @Return:
    *   FreeType error code.  0 means success.
    */
@@ -936,9 +933,6 @@
    * @Input:
    *   size ::
    *     A handle to the size object.
-   *
-   *   pedantic ::
-   *     Set if bytecode execution should be pedantic.
    *
    * @Return:
    *   FreeType error code.  0 means success.
@@ -1050,7 +1044,7 @@
 
   /* Initialize bytecode-related fields in the size object.       */
   /* We do this only if bytecode interpretation is really needed. */
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   tt_size_init_bytecode( TT_Size  size,
                          FT_Bool  pedantic )
   {
@@ -1151,7 +1145,6 @@
 
     return error;
   }
-
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
