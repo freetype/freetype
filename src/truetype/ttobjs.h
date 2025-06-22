@@ -225,8 +225,6 @@ FT_BEGIN_HEADER
 
     TT_GraphicsState   GS;
 
-    TT_GlyphZoneRec    twilight;     /* The instance's twilight zone    */
-
     TT_ExecContext     context;
 
     /* if negative, `fpgm' (resp. `prep'), wasn't executed yet; */

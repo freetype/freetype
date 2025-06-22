@@ -284,8 +284,6 @@
     exec->tt_metrics = size->ttmetrics;
     exec->metrics    = *size->metrics;
 
-    exec->twilight   = size->twilight;
-
     return FT_Err_Ok;
   }
 
@@ -7410,28 +7408,9 @@
   TT_Run_Context( TT_ExecContext  exec,
                   TT_Size         size )
   {
-    FT_ULong   num_twilight_points;
-
-
     exec->zp0 = exec->pts;
     exec->zp1 = exec->pts;
     exec->zp2 = exec->pts;
-
-    /* We restrict the number of twilight points to a reasonable,     */
-    /* heuristic value to avoid slow execution of malformed bytecode. */
-    num_twilight_points = FT_MAX( 30,
-                                  2 * ( exec->pts.n_points + exec->cvtSize ) );
-    if ( exec->twilight.n_points > num_twilight_points )
-    {
-      if ( num_twilight_points > 0xFFFFU )
-        num_twilight_points = 0xFFFFU;
-
-      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
-      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
-                  exec->twilight.n_points,
-                  num_twilight_points ));
-      exec->twilight.n_points = (FT_UShort)num_twilight_points;
-    }
 
     /* Set up loop detectors.  We restrict the number of LOOPCALL loops */
     /* and the number of JMPR, JROT, and JROF calls with a negative     */

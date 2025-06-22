@@ -951,8 +951,8 @@
     size->GS = tt_default_graphics_state;
 
     /* all twilight points are originally zero */
-    FT_ARRAY_ZERO( size->twilight.org, size->twilight.n_points );
-    FT_ARRAY_ZERO( size->twilight.cur, size->twilight.n_points );
+    FT_ARRAY_ZERO( exec->twilight.org, exec->twilight.n_points );
+    FT_ARRAY_ZERO( exec->twilight.cur, exec->twilight.n_points );
 
     /* clear storage area */
     FT_ARRAY_ZERO( exec->storage, exec->storeSize );
@@ -1017,12 +1017,11 @@
       FT_FREE( exec->stack );
       FT_FREE( exec->FDefs );
 
+      tt_glyphzone_done( memory, &exec->twilight );
+
       TT_Done_Context( exec );
       size->context = NULL;
     }
-
-    /* twilight zone */
-    tt_glyphzone_done( memory, &size->twilight );
   }
 
 
@@ -1036,7 +1035,6 @@
     TT_Face    face = (TT_Face)size->root.face;
     FT_Memory  memory = size->root.face->memory;
 
-    FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
     TT_ExecContext  exec;
 
@@ -1076,12 +1074,8 @@
 
     /* reserve twilight zone and set GS before fpgm is executed, */
     /* just in case, even though fpgm should not touch them      */
-    n_twilight = maxp->maxTwilightPoints;
-
-    /* there are 4 phantom points (do we need this?) */
-    n_twilight += 4;
-
-    error = tt_glyphzone_new( memory, n_twilight, 0, &size->twilight );
+    error = tt_glyphzone_new( memory, maxp->maxTwilightPoints, 0,
+                              &exec->twilight );
     if ( error )
       goto Exit;
 

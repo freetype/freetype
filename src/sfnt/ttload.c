@@ -806,15 +806,17 @@
       if ( maxProfile->maxFunctionDefs < 64 )
         maxProfile->maxFunctionDefs = 64;
 
-      /* we add 4 phantom points later */
-      if ( maxProfile->maxTwilightPoints > ( 0xFFFFU - 4 ) )
+      /* Points in the twilight zone might be used to mark various */
+      /* font metrics or other hinting anchors typically by the CV */
+      /* program. Let's be reasonable about their number.          */
+      if ( maxProfile->maxTwilightPoints > 256 )
       {
         FT_TRACE0(( "tt_face_load_maxp:"
-                    " too much twilight points in `maxp' table;\n" ));
+                    " too many twilight points in `maxp' table;\n" ));
         FT_TRACE0(( "                  "
                     " some glyphs might be rendered incorrectly\n" ));
 
-        maxProfile->maxTwilightPoints = 0xFFFFU - 4;
+        maxProfile->maxTwilightPoints = 256;
       }
     }
 
