@@ -53,6 +53,8 @@ FT_BEGIN_HEADER
   typedef FT_GlyphSlot  TT_GlyphSlot;
 
 
+#ifdef TT_USE_BYTECODE_INTERPRETER
+
   /**************************************************************************
    *
    * @Struct:
@@ -98,8 +100,6 @@ FT_BEGIN_HEADER
   } TT_GraphicsState;
 
 
-#ifdef TT_USE_BYTECODE_INTERPRETER
-
   FT_LOCAL( void )
   tt_glyphzone_done( FT_Memory     memory,
                      TT_GlyphZone  zone );
@@ -112,73 +112,6 @@ FT_BEGIN_HEADER
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
-
-
-  /**************************************************************************
-   *
-   * EXECUTION SUBTABLES
-   *
-   * These sub-tables relate to instruction execution.
-   *
-   */
-
-
-#define TT_MAX_CODE_RANGES  3
-
-
-  /**************************************************************************
-   *
-   * There can only be 3 active code ranges at once:
-   *   - the Font Program
-   *   - the CVT Program
-   *   - a glyph's instructions set
-   */
-  typedef enum  TT_CodeRange_Tag_
-  {
-    tt_coderange_none = 0,
-    tt_coderange_font,
-    tt_coderange_cvt,
-    tt_coderange_glyph
-
-  } TT_CodeRange_Tag;
-
-
-  typedef struct  TT_CodeRange_
-  {
-    FT_Byte*  base;
-    FT_Long   size;
-
-  } TT_CodeRange;
-
-  typedef TT_CodeRange  TT_CodeRangeTable[TT_MAX_CODE_RANGES];
-
-
-  /**************************************************************************
-   *
-   * Defines a function/instruction definition record.
-   */
-  typedef struct  TT_DefRecord_
-  {
-    FT_Int    range;          /* in which code range is it located?     */
-    FT_Long   start;          /* where does it start?                   */
-    FT_Long   end;            /* where does it end?                     */
-    FT_UInt   opc;            /* function #, or instruction code        */
-    FT_Bool   active;         /* is it active?                          */
-
-  } TT_DefRecord, *TT_DefArray;
-
-
-  /**************************************************************************
-   *
-   * Subglyph transformation record.
-   */
-  typedef struct  TT_Transform_
-  {
-    FT_Fixed    xx, xy;     /* transformation matrix coefficients */
-    FT_Fixed    yx, yy;
-    FT_F26Dot6  ox, oy;     /* offsets                            */
-
-  } TT_Transform;
 
 
   /**************************************************************************
@@ -289,8 +222,6 @@ FT_BEGIN_HEADER
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     FT_Long            point_size;    /* for the `MPS' bytecode instruction */
-
-    TT_CodeRangeTable  codeRangeTable;
 
     TT_GraphicsState   GS;
 

@@ -270,7 +270,6 @@
                    TT_Face         face,
                    TT_Size         size )
   {
-    FT_Int     i;
     FT_Memory  memory = exec->memory;
 
 
@@ -280,9 +279,6 @@
     /* free previous glyph code range */
     FT_FREE( exec->glyphIns );
     exec->glyphSize = 0;
-
-    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
-      exec->codeRangeTable[i] = size->codeRangeTable[i];
 
     exec->pointSize  = size->point_size;
     exec->tt_metrics = size->ttmetrics;
@@ -317,9 +313,6 @@
   TT_Save_Context( TT_ExecContext  exec,
                    TT_Size         size )
   {
-    FT_Int  i;
-
-
     /* UNDOCUMENTED!                                            */
     /* Only these GS values can be modified by the CVT program. */
 
@@ -333,9 +326,6 @@
     size->GS.instruct_control    = exec->GS.instruct_control;
     size->GS.scan_control        = exec->GS.scan_control;
     size->GS.scan_type           = exec->GS.scan_type;
-
-    for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
-      size->codeRangeTable[i] = exec->codeRangeTable[i];
   }
 
 

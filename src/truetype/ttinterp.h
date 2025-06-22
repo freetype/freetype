@@ -41,6 +41,60 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * EXECUTION SUBTABLES
+   *
+   * These sub-tables relate to instruction execution.
+   *
+   */
+
+
+#define TT_MAX_CODE_RANGES  3
+
+
+  /**************************************************************************
+   *
+   * There can only be 3 active code ranges at once:
+   *   - the Font Program
+   *   - the CVT Program
+   *   - a glyph's instructions set
+   */
+  typedef enum  TT_CodeRange_Tag_
+  {
+    tt_coderange_none = 0,
+    tt_coderange_font,
+    tt_coderange_cvt,
+    tt_coderange_glyph
+
+  } TT_CodeRange_Tag;
+
+
+  typedef struct  TT_CodeRange_
+  {
+    FT_Byte*  base;
+    FT_Long   size;
+
+  } TT_CodeRange;
+
+  typedef TT_CodeRange  TT_CodeRangeTable[TT_MAX_CODE_RANGES];
+
+
+  /**************************************************************************
+   *
+   * Defines a function/instruction definition record.
+   */
+  typedef struct  TT_DefRecord_
+  {
+    FT_Int    range;          /* in which code range is it located?     */
+    FT_Long   start;          /* where does it start?                   */
+    FT_Long   end;            /* where does it end?                     */
+    FT_UInt   opc;            /* function #, or instruction code        */
+    FT_Bool   active;         /* is it active?                          */
+
+  } TT_DefRecord, *TT_DefArray;
+
+
+  /**************************************************************************
+   *
    * Function types used by the interpreter, depending on various modes
    * (e.g. the rounding mode, whether to render a vertical or horizontal
    * line etc).
