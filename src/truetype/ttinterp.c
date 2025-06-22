@@ -6550,7 +6550,7 @@
     /* Otherwise, instructions may behave weirdly and rendering results */
     /* may differ between v35 and v40 mode, e.g., in `Times New Roman   */
     /* Bold Italic'. */
-    if ( SUBPIXEL_HINTING_MINIMAL && exc->subpixel_hinting_lean )
+    if ( SUBPIXEL_HINTING_MINIMAL && exc->mode != FT_RENDER_MODE_MONO )
     {
       /*********************************
        * HINTING FOR SUBPIXEL
@@ -6567,7 +6567,7 @@
        * Selector Bit:  8
        * Return Bit(s): 15
        */
-      if ( ( args[0] & 256 ) != 0 && exc->vertical_lcd_lean )
+      if ( ( args[0] & 256 ) != 0 && exc->mode == FT_RENDER_MODE_LCD_V )
         K |= 1 << 15;
 
       /*********************************
@@ -6588,7 +6588,7 @@
        * The only smoothing method FreeType supports unless someone sets
        * FT_LOAD_TARGET_MONO.
        */
-      if ( ( args[0] & 2048 ) != 0 && exc->subpixel_hinting_lean )
+      if ( ( args[0] & 2048 ) != 0 && exc->mode != FT_RENDER_MODE_MONO )
         K |= 1 << 18;
 
       /*********************************
@@ -6600,7 +6600,10 @@
        * Grayscale rendering is what FreeType does anyway unless someone
        * sets FT_LOAD_TARGET_MONO or FT_LOAD_TARGET_LCD(_V)
        */
-      if ( ( args[0] & 4096 ) != 0 && exc->grayscale_cleartype )
+      if ( ( args[0] & 4096 ) != 0           &&
+           exc->mode != FT_RENDER_MODE_MONO  &&
+           exc->mode != FT_RENDER_MODE_LCD   &&
+           exc->mode != FT_RENDER_MODE_LCD_V )
         K |= 1 << 19;
     }
 #endif
