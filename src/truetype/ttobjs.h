@@ -290,26 +290,9 @@ FT_BEGIN_HEADER
 
     FT_Long            point_size;    /* for the `MPS' bytecode instruction */
 
-    FT_UInt            num_function_defs; /* number of function definitions */
-    FT_UInt            max_function_defs;
-    TT_DefArray        function_defs;     /* table of function definitions  */
-
-    FT_UInt            num_instruction_defs;  /* number of ins. definitions */
-    FT_UInt            max_instruction_defs;
-    TT_DefArray        instruction_defs;      /* table of ins. definitions  */
-
-    FT_UInt            max_func;
-    FT_UInt            max_ins;
-
     TT_CodeRangeTable  codeRangeTable;
 
     TT_GraphicsState   GS;
-
-    FT_ULong           cvt_size;      /* the scaled control value table */
-    FT_Long*           cvt;
-
-    FT_UShort          storage_size; /* The storage area is now part of */
-    FT_Long*           storage;      /* the instance                    */
 
     TT_GlyphZoneRec    twilight;     /* The instance's twilight zone    */
 

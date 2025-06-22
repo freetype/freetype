@@ -214,10 +214,6 @@
     exec->maxPoints   = 0;
     exec->maxContours = 0;
 
-    /* free stack */
-    FT_FREE( exec->stack );
-    exec->stackSize = 0;
-
     /* free glyf cvt working area */
     FT_FREE( exec->glyfCvt );
     exec->glyfCvtSize = 0;
@@ -275,26 +271,11 @@
                    TT_Size         size )
   {
     FT_Int     i;
-    FT_Long    stackSize;
-    FT_Error   error;
     FT_Memory  memory = exec->memory;
 
 
     exec->face = face;
     exec->size = size;
-
-    exec->cvtSize = size->cvt_size;
-    exec->cvt     = size->cvt;
-
-    exec->storeSize = size->storage_size;
-    exec->storage   = size->storage;
-
-    /* XXX: We reserve a little more elements on the stack to deal safely */
-    /*      with broken fonts like arialbs, courbs, timesbs, etc.         */
-    stackSize = face->max_profile.maxStackElements + 32;
-    if ( FT_QRENEW_ARRAY( exec->stack, exec->stackSize, stackSize ) )
-      return error;
-    exec->stackSize = stackSize;
 
     /* free previous glyph code range */
     FT_FREE( exec->glyphIns );
@@ -302,15 +283,6 @@
 
     for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
       exec->codeRangeTable[i] = size->codeRangeTable[i];
-
-    exec->numFDefs   = size->num_function_defs;
-    exec->maxFDefs   = size->max_function_defs;
-    exec->numIDefs   = size->num_instruction_defs;
-    exec->maxIDefs   = size->max_instruction_defs;
-    exec->FDefs      = size->function_defs;
-    exec->IDefs      = size->instruction_defs;
-    exec->maxFunc    = size->max_func;
-    exec->maxIns     = size->max_ins;
 
     exec->pointSize  = size->point_size;
     exec->tt_metrics = size->ttmetrics;
@@ -361,12 +333,6 @@
     size->GS.instruct_control    = exec->GS.instruct_control;
     size->GS.scan_control        = exec->GS.scan_control;
     size->GS.scan_type           = exec->GS.scan_type;
-
-    size->num_function_defs    = exec->numFDefs;
-    size->num_instruction_defs = exec->numIDefs;
-
-    size->max_func = exec->maxFunc;
-    size->max_ins  = exec->maxIns;
 
     for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
       size->codeRangeTable[i] = exec->codeRangeTable[i];
