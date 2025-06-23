@@ -276,6 +276,11 @@
     exec->face = face;
     exec->size = size;
 
+    /* CVT and storage are not persistent in FreeType */
+    /* reset them after they might have been modifief */
+    exec->storage = exec->stack   + exec->stackSize;
+    exec->cvt     = exec->storage + exec->storeSize;
+
     /* free previous glyph code range */
     FT_FREE( exec->glyphIns );
     exec->glyphSize = 0;

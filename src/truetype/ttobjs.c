@@ -880,11 +880,9 @@
   tt_size_run_fpgm( TT_Size  size )
   {
     TT_Face         face = (TT_Face)size->root.face;
-    TT_ExecContext  exec;
+    TT_ExecContext  exec = size->context;
     FT_Error        error;
 
-
-    exec = size->context;
 
     error = TT_Load_Context( exec, face, size );
     if ( error )
@@ -954,6 +952,10 @@
     FT_ARRAY_ZERO( size->twilight.org, size->twilight.n_points );
     FT_ARRAY_ZERO( size->twilight.cur, size->twilight.n_points );
 
+    error = TT_Load_Context( exec, face, size );
+    if ( error )
+      return error;
+
     /* clear storage area */
     FT_ARRAY_ZERO( exec->storage, exec->storeSize );
 
@@ -970,10 +972,6 @@
                   i, (double)face->cvt[i] / 64, (double)exec->cvt[i] / 64 ));
     }
     FT_TRACE6(( "\n" ));
-
-    error = TT_Load_Context( exec, face, size );
-    if ( error )
-      return error;
 
     TT_Clear_CodeRange( exec, tt_coderange_glyph );
 
@@ -1070,9 +1068,6 @@
     if ( FT_NEW_ARRAY( exec->stack,
                        exec->stackSize + exec->storeSize  + exec->cvtSize ) )
       goto Exit;
-
-    exec->storage = exec->stack   + exec->stackSize;
-    exec->cvt     = exec->storage + exec->storeSize;
 
     /* reserve twilight zone and set GS before fpgm is executed, */
     /* just in case, even though fpgm should not touch them      */
