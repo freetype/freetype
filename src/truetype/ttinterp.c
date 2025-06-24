@@ -7424,6 +7424,9 @@
 
     /* We restrict the number of twilight points to a reasonable,     */
     /* heuristic value to avoid slow execution of malformed bytecode. */
+    /* The selected value is large enough to support fonts hinted     */
+    /* with `ttfautohint`, which uses twilight points to store        */
+    /* vertical coordinates of (auto-hinter) segments.                */
     num_twilight_points = FT_MAX( 30,
                                   2 * ( exec->pts.n_points + exec->cvtSize ) );
     if ( exec->twilight.n_points > num_twilight_points )
