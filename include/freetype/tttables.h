@@ -192,7 +192,7 @@ FT_BEGIN_HEADER
    *     A pointer into the 'hmtx' table.
    *
    * @note:
-   *   For an OpenType variation font, the values of the following fields can
+   *   For OpenType Font Variations, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
    *   the font contains an 'MVAR' table: `caret_Slope_Rise`,
    *   `caret_Slope_Run`, and `caret_Offset`.
@@ -310,7 +310,7 @@ FT_BEGIN_HEADER
    *     A pointer into the 'vmtx' table.
    *
    * @note:
-   *   For an OpenType variation font, the values of the following fields can
+   *   For OpenType Font Variations, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
    *   the font contains an 'MVAR' table: `Ascender`, `Descender`,
    *   `Line_Gap`, `caret_Slope_Rise`, `caret_Slope_Run`, and `caret_Offset`.
@@ -359,7 +359,7 @@ FT_BEGIN_HEADER
    *   table.  In this case, the `version` field is always set to 0xFFFF.
    *
    * @note:
-   *   For an OpenType variation font, the values of the following fields can
+   *   For OpenType Font Variations, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
    *   the font contains an 'MVAR' table: `sCapHeight`, `sTypoAscender`,
    *   `sTypoDescender`, `sTypoLineGap`, `sxHeight`, `usWinAscent`,
@@ -442,7 +442,7 @@ FT_BEGIN_HEADER
    *   them.
    *
    * @note:
-   *   For an OpenType variation font, the values of the following fields can
+   *   For OpenType Font Variations, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
    *   the font contains an 'MVAR' table: `underlinePosition` and
    *   `underlineThickness`.

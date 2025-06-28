@@ -1068,12 +1068,12 @@ FT_BEGIN_HEADER
    *     the face in the font file (starting with value~0).  They are set
    *     to~0 if there is only one face in the font file.
    *
-   *     [Since 2.6.1] Bits 16-30 are relevant to GX and OpenType variation
-   *     fonts only, holding the named instance index for the current face
-   *     index (starting with value~1; value~0 indicates font access without
-   *     a named instance).  For non-variation fonts, bits 16-30 are ignored.
-   *     If we have the third named instance of face~4, say, `face_index` is
-   *     set to 0x00030004.
+   *     [Since 2.6.1] Bits 16-30 are relevant to TrueType GX and OpenType
+   *     Font Variations only, holding the named instance index for the
+   *     current face index (starting with value~1; value~0 indicates font
+   *     access without a named instance).  For non-variation fonts, bits
+   *     16-30 are ignored.  If we have the third named instance of face~4,
+   *     say, `face_index` is set to 0x00030004.
    *
    *     Bit 31 is always zero (that is, `face_index` is always a positive
    *     value).
@@ -1092,10 +1092,10 @@ FT_BEGIN_HEADER
    *     the face; see @FT_STYLE_FLAG_XXX for the details.
    *
    *     [Since 2.6.1] Bits 16-30 hold the number of named instances
-   *     available for the current face if we have a GX or OpenType variation
-   *     (sub)font.  Bit 31 is always zero (that is, `style_flags` is always
-   *     a positive value).  Note that a variation font has always at least
-   *     one named instance, namely the default instance.
+   *     available for the current face if we have a TrueType GX or OpenType
+   *     Font Variation.  Bit 31 is always zero (that is, `style_flags` is
+   *     always a positive value).  Note that a variation font has always at
+   *     least one named instance, namely the default instance.
    *
    *   num_glyphs ::
    *     The number of glyphs in the face.  If the face is scalable and has
@@ -1159,7 +1159,7 @@ FT_BEGIN_HEADER
    *     Note that the bounding box might be off by (at least) one pixel for
    *     hinted fonts.  See @FT_Size_Metrics for further discussion.
    *
-   *     Note that the bounding box does not vary in OpenType variation fonts
+   *     Note that the bounding box does not vary in OpenType Font Variations
    *     and should only be used in relation to the default instance.
    *
    *   units_per_EM ::
@@ -1218,7 +1218,7 @@ FT_BEGIN_HEADER
    *   Fields may be changed after a call to @FT_Attach_File or
    *   @FT_Attach_Stream.
    *
-   *   For an OpenType variation font, the values of the following fields can
+   *   For OpenType Font Variations, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
    *   the font contains an 'MVAR' table: `ascender`, `descender`, `height`,
    *   `underline_position`, and `underline_thickness`.
@@ -1336,7 +1336,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_MULTIPLE_MASTERS ::
    *     The face contains multiple masters and is capable of interpolating
    *     between them.  Supported formats are Adobe MM, TrueType GX, and
-   *     OpenType variation fonts.
+   *     OpenType Font Variations.
    *
    *     See section @multiple_masters for API details.
    *
@@ -1609,7 +1609,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A macro that returns true whenever a face object is a named instance
-   *   of a GX or OpenType variation font.
+   *   of a TrueType GX or OpenType Font Variations.
    *
    *   [Since 2.9] Changing the design coordinates with
    *   @FT_Set_Var_Design_Coordinates or @FT_Set_Var_Blend_Coordinates does
@@ -2147,7 +2147,7 @@ FT_BEGIN_HEADER
    *     freed.
    *
    *     [Since 2.10.1] If @FT_LOAD_NO_SCALE is set, outline coordinates of
-   *     OpenType variation fonts for a selected instance are internally
+   *     OpenType Font Variations for a selected instance are internally
    *     handled as 26.6 fractional font units but returned as (rounded)
    *     integers, as expected.  To get unrounded font units, don't use
    *     @FT_LOAD_NO_SCALE but load the glyph with @FT_LOAD_NO_HINTING and
@@ -2640,14 +2640,14 @@ FT_BEGIN_HEADER
    *     the face in the font file (starting with value~0).  Set it to~0 if
    *     there is only one face in the font file.
    *
-   *     [Since 2.6.1] Bits 16-30 are relevant to GX and OpenType variation
-   *     fonts only, specifying the named instance index for the current face
-   *     index (starting with value~1; value~0 makes FreeType ignore named
-   *     instances).  For non-variation fonts, bits 16-30 are ignored.
-   *     Assuming that you want to access the third named instance in face~4,
-   *     `face_index` should be set to 0x00030004.  If you want to access
-   *     face~4 without variation handling, simply set `face_index` to
-   *     value~4.
+   *     [Since 2.6.1] Bits 16-30 are relevant to TrueType GX and OpenType
+   *     Font Variations only, specifying the named instance index for the
+   *     current face index (starting with value~1; value~0 makes FreeType
+   *     ignore named instances).  For non-variation fonts, bits 16-30 are
+   *     ignored.  Assuming that you want to access the third named instance
+   *     in face~4, `face_index` should be set to 0x00030004.  If you want
+   *     to access face~4 without variation handling, simply set
+   *     `face_index` to value~4.
    *
    *     `FT_Open_Face` and its siblings can be used to quickly check whether
    *     the font format of a given font resource is supported by FreeType.
@@ -2914,11 +2914,11 @@ FT_BEGIN_HEADER
    *   of the available glyphs at a given ppem value is available.  FreeType
    *   silently uses outlines if there is no bitmap for a given glyph index.
    *
-   *   For GX and OpenType variation fonts, a bitmap strike makes sense only
-   *   if the default instance is active (that is, no glyph variation takes
-   *   place); otherwise, FreeType simply ignores bitmap strikes.  The same
-   *   is true for all named instances that are different from the default
-   *   instance.
+   *   For TrueType GX and OpenType Font Variations, a bitmap strike makes
+   *   sense only if the default instance is active (that is, no glyph
+   *   variation takes place); otherwise, FreeType simply ignores bitmap
+   *   strikes.  The same is true for all named instances that are different
+   *   from the default instance.
    *
    *   Don't use this function if you are using the FreeType cache API.
    */
