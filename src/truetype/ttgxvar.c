@@ -2810,7 +2810,7 @@
         FT_UInt  strid = ~0U;
 
 
-        /* The default instance is missing in array the    */
+        /* The default instance is missing in the array    */
         /* of named instances; try to synthesize an entry. */
         /* If this fails, `default_named_instance` remains */
         /* at value zero, which doesn't do any harm.       */
