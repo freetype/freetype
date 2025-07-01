@@ -460,6 +460,9 @@
       case '%':
         skip_comment( &cur, limit );
         break;
+
+      default:
+        break;
       }
     }
 

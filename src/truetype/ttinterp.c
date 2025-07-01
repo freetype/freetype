@@ -3122,6 +3122,9 @@
         nIfs--;
         Out = FT_BOOL( nIfs == 0 );
         break;
+
+      default:
+        break;
       }
     } while ( Out == 0 );
   }
@@ -3154,6 +3157,9 @@
 
       case 0x59:    /* EIF */
         nIfs--;
+        break;
+
+      default:
         break;
       }
     } while ( nIfs != 0 );
@@ -3322,6 +3328,9 @@
       case 0x2D:   /* ENDF */
         rec->end = exc->IP;
         return;
+
+      default:
+        break;
       }
     }
   }
@@ -3603,6 +3612,9 @@
       case 0x2D:   /* ENDF */
         def->end = exc->IP;
         return;
+
+      default:
+        break;
       }
     }
   }

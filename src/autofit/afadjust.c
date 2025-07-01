@@ -51,8 +51,7 @@
     - The vertical adjustment type.  This should be a combination of the
       AF_ADJUST_XXX and AF_IGNORE_XXX macros.
   */
-  FT_LOCAL_ARRAY_DEF( AF_AdjustmentDatabaseEntry )
-  adjustment_database[] =
+  static AF_AdjustmentDatabaseEntry  adjustment_database[] =
   {
     /* C0 Controls and Basic Latin */
     { 0x21,  AF_ADJUST_UP | AF_ADJUST_NO_HEIGHT_CHECK }, /* ! */
