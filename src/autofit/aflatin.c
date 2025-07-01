@@ -146,7 +146,7 @@
         goto Exit;
       }
 
-      FT_TRACE5(( "standard character: U+%04lX (glyph index %ld)\n",
+      FT_TRACE5(( "standard character: U+%04lX (glyph index %lu)\n",
                   ch, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
@@ -359,7 +359,7 @@
         FT_Bool  have_flag = 0;
 
 
-        FT_TRACE5(( "blue zone %d", axis->blue_count ));
+        FT_TRACE5(( "blue zone %u", axis->blue_count ));
 
         if ( bs->properties )
         {
@@ -493,7 +493,7 @@
             if ( num_idx == 1 )
               FT_TRACE5(( "  U+%04lX contains no (usable) outlines\n", ch ));
             else
-              FT_TRACE5(( "  component %d of cluster starting with U+%04lX"
+              FT_TRACE5(( "  component %u of cluster starting with U+%04lX"
                           " contains no (usable) outlines\n", i, ch ));
 #endif
             continue;
@@ -831,7 +831,7 @@
             if ( num_idx == 1 )
               FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
             else
-              FT_TRACE5(( "  component %d of cluster starting with U+%04lX:"
+              FT_TRACE5(( "  component %u of cluster starting with U+%04lX:"
                           " best_y = %5ld", i, ch, best_y ));
 #endif
 
@@ -1476,13 +1476,13 @@
         AF_LatinBlue  blue = &axis->blues[nn];
 
 
-        FT_TRACE5(( "  reference %d: %ld scaled to %.2f%s\n",
+        FT_TRACE5(( "  reference %u: %ld scaled to %.2f%s\n",
                     nn,
                     blue->ref.org,
                     (double)blue->ref.fit / 64,
                     ( blue->flags & AF_LATIN_BLUE_ACTIVE ) ? ""
                                                            : " (inactive)" ));
-        FT_TRACE5(( "  overshoot %d: %ld scaled to %.2f%s\n",
+        FT_TRACE5(( "  overshoot %u: %ld scaled to %.2f%s\n",
                     nn,
                     blue->shoot.org,
                     (double)blue->shoot.fit / 64,

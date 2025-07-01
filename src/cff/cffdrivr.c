@@ -168,7 +168,7 @@
     CFF_Size       cffsize = (CFF_Size)size;
 
 
-    FT_TRACE1(( "cff_glyph_load: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "cff_glyph_load: glyph index %u\n", glyph_index ));
 
     /* now load the glyph outline if necessary */
     error = cff_slot_load( cffslot, cffsize, glyph_index, load_flags );
@@ -242,7 +242,7 @@
                                                     &dummy,
                                                     &aw );
 
-      FT_TRACE5(( "  idx %d: advance %s %d font unit%s\n",
+      FT_TRACE5(( "  idx %u: advance %s %d font unit%s\n",
                   start + nn,
                   horz ? "width" : "height",
                   aw,

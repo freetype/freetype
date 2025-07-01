@@ -194,7 +194,7 @@
     for ( idx = HB_SET_VALUE_INVALID; hb( set_next )( gsub_lookups, &idx ); )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
-      FT_TRACE4(( " %d", idx ));
+      FT_TRACE4(( " %u", idx ));
       count++;
 #endif
 
@@ -235,7 +235,7 @@
     for ( idx = HB_SET_VALUE_INVALID; hb( set_next )( gpos_lookups, &idx ); )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
-      FT_TRACE4(( " %d", idx ));
+      FT_TRACE4(( " %u", idx ));
       count++;
 #endif
 
@@ -369,7 +369,7 @@
         FT_TRACE4(( "   " ));
       }
 
-      FT_TRACE4(( " %d", idx ));
+      FT_TRACE4(( " %u", idx ));
       count++;
 #endif
 

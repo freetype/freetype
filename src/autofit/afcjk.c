@@ -147,7 +147,7 @@
       if ( !glyph_index )
         goto Exit;
 
-      FT_TRACE5(( "standard character: U+%04lX (glyph index %ld)\n",
+      FT_TRACE5(( "standard character: U+%04lX (glyph index %lu)\n",
                   ch, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
@@ -330,7 +330,7 @@
         };
 
 
-        FT_TRACE5(( "blue zone %d (%s):\n",
+        FT_TRACE5(( "blue zone %u (%s):\n",
                     axis->blue_count,
                     cjk_blue_name[AF_CJK_IS_HORIZ_BLUE( bs ) |
                                   AF_CJK_IS_TOP_BLUE( bs )   ] ));
@@ -723,7 +723,7 @@
 
         blue->shoot.fit = blue->ref.fit - delta2;
 
-        FT_TRACE5(( ">> active cjk blue zone %c%d[%ld/%ld]:\n",
+        FT_TRACE5(( ">> active cjk blue zone %c%u[%ld/%ld]:\n",
                     ( dim == AF_DIMENSION_HORZ ) ? 'H' : 'V',
                     nn, blue->ref.org, blue->shoot.org ));
         FT_TRACE5(( "     ref:   cur=%.2f fit=%.2f\n",

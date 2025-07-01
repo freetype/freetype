@@ -697,7 +697,7 @@
         goto Fail;
       }
 
-      FT_TRACE2(( "  PS string size %5lu bytes, offset 0x%08lx (%lu)\n",
+      FT_TRACE2(( "  PS string size %5lu bytes, offset 0x%08lx (%ld)\n",
                   string_size, ttf_count, ttf_count ));
 
       /* The whole TTF is now loaded into `string_buf'.  We are */

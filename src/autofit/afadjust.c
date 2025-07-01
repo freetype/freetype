@@ -1504,7 +1504,7 @@
 #endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
 
     FT_TRACE4(( "    reverse character map built successfully"
-                " with %d entries\n", ( *map )->used ));
+                " with %u entries\n", ( *map )->used ));
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
@@ -1570,7 +1570,7 @@
           }
         }
 
-        FT_TRACE7(( "      %5d  0x%04X  %s\n", cnt, codepoint, flag_str ));
+        FT_TRACE7(( "      %5u  0x%04X  %s\n", cnt, codepoint, flag_str ));
       }
     }
 

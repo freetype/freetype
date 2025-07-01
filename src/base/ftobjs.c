@@ -1170,9 +1170,9 @@
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-    FT_TRACE5(( "FT_Load_Glyph: index %d, flags 0x%x\n",
+    FT_TRACE5(( "FT_Load_Glyph: index %u, flags 0x%x\n",
                 glyph_index, load_flags ));
-    FT_TRACE5(( "  bitmap %dx%d %s, %s (mode %d)\n",
+    FT_TRACE5(( "  bitmap %ux%u %s, %s (mode %d)\n",
                 slot->bitmap.width,
                 slot->bitmap.rows,
                 slot->outline.points ?
@@ -2111,7 +2111,7 @@
       if ( pfb_pos > pfb_len || pfb_pos + rlen > pfb_len )
         goto Exit2;
 
-      FT_TRACE3(( "    Load POST fragment #%d (%ld byte) to buffer"
+      FT_TRACE3(( "    Load POST fragment #%d (%lu byte) to buffer"
                   " %p + 0x%08lx\n",
                   i, rlen, (void*)pfb_data, pfb_pos ));
 
@@ -2384,7 +2384,7 @@
       is_darwin_vfs = ft_raccess_rule_by_darwin_vfs( library, i );
       if ( is_darwin_vfs && vfs_rfork_has_no_font )
       {
-        FT_TRACE3(( "Skip rule %d: darwin vfs resource fork"
+        FT_TRACE3(( "Skip rule %u: darwin vfs resource fork"
                     " is already checked and"
                     " no font is found\n",
                     i ));
@@ -2393,7 +2393,7 @@
 
       if ( errors[i] )
       {
-        FT_TRACE3(( "Error 0x%x has occurred in rule %d\n",
+        FT_TRACE3(( "Error 0x%x has occurred in rule %u\n",
                     errors[i], i ));
         continue;
       }
@@ -2401,7 +2401,7 @@
       args2.flags    = FT_OPEN_PATHNAME;
       args2.pathname = file_names[i] ? file_names[i] : args->pathname;
 
-      FT_TRACE3(( "Try rule %d: %s (offset=%ld) ...",
+      FT_TRACE3(( "Try rule %u: %s (offset=%ld) ...",
                   i, args2.pathname, offsets[i] ));
 
       error = FT_Stream_New( library, &args2, &stream2 );

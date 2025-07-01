@@ -660,7 +660,7 @@
     } while ( subglyph->flags & MORE_COMPONENTS );
 
     gloader->current.num_subglyphs = num_subglyphs;
-    FT_TRACE5(( "  %d component%s\n",
+    FT_TRACE5(( "  %u component%s\n",
                 num_subglyphs,
                 num_subglyphs > 1 ? "s" : "" ));
 
@@ -674,7 +674,7 @@
       for ( i = 0; i < num_subglyphs; i++ )
       {
         if ( num_subglyphs > 1 )
-          FT_TRACE7(( "    subglyph %d:\n", i ));
+          FT_TRACE7(( "    subglyph %u:\n", i ));
 
         FT_TRACE7(( "      glyph index: %d\n", subglyph->index ));
 
@@ -1437,13 +1437,13 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( recurse_count )
-      FT_TRACE5(( "  nesting level: %d\n", recurse_count ));
+      FT_TRACE5(( "  nesting level: %u\n", recurse_count ));
 #endif
 
     /* some fonts have an incorrect value of `maxComponentDepth' */
     if ( recurse_count > face->max_profile.maxComponentDepth )
     {
-      FT_TRACE1(( "load_truetype_glyph: maxComponentDepth set to %d\n",
+      FT_TRACE1(( "load_truetype_glyph: maxComponentDepth set to %u\n",
                   recurse_count ));
       face->max_profile.maxComponentDepth = (FT_UShort)recurse_count;
     }
@@ -2397,7 +2397,7 @@
     TT_LoaderRec  loader;
 
 
-    FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "TT_Load_Glyph: glyph index %u\n", glyph_index ));
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 

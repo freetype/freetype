@@ -162,28 +162,28 @@
 #define ACMSG6   "Font descent != actual descent.  Old: %d New: %d.\n"
 #define ACMSG7   "Font height != actual height. Old: %d New: %d.\n"
 #define ACMSG8   "Glyph scalable width (SWIDTH) adjustments made.\n"
-#define ACMSG9   "SWIDTH field missing at line %ld.  Set automatically.\n"
-#define ACMSG10  "DWIDTH field missing at line %ld.  Set to glyph width.\n"
+#define ACMSG9   "SWIDTH field missing at line %lu.  Set automatically.\n"
+#define ACMSG10  "DWIDTH field missing at line %lu.  Set to glyph width.\n"
 #define ACMSG11  "SIZE bits per pixel field adjusted to %hd.\n"
 #define ACMSG13  "Glyph %lu extra rows removed.\n"
 #define ACMSG14  "Glyph %lu extra columns removed.\n"
-#define ACMSG15  "Incorrect glyph count: %ld indicated but %ld found.\n"
+#define ACMSG15  "Incorrect glyph count: %lu indicated but %lu found.\n"
 #define ACMSG16  "Glyph %lu missing columns padded with zero bits.\n"
-#define ACMSG17  "Adjusting number of glyphs to %ld.\n"
+#define ACMSG17  "Adjusting number of glyphs to %lu.\n"
 
   /* Error messages. */
-#define ERRMSG1  "[line %ld] Missing `%s' line.\n"
-#define ERRMSG2  "[line %ld] Font header corrupted or missing fields.\n"
-#define ERRMSG3  "[line %ld] Font glyphs corrupted or missing fields.\n"
-#define ERRMSG4  "[line %ld] BBX too big.\n"
-#define ERRMSG5  "[line %ld] `%s' value too big.\n"
-#define ERRMSG6  "[line %ld] Input line too long.\n"
-#define ERRMSG7  "[line %ld] Font name too long.\n"
-#define ERRMSG8  "[line %ld] Invalid `%s' value.\n"
-#define ERRMSG9  "[line %ld] Invalid keyword.\n"
+#define ERRMSG1  "[line %lu] Missing `%s' line.\n"
+#define ERRMSG2  "[line %lu] Font header corrupted or missing fields.\n"
+#define ERRMSG3  "[line %lu] Font glyphs corrupted or missing fields.\n"
+#define ERRMSG4  "[line %lu] BBX too big.\n"
+#define ERRMSG5  "[line %lu] `%s' value too big.\n"
+#define ERRMSG6  "[line %lu] Input line too long.\n"
+#define ERRMSG7  "[line %lu] Font name too long.\n"
+#define ERRMSG8  "[line %lu] Invalid `%s' value.\n"
+#define ERRMSG9  "[line %lu] Invalid keyword.\n"
 
   /* Debug messages. */
-#define DBGMSG1  "  [%6ld] %s" /* no \n */
+#define DBGMSG1  "  [%6lu] %s" /* no \n */
 #define DBGMSG2  " (0x%lX)\n"
 
 

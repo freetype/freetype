@@ -968,7 +968,7 @@
       /* Note that this scaling operation is very sensitive to rounding;   */
       /* the integer division by 64 must be applied to the first argument. */
       exec->cvt[i] = FT_MulFix( face->cvt[i] / 64, size->ttmetrics.scale );
-      FT_TRACE6(( "  %3d: %f (%f)\n",
+      FT_TRACE6(( "  %3u: %f (%f)\n",
                   i, (double)face->cvt[i] / 64, (double)exec->cvt[i] / 64 ));
     }
     FT_TRACE6(( "\n" ));

@@ -7382,7 +7382,7 @@
     } while ( !exc->instruction_trap );
 
   LNo_Error_:
-    FT_TRACE4(( "  %ld instruction%s executed\n",
+    FT_TRACE4(( "  %lu instruction%s executed\n",
                 ins_counter,
                 ins_counter == 1 ? "" : "s" ));
 
@@ -7435,7 +7435,7 @@
         num_twilight_points = 0xFFFFU;
 
       FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
-      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
+      FT_TRACE5(( "           from %d to the more reasonable value %lu\n",
                   exec->twilight.n_points,
                   num_twilight_points ));
       exec->twilight.n_points = (FT_UShort)num_twilight_points;
@@ -7470,11 +7470,11 @@
       exec->loopcall_counter_max = 100 * (FT_ULong)exec->face->root.num_glyphs;
 
     FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
-                " to %ld\n", exec->loopcall_counter_max ));
+                " to %lu\n", exec->loopcall_counter_max ));
 
     exec->neg_jump_counter_max = exec->loopcall_counter_max;
     FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
-                " to %ld\n", exec->neg_jump_counter_max ));
+                " to %lu\n", exec->neg_jump_counter_max ));
 
     /* set PPEM and CVT functions */
     if ( exec->metrics.x_ppem != exec->metrics.y_ppem )

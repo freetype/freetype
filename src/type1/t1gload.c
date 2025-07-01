@@ -303,7 +303,7 @@
       {
         advances[nn] = 0;
 
-        FT_TRACE5(( "  idx %d: advance height 0 font units\n",
+        FT_TRACE5(( "  idx %u: advance height 0 font units\n",
                     first + nn ));
       }
 
@@ -341,7 +341,7 @@
       else
         advances[nn] = 0;
 
-      FT_TRACE5(( "  idx %d: advance width %ld font unit%s\n",
+      FT_TRACE5(( "  idx %u: advance width %ld font unit%s\n",
                   first + nn,
                   advances[nn],
                   advances[nn] == 1 ? "" : "s" ));
@@ -388,7 +388,7 @@
       goto Exit;
     }
 
-    FT_TRACE1(( "T1_Load_Glyph: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "T1_Load_Glyph: glyph index %u\n", glyph_index ));
 
     FT_ASSERT( ( face->len_buildchar == 0 ) == ( face->buildchar == NULL ) );
 
