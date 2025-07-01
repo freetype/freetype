@@ -3577,7 +3577,7 @@
   af_glyph_hints_apply_vertical_separation_adjustments(
     AF_GlyphHints  hints,
     AF_Dimension   dim,
-    FT_Int         glyph_index,
+    FT_UInt        glyph_index,
     FT_Pos         accent_height_limit,
     FT_Hash        reverse_charmap )
   {
@@ -3597,10 +3597,10 @@
     if ( dim != AF_DIMENSION_VERT )
       return;
 
-    val = ft_hash_num_lookup( glyph_index, reverse_charmap );
+    val = ft_hash_num_lookup( (FT_Int)glyph_index, reverse_charmap );
     if ( val )
     {
-      FT_Int  codepoint = *val;
+      FT_UInt  codepoint = *val;
 
 
       adj_type = af_adjustment_database_lookup( codepoint );
@@ -4901,11 +4901,11 @@
       FT_Pos  y_offset;
 
 
-      val = ft_hash_num_lookup( glyph_index,
+      val = ft_hash_num_lookup( (FT_Int)glyph_index,
                                 metrics->root.reverse_charmap );
       if ( val )
       {
-        FT_Int     codepoint = *val;
+        FT_UInt    codepoint = *val;
         FT_UInt32  adj_type  = af_adjustment_database_lookup( codepoint );
 
 

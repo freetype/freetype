@@ -1175,7 +1175,7 @@
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
   static FT_Error
-  add_substitute( FT_UInt    glyph_idx,
+  add_substitute( FT_Int     glyph_idx,
                   size_t     value,
                   FT_UInt32  codepoint,
                   FT_Hash    reverse_map,
@@ -1184,7 +1184,7 @@
   {
     FT_Error  error;
 
-    FT_UInt  first_substitute = value & 0xFFFF;
+    FT_Int  first_substitute = (FT_Int)( value & 0xFFFF );
 
     FT_UInt  used = reverse_map->used;
 
@@ -1232,8 +1232,8 @@
 
       for ( i = 1; i <= num_substitutes; i++ )
       {
-        size_t*  substitute = ft_hash_num_lookup( glyph_idx + ( i << 16 ),
-                                                  subst_map );
+        FT_Int   idx        = glyph_idx + (FT_Int)( i << 16 );
+        size_t*  substitute = ft_hash_num_lookup( idx, subst_map );
 
 
         used = reverse_map->used;
@@ -1345,7 +1345,7 @@
       */
       codepoint = adjustment_database[i].codepoint;
 
-      cmap_glyph = FT_Get_Char_Index( face, codepoint );
+      cmap_glyph = (FT_Int)FT_Get_Char_Index( face, codepoint );
       if ( cmap_glyph == 0 )
         continue;
 
@@ -1475,7 +1475,7 @@
 
 
         /* Ignore keys that do not point to the first substitute. */
-        if ( glyph_idx & 0xFFFF0000 )
+        if ( (FT_UInt)glyph_idx & 0xFFFF0000U )
           continue;
 
         /* Ignore glyph indices that are not related to accents. */
@@ -1546,7 +1546,7 @@
         size_t  j;
 
 
-        val = ft_hash_num_lookup( cnt, *map );
+        val = ft_hash_num_lookup( (FT_Int)cnt, *map );
         if ( !val )
           continue;
         codepoint = *val;

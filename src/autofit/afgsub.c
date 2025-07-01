@@ -511,11 +511,14 @@
     else
     {
       /* Get number of substitutes, increased by one... */
-      FT_UInt  mask = ( *value & 0xFFFF0000 ) + 0x10000U;
+      FT_UInt  mask = ( (FT_UInt)*value & 0xFFFF0000U ) + 0x10000U;
 
 
       /* ... which becomes the new key mask. */
-      error = ft_hash_num_insert( glyph | mask, substitute, map, memory );
+      error = ft_hash_num_insert( (FT_Int)( glyph | mask ),
+                                  substitute,
+                                  map,
+                                  memory );
       if ( error )
         return error;
 

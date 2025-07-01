@@ -793,7 +793,7 @@
       if ( i & 1 )
         *bp++ |= x;
       else
-        *bp    = x << 4;
+        *bp = (unsigned char)( x << 4 );
     }
 
     p->row++;

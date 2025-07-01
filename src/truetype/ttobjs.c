@@ -1066,7 +1066,8 @@
     exec->cvtSize   = face->cvt_size;
 
     if ( FT_NEW_ARRAY( exec->stack,
-                       exec->stackSize + exec->storeSize  + exec->cvtSize ) )
+                       (FT_ULong)exec->stackSize +
+                         exec->storeSize + exec->cvtSize ) )
       goto Exit;
 
     /* reserve twilight zone and set GS before fpgm is executed, */
