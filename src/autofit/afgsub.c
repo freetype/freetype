@@ -16,11 +16,13 @@
  */
 
 #include <freetype/freetype.h>
+#include <freetype/tttables.h>
 #include <freetype/tttags.h>
 
 #include <freetype/internal/ftstream.h>
 
 #include "afglobal.h"
+#include "afgsub.h"
 #include "aftypes.h"
 
 
