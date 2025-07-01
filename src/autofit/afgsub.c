@@ -310,9 +310,7 @@
     FT_Byte*  limit;
 
 
-    globals->gsub_length = 0;
-    globals->gsub        = NULL;
-
+    globals->gsub                          = NULL;
     globals->gsub_lookups_single_alternate = NULL;
 
     /* No error if we can't load or parse GSUB data. */
@@ -364,9 +362,7 @@
       idx++;
     }
 
-    globals->gsub_length = gsub_length;
-    globals->gsub        = gsub;
-
+    globals->gsub                          = gsub;
     globals->gsub_lookups_single_alternate = gsub_lookups_single_alternate;
 
     return;

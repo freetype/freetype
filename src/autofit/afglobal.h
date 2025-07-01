@@ -115,9 +115,7 @@ FT_BEGIN_HEADER
     hb_buffer_t*     hb_buf;           /* for feature comparison */
 
     /* The GSUB table. */
-    FT_ULong         gsub_length;
     FT_Byte*         gsub;
-
     /* Lookup offsets, with only SingleSubst and AlternateSubst non-NULL. */
     FT_UInt32*       gsub_lookups_single_alternate;
 #endif
