@@ -20,6 +20,7 @@
 
 #include <freetype/internal/ftstream.h>
 
+#include "afglobal.h"
 #include "aftypes.h"
 
 
