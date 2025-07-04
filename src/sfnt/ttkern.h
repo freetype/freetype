@@ -40,8 +40,6 @@ FT_BEGIN_HEADER
                        FT_UInt     left_glyph,
                        FT_UInt     right_glyph );
 
-#define TT_FACE_HAS_KERNING( face )  ( (face)->kern_avail_bits != 0 )
-
 
 FT_END_HEADER
 

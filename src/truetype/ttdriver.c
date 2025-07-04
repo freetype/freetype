@@ -220,7 +220,7 @@
     {
       /* Use 'kern' table if available since that can be faster; otherwise */
       /* use GPOS kerning pairs if available.                              */
-      if ( ttface->kern_avail_bits != 0 )
+      if ( ttface->kern_avail_bits )
         kerning->x = sfnt->get_kerning( ttface,
                                         left_glyph,
                                         right_glyph );
