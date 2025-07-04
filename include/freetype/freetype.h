@@ -3997,13 +3997,13 @@ FT_BEGIN_HEADER
    *   out of the scope of this API function -- they can be implemented
    *   through format-specific interfaces.
    *
-   *   Note that, for TrueType fonts only, this can extract data from both
-   *   the 'kern' table and the basic, pair-wise kerning feature from the
-   *   GPOS table (with `TT_CONFIG_OPTION_GPOS_KERNING` enabled), though
-   *   FreeType does not support the more advanced GPOS layout features; use
-   *   a library like HarfBuzz for those instead.  If a font has both a
-   *   'kern' table and kern features of a GPOS table, the 'kern' table will
-   *   be used.
+   *   Note that, for TrueType and OpenType fonts only, this can extract data
+   *   from both the 'kern' table and the basic, pair-wise kerning feature
+   *   from the GPOS table (with `TT_CONFIG_OPTION_GPOS_KERNING` enabled),
+   *   though FreeType does not support the more advanced GPOS layout
+   *   features; use a library like HarfBuzz for those instead.  If a font
+   *   has both a 'kern' table and kern features of a GPOS table, the 'kern'
+   *   table will be used.
    *
    *   Also note for right-to-left scripts, the functionality may differ for
    *   fonts with GPOS tables vs. 'kern' tables.  For GPOS, right-to-left

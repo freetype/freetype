@@ -129,7 +129,7 @@
                                         left_glyph,
                                         right_glyph );
 #ifdef TT_CONFIG_OPTION_GPOS_KERNING
-      else if ( cffface->gpos_kerning_available )
+      else if ( cffface->num_gpos_lookups_kerning )
         kerning->x = sfnt->get_gpos_kerning( cffface,
                                              left_glyph,
                                              right_glyph );

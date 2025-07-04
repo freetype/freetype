@@ -43,6 +43,13 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     outlines, not to ban them completely.
 
 
+  II. IMPORTANT BUG FIXES
+
+  - Users of the `TT_CONFIG_OPTION_GPOS_KERNING`  configuration option
+    should update;  the 'GPOS' table wasn't correctly validated before
+    access, which could lead to crashes with malformed font files.
+
+
   III. MISCELLANEOUS
 
   - `FT_Set_Var_Design_Coordinates`  and `FT_Set_MM_Blend_Coordinates`
@@ -65,6 +72,10 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     point multiplication.
 
   - The BDF driver now loads fonts 75% faster.
+
+  - 'GPOS' kern table handling (if the `TT_CONFIG_OPTION_GPOS_KERNING`
+    configuration option is active) is now about 3.5 times faster than
+    before.
 
 
 ======================================================================

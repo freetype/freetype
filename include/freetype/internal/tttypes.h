@@ -1574,11 +1574,6 @@ FT_BEGIN_HEADER
     FT_UInt32             kern_avail_bits;
     FT_UInt32             kern_order_bits;
 
-#ifdef TT_CONFIG_OPTION_GPOS_KERNING
-    FT_Byte*              gpos_table;
-    FT_Bool               gpos_kerning_available;
-#endif
-
 #ifdef TT_CONFIG_OPTION_BDF
     TT_BDFRec             bdf;
 #endif /* TT_CONFIG_OPTION_BDF */
@@ -1599,6 +1594,15 @@ FT_BEGIN_HEADER
 
     /* since 2.12 */
     void*                 svg;
+
+#ifdef TT_CONFIG_OPTION_GPOS_KERNING
+    /* since 2.13.3 */
+    FT_Byte*              gpos_table;
+    /* since 2.14 */
+    /* This is actually an array of GPOS lookup subtables. */
+    FT_UInt32*            gpos_lookups_kerning;
+    FT_UInt               num_gpos_lookups_kerning;
+#endif
 
   } TT_FaceRec;
 
