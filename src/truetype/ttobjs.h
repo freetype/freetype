@@ -79,6 +79,7 @@ FT_BEGIN_HEADER
 
     FT_Long        loop;
     FT_Int         round_state;
+    FT_F26Dot6     compensation[4];   /* device-specific compensations  */
 
     /* default values below can be modified by 'fpgm' and 'prep' */
     FT_F26Dot6     minimum_distance;
@@ -186,11 +187,9 @@ FT_BEGIN_HEADER
     FT_Long     x_ratio;
     FT_Long     y_ratio;
 
-    FT_UShort   ppem;               /* maximum ppem size              */
     FT_Long     ratio;              /* current ratio                  */
     FT_Fixed    scale;
-
-    FT_F26Dot6  compensations[4];   /* device-specific compensations  */
+    FT_UShort   ppem;               /* maximum ppem size              */
 
     FT_Bool     valid;
 
