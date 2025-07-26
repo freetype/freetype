@@ -2478,7 +2478,7 @@
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     /* if FT_LOAD_NO_SCALE is not set, `ttmetrics' must be valid */
-    if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.valid )
+    if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.ppem )
     {
       error = FT_THROW( Invalid_Size_Handle );
       goto Exit;
