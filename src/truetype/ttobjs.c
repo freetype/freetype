@@ -1135,8 +1135,7 @@
     size->bytecode_ready = -1;
 #endif
 
-    size->ttmetrics.valid = FALSE;
-    size->strike_index    = 0xFFFFFFFFUL;
+    size->strike_index = 0xFFFFFFFFUL;
 
     return error;
   }
@@ -1163,8 +1162,6 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
     tt_size_done_bytecode( size );
 #endif
-
-    size->ttmetrics.valid = FALSE;
   }
 
 
@@ -1192,8 +1189,6 @@
     TT_Face           face         = (TT_Face)size->root.face;
     FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
 
-    size->ttmetrics.valid = FALSE;
-
     /* copy the result from base layer */
     *size_metrics = size->root.metrics;
 
@@ -1217,8 +1212,6 @@
                                FT_MulFix( face->root.height,
                                           size_metrics->y_scale ) );
     }
-
-    size->ttmetrics.valid = TRUE;
 
     return FT_Err_Ok;
   }
@@ -1244,6 +1237,9 @@
     TT_Face           face         = (TT_Face)size->root.face;
     FT_Size_Metrics*  size_metrics = &size->hinted_metrics;
 
+
+    /* invalidate the size object first */
+    size->ttmetrics.ppem = 0;
 
     error = tt_size_reset_height( (FT_Size)size );
     if ( error )

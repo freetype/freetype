@@ -191,8 +191,6 @@ FT_BEGIN_HEADER
     FT_Fixed    scale;
     FT_UShort   ppem;               /* maximum ppem size              */
 
-    FT_Bool     valid;
-
     FT_Bool     rotated;            /* `is the glyph rotated?'-flag   */
     FT_Bool     stretched;          /* `is the glyph stretched?'-flag */
 
