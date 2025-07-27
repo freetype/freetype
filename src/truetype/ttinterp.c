@@ -1675,8 +1675,8 @@
    *   distance ::
    *     The distance (not) to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   The compensated distance.
@@ -1718,8 +1718,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1763,8 +1763,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1810,8 +1810,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1854,8 +1854,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1899,8 +1899,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1944,8 +1944,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
@@ -1999,8 +1999,8 @@
    *   distance ::
    *     The distance to round.
    *
-   *   color ::
-   *     The engine compensation color.
+   *   compensation ::
+   *     The engine compensation.
    *
    * @Return:
    *   Rounded distance.
