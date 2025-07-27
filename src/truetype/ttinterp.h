@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
   typedef FT_F26Dot6
   (*TT_Round_Func)( TT_ExecContext  exc,
                     FT_F26Dot6      distance,
-                    FT_Int          color );
+                    FT_F26Dot6      compensation );
 
   /* Point displacement along the freedom vector routine */
   typedef void
