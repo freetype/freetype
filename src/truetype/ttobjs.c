@@ -1088,18 +1088,6 @@
     size->ttmetrics.rotated   = FALSE;
     size->ttmetrics.stretched = FALSE;
 
-    /* Set default engine compensation.  Value 3 is not described */
-    /* in the OpenType specification (as of May 2019), but Greg   */
-    /* says that MS handles it the same as `gray'.                */
-    /*                                                            */
-    /* The Apple specification says that the compensation for     */
-    /* `gray' is always zero.  FreeType doesn't do any            */
-    /* compensation at all.                                       */
-    size->ttmetrics.compensations[0] = 0;   /* gray  */
-    size->ttmetrics.compensations[1] = 0;   /* black */
-    size->ttmetrics.compensations[2] = 0;   /* white */
-    size->ttmetrics.compensations[3] = 0;   /* zero  */
-
     /* Fine, now run the font program! */
 
     /* In case of an error while executing `fpgm', we intentionally don't */

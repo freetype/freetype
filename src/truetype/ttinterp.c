@@ -95,12 +95,20 @@
   /* default values of our `scan_type' and `scan_control' fields (which */
   /* the documentation's `scan_control' variable is split into) are     */
   /* zero.                                                              */
+  /*                                                                    */
+  /* The rounding compensation should logically belong here but poorly  */
+  /* described in the OpenType specs.  It was probably important in the */
+  /* days of dot matrix printers.  The values are referenced by color   */
+  /* as Gray, Black, and White in order. The Apple specification says   */
+  /* that the Gray compensation is always zero.  The fourth value is    */
+  /* not described at all, but Greg says that it is the same as Gray.   */
+  /* FreeType sets all compensation values to zero.                     */
 
   const TT_GraphicsState  tt_default_graphics_state =
   {
     0, 0, 0,  1, 1, 1,
     { 0x4000, 0 }, { 0x4000, 0 }, { 0x4000, 0 },
-    1, 1,
+    1, 1, { 0, 0, 0, 0 },
 
     64, 68, 0, 0, 9, 3,
     TRUE, 0, FALSE, 0
@@ -1676,10 +1684,10 @@
   static FT_F26Dot6
   Round_None( TT_ExecContext  exc,
               FT_F26Dot6      distance,
-              FT_Int          color )
+              FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1719,10 +1727,10 @@
   static FT_F26Dot6
   Round_To_Grid( TT_ExecContext  exc,
                  FT_F26Dot6      distance,
-                 FT_Int          color )
+                 FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1764,10 +1772,10 @@
   static FT_F26Dot6
   Round_To_Half_Grid( TT_ExecContext  exc,
                       FT_F26Dot6      distance,
-                      FT_Int          color )
+                      FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1811,10 +1819,10 @@
   static FT_F26Dot6
   Round_Down_To_Grid( TT_ExecContext  exc,
                       FT_F26Dot6      distance,
-                      FT_Int          color )
+                      FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1855,10 +1863,10 @@
   static FT_F26Dot6
   Round_Up_To_Grid( TT_ExecContext  exc,
                     FT_F26Dot6      distance,
-                    FT_Int          color )
+                    FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1900,10 +1908,10 @@
   static FT_F26Dot6
   Round_To_Double_Grid( TT_ExecContext  exc,
                         FT_F26Dot6      distance,
-                        FT_Int          color )
+                        FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1951,9 +1959,8 @@
   static FT_F26Dot6
   Round_Super( TT_ExecContext  exc,
                FT_F26Dot6      distance,
-               FT_Int          color )
+               FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
 
 
@@ -2005,9 +2012,8 @@
   static FT_F26Dot6
   Round_Super_45( TT_ExecContext  exc,
                   FT_F26Dot6      distance,
-                  FT_Int          color )
+                  FT_F26Dot6      compensation )
   {
-    FT_F26Dot6  compensation = exc->tt_metrics.compensations[color];
     FT_F26Dot6  val;
 
 
@@ -2561,7 +2567,7 @@
   Ins_ODD( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    args[0] = ( ( exc->func_round( exc, args[0], 3 ) & 127 ) == 64 );
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 64 );
   }
 
 
@@ -2575,7 +2581,7 @@
   Ins_EVEN( TT_ExecContext  exc,
             FT_Long*        args )
   {
-    args[0] = ( ( exc->func_round( exc, args[0], 3 ) & 127 ) == 0 );
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 0 );
   }
 
 
@@ -2905,7 +2911,8 @@
   Ins_ROUND( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    args[0] = exc->func_round( exc, args[0], exc->opcode & 3 );
+    args[0] = exc->func_round( exc, args[0],
+                               exc->GS.compensation[exc->opcode & 3] );
   }
 
 
@@ -2919,7 +2926,8 @@
   Ins_NROUND( TT_ExecContext  exc,
               FT_Long*        args )
   {
-    args[0] = Round_None( exc, args[0], exc->opcode & 3 );
+    args[0] = Round_None( exc, args[0],
+                          exc->GS.compensation[exc->opcode & 3] );
   }
 
 
