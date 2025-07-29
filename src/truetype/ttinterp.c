@@ -5296,7 +5296,7 @@
     if ( ( exc->opcode & 1 ) != 0 )
     {
       cur_dist = FAST_PROJECT( &exc->zp0.cur[point] );
-      distance = SUB_LONG( exc->func_round( exc, cur_dist, 3 ), cur_dist );
+      distance = SUB_LONG( exc->func_round( exc, cur_dist, 0 ), cur_dist );
     }
     else
       distance = 0;
@@ -5381,7 +5381,7 @@
       if ( delta > control_value_cutin )
         distance = org_dist;
 
-      distance = exc->func_round( exc, distance, 3 );
+      distance = exc->func_round( exc, distance, 0 );
     }
 
     exc->func_move( exc, &exc->zp0, point, SUB_LONG( distance, org_dist ) );
@@ -5474,10 +5474,12 @@
 
     if ( ( exc->opcode & 4 ) != 0 )
     {
-      distance = exc->func_round( exc, org_dist, exc->opcode & 3 );
+      distance = exc->func_round( exc, org_dist,
+                                  exc->GS.compensation[exc->opcode & 3] );
     }
     else
-      distance = Round_None( exc, org_dist, exc->opcode & 3 );
+      distance = Round_None( exc, org_dist,
+                             exc->GS.compensation[exc->opcode & 3] );
 
     /* minimum distance flag */
 
@@ -5625,10 +5627,12 @@
           cvt_dist = org_dist;
       }
 
-      distance = exc->func_round( exc, cvt_dist, exc->opcode & 3 );
+      distance = exc->func_round( exc, cvt_dist,
+                                  exc->GS.compensation[exc->opcode & 3] );
     }
     else
-      distance = Round_None( exc, cvt_dist, exc->opcode & 3 );
+      distance = Round_None( exc, cvt_dist,
+                             exc->GS.compensation[exc->opcode & 3] );
 
     /* minimum distance test */
 
