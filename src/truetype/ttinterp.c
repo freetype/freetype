@@ -2567,7 +2567,7 @@
   Ins_ODD( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 64 );
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 64 ) == 64 );
   }
 
 
@@ -2581,7 +2581,7 @@
   Ins_EVEN( TT_ExecContext  exc,
             FT_Long*        args )
   {
-    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 0 );
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 64 ) == 0 );
   }
 
 
