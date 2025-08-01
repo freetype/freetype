@@ -1144,30 +1144,15 @@
         x = FT_MulFix( x, x_scale );
         y = FT_MulFix( y, y_scale );
 
-        if ( subglyph->flags & ROUND_XY_TO_GRID )
+        if ( subglyph->flags & ROUND_XY_TO_GRID &&
+             IS_HINTED( loader->load_flags )    )
         {
-          TT_Face    face   = loader->face;
-          TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+          if ( !loader->exec->backward_compatibility )
+#endif
+            x = FT_PIX_ROUND( x );
 
-
-          if ( IS_HINTED( loader->load_flags ) )
-          {
-            /*
-             * We round the horizontal offset only if there is hinting along
-             * the x axis; this corresponds to integer advance width values.
-             *
-             * Theoretically, a glyph's bytecode can toggle ClearType's
-             * `backward compatibility' mode, which would allow modification
-             * of the advance width.  In reality, however, applications
-             * neither allow nor expect modified advance widths if subpixel
-             * rendering is active.
-             *
-             */
-            if ( driver->interpreter_version == TT_INTERPRETER_VERSION_35 )
-              x = FT_PIX_ROUND( x );
-
-            y = FT_PIX_ROUND( y );
-          }
+          y = FT_PIX_ROUND( y );
         }
       }
     }
