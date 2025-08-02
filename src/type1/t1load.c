@@ -640,7 +640,7 @@
   {
     FT_UNUSED( instance_index );
 
-    return T1_Set_MM_Blend( face, 0, NULL );
+    return T1_Set_MM_WeightVector( face, 0, NULL );
   }
 
 
