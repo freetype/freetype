@@ -77,6 +77,9 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     configuration option is active) is now about 3.5 times faster than
     before.
 
+  - `ftmulti` can now scroll  through named instances  and  gracefully
+    show static fonts.
+
 
 ======================================================================
 
