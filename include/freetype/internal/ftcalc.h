@@ -99,6 +99,13 @@ FT_BEGIN_HEADER
     return (FT_Long)( ab >> 16 );
   }
 
+
+#ifdef __VMS
+#  ifdef FT_MulFix
+#    undef FT_MulFix
+#  endif
+#endif
+
 #define FT_MulFix( a, b )  FT_MulFix_64( a, b )
 
 #elif !defined( FT_CONFIG_OPTION_NO_ASSEMBLER )

@@ -80,6 +80,9 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
   - `ftmulti` can now scroll  through named instances  and  gracefully
     show static fonts.
 
+  - The build file on OpenVMS now also creates a 32-bit version of the
+    library.
+
 
 ======================================================================
 
