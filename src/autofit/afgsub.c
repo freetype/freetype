@@ -15,6 +15,9 @@
  *
  */
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+
+
 #include <freetype/freetype.h>
 #include <freetype/tttables.h>
 #include <freetype/tttags.h>
@@ -24,9 +27,6 @@
 #include "afglobal.h"
 #include "afgsub.h"
 #include "aftypes.h"
-
-
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
 
   /*********************************/
