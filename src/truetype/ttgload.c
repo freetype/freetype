@@ -1926,9 +1926,14 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     if ( glyph_data_loaded )
+    {
+      /* restore original stream */
+      loader->stream = face->root.stream;
+
       face->root.internal->incremental_interface->funcs->free_glyph_data(
         face->root.internal->incremental_interface->object,
         &glyph_data );
+    }
 
 #endif
 
