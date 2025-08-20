@@ -1156,11 +1156,10 @@
   FT_LOCAL_DEF( void )
   tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
-    TT_Size  size = (TT_Size)ttsize;
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    tt_size_done_bytecode( size );
+    tt_size_done_bytecode( (TT_Size)ttsize );
+#else
+    FT_UNUSED( ttsize );
 #endif
   }
 
