@@ -4,7 +4,7 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
 
   - A new  configuration macro `FT_CONFIG_OPTION_USE_HARFBUZZ_DYNAMIC`
     is available to load the HarfBuzz library dynamically (in addition
-    to the standard static and  dynamic linking modes);  cmake,  meson
+    to the standard static and  dynamic linking modes);  cmake, meson,
     and autotools support have  been updated  accordingly.  Using this
     new feature  makes  it possible  to avoid  the circular dependency
     between HarfBuzz and FreeType.
@@ -36,11 +36,11 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
     The central algorithm and the foundation of this feature was Craig
     White's GSoC 2023 project.
 
-  - Bitmap-only TrueType fonts  now ignore FT_LOAD_NO_BITMAP flag  and
-    proceed loading bitmaps instead of giving an error.  This behavior
-    is documented  and  implemented  for other bitmap-only fonts.  The
-    flag  was always meant  to suppress the bitmap strikes in favor of
-    outlines, not to ban them completely.
+  - Bitmap-only TrueType fonts now ignore the `FT_LOAD_NO_BITMAP` flag
+    and  proceed loading  bitmaps instead  of giving  an error.   This
+    behavior  is  documented  and implemented  for  other  bitmap-only
+    fonts.  The flag  was always meant to suppress  the bitmap strikes
+    in favor of outlines, not to ban them completely.
 
 
   II. IMPORTANT BUG FIXES
@@ -54,15 +54,15 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
 
   - `FT_Set_Var_Design_Coordinates`  and `FT_Set_MM_Blend_Coordinates`
     now set the `FT_FACE_FLAG_VARIATION`  bit in the `face_flag` field
-    of `FT_Face` (i.e., the  macro `FT_IS_VARIATION` will return true)
-    also  if any  of the  provided coordinates  is different  from the
-    face's default value for the  corresponding axis, that is, the set
-    up face is not at its default position.
+    of `FT_Face` (i.e., the macro `FT_IS_VARIATION` returns true) also
+    if any  of the provided  coordinates is different from  the face's
+    default value for the corresponding axis, that is, the set up face
+    is not at its default position.
 
   - `FT_Load_Sfnt_Table` can now also load a font's table directory.
 
-  - The TrueType instruction interpreter  was optimized to produce 15%
-    gain in the glyph loading speed.
+  - The TrueType  instruction interpreter  was optimized to  produce a
+    15% gain in the glyph loading speed.
 
   - Handling of Variation Fonts is now considerably faster,  thanks to
     contributions by Behdad Esfahbod.
@@ -76,6 +76,10 @@ CHANGES BETWEEN 2.13.3 and 2.14.0 (2025-Mmm-DD)
   - 'GPOS' kern table handling (if the `TT_CONFIG_OPTION_GPOS_KERNING`
     configuration option is active) is now about 3.5 times faster than
     before.
+
+  - Support for  the (currently  undocumented) 'flip' graphic  type in
+    the 'sbix' SFNT table as used  in the `Apple Color Emoji.ttc` font
+    (code provided by Andrew Murray).
 
   - `ftmulti` can now scroll  through named instances  and  gracefully
     show static fonts.

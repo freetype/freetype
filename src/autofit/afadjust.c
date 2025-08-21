@@ -1198,7 +1198,7 @@
       be contradictory entries for glyphs not in the cmap.  A possible
       solution might be to specially mark pairs of related lowercase and
       uppercase characters in the adjustment database that have diacritics
-      on different vertical sides (for example, U+0122 'Ģ' and U+0123 'ģ'). 
+      on different vertical sides (for example, U+0122 'Ģ' and U+0123 'ģ').
       The auto-hinter could then perform a topological analysis to do the
       right thing.
     */

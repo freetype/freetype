@@ -849,9 +849,9 @@
                     FT_Int  width )
   {
 #if USE_SQUARED_DISTANCES
-    FT_16D16 edge_threshold = ONE / 4;
+    FT_16D16      edge_threshold = ONE / 4;
 #else
-    FT_16D16 edge_threshold = ONE / 2;
+    FT_16D16      edge_threshold = ONE / 2;
 #endif
     ED*           to_check;
     FT_16D16      dist;

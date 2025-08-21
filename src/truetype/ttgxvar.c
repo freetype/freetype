@@ -3169,7 +3169,7 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error;
 
 
     error = tt_set_mm_blend( (TT_Face)face, num_coords, coords, 1 );

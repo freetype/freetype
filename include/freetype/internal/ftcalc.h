@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
       : "a"(a), "d"(b)
       : "%ecx", "cc" );
 
-#elif defined( _MSC_VER)
+#elif defined( _MSC_VER )
 
     __asm
     {
