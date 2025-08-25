@@ -20,15 +20,14 @@
 /* issues; many thanks!                                                */
 
 
-#ifdef TT_USE_BYTECODE_INTERPRETER
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/fttrigon.h>
 #include <freetype/ftsystem.h>
 #include <freetype/ftdriver.h>
 #include <freetype/ftmm.h>
+
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
 #include "ttinterp.h"
 #include "tterrors.h"
