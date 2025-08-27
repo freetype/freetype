@@ -905,7 +905,6 @@
     FT_Library    library;
     FT_Bool       autohint = FALSE;
     FT_Module     hinter;
-    TT_Face       ttface = (TT_Face)face;
 
 
     if ( !face || !face->size || !face->glyph )
@@ -983,6 +982,7 @@
       {
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
         FT_Bool         is_light_type1;
+        TT_Face         ttface = (TT_Face)face;
 
 
         /* only the new Adobe engine (for both CFF and Type 1) is `light'; */
