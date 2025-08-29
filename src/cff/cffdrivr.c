@@ -1182,10 +1182,9 @@
   FT_DEFINE_DRIVER(
     cff_driver_class,
 
-      FT_MODULE_FONT_DRIVER          |
-      FT_MODULE_DRIVER_SCALABLE      |
-      FT_MODULE_DRIVER_HAS_HINTER    |
-      FT_MODULE_DRIVER_HINTS_LIGHTLY,
+      FT_MODULE_FONT_DRIVER       |
+      FT_MODULE_DRIVER_SCALABLE   |
+      FT_MODULE_DRIVER_HAS_HINTER,
 
       sizeof ( PS_DriverRec ),
       "cff",

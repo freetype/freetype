@@ -166,6 +166,12 @@
           error = FT_ERR( Unimplemented_Feature );
       }
 
+      /* set the light hinting flags accordingly */
+      if ( driver->hinting_engine == FT_HINTING_ADOBE )
+        module->clazz->module_flags |= FT_MODULE_DRIVER_HINTS_LIGHTLY;
+      else if ( driver->hinting_engine == FT_HINTING_FREETYPE )
+        module->clazz->module_flags &= ~FT_MODULE_DRIVER_HINTS_LIGHTLY;
+
       return error;
     }
 

@@ -236,6 +236,7 @@
       FT_MODULE_FONT_DRIVER       |
       FT_MODULE_DRIVER_SCALABLE   |
       FT_MODULE_DRIVER_HAS_HINTER,
+
       sizeof ( PS_DriverRec ),
 
       "t1cid",   /* module name           */

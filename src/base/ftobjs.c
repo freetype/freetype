@@ -27,7 +27,6 @@
 #include <freetype/internal/ftrfork.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>          /* for SFNT_Load_Table_Func */
-#include <freetype/internal/psaux.h>         /* for PS_Driver            */
 #include <freetype/internal/svginterface.h>
 
 #include <freetype/tttables.h>
@@ -978,34 +977,22 @@
       if ( ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ||
            !FT_DRIVER_HAS_HINTER( driver )         )
         autohint = TRUE;
-      else
-      {
-        FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
-        FT_Bool         is_light_type1;
-        TT_Face         ttface = (TT_Face)face;
 
+      else if ( FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LIGHT &&
+                !FT_DRIVER_HINTS_LIGHTLY( driver )                        )
+        autohint = TRUE;
 
-        /* only the new Adobe engine (for both CFF and Type 1) is `light'; */
-        /* we use `strstr' to catch both `Type 1' and `CID Type 1'         */
-        is_light_type1 =
-          ft_strstr( FT_Get_Font_Format( face ), "Type 1" ) != NULL &&
-          ((PS_Driver)driver)->hinting_engine == FT_HINTING_ADOBE;
-
-        /* the check for `num_locations' assures that we actually    */
-        /* test for instructions in a TTF and not in a CFF-based OTF */
-        /*                                                           */
-        /* we check the size of the `fpgm' and `prep' tables, too -- */
-        /* the assumption is that there don't exist real TTFs where  */
-        /* both `fpgm' and `prep' tables are missing                 */
-        if ( ( mode == FT_RENDER_MODE_LIGHT           &&
-               ( !FT_DRIVER_HINTS_LIGHTLY( driver ) &&
-                 !is_light_type1                    ) )         ||
-             ( FT_IS_SFNT( face )                             &&
-               ttface->num_locations                          &&
-               ttface->font_program_size == 0                 &&
-               ttface->cvt_program_size <= 7                  ) )
-          autohint = TRUE;
-      }
+      /* the check for `num_locations' assures that we actually    */
+      /* test for instructions in a TTF and not in a CFF-based OTF */
+      /*                                                           */
+      /* we check the size of the `fpgm' and `prep' tables, too -- */
+      /* the assumption is that there don't exist real TTFs where  */
+      /* both `fpgm' and `prep' tables are missing                 */
+      else if ( FT_IS_SFNT( face )                      &&
+                ((TT_Face)face)->num_locations          &&
+                ((TT_Face)face)->font_program_size == 0 &&
+                ((TT_Face)face)->cvt_program_size <= 7  )
+        autohint = TRUE;
     }
 
     if ( autohint )

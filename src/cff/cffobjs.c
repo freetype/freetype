@@ -1138,7 +1138,8 @@
 
 
     /* set default property values, cf. `ftcffdrv.h' */
-    driver->hinting_engine = FT_HINTING_ADOBE;
+    driver->hinting_engine       = FT_HINTING_ADOBE;
+    module->clazz->module_flags |= FT_MODULE_DRIVER_HINTS_LIGHTLY;
 
     driver->no_stem_darkening = TRUE;
 
