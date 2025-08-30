@@ -41,9 +41,6 @@
   /* cancel inlining macro from internal/ftcalc.h */
 #ifdef FT_MulFix
 #  undef FT_MulFix
-#  ifdef vms_auto64_source
-#    define FT_MulFix FT_MulFix64__
-#  endif
 #endif
 
 

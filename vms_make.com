@@ -480,21 +480,22 @@ CXXFLAGS=$(CXXCOMP_FLAGS) -I[] -I[--.include] -I[--.src.base]
 	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3,MACROREDEF))/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
 	$(MMS$TARGET_NAME)_64.c
-	clang $(CXXFLAGS) -o $(MMS$TARGET_NAME)_64_cxx.obj $(MMS$TARGET_NAME)_64.c
+	clang $(CXXFLAGS) -Wno-macro-redefined\
+	-o $(MMS$TARGET_NAME)_64_cxx.obj $(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 .else
 .c.obj :
 	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all $(MMS$TARGET_NAME).c
 	pipe link/map/full/exec=nl: $(MMS$TARGET_NAME).obj | copy sys$input nl:
 	mc sys$library:vms_auto64 $(MMS$TARGET_NAME).map
-	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3))/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3,MACROREDEF))/point=64/obj=$(MMS$TARGET_NAME)_64.obj\
 	$(MMS$TARGET_NAME)_64.c
 	delete $(MMS$TARGET_NAME)_64.c;*
 .endif
 
-OBJS=ftbase.obj,\
+OBJS=ftbase_vms.obj,\
      ftbbox.obj,\
      ftbdf.obj,\
      ftbitmap.obj,\
@@ -511,7 +512,7 @@ OBJS=ftbase.obj,\
      fttype1.obj,\
      ftwinfnt.obj,ftpatent.obj,ftgxval.obj,ftotval.obj
 
-OBJS64=ftbase_64.obj,\
+OBJS64=ftbase_vms_64.obj,\
      ftbbox_64.obj,\
      ftbdf_64.obj,\
      ftbitmap_64.obj,\
@@ -528,7 +529,7 @@ OBJS64=ftbase_64.obj,\
      fttype1_64.obj,\
      ftwinfnt_64.obj,ftpatent_64.obj,ftgxval_64.obj,ftotval_64.obj
 
-OBJSCXX=ftbase_cxx.obj,\
+OBJSCXX=ftbase_vms_cxx.obj,\
      ftbbox_cxx.obj,\
      ftbdf_cxx.obj,\
      ftbitmap_cxx.obj,\
@@ -545,7 +546,7 @@ OBJSCXX=ftbase_cxx.obj,\
      fttype1_cxx.obj,\
      ftwinfnt_cxx.obj,ftpatent_cxx.obj,ftgxval_cxx.obj,ftotval_cxx.obj
 
-OBJSCXX32=ftbase_cxx32.obj,\
+OBJSCXX32=ftbase_vms_cxx32.obj,\
      ftbbox_cxx32.obj,\
      ftbdf_cxx32.obj,\
      ftbitmap_cxx32.obj,\
@@ -571,10 +572,37 @@ all : $(OBJS)
 	library [--.lib]freetype_cxx.olb $(OBJS64)
 .endif
 
-ftbase.obj : ftbase.c ftadvanc.c ftcalc.c ftcolor.c ftdbgmem.c fterrors.c\
+.ifdef X86
+ftbase_vms.obj : ftbase.c ftadvanc.c ftcalc.c_vms ftcolor.c ftdbgmem.c fterrors.c\
 	ftfntfmt.c ftgloadr.c fthash.c ftlcdfil.c ftmac.c ftobjs.c ftoutln.c\
 	ftpsprop.c ftrfork.c ftsnames.c ftstream.c fttrigon.c ftutil.c
+	pipe gsed -e "s/ftcalc.c/ftcalc.c_vms/" < ftbase.c > ftbase_vms.c
+	clang $(CXXFLAGS) -pointer-size=32 -o ftbase_vms_cxx32.obj ftbase_vms.c
+	clang $(CXXFLAGS) -o ftbase_vms_cxx.obj ftbase_vms.c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all ftbase_vms.c
+	pipe link/map/full/exec=nl: ftbase_vms.obj | copy sys$input nl:
+	mc sys$library:vms_auto64 ftbase_vms.map
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3,MACROREDEF))/point=64/obj=ftbase_vms_64.obj\
+	ftbase_vms_64.c
+	clang $(CXXFLAGS) -Wno-macro-redefined\
+	-o ftbase_vms_64_cxx.obj ftbase_vms_64.c
+	delete ftbase_vms_64.c;*
+.else
+ftbase_vms.obj : ftbase.c ftadvanc.c ftcalc.c_vms ftcolor.c ftdbgmem.c fterrors.c\
+	ftfntfmt.c ftgloadr.c fthash.c ftlcdfil.c ftmac.c ftobjs.c ftoutln.c\
+	ftpsprop.c ftrfork.c ftsnames.c ftstream.c fttrigon.c ftutil.c
+	pipe gsed -e "s/ftcalc.c/ftcalc.c_vms/" < ftbase.c > ftbase_vms.c
+	cc$(CFLAGS)/warn=noinfo/point=32/list/show=all ftbase_vms.c
+	pipe link/map/full/exec=nl: ftbase_vms.obj | copy sys$input nl:
+	mc sys$library:vms_auto64 ftbase_vms.map
+	cc$(CFLAGS)/warn=(noinfo,disable=(MAYLOSEDATA3,MACROREDEF))/point=64/obj=ftbase_vms_64.obj\
+	ftbase_vms_64.c
+	delete ftbase_vms_64.c;*
+	delete ftbase_vms.c;*
+.endif
 
+ftcalc.c_vms : ftcalc.c
+	pipe gsed -f [--.builds.vms]patch_ftcalc.sed < ftcalc.c > ftcalc.c_vms
 
 # EOF
 $ eod
@@ -2158,9 +2186,9 @@ $     then
 $       write sys$output "Unsupported compiler choice ''cc_com' ignored"
 $       write sys$output "Use DECC, VAXC, or GNUC instead"
 $     else
-$     	if cc_com .eqs. "DECC" then its_decc = true
-$     	if cc_com .eqs. "VAXC" then its_vaxc = true
-$     	if cc_com .eqs. "GNUC" then its_gnuc = true
+$       if cc_com .eqs. "DECC" then its_decc = true
+$       if cc_com .eqs. "VAXC" then its_vaxc = true
+$       if cc_com .eqs. "GNUC" then its_gnuc = true
 $     endif
 $   endif
 $   if f$locate("MAKE=",cparm) .lt. f$length(cparm)
