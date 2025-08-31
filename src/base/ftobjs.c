@@ -311,7 +311,7 @@
   ft_glyphslot_init( FT_GlyphSlot  slot )
   {
     FT_Driver         driver   = slot->face->driver;
-    FT_Driver_Class   clazz    = driver->clazz;
+    FT_Driver_Class*  clazz    = driver->clazz;
     FT_Memory         memory   = driver->root.memory;
     FT_Error          error    = FT_Err_Ok;
     FT_Slot_Internal  internal = NULL;
@@ -624,9 +624,9 @@
   static void
   ft_glyphslot_done( FT_GlyphSlot  slot )
   {
-    FT_Driver        driver = slot->face->driver;
-    FT_Driver_Class  clazz  = driver->clazz;
-    FT_Memory        memory = driver->root.memory;
+    FT_Driver         driver = slot->face->driver;
+    FT_Driver_Class*  clazz  = driver->clazz;
+    FT_Memory         memory = driver->root.memory;
 
 #ifdef FT_CONFIG_OPTION_SVG
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
@@ -674,11 +674,11 @@
   FT_New_GlyphSlot( FT_Face        face,
                     FT_GlyphSlot  *aslot )
   {
-    FT_Error         error;
-    FT_Driver        driver;
-    FT_Driver_Class  clazz;
-    FT_Memory        memory;
-    FT_GlyphSlot     slot = NULL;
+    FT_Error          error;
+    FT_Driver         driver;
+    FT_Driver_Class*  clazz;
+    FT_Memory         memory;
+    FT_GlyphSlot      slot = NULL;
 
 
     if ( !face )
@@ -1299,9 +1299,9 @@
                 void*      face_,
                 void*      driver_ )
   {
-    FT_Face          face   = (FT_Face)face_;
-    FT_Driver        driver = (FT_Driver)driver_;
-    FT_Driver_Class  clazz  = driver->clazz;
+    FT_Face           face   = (FT_Face)face_;
+    FT_Driver         driver = (FT_Driver)driver_;
+    FT_Driver_Class*  clazz  = driver->clazz;
 
 
     /* discard auto-hinting data */
@@ -1495,7 +1495,7 @@
              FT_Face       *aface )
   {
     FT_Memory         memory;
-    FT_Driver_Class   clazz;
+    FT_Driver_Class*  clazz;
     FT_Face           face     = NULL;
     FT_Face_Internal  internal = NULL;
 
@@ -2870,7 +2870,7 @@
     FT_Error   error;
     FT_Driver  driver;
 
-    FT_Driver_Class  clazz;
+    FT_Driver_Class*  clazz;
 
 
     /* test for valid `parameters' delayed to `FT_Stream_New' */
@@ -2965,13 +2965,13 @@
   FT_New_Size( FT_Face   face,
                FT_Size  *asize )
   {
-    FT_Error         error;
-    FT_Memory        memory;
-    FT_Driver        driver;
-    FT_Driver_Class  clazz;
+    FT_Error          error;
+    FT_Memory         memory;
+    FT_Driver         driver;
+    FT_Driver_Class*  clazz;
 
-    FT_Size          size = NULL;
-    FT_ListNode      node = NULL;
+    FT_Size           size = NULL;
+    FT_ListNode       node = NULL;
 
     FT_Size_Internal  internal = NULL;
 
@@ -3373,8 +3373,8 @@
   FT_Select_Size( FT_Face  face,
                   FT_Int   strike_index )
   {
-    FT_Error         error = FT_Err_Ok;
-    FT_Driver_Class  clazz;
+    FT_Error          error = FT_Err_Ok;
+    FT_Driver_Class*  clazz;
 
 
     if ( !face || !FT_HAS_FIXED_SIZES( face ) )
@@ -3431,9 +3431,9 @@
   FT_Request_Size( FT_Face          face,
                    FT_Size_Request  req )
   {
-    FT_Error         error;
-    FT_Driver_Class  clazz;
-    FT_ULong         strike_index;
+    FT_Error          error;
+    FT_Driver_Class*  clazz;
+    FT_ULong          strike_index;
 
 
     if ( !face )
@@ -5135,7 +5135,7 @@
       FT_Driver  driver = FT_DRIVER( module );
 
 
-      driver->clazz = (FT_Driver_Class)module->clazz;
+      driver->clazz = (FT_Driver_Class*)module->clazz;
     }
 
     if ( clazz->module_init )

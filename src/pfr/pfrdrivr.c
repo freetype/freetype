@@ -168,7 +168,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  FT_Driver_ClassRec  pfr_driver_class =
+  FT_Driver_Class  pfr_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER     |

@@ -485,7 +485,7 @@
       return FT_THROW( Missing_Module );
     }
 
-    driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;
+    driver->ttclazz = (FT_Driver_Class*)ttmodule->clazz;
 
     return FT_Err_Ok;
   }
@@ -651,11 +651,11 @@
                       FT_UInt       glyph_index,
                       FT_Int32      load_flags )
   {
-    FT_Error         error;
-    T42_GlyphSlot    t42slot = (T42_GlyphSlot)glyph;
-    T42_Size         t42size = (T42_Size)size;
-    T42_Face         t42face = (T42_Face)size->face;
-    FT_Driver_Class  ttclazz = ((T42_Driver)glyph->face->driver)->ttclazz;
+    FT_Error          error;
+    T42_GlyphSlot     t42slot = (T42_GlyphSlot)glyph;
+    T42_Size          t42size = (T42_Size)size;
+    T42_Face          t42face = (T42_Face)size->face;
+    FT_Driver_Class*  ttclazz = ((T42_Driver)glyph->face->driver)->ttclazz;
 
 
     FT_TRACE1(( "T42_GlyphSlot_Load: glyph index %u\n", glyph_index ));

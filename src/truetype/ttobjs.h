@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
 
 
   /* Note: All of the functions below (except tt_size_reset()) are used    */
-  /* as function pointers in a FT_Driver_ClassRec.  Therefore their        */
+  /* as function pointers in a FT_Driver_Class.  Therefore their           */
   /* parameters are of types FT_Face, FT_Size, etc., rather than TT_Face,  */
   /* TT_Size, etc., so that the compiler can confirm that the types and    */
   /* number of parameters are correct.  In all cases the FT_xxx types are  */

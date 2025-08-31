@@ -75,7 +75,7 @@ def generate_ftmodule(lists):
             "winfonts": "winfnt",
         }.get(driver, driver)
         result += (
-            "FT_USE_MODULE( FT_Driver_ClassRec, %s_driver_class )\n" % name
+            "FT_USE_MODULE( FT_Driver_Class, %s_driver_class )\n" % name
         )
 
     for module in lists["HINTING_MODULES"]:

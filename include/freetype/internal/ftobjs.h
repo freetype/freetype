@@ -815,10 +815,10 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_DriverRec_
   {
-    FT_ModuleRec     root;
-    FT_Driver_Class  clazz;
-    FT_ListRec       faces_list;
-    FT_GlyphLoader   glyph_loader;
+    FT_ModuleRec      root;
+    FT_Driver_Class*  clazz;
+    FT_ListRec        faces_list;
+    FT_GlyphLoader    glyph_loader;
 
   } FT_DriverRec;
 

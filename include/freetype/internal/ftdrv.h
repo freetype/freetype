@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_Driver_ClassRec
+   *   FT_Driver_Class
    *
    * @description:
    *   The font driver class.  This structure mostly contains pointers to
@@ -162,7 +162,7 @@ FT_BEGIN_HEADER
    *   Most function pointers, with the exception of `load_glyph`, can be set
    *   to 0 to indicate a default behaviour.
    */
-  typedef const struct  FT_Driver_ClassRec_
+  typedef const struct  FT_Driver_Class_
   {
     FT_Module_Class          root;
 
@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
     FT_Size_RequestFunc      request_size;
     FT_Size_SelectFunc       select_size;
 
-  } FT_Driver_ClassRec, *FT_Driver_Class;
+  } FT_Driver_Class, FT_Driver_ClassRec;
 
 
   /**************************************************************************
@@ -198,14 +198,14 @@ FT_BEGIN_HEADER
    *   FT_DECLARE_DRIVER
    *
    * @description:
-   *   Used to create a forward declaration of an FT_Driver_ClassRec struct
+   *   Used to create a forward declaration of an FT_Driver_Class struct
    *   instance.
    *
    * @macro:
    *   FT_DEFINE_DRIVER
    *
    * @description:
-   *   Used to initialize an instance of FT_Driver_ClassRec struct.
+   *   Used to initialize an instance of FT_Driver_Class struct.
    *
    *   `ftinit.c` (ft_create_default_module_classes) already contains a
    *   mechanism to call these functions for the default modules described in
@@ -216,7 +216,7 @@ FT_BEGIN_HEADER
    */
 #define FT_DECLARE_DRIVER( class_ )  \
   FT_CALLBACK_TABLE                  \
-  FT_Driver_ClassRec  class_;
+  FT_Driver_Class  class_;
 
 #define FT_DEFINE_DRIVER(                    \
           class_,                            \
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
           request_size_,                     \
           select_size_ )                     \
   FT_CALLBACK_TABLE_DEF                      \
-  FT_Driver_ClassRec  class_ =               \
+  FT_Driver_Class  class_ =                  \
   {                                          \
     FT_DEFINE_ROOT_MODULE( flags_,           \
                            size_,            \

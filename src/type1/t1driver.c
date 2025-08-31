@@ -757,7 +757,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  FT_Driver_ClassRec  t1_driver_class =
+  FT_Driver_Class  t1_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER       |

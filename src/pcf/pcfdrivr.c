@@ -793,7 +793,7 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_TABLE_DEF
-  FT_Driver_ClassRec  pcf_driver_class =
+  FT_Driver_Class  pcf_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER        |

@@ -26,7 +26,7 @@
 FT_BEGIN_HEADER
 
   FT_CALLBACK_TABLE
-  FT_Driver_ClassRec  t1cid_driver_class;
+  FT_Driver_Class  t1cid_driver_class;
 
 FT_END_HEADER
 

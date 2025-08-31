@@ -152,7 +152,7 @@ FT_BEGIN_HEADER
   } FNT_FaceRec, *FNT_Face;
 
 
-  FT_EXPORT_VAR( FT_Driver_ClassRec )  winfnt_driver_class;
+  FT_EXPORT_VAR( FT_Driver_Class )  winfnt_driver_class;
 
 
 FT_END_HEADER

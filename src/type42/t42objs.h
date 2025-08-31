@@ -53,8 +53,8 @@ FT_BEGIN_HEADER
   /* Type 42 driver */
   typedef struct  T42_DriverRec_
   {
-    FT_DriverRec     root;
-    FT_Driver_Class  ttclazz;
+    FT_DriverRec      root;
+    FT_Driver_Class*  ttclazz;
 
   } T42_DriverRec, *T42_Driver;
 

@@ -25,7 +25,7 @@
 
 FT_BEGIN_HEADER
 
-  FT_EXPORT_VAR( FT_Driver_ClassRec )  t1_driver_class;
+  FT_EXPORT_VAR( FT_Driver_Class )  t1_driver_class;
 
 FT_END_HEADER
 

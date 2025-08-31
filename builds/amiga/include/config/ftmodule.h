@@ -84,35 +84,35 @@ FT_USE_MODULE( FT_Module_Class, autofit_module_class )
 #endif
 
 #ifdef FT_USE_TT
-FT_USE_MODULE( FT_Driver_ClassRec, tt_driver_class )
+FT_USE_MODULE( FT_Driver_Class, tt_driver_class )
 #endif
 
 #ifdef FT_USE_T1
-FT_USE_MODULE( FT_Driver_ClassRec, t1_driver_class )
+FT_USE_MODULE( FT_Driver_Class, t1_driver_class )
 #endif
 
 #ifdef FT_USE_CFF
-FT_USE_MODULE( FT_Driver_ClassRec, cff_driver_class )
+FT_USE_MODULE( FT_Driver_Class, cff_driver_class )
 #endif
 
 #ifdef FT_USE_T1CID
-FT_USE_MODULE( FT_Driver_ClassRec, t1cid_driver_class )
+FT_USE_MODULE( FT_Driver_Class, t1cid_driver_class )
 #endif
 
 #ifdef FT_USE_PFR
-FT_USE_MODULE( FT_Driver_ClassRec, pfr_driver_class )
+FT_USE_MODULE( FT_Driver_Class, pfr_driver_class )
 #endif
 
 #ifdef FT_USE_T42
-FT_USE_MODULE( FT_Driver_ClassRec, t42_driver_class )
+FT_USE_MODULE( FT_Driver_Class, t42_driver_class )
 #endif
 
 #ifdef FT_USE_WINFNT
-FT_USE_MODULE( FT_Driver_ClassRec, winfnt_driver_class )
+FT_USE_MODULE( FT_Driver_Class, winfnt_driver_class )
 #endif
 
 #ifdef FT_USE_PCF
-FT_USE_MODULE( FT_Driver_ClassRec, pcf_driver_class )
+FT_USE_MODULE( FT_Driver_Class, pcf_driver_class )
 #endif
 
 #ifdef FT_USE_PSAUX
@@ -144,7 +144,7 @@ FT_USE_MODULE( FT_Module_Class, otv_module_class )
 #endif
 
 #ifdef FT_USE_BDF
-FT_USE_MODULE( FT_Driver_ClassRec, bdf_driver_class )
+FT_USE_MODULE( FT_Driver_Class, bdf_driver_class )
 #endif
 
 #ifdef FT_USE_GXV
