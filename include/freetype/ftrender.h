@@ -147,7 +147,7 @@ FT_BEGIN_HEADER
    *     For @FT_GLYPH_FORMAT_OUTLINE renderers only.  This is a pointer to
    *     its raster's class.
    */
-  typedef struct  FT_Renderer_Class_
+  typedef const struct  FT_Renderer_Class_
   {
     FT_Module_Class            root;
 

@@ -1119,8 +1119,8 @@ FT_BEGIN_HEADER
    *   The struct will be allocated in the global scope (or the scope where
    *   the macro is used).
    */
-#define FT_DECLARE_RENDERER( class_ )               \
-  FT_EXPORT_VAR( const FT_Renderer_Class ) class_;
+#define FT_DECLARE_RENDERER( class_ )        \
+  FT_EXPORT_VAR( FT_Renderer_Class ) class_;
 
 #define FT_DEFINE_RENDERER(                  \
           class_,                            \
@@ -1140,7 +1140,7 @@ FT_BEGIN_HEADER
           set_mode_,                         \
           raster_class_ )                    \
   FT_CALLBACK_TABLE_DEF                      \
-  const FT_Renderer_Class  class_ =          \
+  FT_Renderer_Class  class_ =                \
   {                                          \
     FT_DEFINE_ROOT_MODULE( flags_,           \
                            size_,            \
