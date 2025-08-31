@@ -162,7 +162,7 @@ FT_BEGIN_HEADER
    *   Most function pointers, with the exception of `load_glyph`, can be set
    *   to 0 to indicate a default behaviour.
    */
-  typedef struct  FT_Driver_ClassRec_
+  typedef const struct  FT_Driver_ClassRec_
   {
     FT_Module_Class          root;
 
@@ -216,7 +216,7 @@ FT_BEGIN_HEADER
    */
 #define FT_DECLARE_DRIVER( class_ )  \
   FT_CALLBACK_TABLE                  \
-  const FT_Driver_ClassRec  class_;
+  FT_Driver_ClassRec  class_;
 
 #define FT_DEFINE_DRIVER(                    \
           class_,                            \
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
           request_size_,                     \
           select_size_ )                     \
   FT_CALLBACK_TABLE_DEF                      \
-  const FT_Driver_ClassRec  class_ =         \
+  FT_Driver_ClassRec  class_ =               \
   {                                          \
     FT_DEFINE_ROOT_MODULE( flags_,           \
                            size_,            \

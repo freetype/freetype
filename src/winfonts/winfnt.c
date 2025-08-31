@@ -1176,7 +1176,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_ClassRec  winfnt_driver_class =
+  FT_Driver_ClassRec  winfnt_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER        |

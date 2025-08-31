@@ -60,7 +60,7 @@ FT_BEGIN_HEADER
   } BDF_FaceRec, *BDF_Face;
 
 
-  FT_EXPORT_VAR( const FT_Driver_ClassRec )  bdf_driver_class;
+  FT_EXPORT_VAR( FT_Driver_ClassRec )  bdf_driver_class;
 
 
 FT_END_HEADER
