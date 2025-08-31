@@ -232,7 +232,7 @@ FT_BEGIN_HEADER
    *   get_interface ::
    *     The interface requesting function.
    */
-  typedef struct  FT_Module_Class_
+  typedef const struct  FT_Module_Class_
   {
     FT_ULong               module_flags;
     FT_Long                module_size;
@@ -273,8 +273,8 @@ FT_BEGIN_HEADER
    *   if the module requires a version of FreeType that is too great.
    */
   FT_EXPORT( FT_Error )
-  FT_Add_Module( FT_Library              library,
-                 const FT_Module_Class*  clazz );
+  FT_Add_Module( FT_Library        library,
+                 FT_Module_Class*  clazz );
 
 
   /**************************************************************************

@@ -5030,9 +5030,9 @@
   static void
   Destroy_Module( FT_Module  module )
   {
-    const FT_Module_Class*  clazz   = module->clazz;
-    FT_Library              library = module->library;
-    FT_Memory               memory  = module->memory;
+    FT_Module_Class*  clazz   = module->clazz;
+    FT_Library        library = module->library;
+    FT_Memory         memory  = module->memory;
 
 
     if ( library && library->auto_hinter == module )
@@ -5058,8 +5058,8 @@
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Add_Module( FT_Library              library,
-                 const FT_Module_Class*  clazz )
+  FT_Add_Module( FT_Library        library,
+                 FT_Module_Class*  clazz )
   {
     FT_Error   error;
     FT_Memory  memory;

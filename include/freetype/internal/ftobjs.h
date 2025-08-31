@@ -520,9 +520,9 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_ModuleRec_
   {
-    const FT_Module_Class*  clazz;
-    FT_Library              library;
-    FT_Memory               memory;
+    FT_Module_Class*  clazz;
+    FT_Library        library;
+    FT_Memory         memory;
 
   } FT_ModuleRec;
 
@@ -1190,7 +1190,7 @@ FT_BEGIN_HEADER
    */
 #define FT_DECLARE_MODULE( class_ )  \
   FT_CALLBACK_TABLE                  \
-  const FT_Module_Class  class_;
+  FT_Module_Class  class_;
 
 #define FT_DEFINE_ROOT_MODULE(  \
           flags_,               \
@@ -1217,32 +1217,32 @@ FT_BEGIN_HEADER
     get_interface_,             \
   },
 
-#define FT_DEFINE_MODULE(         \
-          class_,                 \
-          flags_,                 \
-          size_,                  \
-          name_,                  \
-          version_,               \
-          requires_,              \
-          interface_,             \
-          init_,                  \
-          done_,                  \
-          get_interface_ )        \
-  FT_CALLBACK_TABLE_DEF           \
-  const FT_Module_Class class_ =  \
-  {                               \
-    flags_,                       \
-    size_,                        \
-                                  \
-    name_,                        \
-    version_,                     \
-    requires_,                    \
-                                  \
-    interface_,                   \
-                                  \
-    init_,                        \
-    done_,                        \
-    get_interface_,               \
+#define FT_DEFINE_MODULE(   \
+          class_,           \
+          flags_,           \
+          size_,            \
+          name_,            \
+          version_,         \
+          requires_,        \
+          interface_,       \
+          init_,            \
+          done_,            \
+          get_interface_)   \
+  FT_CALLBACK_TABLE_DEF     \
+  FT_Module_Class class_ =  \
+  {                         \
+    flags_,                 \
+    size_,                  \
+                            \
+    name_,                  \
+    version_,               \
+    requires_,              \
+                            \
+    interface_,             \
+                            \
+    init_,                  \
+    done_,                  \
+    get_interface_,         \
   };
 
 

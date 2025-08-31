@@ -56,18 +56,18 @@
 
 #undef  FT_USE_MODULE
 #ifdef __cplusplus
-#define FT_USE_MODULE( type, x )  extern "C" const type  x;
+#define FT_USE_MODULE( type, x )  extern "C" type  x;
 #else
-#define FT_USE_MODULE( type, x )  extern const type  x;
+#define FT_USE_MODULE( type, x )  extern type  x;
 #endif
 
 #include FT_CONFIG_MODULES_H
 
 #undef  FT_USE_MODULE
-#define FT_USE_MODULE( type, x )  (const FT_Module_Class*)&(x),
+#define FT_USE_MODULE( type, x )  (FT_Module_Class*)&(x),
 
   static
-  const FT_Module_Class*  const ft_default_modules[] =
+  FT_Module_Class*  const ft_default_modules[] =
   {
 #include FT_CONFIG_MODULES_H
     0
@@ -80,13 +80,13 @@
   FT_Add_Default_Modules( FT_Library  library )
   {
     FT_Error                       error;
-    const FT_Module_Class* const*  cur;
+    FT_Module_Class* const*  cur;
 
 
     /* GCC 4.6 warns the type difference:
-     *   FT_Module_Class** != const FT_Module_Class* const*
+     *   FT_Module_Class** != FT_Module_Class* const*
      */
-    cur = (const FT_Module_Class* const*)ft_default_modules;
+    cur = (FT_Module_Class* const*)ft_default_modules;
 
     /* test for valid `library' delayed to FT_Add_Module() */
     while ( *cur )

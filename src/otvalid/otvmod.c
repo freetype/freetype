@@ -262,7 +262,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Module_Class  otv_module_class =
+  FT_Module_Class  otv_module_class =
   {
     0,
     sizeof ( FT_ModuleRec ),
