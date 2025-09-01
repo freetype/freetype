@@ -133,9 +133,9 @@
   }
 
 
-  FT_DEFINE_GLYPH(
-    ft_bitmap_glyph_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Glyph_Class  ft_bitmap_glyph_class =
+  {
     sizeof ( FT_BitmapGlyphRec ),
     FT_GLYPH_FORMAT_BITMAP,
 
@@ -145,7 +145,7 @@
     NULL,                    /* FT_Glyph_TransformFunc  glyph_transform */
     ft_bitmap_glyph_bbox,    /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
     NULL                     /* FT_Glyph_PrepareFunc    glyph_prepare   */
-  )
+  };
 
 
   /*************************************************************************/
@@ -263,9 +263,9 @@
   }
 
 
-  FT_DEFINE_GLYPH(
-    ft_outline_glyph_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Glyph_Class  ft_outline_glyph_class =
+  {
     sizeof ( FT_OutlineGlyphRec ),
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -275,7 +275,7 @@
     ft_outline_glyph_transform, /* FT_Glyph_TransformFunc  glyph_transform */
     ft_outline_glyph_bbox,      /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
     ft_outline_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
-  )
+  };
 
 
 #ifdef FT_CONFIG_OPTION_SVG
@@ -495,9 +495,9 @@
   }
 
 
-  FT_DEFINE_GLYPH(
-    ft_svg_glyph_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Glyph_Class  ft_svg_glyph_class =
+  {
     sizeof ( FT_SvgGlyphRec ),
     FT_GLYPH_FORMAT_SVG,
 
@@ -507,7 +507,7 @@
     ft_svg_glyph_transform, /* FT_Glyph_TransformFunc  glyph_transform */
     NULL,                   /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
     ft_svg_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
-  )
+  };
 
 #endif /* FT_CONFIG_OPTION_SVG */
 
@@ -521,9 +521,9 @@
   /*************************************************************************/
 
    static FT_Error
-   ft_new_glyph( FT_Library             library,
-                 const FT_Glyph_Class*  clazz,
-                 FT_Glyph*              aglyph )
+   ft_new_glyph( FT_Library       library,
+                 FT_Glyph_Class*  clazz,
+                 FT_Glyph*        aglyph )
    {
      FT_Memory  memory = library->memory;
      FT_Error   error;
@@ -551,9 +551,9 @@
   FT_Glyph_Copy( FT_Glyph   source,
                  FT_Glyph  *target )
   {
-    FT_Glyph               copy;
-    FT_Error               error;
-    const FT_Glyph_Class*  clazz;
+    FT_Glyph         copy;
+    FT_Error         error;
+    FT_Glyph_Class*  clazz;
 
 
     /* check arguments */
@@ -599,7 +599,7 @@
                 FT_Glyph_Format  format,
                 FT_Glyph        *aglyph )
   {
-    const FT_Glyph_Class*  clazz = NULL;
+    FT_Glyph_Class*  clazz = NULL;
 
     if ( !library || !aglyph )
       return FT_THROW( Invalid_Argument );
@@ -708,7 +708,7 @@
       error = FT_THROW( Invalid_Argument );
     else
     {
-      const FT_Glyph_Class*  clazz = glyph->clazz;
+      FT_Glyph_Class*  clazz = glyph->clazz;
 
 
       if ( clazz->glyph_transform )
@@ -734,7 +734,7 @@
                      FT_UInt   bbox_mode,
                      FT_BBox  *acbox )
   {
-    const FT_Glyph_Class*  clazz;
+    FT_Glyph_Class*  clazz;
 
 
     if ( !acbox )
@@ -787,7 +787,7 @@
     FT_Error                  error = FT_Err_Ok;
     FT_Glyph                  b, glyph;
     FT_BitmapGlyph            bitmap = NULL;
-    const FT_Glyph_Class*     clazz;
+    FT_Glyph_Class*           clazz;
 
     FT_Library                library;
 
@@ -896,8 +896,8 @@
   {
     if ( glyph )
     {
-      FT_Memory              memory = glyph->library->memory;
-      const FT_Glyph_Class*  clazz  = glyph->clazz;
+      FT_Memory        memory = glyph->library->memory;
+      FT_Glyph_Class*  clazz  = glyph->clazz;
 
 
       if ( clazz->glyph_done )

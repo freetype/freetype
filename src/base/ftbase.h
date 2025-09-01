@@ -26,9 +26,10 @@
 FT_BEGIN_HEADER
 
 
-  FT_DECLARE_GLYPH( ft_bitmap_glyph_class )
-  FT_DECLARE_GLYPH( ft_outline_glyph_class )
-  FT_DECLARE_GLYPH( ft_svg_glyph_class )
+  FT_CALLBACK_TABLE
+  FT_Glyph_Class  ft_bitmap_glyph_class,
+                  ft_outline_glyph_class,
+                  ft_svg_glyph_class;
 
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS

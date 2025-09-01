@@ -66,7 +66,7 @@ FT_BEGIN_HEADER
 
 
   /* forward declaration to a private type */
-  typedef struct FT_Glyph_Class_  FT_Glyph_Class;
+  typedef const struct FT_Glyph_Class_  FT_Glyph_Class;
 
 
   /**************************************************************************
@@ -111,10 +111,10 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_GlyphRec_
   {
-    FT_Library             library;
-    const FT_Glyph_Class*  clazz;
-    FT_Glyph_Format        format;
-    FT_Vector              advance;
+    FT_Library       library;
+    FT_Glyph_Class*  clazz;
+    FT_Glyph_Format  format;
+    FT_Vector        advance;
 
   } FT_GlyphRec;
 

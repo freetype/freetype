@@ -1064,43 +1064,6 @@ FT_BEGIN_HEADER
   };
 
 
-
-  /**************************************************************************
-   *
-   * @macro:
-   *   FT_DEFINE_GLYPH
-   *
-   * @description:
-   *   The struct will be allocated in the global scope (or the scope where
-   *   the macro is used).
-   */
-#define FT_DECLARE_GLYPH( class_ )                \
-  FT_CALLBACK_TABLE const FT_Glyph_Class  class_;
-
-#define FT_DEFINE_GLYPH(          \
-          class_,                 \
-          size_,                  \
-          format_,                \
-          init_,                  \
-          done_,                  \
-          copy_,                  \
-          transform_,             \
-          bbox_,                  \
-          prepare_ )              \
-  FT_CALLBACK_TABLE_DEF           \
-  const FT_Glyph_Class  class_ =  \
-  {                               \
-    size_,                        \
-    format_,                      \
-    init_,                        \
-    done_,                        \
-    copy_,                        \
-    transform_,                   \
-    bbox_,                        \
-    prepare_                      \
-  };
-
-
 FT_END_HEADER
 
 #endif /* FTOBJS_H_ */
