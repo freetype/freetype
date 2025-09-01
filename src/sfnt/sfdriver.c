@@ -1363,9 +1363,9 @@
   )
 
 
-  FT_DEFINE_MODULE(
-    sfnt_module_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Module_Class  sfnt_module_class =
+  {
     0,  /* not a font driver or renderer */
     sizeof ( FT_ModuleRec ),
 
@@ -1378,7 +1378,7 @@
     NULL,               /* FT_Module_Constructor module_init   */
     NULL,               /* FT_Module_Destructor  module_done   */
     sfnt_get_interface  /* FT_Module_Requester   get_interface */
-  )
+  };
 
 
 /* END */

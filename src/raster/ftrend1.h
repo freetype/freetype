@@ -25,9 +25,8 @@
 
 FT_BEGIN_HEADER
 
-
-  FT_DECLARE_RENDERER( ft_raster1_renderer_class )
-
+  FT_CALLBACK_TABLE
+  FT_Renderer_Class  ft_raster1_renderer_class;
 
 FT_END_HEADER
 

@@ -660,9 +660,10 @@
 #define TT_SIZE_SELECT  0
 #endif
 
-  FT_DEFINE_DRIVER(
-    tt_driver_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Driver_Class  tt_driver_class =
+  {
+    {
       FT_MODULE_FONT_DRIVER     |
       FT_MODULE_DRIVER_SCALABLE |
       TT_HINTER_FLAG,
@@ -677,7 +678,8 @@
 
       tt_driver_init,           /* FT_Module_Constructor  module_init   */
       tt_driver_done,           /* FT_Module_Destructor   module_done   */
-      tt_get_interface,         /* FT_Module_Requester    get_interface */
+      tt_get_interface          /* FT_Module_Requester    get_interface */
+    },
 
     sizeof ( TT_FaceRec ),
     sizeof ( TT_SizeRec ),
@@ -698,7 +700,7 @@
 
     tt_size_request,            /* FT_Size_RequestFunc  request_size */
     TT_SIZE_SELECT              /* FT_Size_SelectFunc   select_size  */
-  )
+  };
 
 
 /* END */

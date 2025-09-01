@@ -575,9 +575,10 @@
   }
 
 
-  FT_DEFINE_RENDERER(
-    ft_smooth_renderer_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Renderer_Class  ft_smooth_renderer_class =
+  {
+    {
       FT_MODULE_RENDERER,
       sizeof ( FT_RendererRec ),
 
@@ -589,7 +590,8 @@
 
       (FT_Module_Constructor)ft_smooth_init,  /* module_init   */
       (FT_Module_Destructor) NULL,            /* module_done   */
-      (FT_Module_Requester)  NULL,            /* get_interface */
+      (FT_Module_Requester)  NULL             /* get_interface */
+    },
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -599,7 +601,7 @@
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,   /* set_mode        */
 
     (FT_Raster_Funcs*)&ft_grays_raster               /* raster_class    */
-  )
+  };
 
 
 /* END */

@@ -424,21 +424,23 @@
   }
 
 
-  FT_DEFINE_RENDERER(
-    ft_sdf_renderer_class,
+  FT_CALLBACK_TABLE_DEF
+  FT_Renderer_Class  ft_sdf_renderer_class =
+  {
+    {
+      FT_MODULE_RENDERER,
+      sizeof ( SDF_Renderer_Module ),
 
-    FT_MODULE_RENDERER,
-    sizeof ( SDF_Renderer_Module ),
+      "sdf",
+      0x10000L,
+      0x20000L,
 
-    "sdf",
-    0x10000L,
-    0x20000L,
+      NULL,
 
-    NULL,
-
-    (FT_Module_Constructor)ft_sdf_init,
-    (FT_Module_Destructor) ft_sdf_done,
-    (FT_Module_Requester)  ft_sdf_requester,
+      (FT_Module_Constructor)ft_sdf_init,
+      (FT_Module_Destructor) ft_sdf_done,
+      (FT_Module_Requester)  ft_sdf_requester
+    },
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -448,7 +450,7 @@
     (FT_Renderer_SetModeFunc)  ft_sdf_set_mode,   /* set_mode        */
 
     (FT_Raster_Funcs*)&ft_sdf_raster              /* raster_class    */
-  )
+  };
 
 
   /*************************************************************************/
@@ -573,21 +575,23 @@
   }
 
 
-  FT_DEFINE_RENDERER(
-    ft_bitmap_sdf_renderer_class,
+  FT_CALLBACK_TABLE_DEF
+  FT_Renderer_Class  ft_bitmap_sdf_renderer_class =
+  {
+    {
+      FT_MODULE_RENDERER,
+      sizeof ( SDF_Renderer_Module ),
 
-    FT_MODULE_RENDERER,
-    sizeof ( SDF_Renderer_Module ),
+      "bsdf",
+      0x10000L,
+      0x20000L,
 
-    "bsdf",
-    0x10000L,
-    0x20000L,
+      NULL,
 
-    NULL,
-
-    (FT_Module_Constructor)ft_sdf_init,
-    (FT_Module_Destructor) ft_sdf_done,
-    (FT_Module_Requester)  ft_sdf_requester,
+      (FT_Module_Constructor)ft_sdf_init,
+      (FT_Module_Destructor) ft_sdf_done,
+      (FT_Module_Requester)  ft_sdf_requester
+    },
 
     FT_GLYPH_FORMAT_BITMAP,
 
@@ -597,7 +601,7 @@
     (FT_Renderer_SetModeFunc)  ft_sdf_set_mode,   /* set_mode        */
 
     (FT_Raster_Funcs*)&ft_bitmap_sdf_raster       /* raster_class    */
-  )
+  };
 
 
 /* END */

@@ -179,9 +179,10 @@
   }
 
 
-  FT_DEFINE_RENDERER(
-    ft_raster1_renderer_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Renderer_Class  ft_raster1_renderer_class =
+  {
+    {
       FT_MODULE_RENDERER,
       sizeof ( FT_RendererRec ),
 
@@ -193,7 +194,8 @@
 
       ft_raster1_init,  /* FT_Module_Constructor module_init   */
       NULL,             /* FT_Module_Destructor  module_done   */
-      NULL,             /* FT_Module_Requester   get_interface */
+      NULL              /* FT_Module_Requester   get_interface */
+    },
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -203,7 +205,7 @@
     ft_raster1_set_mode,   /* FT_Renderer_SetModeFunc   set_mode        */
 
     &ft_standard_raster    /* FT_Raster_Funcs*          raster_class    */
-  )
+  };
 
 
 /* END */

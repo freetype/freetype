@@ -91,7 +91,8 @@ FT_BEGIN_HEADER
    *   Renderer to convert @FT_Outline to signed distance fields.
    *
    */
-  FT_DECLARE_RENDERER( ft_sdf_renderer_class )
+  FT_CALLBACK_TABLE
+  FT_Renderer_Class  ft_sdf_renderer_class;
 
 
   /**************************************************************************
@@ -107,7 +108,8 @@ FT_BEGIN_HEADER
    *   This is not a separate module, it is part of the 'sdf' module.
    *
    */
-  FT_DECLARE_RENDERER( ft_bitmap_sdf_renderer_class )
+  FT_CALLBACK_TABLE
+  FT_Renderer_Class  ft_bitmap_sdf_renderer_class;
 
 
 FT_END_HEADER

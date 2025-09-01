@@ -25,7 +25,8 @@
 
 FT_BEGIN_HEADER
 
-  FT_DECLARE_DRIVER( tt_driver_class )
+  FT_CALLBACK_TABLE
+  FT_Driver_Class  tt_driver_class;
 
 FT_END_HEADER
 

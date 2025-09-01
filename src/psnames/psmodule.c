@@ -599,9 +599,9 @@
 #define PUT_PS_NAMES_SERVICE( a )  a
 #endif
 
-  FT_DEFINE_MODULE(
-    psnames_module_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Module_Class  psnames_module_class =
+  {
     0,  /* this is not a font driver, nor a renderer */
     sizeof ( FT_ModuleRec ),
 
@@ -615,7 +615,7 @@
     NULL,                                        /* FT_Module_Constructor module_init   */
     NULL,                                        /* FT_Module_Destructor  module_done   */
     PUT_PS_NAMES_SERVICE( psnames_get_service )  /* FT_Module_Requester   get_interface */
-  )
+  };
 
 
 /* END */

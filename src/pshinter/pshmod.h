@@ -25,9 +25,8 @@
 
 FT_BEGIN_HEADER
 
-
-  FT_DECLARE_MODULE( pshinter_module_class )
-
+  FT_CALLBACK_TABLE
+  FT_Module_Class  pshinter_module_class;
 
 FT_END_HEADER
 

@@ -516,9 +516,10 @@
     af_autofitter_load_glyph  /* FT_AutoHinter_GlyphLoadFunc   load_glyph        */
   )
 
-  FT_DEFINE_MODULE(
-    autofit_module_class,
 
+  FT_CALLBACK_TABLE_DEF
+  FT_Module_Class  autofit_module_class =
+  {
     FT_MODULE_HINTER,
     sizeof ( AF_ModuleRec ),
 
@@ -531,7 +532,7 @@
     af_autofitter_init,  /* FT_Module_Constructor module_init   */
     af_autofitter_done,  /* FT_Module_Destructor  module_done   */
     af_get_interface     /* FT_Module_Requester   get_interface */
-  )
+  };
 
 
 /* END */

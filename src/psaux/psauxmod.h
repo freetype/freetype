@@ -45,8 +45,8 @@ FT_BEGIN_HEADER
   FT_CALLBACK_TABLE
   const CFF_Decoder_FuncsRec  cff_decoder_funcs;
 
-
-  FT_DECLARE_MODULE( psaux_module_class )
+  FT_CALLBACK_TABLE
+  FT_Module_Class  psaux_module_class;
 
 
 FT_END_HEADER

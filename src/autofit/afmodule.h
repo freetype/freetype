@@ -50,7 +50,10 @@ FT_BEGIN_HEADER
 
 
 FT_DECLARE_AUTOHINTER_INTERFACE( af_autofitter_interface )
-FT_DECLARE_MODULE( autofit_module_class )
+
+
+  FT_CALLBACK_TABLE
+  FT_Module_Class  autofit_module_class;
 
 
 FT_END_HEADER

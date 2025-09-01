@@ -326,9 +326,10 @@
 #endif
 
 
-  FT_DEFINE_RENDERER(
-    ft_svg_renderer_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Renderer_Class  ft_svg_renderer_class =
+  {
+    {
       FT_MODULE_RENDERER,
       sizeof ( SVG_RendererRec ),
 
@@ -340,16 +341,17 @@
 
       PUT_SVG_MODULE( ft_svg_init ),           /* FT_Module_Constructor module_init   */
       PUT_SVG_MODULE( ft_svg_done ),           /* FT_Module_Destructor  module_done   */
-      PUT_SVG_MODULE( ft_svg_get_interface ),  /* FT_Module_Requester   get_interface */
+      PUT_SVG_MODULE( ft_svg_get_interface )   /* FT_Module_Requester   get_interface */
+    },
 
-      SVG_GLYPH_FORMAT,
+    SVG_GLYPH_FORMAT,
 
-      PUT_SVG_MODULE( ft_svg_render ),     /* FT_Renderer_RenderFunc    render_glyph    */
-      PUT_SVG_MODULE( ft_svg_transform ),  /* FT_Renderer_TransformFunc transform_glyph */
-      NULL,                                /* FT_Renderer_GetCBoxFunc   get_glyph_cbox  */
-      NULL,                                /* FT_Renderer_SetModeFunc   set_mode        */
-      NULL                                 /* FT_Raster_Funcs*          raster_class    */
-  )
+    PUT_SVG_MODULE( ft_svg_render ),     /* FT_Renderer_RenderFunc    render_glyph    */
+    PUT_SVG_MODULE( ft_svg_transform ),  /* FT_Renderer_TransformFunc transform_glyph */
+    NULL,                                /* FT_Renderer_GetCBoxFunc   get_glyph_cbox  */
+    NULL,                                /* FT_Renderer_SetModeFunc   set_mode        */
+    NULL                                 /* FT_Raster_Funcs*          raster_class    */
+  };
 
 
 /* END */

@@ -106,9 +106,9 @@
   )
 
 
-  FT_DEFINE_MODULE(
-    pshinter_module_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Module_Class  pshinter_module_class =
+  {
     0,
     sizeof ( PS_Hinter_ModuleRec ),
     "pshinter",
@@ -120,6 +120,6 @@
     (FT_Module_Constructor)ps_hinter_init,  /* module_init   */
     (FT_Module_Destructor) ps_hinter_done,  /* module_done   */
     (FT_Module_Requester)  NULL             /* get_interface */
-  )
+  };
 
 /* END */

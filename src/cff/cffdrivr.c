@@ -1179,9 +1179,10 @@
 #define CFF_SIZE_SELECT 0
 #endif
 
-  FT_DEFINE_DRIVER(
-    cff_driver_class,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_Driver_Class  cff_driver_class =
+  {
+    {
       FT_MODULE_FONT_DRIVER          |
       FT_MODULE_DRIVER_SCALABLE      |
       FT_MODULE_DRIVER_HAS_HINTER    |
@@ -1196,7 +1197,8 @@
 
       cff_driver_init,          /* FT_Module_Constructor  module_init   */
       cff_driver_done,          /* FT_Module_Destructor   module_done   */
-      cff_get_interface,        /* FT_Module_Requester    get_interface */
+      cff_get_interface         /* FT_Module_Requester    get_interface */
+    },
 
     sizeof ( TT_FaceRec ),
     sizeof ( CFF_SizeRec ),
@@ -1217,7 +1219,7 @@
 
     cff_size_request,           /* FT_Size_RequestFunc  request_size */
     CFF_SIZE_SELECT             /* FT_Size_SelectFunc   select_size  */
-  )
+  };
 
 
 /* END */

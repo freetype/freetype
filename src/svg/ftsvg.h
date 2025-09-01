@@ -25,7 +25,8 @@
 
 FT_BEGIN_HEADER
 
-  FT_DECLARE_RENDERER( ft_svg_renderer_class )
+  FT_CALLBACK_TABLE
+  FT_Renderer_Class  ft_svg_renderer_class;
 
 FT_END_HEADER
 
