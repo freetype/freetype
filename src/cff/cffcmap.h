@@ -43,7 +43,8 @@ FT_BEGIN_HEADER
   } CFF_CMapStdRec;
 
 
-  FT_DECLARE_CMAP_CLASS( cff_cmap_encoding_class_rec )
+  FT_CALLBACK_TABLE
+  FT_CMap_ClassRec  cff_cmap_encoding_class_rec;
 
 
   /*************************************************************************/
@@ -56,7 +57,8 @@ FT_BEGIN_HEADER
 
   /* unicode (synthetic) cmaps */
 
-  FT_DECLARE_CMAP_CLASS( cff_cmap_unicode_class_rec )
+  FT_CALLBACK_TABLE
+  FT_CMap_ClassRec  cff_cmap_unicode_class_rec;
 
 
 FT_END_HEADER

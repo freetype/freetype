@@ -167,8 +167,8 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
-  pfr_cmap_class_rec =
+  FT_CALLBACK_TABLE_DEF
+  FT_CMap_ClassRec  pfr_cmap_class_rec =
   {
     sizeof ( PFR_CMapRec ),
 

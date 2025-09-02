@@ -187,7 +187,7 @@ THE SOFTWARE.
 
 
   static
-  const FT_CMap_ClassRec  bdf_cmap_class =
+  FT_CMap_ClassRec  bdf_cmap_class =
   {
     sizeof ( BDF_CMapRec ),
     bdf_cmap_init,

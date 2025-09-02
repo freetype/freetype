@@ -157,7 +157,7 @@ THE SOFTWARE.
 
 
   static
-  const FT_CMap_ClassRec  pcf_cmap_class =
+  FT_CMap_ClassRec  pcf_cmap_class =
   {
     sizeof ( PCF_CMapRec ),
     pcf_cmap_init,

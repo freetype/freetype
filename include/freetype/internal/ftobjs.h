@@ -205,7 +205,7 @@ FT_BEGIN_HEADER
                                   FT_UInt32  variant_selector );
 
 
-  typedef struct  FT_CMap_ClassRec_
+  typedef const struct  FT_CMap_ClassRec_
   {
     FT_ULong               size;
 
@@ -224,37 +224,6 @@ FT_BEGIN_HEADER
     FT_CMap_VariantCharListFunc   variantchar_list;
 
   } FT_CMap_ClassRec;
-
-
-#define FT_DECLARE_CMAP_CLASS( class_ )            \
-  FT_CALLBACK_TABLE const FT_CMap_ClassRec  class_;
-
-#define FT_DEFINE_CMAP_CLASS(       \
-          class_,                   \
-          size_,                    \
-          init_,                    \
-          done_,                    \
-          char_index_,              \
-          char_next_,               \
-          char_var_index_,          \
-          char_var_default_,        \
-          variant_list_,            \
-          charvariant_list_,        \
-          variantchar_list_ )       \
-  FT_CALLBACK_TABLE_DEF             \
-  const FT_CMap_ClassRec  class_ =  \
-  {                                 \
-    size_,                          \
-    init_,                          \
-    done_,                          \
-    char_index_,                    \
-    char_next_,                     \
-    char_var_index_,                \
-    char_var_default_,              \
-    variant_list_,                  \
-    charvariant_list_,              \
-    variantchar_list_               \
-  };
 
 
   /* create a new charmap and add it to charmap->face */

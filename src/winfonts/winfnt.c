@@ -689,7 +689,8 @@
   }
 
 
-  static const FT_CMap_ClassRec  fnt_cmap_class_rec =
+  static
+  FT_CMap_ClassRec  fnt_cmap_class =
   {
     sizeof ( FNT_CMapRec ),
 
@@ -700,8 +701,6 @@
 
     NULL, NULL, NULL, NULL, NULL
   };
-
-  static FT_CMap_Class const  fnt_cmap_class = &fnt_cmap_class_rec;
 
 
   static void
@@ -871,7 +870,7 @@
 /*        charmap.encoding_id = TT_MAC_ID_ROMAN; */
         }
 
-        error = FT_CMap_New( fnt_cmap_class,
+        error = FT_CMap_New( &fnt_cmap_class,
                              NULL,
                              &charmap,
                              NULL );

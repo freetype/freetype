@@ -97,9 +97,9 @@
   }
 
 
-  FT_DEFINE_CMAP_CLASS(
-    cff_cmap_encoding_class_rec,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_CMap_ClassRec  cff_cmap_encoding_class_rec =
+  {
     sizeof ( CFF_CMapStdRec ),
 
     (FT_CMap_InitFunc)     cff_cmap_encoding_init,        /* init       */
@@ -112,7 +112,7 @@
     (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
     (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
     (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
-  )
+  };
 
 
   /*************************************************************************/
@@ -209,9 +209,9 @@
   }
 
 
-  FT_DEFINE_CMAP_CLASS(
-    cff_cmap_unicode_class_rec,
-
+  FT_CALLBACK_TABLE_DEF
+  FT_CMap_ClassRec  cff_cmap_unicode_class_rec =
+  {
     sizeof ( PS_UnicodesRec ),
 
     (FT_CMap_InitFunc)     cff_cmap_unicode_init,        /* init       */
@@ -224,7 +224,7 @@
     (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
     (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
     (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
-  )
+  };
 
 
 /* END */
