@@ -585,8 +585,19 @@
     }
     else if ( tag == 1 )
     {
-      /* The currently selected font's table directory. */
-      offset += face->ttc_header.offsets[face->root.face_index & 0xFFFF];
+      /* The currently selected font's table directory.            */
+      /*                                                           */
+      /* Note that `face_index` is also used to enumerate elements */
+      /* of containers like a Mac Resource; this means we must     */
+      /* check whether we actually have a TTC (with multiple table */
+      /* directories).                                             */
+      FT_Long  idx = face->root.face_index & 0xFFFF;
+
+
+      if ( idx >= face->ttc_header.count )
+        idx = 0;
+
+      offset += face->ttc_header.offsets[idx];
       size    = 4 + 8 + 16 * face->num_tables;
     }
     else

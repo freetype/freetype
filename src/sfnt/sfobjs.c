@@ -579,6 +579,9 @@
     if ( face_instance_index < 0 && face_index > 0 )
       face_index--;
 
+    /* Note that `face_index` is also used to enumerate elements */
+    /* of containers like a Mac Resource; this means we must     */
+    /* check whether we actually have a TTC.                     */
     if ( face_index >= face->ttc_header.count )
     {
       if ( face_instance_index >= 0 )
