@@ -300,7 +300,7 @@ do-dist: distclean refdoc
 	rm -rf $(TOP_DIR)/builds/unix/autom4te.cache
 
 	rm -rf $(GNU_CONFIG_DESTDIR)
-	git clone https://git.savannah.gnu.org/git/config.git $(GNU_CONFIG_DESTDIR)
+	git clone --depth=1 $(GNU_CONFIG_GIT_URL) $(GNU_CONFIG_DESTDIR)
 	cp $(CONFIG_GUESS) $(TOP_DIR)/builds/unix
 	cp $(CONFIG_SUB) $(TOP_DIR)/builds/unix
 
