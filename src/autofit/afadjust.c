@@ -4,7 +4,7 @@
  *
  *   Auto-fitter routines to adjust components based on charcode (body).
  *
- * Copyright (C) 2023-2024 by
+ * Copyright (C) 2023-2025 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * Written by Craig White <gerzytet@gmail.com>.
