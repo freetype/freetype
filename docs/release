@@ -5,7 +5,7 @@ How to prepare a new release
   `FREETYPE_MINOR`, and `FREETYPE_PATCH`.
 
 . Update version numbers in all files where necessary (for example, do
-  a grep for both '2.13.2' and '2132' for release 2.13.2).
+  a grep for both '2.14.0' and '2140' for release 2.14.0).
 
 . builds/unix/configure.raw: Update `version_info`.
 
@@ -94,11 +94,12 @@ How to prepare a new release
   `$SOURCEFORGE_USER`, and `GPG_KEY_ID` variables) to sign and upload
   the bundles to both Savannah and SourceForge.  The signing code has
   been taken from the `gnupload` script (part of the 'automake'
-  bundle).
+  bundle); it uses `sshpass` to avoid entering the SourceForge password
+  multiple times.
 
     #!/bin/sh
 
-    VERSION=2.13.2
+    VERSION=2.14.0
     SAVANNAH_USER=wl
     SOURCEFORGE_USER=wlemb
     GPG_KEY_ID=BE6C3AAC63AD8E3F
@@ -124,11 +125,18 @@ How to prepare a new release
                   $FTDOC_PACKAGES"
 
     set -e
-    unset passphrase
+    unset savannah_passphrase
+    unset sourceforge_password
 
-    PATH=/empty echo -n "Enter GPG passphrase: "
+    PATH=/empty echo -n "Enter Savannah GPG passphrase: "
     stty -echo
-    read -r passphrase
+    read -r savannah_passphrase
+    stty echo
+    echo
+
+    PATH=/empty echo -n "Enter SoureForge password: "
+    stty -echo
+    read -r sourceforge_password
     stty echo
     echo
 
@@ -144,7 +152,7 @@ How to prepare a new release
     for f in $PACKAGE_LIST; do
       echo "Signing $f..."
       rm -f $f.sig
-      echo $passphrase | $GPG --passphrase-fd 0 -ba -o $f.sig $f
+      echo $savannah_passphrase | $GPG --passphrase-fd 0 -ba -o $f.sig $f
     done
 
     FREETYPE_SIGNATURES=
@@ -169,12 +177,15 @@ How to prepare a new release
     scp -O $PACKAGE_LIST $SIGNATURE_LIST \
       $SAVANNAH_USER@dl.sv.nongnu.org:/releases/freetype/
 
-    rsync -avP -e ssh $FREETYPE_PACKAGES $FREETYPE_SIGNATURES \
-      $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype2/$VERSION/
-    rsync -avP -e ssh $FT2DEMOS_PACKAGES $FT2DEMOS_SIGNATURES \
-      $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype-demos/$VERSION/
-    rsync -avP -e ssh $FTDOC_PACKAGES $FTDOC_SIGNATURES \
-      $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype-docs/$VERSION/
+    echo $sourceforge_password | sshpass \
+      rsync -avP -e ssh $FREETYPE_PACKAGES $FREETYPE_SIGNATURES \
+        $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype2/$VERSION/
+    echo $sourceforge_password | sshpass \
+      rsync -avP -e ssh $FT2DEMOS_PACKAGES $FT2DEMOS_SIGNATURES \
+        $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype-demos/$VERSION/
+    echo $sourceforge_password | sshpass \
+      rsync -avP -e ssh $FTDOC_PACKAGES $FTDOC_SIGNATURES \
+        $SOURCEFORGE_USER,freetype@frs.sf.net:/home/frs/project/f/fr/freetype/freetype-docs/$VERSION/
 
     # EOF
 
@@ -184,7 +195,7 @@ How to prepare a new release
 
     #!/bin/sh
 
-    VERSION=2.13.2
+    VERSION=2.14.0
     SOURCEFORGE_USER=wlemb
 
     #####################################################################
