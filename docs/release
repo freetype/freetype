@@ -166,7 +166,7 @@ How to prepare a new release
                     $FT2DEMOS_SIGNATURES \
                     $FTDOC_SIGNATURES"
 
-    scp $PACKAGE_LIST $SIGNATURE_LIST \
+    scp -O $PACKAGE_LIST $SIGNATURE_LIST \
       $SAVANNAH_USER@dl.sv.nongnu.org:/releases/freetype/
 
     rsync -avP -e ssh $FREETYPE_PACKAGES $FREETYPE_SIGNATURES \
