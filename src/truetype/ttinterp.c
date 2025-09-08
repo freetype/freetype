@@ -7524,7 +7524,7 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     /* Reset IUP tracking bits in the backward compatibility mode. */
     /* See `ttinterp.h' for details.                               */
-    exc->backward_compatibility &= ~0x6;
+    exec->backward_compatibility &= ~0x6;
 #endif
 
     /* some glyphs leave something on the stack, */
