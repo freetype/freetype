@@ -134,7 +134,7 @@ How to prepare a new release
     stty echo
     echo
 
-    PATH=/empty echo -n "Enter SoureForge password: "
+    PATH=/empty echo -n "Enter SourceForge password: "
     stty -echo
     read -r sourceforge_password
     stty echo
