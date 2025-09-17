@@ -4,7 +4,7 @@
 
 ### Download test fonts
 
-Run the `tests/scripts/download-fonts.py` script, which will
+Run the `tests/scripts/download-test-fonts.py` script, which will
 download test fonts to the `tests/data/` directory first.
 
 ### Build the test programs
