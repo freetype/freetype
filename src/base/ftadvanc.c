@@ -20,6 +20,7 @@
 
 #include <freetype/ftadvanc.h>
 #include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftcalc.h>
 
 
   static FT_Error
@@ -47,7 +48,7 @@
     /* (see `FT_Load_Glyph' implementation in src/base/ftobjs.c)        */
 
     for ( nn = 0; nn < count; nn++ )
-      advances[nn] = FT_MulDiv( advances[nn], scale, 64 );
+      advances[nn] = FT_MulFix( 1024 * advances[nn], scale );
 
     return FT_Err_Ok;
   }
