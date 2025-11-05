@@ -1,3 +1,15 @@
+CHANGES BETWEEN 2.14.1 and 2.14.2 (2025-Mmm-DD)
+
+  I. IMPORTANT BUG FIXES
+
+  - The italic angle in `PS_FontInfo`  is now stored  as a fixed-point
+    value  in degrees  for  all  Type 1 fonts  and  their derivatives,
+    consistent  with  CFF  fonts  and  common  practices.  The  broken
+    underline position and thickness values are fixed for CFF fonts.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.14.0 and 2.14.1 (2025-Sep-11)
 
   I. IMPORTANT BUG FIXES
