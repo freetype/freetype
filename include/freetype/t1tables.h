@@ -645,7 +645,7 @@ FT_BEGIN_HEADER
     PS_DICT_UNDERLINE_POSITION,     /* FT_Short   */
     PS_DICT_UNDERLINE_THICKNESS,    /* FT_UShort  */
     PS_DICT_FS_TYPE,                /* FT_UShort  */
-    PS_DICT_ITALIC_ANGLE,           /* FT_Long    */
+    PS_DICT_ITALIC_ANGLE,           /* FT_Fixed   */
 
     PS_DICT_MAX = PS_DICT_ITALIC_ANGLE
 
