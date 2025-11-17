@@ -64,6 +64,8 @@ FT_BEGIN_HEADER
 #define TTAG_GSUB  FT_MAKE_TAG( 'G', 'S', 'U', 'B' )
 #define TTAG_gvar  FT_MAKE_TAG( 'g', 'v', 'a', 'r' )
 #define TTAG_HVAR  FT_MAKE_TAG( 'H', 'V', 'A', 'R' )
+#define TTAG_hvgl  FT_MAKE_TAG( 'h', 'v', 'g', 'l' )
+#define TTAG_hvpm  FT_MAKE_TAG( 'h', 'v', 'p', 'm' )
 #define TTAG_hdmx  FT_MAKE_TAG( 'h', 'd', 'm', 'x' )
 #define TTAG_head  FT_MAKE_TAG( 'h', 'e', 'a', 'd' )
 #define TTAG_hhea  FT_MAKE_TAG( 'h', 'h', 'e', 'a' )

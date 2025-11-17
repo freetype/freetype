@@ -53,6 +53,11 @@ option('zlib',
              'disabled', 'enabled' ],
   description: 'Support reading gzip-compressed font files')
 
+option('hvf',
+  type: 'feature',
+  value: 'auto',
+  description: 'Support Apple Hierarchical Variable Font (HVF) format on Apple platforms')
+
 option('error_strings',
   type: 'boolean',
   value: false,

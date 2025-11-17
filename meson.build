@@ -401,6 +401,35 @@ if brotli_dep.found()
   ft2_deps += [brotli_dep]
 endif
 
+# HVF support (Apple platforms only)
+hvf_dep = disabler()
+hvf_found = false
+
+if not get_option('hvf').disabled()
+  if host_machine.system() == 'darwin'
+    # Check for HVF header availability
+    if cc.has_header('hvf/Scaler.h')
+      # Find the HVF library
+      hvf_dep = cc.find_library('hvf', required: get_option('hvf'))
+
+      if hvf_dep.found()
+        hvf_found = true
+        ftoption_command += ['--enable=FT_CONFIG_OPTION_HVF']
+        ft2_deps += [hvf_dep]
+
+        # Check for Clang compiler for runtime availability support
+        if cc.get_id() == 'clang'
+          ft2_defines += ['-DHVF_RUNTIME_AVAILABLE=1']
+        endif
+      endif
+    elif get_option('hvf').enabled()
+      error('HVF support was enabled but hvf/Scaler.h header was not found')
+    endif
+  elif get_option('hvf').enabled()
+    error('HVF support is only available on Apple platforms (macOS/iOS)')
+  endif
+endif
+
 if get_option('error_strings')
   ftoption_command += ['--enable=FT_CONFIG_OPTION_ERROR_STRINGS']
 endif
@@ -524,6 +553,7 @@ summary({'Zlib': zlib_option,
          'Png': libpng_dep.found(),
          'HarfBuzz': harfbuzz_opt,
          'Brotli': brotli_dep.found(),
+         'HVF': hvf_found,
         }, bool_yn: true, section: 'Used Libraries')
 
 # EOF

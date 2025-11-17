@@ -734,6 +734,9 @@
         /* a `loca' table is not valid              */
         if ( face->glyf_len && FT_ERR_EQ( error, Table_Missing ) )
           goto Exit;
+        /* if both glyf and loca tables are missing, not a valid file */
+        if ( face->glyf_len == 0 && FT_ERR_EQ( error, Locations_Missing) )
+          goto Bad_Format;
         if ( error )
           goto Exit;
       }
