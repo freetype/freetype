@@ -408,8 +408,8 @@
       FT_Int  threshold = blues->blue_shift;
 
 
-      while ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
-        threshold--;
+      if ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
+        threshold = 32 * 0x10000L / scale;
 
       blues->blue_threshold = threshold;
     }
