@@ -259,9 +259,9 @@ dist:
 
 	mv tmp freetype-$(version)
 
-	tar -H ustar -chf - freetype-$(version) \
+	tar --format=ustar -chf - freetype-$(version) \
 	| gzip -9 -c > freetype-$(version).tar.gz
-	tar -H ustar -chf - freetype-$(version) \
+	tar --format=ustar -chf - freetype-$(version) \
 	| xz -c > freetype-$(version).tar.xz
 
 	@# Use CR/LF for zip files.
