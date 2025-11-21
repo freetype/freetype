@@ -475,6 +475,7 @@
     <ClCompile Include="..\..\..\src\cid\type1cid.c" />
     <ClCompile Include="..\..\..\src\dlg\dlgwrap.c" />
     <ClCompile Include="..\..\..\src\gzip\ftgzip.c" />
+    <ClCompile Include="..\..\..\src\hvf\hvf.c" />
     <ClCompile Include="..\..\..\src\lzw\ftlzw.c" />
     <ClCompile Include="..\..\..\src\pcf\pcf.c" />
     <ClCompile Include="..\..\..\src\pfr\pfr.c" />
