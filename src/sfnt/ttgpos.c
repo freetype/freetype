@@ -443,8 +443,9 @@
   }
 
 
-  /* The return value is the number of fitting subtables. */
-  static FT_UInt
+  /* The return value is the number of fitting subtables.  It is negative */
+  /* if there is a validation error.                                      */
+  static FT_Int
   tt_face_validate_lookup_table( FT_Byte*  table,
                                  FT_Byte*  table_limit )
   {
@@ -459,7 +460,7 @@
 
 
     if ( table_limit < p + 6 )
-      return 0;
+      return -1;
 
     lookupType = FT_NEXT_USHORT( p );
 
@@ -468,7 +469,7 @@
     subtableCount = FT_NEXT_USHORT( p );
     limit         = p + subtableCount * 2;
     if ( table_limit < limit )
-      return 0;
+      return -1;
 
     while ( p < limit )
     {
@@ -485,15 +486,15 @@
 
 
         if ( table_limit < q + 8 )
-          return 0;
+          return -1;
 
         if ( FT_NEXT_USHORT( q ) != 1 ) /* format */
-          return 0;
+          return -1;
 
         if ( real_lookupType == 0 )
           real_lookupType = FT_NEXT_USHORT( q );
         else if ( real_lookupType != FT_NEXT_USHORT( q ) )
-          return 0;
+          return -1;
 
         subtable += FT_PEEK_ULONG( q );
       }
@@ -502,7 +503,7 @@
 
       /* Ensure the first eight bytes of the subtable formats. */
       if ( table_limit < subtable + 8 )
-        return 0;
+        return -1;
 
       format = FT_PEEK_USHORT( subtable );
 
@@ -513,20 +514,20 @@
           if ( !tt_face_validate_pair_pos1( subtable,
                                             table_limit,
                                             &is_fitting ) )
-            return 0;
+            return -1;
         }
         else if ( format == 2 )
         {
           if ( !tt_face_validate_pair_pos2( subtable,
                                             table_limit,
                                             &is_fitting ) )
-            return 0;
+            return -1;
         }
         else
-          return 0;
+          return -1;
       }
       else
-        return 0;
+        return -1;
 
       if ( is_fitting )
         num_fitting_subtables++;
@@ -657,6 +658,7 @@
     for ( i = 0; i < lookupCount; i++ )
     {
       FT_UInt  lookupOffset;
+      FT_Int   fits;
 
 
       if ( !use_lookup_table[i] )
@@ -664,10 +666,12 @@
 
       lookupOffset = FT_PEEK_USHORT( p + i * 2 );
 
-      num_fitting_subtables +=
-        tt_face_validate_lookup_table( lookup_list + lookupOffset,
-                                       gpos_limit );
+      fits = tt_face_validate_lookup_table( lookup_list + lookupOffset,
+                                            gpos_limit );
+      if ( fits < 0 )
+        goto Fail;
 
+      num_fitting_subtables += (FT_UInt)fits;
     }
 
     /* Loop again over all lookup tables and */
