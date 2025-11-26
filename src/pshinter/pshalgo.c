@@ -1295,30 +1295,27 @@
     /* first of all, compute all local extrema */
     for ( n = 0; n < glyph->num_contours; n++ )
     {
-      PSH_Point  first = glyph->contours[n].start;
-      PSH_Point  point, before, after;
+      PSH_Point  first, point, before, after;
 
 
       /* we need at least 3 points to create an extremum */
       if ( glyph->contours[n].count < 3 )
         continue;
 
-      point  = first;
-      before = point;
+      before = after = glyph->contours[n].start;
 
       do
       {
         before = before->prev;
-        if ( before == first )
+        if ( before == after )
           goto Next;
 
-      } while ( before->org_u == point->org_u );
+      } while ( before->org_u == after->org_u );
 
       first = point = before->next;
 
       for (;;)
       {
-        after = point;
         do
         {
           after = after->next;
@@ -1344,6 +1341,13 @@
             do
             {
               psh_point_set_extremum( point );
+
+              /* determine its direction */
+              if ( before->org_v < after->org_v )
+                psh_point_set_positive( point );
+              else if ( before->org_v > after->org_v )
+                psh_point_set_negative( point );
+
               point = point->next;
 
             } while ( point != after );
@@ -1356,51 +1360,6 @@
       } /* for  */
 
     Next:
-      ;
-    }
-
-    /* for each extremum, determine its direction along the */
-    /* orthogonal axis                                      */
-    for ( n = 0; n < glyph->num_points; n++ )
-    {
-      PSH_Point  point, before, after;
-
-
-      point  = &glyph->points[n];
-      before = point;
-      after  = point;
-
-      if ( psh_point_is_extremum( point ) )
-      {
-        do
-        {
-          before = before->prev;
-          if ( before == point )
-            goto Skip;
-
-        } while ( before->org_v == point->org_v );
-
-        do
-        {
-          after = after->next;
-          if ( after == point )
-            goto Skip;
-
-        } while ( after->org_v == point->org_v );
-      }
-
-      if ( before->org_v < point->org_v &&
-           after->org_v  > point->org_v )
-      {
-        psh_point_set_positive( point );
-      }
-      else if ( before->org_v > point->org_v &&
-                after->org_v  < point->org_v )
-      {
-        psh_point_set_negative( point );
-      }
-
-    Skip:
       ;
     }
   }
