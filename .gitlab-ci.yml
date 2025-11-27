@@ -32,7 +32,9 @@ variables:
   stage: 'build'
 
 .build macos common:
-  image: "registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/15-sequoia:2024-10-28.0"
+  # HVF is available since Sequoia 15.5, but 2024-10-28 seems to be Sequoia 15.0
+  # registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/15-sequoia:2024-10-28.0
+  image: "registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/26-tahoe:2025-09-30.0"
   stage: 'build'
   tags:
     - gst-mac-arm
