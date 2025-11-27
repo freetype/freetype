@@ -364,6 +364,7 @@
     }
 
     globals->gsub                          = gsub;
+    globals->gsub_lookup_count             = lookupCount;
     globals->gsub_lookups_single_alternate = gsub_lookups_single_alternate;
 
     return;
