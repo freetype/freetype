@@ -235,23 +235,19 @@ dist:
 	rm -f freetype-$(version).tar.xz
 	rm -f ft$(winversion).zip
 
-	for d in `find . -name '.git' -prune \
-	                 -o -type f \
-	                 -o -print` ; do \
-	  mkdir -p tmp/$$d ; \
-	done ;
+	find .    -name .git -prune \
+	       -o -name  tmp -prune \
+	       -o -type d -exec mkdir -p tmp/{} \;
 
 	currdir=`pwd` ; \
-	for f in `find . -name '.git' -prune \
-	                 -o -name .gitattributes \
-	                 -o -name .gitignore \
-	                 -o -name .gitlab-ci.yml \
-	                 -o -name .gitmodules \
-	                 -o -name .mailmap \
-	                 -o -type d \
-	                 -o -print` ; do \
-	  ln -s $$currdir/$$f tmp/$$f ; \
-	done
+	find .    -name .git -prune \
+	       -o -name  tmp -prune \
+	       -o -name .gitattributes \
+	       -o -name .gitignore \
+	       -o -name .gitlab-ci.yml \
+	       -o -name .gitmodules \
+	       -o -name .mailmap \
+	       -o -type f -exec ln -s $$currdir/{} tmp/{} \;
 
 	cd tmp ; \
 	$(MAKE) devel ; \
