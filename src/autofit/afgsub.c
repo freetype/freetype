@@ -370,6 +370,7 @@
     return;
 
   Fail:
+    globals->gsub_lookup_count = 0;
     FT_FREE( gsub );
     FT_FREE( gsub_lookups_single_alternate );
   }
