@@ -488,7 +488,7 @@
 
     OTV_TRACE(( " (FeatureCount = %u)\n", FeatureCount ));
 
-    OTV_LIMIT_CHECK( FeatureCount * 2 );
+    OTV_LIMIT_CHECK( FeatureCount * 6 );
 
     otvalid->lookup_count = otv_LookupList_get_count( lookups );
 
