@@ -86,8 +86,8 @@ which isn't supported yet please send a mail too.
   SFNT    PS      CFF     SYNTHETIC  ---      OT spec, 5176.CFF.pdf
   SFNT    PS      CFF2    ---        cff      OT spec 1.8
 
-  SFNT    TT      SBIT    ---        sfnt     XFree86 (bitmaps only;
-                                              with `head' table)
+  SFNT    TT      SBIT    ---        sfnt     X11 (bitmaps only;
+                                              with `head' table) [8]
   SFNT    TT      MACSBIT ---        sfnt     OT spec (for the Mac;
                                               bitmaps only; `bhed' table)
   SFNT    TT      ---     ---        truetype OT spec (`normal' TT font)
@@ -203,6 +203,10 @@ which isn't supported yet please send a mail too.
     is a PostScript Type 1 font without the eexec encryption.  Current
     versions of FreeType don't not support this format,  but FontForge
     can load it.
+
+[8] Such fonts also contain a 'BDF ' table to hold BDF properties; see
+
+      https://fontforge.org/docs/techref/non-standard.html#non-standard-bdf
 
 ------------------------------------------------------------------------
 
