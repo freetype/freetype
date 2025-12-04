@@ -97,7 +97,7 @@
       if ( version != 0x0001                 ||
            strings < 8                       ||
            ( strings - 8 ) / 4 < num_strikes ||
-           strings + 1 > length              )
+           strings >= length                 )
         goto BadTable;
 
       bdf->num_strikes  = num_strikes;
