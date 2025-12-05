@@ -378,6 +378,8 @@ THE SOFTWARE.
         }
 
         error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
+        if ( error )
+          PCF_Face_Done( face );
       }
     }
 
