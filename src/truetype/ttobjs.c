@@ -1049,7 +1049,7 @@
     exec->maxIDefs = maxp->maxInstructionDefs;
 
     if ( FT_NEW_ARRAY( exec->FDefs, exec->maxFDefs + exec->maxIDefs ) )
-      goto Exit;
+      goto Fail;
 
     exec->IDefs = exec->FDefs + exec->maxFDefs;
 
@@ -1068,7 +1068,7 @@
     if ( FT_NEW_ARRAY( exec->stack,
                        exec->stackSize +
                          (FT_Long)( exec->storeSize + exec->cvtSize ) ) )
-      goto Exit;
+      goto Fail;
 
     /* reserve twilight zone and set GS before fpgm is executed, */
     /* just in case, even though fpgm should not touch them      */
@@ -1079,7 +1079,7 @@
 
     error = tt_glyphzone_new( memory, n_twilight, 0, &size->twilight );
     if ( error )
-      goto Exit;
+      goto Fail;
 
     size->GS        = tt_default_graphics_state;
     size->cvt_ready = -1;
@@ -1099,10 +1099,9 @@
     error = tt_size_run_fpgm( size );
     return error;
 
-  Exit:
-    if ( error )
-      tt_size_done_bytecode( size );
-
+  Fail:
+    TT_Done_Context( exec );
+    tt_size_done_bytecode( size );
     return error;
   }
 
