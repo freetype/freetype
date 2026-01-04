@@ -3309,12 +3309,14 @@
     p = first_point;
     do
     {
-      p     = p->next;
-      /* We adjust the height of the diacritic only, which means    */
-      /* we are never dealing with large numbers and can thus avoid */
-      /* `FT_MulFix`.                                               */
-      p->y  = ADD_LONG( SUB_LONG( p->y, min_y ) * target_height / height,
-                        min_y );
+      p    = p->next;
+      /* We adjust the height of the diacritic only, which means */
+      /* we are never dealing with (valid) large numbers and can */
+      /* thus avoid `FT_MulFix`.                                 */
+      p->y = ADD_LONG( MUL_LONG( SUB_LONG( p->y,
+                                           min_y ),
+                                 target_height ) / height,
+                       min_y );
 
     } while ( p != first_point );
 
@@ -3404,9 +3406,11 @@
     p = first_point;
     do
     {
-      p     = p->next;
-      p->y  = ADD_LONG( SUB_LONG( p->y, max_y ) * target_height / height,
-                        max_y );
+      p    = p->next;
+      p->y = ADD_LONG( MUL_LONG( SUB_LONG( p->y,
+                                           max_y ),
+                                 target_height ) / height,
+                       max_y );
 
     } while ( p != first_point );
 
