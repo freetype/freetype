@@ -532,8 +532,10 @@
       slot->metrics.horiBearingX = bbox.xMin;
       slot->metrics.horiBearingY = bbox.yMax;
 
-      slot->metrics.vertBearingX = FT_PIX_FLOOR( bbox.xMin + vvector.x );
-      slot->metrics.vertBearingY = FT_PIX_FLOOR( bbox.yMax + vvector.y );
+      slot->metrics.vertBearingX = FT_PIX_FLOOR( ADD_LONG( bbox.xMin,
+                                                           vvector.x ) );
+      slot->metrics.vertBearingY = FT_PIX_FLOOR( ADD_LONG( bbox.yMax,
+                                                           vvector.y ) );
 
       /* for mono-width fonts (like Andale, Courier, etc.) we need */
       /* to keep the original rounded advance width; ditto for     */
