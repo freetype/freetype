@@ -5457,11 +5457,11 @@
     /* single width cut-in test */
 
     /* |org_dist - single_width_value| < single_width_cutin */
-    if ( exc->GS.single_width_cutin > 0          &&
-         org_dist < exc->GS.single_width_value +
-                      exc->GS.single_width_cutin &&
-         org_dist > exc->GS.single_width_value -
-                      exc->GS.single_width_cutin )
+    if ( exc->GS.single_width_cutin > 0                    &&
+         org_dist < ADD_LONG( exc->GS.single_width_value,
+                              exc->GS.single_width_cutin ) &&
+         org_dist > SUB_LONG( exc->GS.single_width_value,
+                              exc->GS.single_width_cutin ) )
     {
       if ( org_dist >= 0 )
         org_dist = exc->GS.single_width_value;
