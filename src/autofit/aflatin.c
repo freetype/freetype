@@ -3468,7 +3468,7 @@
     } while ( p != first_point );
 
     /* Align bottom of the tilde to the grid. */
-    min_y_rounded = FT_PIX_ROUND( min_y );
+    min_y_rounded = FT_PIX_ROUND_LONG( min_y );
     delta         = SUB_LONG( min_y_rounded, min_y );
     height        = SUB_LONG( max_y, min_y );
 
@@ -3508,7 +3508,7 @@
 
     } while ( p != first_point );
 
-    max_y_rounded = FT_PIX_ROUND( max_y );
+    max_y_rounded = FT_PIX_ROUND_LONG( max_y );
     delta         = SUB_LONG( max_y_rounded, max_y );
     height        = SUB_LONG( max_y, min_y );
 

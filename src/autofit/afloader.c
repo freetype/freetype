@@ -524,11 +524,11 @@
 
       bbox.xMin = FT_PIX_FLOOR( bbox.xMin );
       bbox.yMin = FT_PIX_FLOOR( bbox.yMin );
-      bbox.xMax = FT_PIX_CEIL(  bbox.xMax );
-      bbox.yMax = FT_PIX_CEIL(  bbox.yMax );
+      bbox.xMax = FT_PIX_CEIL_LONG( bbox.xMax );
+      bbox.yMax = FT_PIX_CEIL_LONG( bbox.yMax );
 
-      slot->metrics.width        = bbox.xMax - bbox.xMin;
-      slot->metrics.height       = bbox.yMax - bbox.yMin;
+      slot->metrics.width        = SUB_LONG( bbox.xMax, bbox.xMin );
+      slot->metrics.height       = SUB_LONG( bbox.yMax, bbox.yMin );
       slot->metrics.horiBearingX = bbox.xMin;
       slot->metrics.horiBearingY = bbox.yMax;
 
