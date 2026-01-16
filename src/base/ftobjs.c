@@ -529,9 +529,21 @@
     /* The limit is based on the ppem value when available. */ 
     {
       FT_Face  face = slot->face;
-      FT_Pos   xlim = face ? 10 * face->size->metrics.x_ppem : 0x8000;
-      FT_Pos   ylim = face ? 10 * face->size->metrics.y_ppem : 0x8000;
+      FT_Pos   xlim = 0x7FFF;
+      FT_Pos   ylim = 0x7FFF;
 
+
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+      /* should fit 16-bit FT_Span after 3x implosion */
+      if ( mode == FT_RENDER_MODE_LCD )
+        xlim = 0x2AAA;
+#endif
+
+      if ( face )
+      {
+        xlim = FT_MIN( xlim, 10 * face->size->metrics.x_ppem );
+        ylim = FT_MIN( ylim, 10 * face->size->metrics.y_ppem );
+      }
 
       if ( pbox.xMin < -xlim || pbox.xMax > xlim ||
            pbox.yMin < -ylim || pbox.yMax > ylim )
