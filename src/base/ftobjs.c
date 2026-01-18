@@ -526,18 +526,12 @@
 
     /* Flag the bounding box size unsuitable for rendering. */
     /* FT_Renderer modules should check the return value.   */
-    /* The limit is based on the ppem value when available. */ 
+    /* The limit is based on the ppem value when available. */
     {
       FT_Face  face = slot->face;
-      FT_Pos   xlim = 0x7FFF;
-      FT_Pos   ylim = 0x7FFF;
+      FT_Pos   xlim = 0x8000;
+      FT_Pos   ylim = 0x8000;
 
-
-#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-      /* should fit 16-bit FT_Span after 3x implosion */
-      if ( mode == FT_RENDER_MODE_LCD )
-        xlim = 0x2AAA;
-#endif
 
       if ( face )
       {
@@ -545,8 +539,8 @@
         ylim = FT_MIN( ylim, 10 * face->size->metrics.y_ppem );
       }
 
-      if ( pbox.xMin < -xlim || pbox.xMax > xlim ||
-           pbox.yMin < -ylim || pbox.yMax > ylim )
+      if ( pbox.xMin < -xlim || pbox.xMax >= xlim ||
+           pbox.yMin < -ylim || pbox.yMax >= ylim )
       {
         FT_TRACE3(( "ft_glyphslot_preset_bitmap: [%ld %ld %ld %ld]\n",
                     pbox.xMin, pbox.yMin, pbox.xMax, pbox.yMax ));
