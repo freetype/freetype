@@ -113,6 +113,11 @@ windows msbuild vs2019 amd64:
     ARCH: 'amd64'
     PLATFORM: 'x64'
 
+windows msbuild vs2019 arm64:
+  extends: '.build windows msbuild'
+  variables:
+    ARCH: 'arm64'
+    PLATFORM: 'arm64'
 
 # Linux Jobs.
 #
