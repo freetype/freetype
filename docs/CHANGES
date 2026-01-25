@@ -1,6 +1,14 @@
-CHANGES BETWEEN 2.14.1 and 2.14.2 (2025-Mmm-DD)
+CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mmm-DD)
 
-  I. IMPORTANT BUG FIXES
+  I. IMPORTANT CHANGES
+
+  - Several  changes  related  to  LCD  filtering  are implemented  to
+    achieve better performance and encourage sound practices.
+
+    . The legacy libXft LCD filter algorithm is no longer provided.
+
+
+  II. IMPORTANT BUG FIXES
 
   - The italic angle in `PS_FontInfo`  is now stored  as a fixed-point
     value  in degrees  for  all  Type 1 fonts  and  their derivatives,

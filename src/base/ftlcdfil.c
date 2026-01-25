@@ -25,9 +25,6 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-/* define USE_LEGACY to implement the legacy filter */
-#define  USE_LEGACY
-
 #define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
 
 
@@ -177,113 +174,6 @@
   }
 
 
-#ifdef USE_LEGACY
-
-  /* intra-pixel filter used by the legacy filter */
-  static void
-  _ft_lcd_filter_legacy( FT_Bitmap*      bitmap,
-                         FT_Byte*        weights )
-  {
-    FT_UInt   width  = (FT_UInt)bitmap->width;
-    FT_UInt   height = (FT_UInt)bitmap->rows;
-    FT_Int    pitch  = bitmap->pitch;
-    FT_Byte*  origin = bitmap->buffer;
-    FT_Byte   mode   = bitmap->pixel_mode;
-
-    static const unsigned int  filters[3][3] =
-    {
-      { 65538 * 9/13, 65538 * 1/6, 65538 * 1/13 },
-      { 65538 * 3/13, 65538 * 4/6, 65538 * 3/13 },
-      { 65538 * 1/13, 65538 * 1/6, 65538 * 9/13 }
-    };
-
-    FT_UNUSED( weights );
-
-
-    /* take care of bitmap flow */
-    if ( pitch > 0 && height > 0 )
-      origin += pitch * (FT_Int)( height - 1 );
-
-    /* horizontal in-place intra-pixel filter */
-    if ( mode == FT_PIXEL_MODE_LCD && width >= 3 )
-    {
-      FT_Byte*  line = origin;
-
-
-      for ( ; height > 0; height--, line -= pitch )
-      {
-        FT_UInt  xx;
-
-
-        for ( xx = 0; xx < width; xx += 3 )
-        {
-          FT_UInt  r, g, b;
-          FT_UInt  p;
-
-
-          p  = line[xx];
-          r  = filters[0][0] * p;
-          g  = filters[0][1] * p;
-          b  = filters[0][2] * p;
-
-          p  = line[xx + 1];
-          r += filters[1][0] * p;
-          g += filters[1][1] * p;
-          b += filters[1][2] * p;
-
-          p  = line[xx + 2];
-          r += filters[2][0] * p;
-          g += filters[2][1] * p;
-          b += filters[2][2] * p;
-
-          line[xx]     = (FT_Byte)( r / 65536 );
-          line[xx + 1] = (FT_Byte)( g / 65536 );
-          line[xx + 2] = (FT_Byte)( b / 65536 );
-        }
-      }
-    }
-    else if ( mode == FT_PIXEL_MODE_LCD_V && height >= 3 )
-    {
-      FT_Byte*  column = origin;
-
-
-      for ( ; width > 0; width--, column++ )
-      {
-        FT_Byte*  col = column - 2 * pitch;
-
-
-        for ( ; height > 0; height -= 3, col -= 3 * pitch )
-        {
-          FT_UInt  r, g, b;
-          FT_UInt  p;
-
-
-          p  = col[0];
-          r  = filters[0][0] * p;
-          g  = filters[0][1] * p;
-          b  = filters[0][2] * p;
-
-          p  = col[pitch];
-          r += filters[1][0] * p;
-          g += filters[1][1] * p;
-          b += filters[1][2] * p;
-
-          p  = col[pitch * 2];
-          r += filters[2][0] * p;
-          g += filters[2][1] * p;
-          b += filters[2][2] * p;
-
-          col[0]         = (FT_Byte)( r / 65536 );
-          col[pitch]     = (FT_Byte)( g / 65536 );
-          col[pitch * 2] = (FT_Byte)( b / 65536 );
-        }
-      }
-    }
-  }
-
-#endif /* USE_LEGACY */
-
-
   /* documentation in ftlcdfil.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -337,15 +227,6 @@
                  FT_LCD_FILTER_FIVE_TAPS );
       library->lcd_filter_func = ft_lcd_filter_fir;
       break;
-
-#ifdef USE_LEGACY
-
-    case FT_LCD_FILTER_LEGACY:
-    case FT_LCD_FILTER_LEGACY1:
-      library->lcd_filter_func = _ft_lcd_filter_legacy;
-      break;
-
-#endif
 
     default:
       return FT_THROW( Invalid_Argument );
