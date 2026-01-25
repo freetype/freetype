@@ -365,11 +365,6 @@ FT_BEGIN_HEADER
    *     Value~0 means to use the font's value.  Value~-1 means to use the
    *     CFF driver's default.
    *
-   *   lcd_weights ::
-   *   lcd_filter_func ::
-   *     These fields specify the LCD filtering weights and callback function
-   *     for ClearType-style subpixel rendering.
-   *
    *   refcount ::
    *     A counter initialized to~1 at the time an @FT_Face structure is
    *     created.  @FT_Reference_Face increments this counter, and
@@ -390,11 +385,6 @@ FT_BEGIN_HEADER
 
     FT_Char              no_stem_darkening;
     FT_Int32             random_seed;
-
-#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    FT_LcdFiveTapFilter      lcd_weights;      /* filter weights, if any */
-    FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
-#endif
 
     FT_Int  refcount;
 

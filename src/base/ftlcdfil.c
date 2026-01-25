@@ -38,17 +38,8 @@
     FT_Bitmap_LcdFilterFunc  lcd_filter_func;
 
 
-    /* Per-face LCD filtering takes priority if set up. */
-    if ( slot->face && slot->face->internal->lcd_filter_func )
-    {
-      lcd_weights     = slot->face->internal->lcd_weights;
-      lcd_filter_func = slot->face->internal->lcd_filter_func;
-    }
-    else
-    {
-      lcd_weights     = slot->library->lcd_weights;
-      lcd_filter_func = slot->library->lcd_filter_func;
-    }
+    lcd_weights     = slot->library->lcd_weights;
+    lcd_filter_func = slot->library->lcd_filter_func;
 
     if ( lcd_filter_func == ft_lcd_filter_fir )
     {
