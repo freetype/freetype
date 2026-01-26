@@ -5,6 +5,11 @@ CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mmm-DD)
   - Several  changes  related  to  LCD  filtering  are implemented  to
     achieve better performance and encourage sound practices.
 
+    . Instead of  blanket LCD filtering over the entire bitmap,  it is
+      now applied only to non-zero spans using direct rendering.  This
+      speeds up the ClearType-like rendering by more than 40% at sizes
+      above 32 ppem.
+
     . Setting the filter weights with FT_Face_Properties  is no longer
       supported.  The default and light filters  are optimized to work
       with any face.

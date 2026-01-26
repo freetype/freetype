@@ -879,10 +879,6 @@ FT_BEGIN_HEADER
    *   lcd_weights ::
    *     The LCD filter weights for ClearType-style subpixel rendering.
    *
-   *   lcd_filter_func ::
-   *     The LCD filtering callback function for for ClearType-style subpixel
-   *     rendering.
-   *
    *   lcd_geometry ::
    *     This array specifies LCD subpixel geometry and controls Harmony LCD
    *     rendering technique, alternative to ClearType.
@@ -916,7 +912,6 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFiveTapFilter      lcd_weights;      /* filter weights, if any */
-    FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
 #else
     FT_Vector                lcd_geometry[3];  /* RGB subpixel positions */
 #endif

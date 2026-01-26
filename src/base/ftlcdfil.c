@@ -25,142 +25,24 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-#define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
-
-
-  /* add padding according to filter weights */
+  /* add padding sufficient for a 5-tap filter, */
+  /* which is 2/3 of a pixel                    */
   FT_BASE_DEF( void )
   ft_lcd_padding( FT_BBox*        cbox,
                   FT_GlyphSlot    slot,
                   FT_Render_Mode  mode )
   {
-    FT_Byte*                 lcd_weights;
-    FT_Bitmap_LcdFilterFunc  lcd_filter_func;
+    FT_UNUSED( slot );
 
-
-    lcd_weights     = slot->library->lcd_weights;
-    lcd_filter_func = slot->library->lcd_filter_func;
-
-    if ( lcd_filter_func == ft_lcd_filter_fir )
+    if ( mode == FT_RENDER_MODE_LCD )
     {
-      if ( mode == FT_RENDER_MODE_LCD )
-      {
-        cbox->xMin -= lcd_weights[0] ? 43 :
-                      lcd_weights[1] ? 22 : 0;
-        cbox->xMax += lcd_weights[4] ? 43 :
-                      lcd_weights[3] ? 22 : 0;
-      }
-      else if ( mode == FT_RENDER_MODE_LCD_V )
-      {
-        cbox->yMin -= lcd_weights[0] ? 43 :
-                      lcd_weights[1] ? 22 : 0;
-        cbox->yMax += lcd_weights[4] ? 43 :
-                      lcd_weights[3] ? 22 : 0;
-      }
+      cbox->xMin -= 43;
+      cbox->xMax += 43;
     }
-  }
-
-
-  /* FIR filter used by the default and light filters */
-  FT_BASE_DEF( void )
-  ft_lcd_filter_fir( FT_Bitmap*           bitmap,
-                     FT_LcdFiveTapFilter  weights )
-  {
-    FT_UInt   width  = (FT_UInt)bitmap->width;
-    FT_UInt   height = (FT_UInt)bitmap->rows;
-    FT_Int    pitch  = bitmap->pitch;
-    FT_Byte*  origin = bitmap->buffer;
-    FT_Byte   mode   = bitmap->pixel_mode;
-
-
-    /* take care of bitmap flow */
-    if ( pitch > 0 && height > 0 )
-      origin += pitch * (FT_Int)( height - 1 );
-
-    /* horizontal in-place FIR filter */
-    if ( mode == FT_PIXEL_MODE_LCD && width >= 2 )
+    else if ( mode == FT_RENDER_MODE_LCD_V )
     {
-      FT_Byte*  line = origin;
-
-
-      /* `fir' must be at least 32 bit wide, since the sum of */
-      /* the values in `weights' can exceed 0xFF              */
-
-      for ( ; height > 0; height--, line -= pitch )
-      {
-        FT_UInt  fir[5];
-        FT_UInt  val, xx;
-
-
-        val    = line[0];
-        fir[2] = weights[2] * val;
-        fir[3] = weights[3] * val;
-        fir[4] = weights[4] * val;
-
-        val    = line[1];
-        fir[1] = fir[2] + weights[1] * val;
-        fir[2] = fir[3] + weights[2] * val;
-        fir[3] = fir[4] + weights[3] * val;
-        fir[4] =          weights[4] * val;
-
-        for ( xx = 2; xx < width; xx++ )
-        {
-          val    = line[xx];
-          fir[0] = fir[1] + weights[0] * val;
-          fir[1] = fir[2] + weights[1] * val;
-          fir[2] = fir[3] + weights[2] * val;
-          fir[3] = fir[4] + weights[3] * val;
-          fir[4] =          weights[4] * val;
-
-          line[xx - 2] = FT_SHIFTCLAMP( fir[0] );
-        }
-
-        line[xx - 2] = FT_SHIFTCLAMP( fir[1] );
-        line[xx - 1] = FT_SHIFTCLAMP( fir[2] );
-      }
-    }
-
-    /* vertical in-place FIR filter */
-    else if ( mode == FT_PIXEL_MODE_LCD_V && height >= 2 )
-    {
-      FT_Byte*  column = origin;
-
-
-      for ( ; width > 0; width--, column++ )
-      {
-        FT_Byte*  col = column;
-        FT_UInt   fir[5];
-        FT_UInt   val, yy;
-
-
-        val    = col[0];
-        fir[2] = weights[2] * val;
-        fir[3] = weights[3] * val;
-        fir[4] = weights[4] * val;
-        col   -= pitch;
-
-        val    = col[0];
-        fir[1] = fir[2] + weights[1] * val;
-        fir[2] = fir[3] + weights[2] * val;
-        fir[3] = fir[4] + weights[3] * val;
-        fir[4] =          weights[4] * val;
-        col   -= pitch;
-
-        for ( yy = 2; yy < height; yy++, col -= pitch )
-        {
-          val    = col[0];
-          fir[0] = fir[1] + weights[0] * val;
-          fir[1] = fir[2] + weights[1] * val;
-          fir[2] = fir[3] + weights[2] * val;
-          fir[3] = fir[4] + weights[3] * val;
-          fir[4] =          weights[4] * val;
-
-          col[pitch * 2]  = FT_SHIFTCLAMP( fir[0] );
-        }
-
-        col[pitch * 2]  = FT_SHIFTCLAMP( fir[1] );
-        col[pitch]      = FT_SHIFTCLAMP( fir[2] );
-      }
+      cbox->yMin -= 43;
+      cbox->yMax += 43;
     }
   }
 
@@ -178,7 +60,6 @@
       return FT_THROW( Invalid_Argument );
 
     ft_memcpy( library->lcd_weights, weights, FT_LCD_FILTER_FIVE_TAPS );
-    library->lcd_filter_func = ft_lcd_filter_fir;
 
     return FT_Err_Ok;
   }
@@ -202,21 +83,21 @@
     switch ( filter )
     {
     case FT_LCD_FILTER_NONE:
-      library->lcd_filter_func = NULL;
+      ft_memset( library->lcd_weights,
+                 0,
+                 FT_LCD_FILTER_FIVE_TAPS );
       break;
 
     case FT_LCD_FILTER_DEFAULT:
       ft_memcpy( library->lcd_weights,
                  default_weights,
                  FT_LCD_FILTER_FIVE_TAPS );
-      library->lcd_filter_func = ft_lcd_filter_fir;
       break;
 
     case FT_LCD_FILTER_LIGHT:
       ft_memcpy( library->lcd_weights,
                  light_weights,
                  FT_LCD_FILTER_FIVE_TAPS );
-      library->lcd_filter_func = ft_lcd_filter_fir;
       break;
 
     default:
