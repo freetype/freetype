@@ -55,7 +55,7 @@
     FT_Byte*  p = table;
     FT_Byte*  limit;
 
-    FT_Long  last_id = -1;
+    FT_UInt  next_id = 0;
 
 
     if ( table_limit < p + 4 )
@@ -79,9 +79,9 @@
         FT_UInt  id = FT_NEXT_USHORT( p );
 
 
-        if ( last_id >= id )
+        if ( next_id > id )
           return FALSE;
-        last_id = id;
+        next_id = id + 1;
       }
     }
     else if ( format == 2 )
@@ -103,9 +103,9 @@
         if ( startGlyphID > endGlyphID )
           return FALSE;
 
-        if ( last_id >= startGlyphID )
+        if ( next_id > startGlyphID )
           return FALSE;
-        last_id = endGlyphID;
+        next_id = endGlyphID + 1;
 
         /* XXX: Is this modulo 65536 arithmetic? */
         if ( startCoverageIndex + endGlyphID - startGlyphID >=
@@ -164,7 +164,7 @@
     else if ( format == 2 )
     {
       FT_UInt  classRangeCount;
-      FT_Long  last_id = -1;
+      FT_UInt  next_id = 0;
 
 
       if ( table_limit < p + 2 )
@@ -185,9 +185,9 @@
         if ( startGlyphID > endGlyphID )
           return FALSE;
 
-        if ( last_id >= startGlyphID )
+        if ( next_id > startGlyphID )
           return FALSE;
-        last_id = endGlyphID;
+        next_id = endGlyphID + 1;
 
         if ( class_value > max_class_value )
           max_class_value = class_value;
@@ -291,7 +291,7 @@
     FT_Byte*  p = table;
     FT_Byte*  limit;
 
-    FT_Long  last_id = -1;
+    FT_UInt  next_id = 0;
 
 
     if ( table_limit < p + 2 )
@@ -311,10 +311,10 @@
       FT_UInt  id = FT_NEXT_USHORT( p );
 
 
-      if ( last_id >= id )
+      if ( next_id > id )
         return FALSE;
 
-      last_id = id;
+      next_id = id + 1;
 
       p += 2; /* Skip `valueRecord1`. */
     }
