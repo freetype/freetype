@@ -1209,6 +1209,13 @@ FT_BEGIN_HEADER
    *     A pointer to the Metrics Variations service for this `TT_Face`'s
    *     driver.
    *
+   *   tt_varc ::
+   *     A pointer for sharing the VARC services provided by this
+   *     `TT_Face`'s driver.
+   *
+   *   face_varc ::
+   *     A pointer to handle VARC glyphs by this `TT_Face`'s driver.
+   *
    *   psaux ::
    *     A pointer to the PostScript Auxiliary service.
    *
@@ -1408,6 +1415,26 @@ FT_BEGIN_HEADER
    *   svg ::
    *     A pointer to data related to the 'SVG' table.  `NULL` if the table
    *     is not available.
+   *
+   *   gpos_table ::
+   *     A pointer to the 'GPOS' table.  `NULL` if the table is not
+   *     available.
+   *
+   *   gpos_lookups_kerning ::
+   *     An array of GPOS kerning lookups.
+   *
+   *   num_gpos_lookups_kerning ::
+   *     The number of GPOS kerning lookups.
+   *
+   *   varc ::
+   *     A pointer to data related to the 'VARC' table.  `NULL` if the table
+   *     is not available.
+   *
+   *   varc_context ::
+   *     A context to manage recursion in the 'VARC' table.
+   *
+   *   varc_loading_components ::
+   *     Set if component checks for 'VARC' table handling can be skipped.
    */
   typedef struct  TT_FaceRec_
   {
@@ -1466,6 +1493,16 @@ FT_BEGIN_HEADER
     /* used to handle the HVAR, VVAR, and MVAR OpenType tables by this */
     /* TT_Face's driver                                                */
     void*                 face_var;             /* since 2.13.1 */
+#endif
+
+#ifdef TT_CONFIG_OPTION_VARC
+    /* a typeless pointer to the FT_Service_VARCRec table used to */
+    /* share VARC handling from the `truetype' driver             */
+    void*                 tt_varc;              /* since 2.15 */
+
+    /* a typeless pointer to the FT_Service_VARCRec table used to */
+    /* handle VARC glyphs by this TT_Face's driver                */
+    void*                 face_varc;            /* since 2.15 */
 #endif
 
     /* a typeless pointer to the PostScript Aux service */
@@ -1602,6 +1639,15 @@ FT_BEGIN_HEADER
     /* This is actually an array of GPOS lookup subtables. */
     FT_UInt32*            gpos_lookups_kerning;
     FT_UInt               num_gpos_lookups_kerning;
+#endif
+
+#ifdef TT_CONFIG_OPTION_VARC
+    /* since 2.15 */
+    void*                 varc;
+    /* Active recursion context. */
+    void*                 varc_context;
+    /* Whether to skip VARC check for components. */
+    FT_Bool               varc_loading_components;
 #endif
 
   } TT_FaceRec;

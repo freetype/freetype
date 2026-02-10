@@ -34,6 +34,10 @@
 #include <freetype/internal/services/svmetric.h>
 #endif
 
+#ifdef TT_CONFIG_OPTION_VARC
+#include <freetype/internal/services/svvarc.h>
+#endif
+
 #include "sferrors.h"
 
 #ifdef TT_CONFIG_OPTION_BDF
@@ -557,6 +561,24 @@
                          0 );
 #endif
 
+#ifdef TT_CONFIG_OPTION_VARC
+    if ( !face->tt_varc )
+    {
+      /* we want the VARC implementation from the `truetype' module only */
+      FT_Module  tt_module = FT_Get_Module( library, "truetype" );
+
+
+      face->tt_varc = ft_module_get_service( tt_module,
+                                             FT_SERVICE_ID_VARC,
+                                             0 );
+    }
+
+    if ( !face->face_varc )
+      face->face_varc = ft_module_get_service( &face->root.driver->root,
+                                               FT_SERVICE_ID_VARC,
+                                               0 );
+#endif
+
     FT_TRACE2(( "SFNT driver\n" ));
 
     error = sfnt_open_font( stream,
@@ -1025,6 +1047,27 @@
       LOAD_( colr );
     }
 
+#ifdef TT_CONFIG_OPTION_VARC
+    /* variable composite glyph support */
+    if ( face->face_varc )
+    {
+      FT_Service_VARC  varc = (FT_Service_VARC)face->face_varc;
+
+
+      FT_TRACE2(( "'VARC' " ));
+      FT_TRACE3(( "-->\n" ));
+
+      error = varc->load( (FT_Face)face, stream );
+
+      FT_TRACE2(( "%s\n", ( !error )
+                            ? "loaded"
+                            : FT_ERR_EQ( error, Table_Missing )
+                              ? "missing"
+                              : "failed to load" ));
+      FT_TRACE3(( "\n" ));
+    }
+#endif
+
     /* OpenType-SVG glyph support */
     if ( sfnt->load_svg )
       LOAD_( svg );
@@ -1471,6 +1514,17 @@
         sfnt->free_colr( face );
       }
 
+#ifdef TT_CONFIG_OPTION_VARC
+      /* free VARC data */
+      if ( face->face_varc )
+      {
+        FT_Service_VARC  varc = (FT_Service_VARC)face->face_varc;
+
+
+        varc->done( (FT_Face)face );
+      }
+#endif
+
 #ifdef FT_CONFIG_OPTION_SVG
       /* free SVG data */
       if ( sfnt->free_svg )
@@ -1550,6 +1604,11 @@
     FT_FREE( face->palette );
 
     face->sfnt = NULL;
+
+#ifdef TT_CONFIG_OPTION_VARC
+    face->tt_varc   = NULL;
+    face->face_varc = NULL;
+#endif
   }
 
 

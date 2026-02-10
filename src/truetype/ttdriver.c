@@ -32,12 +32,20 @@
 #include <freetype/internal/services/svprop.h>
 #include <freetype/ftdriver.h>
 
+#ifdef TT_CONFIG_OPTION_VARC
+#include <freetype/internal/services/svvarc.h>
+#endif
+
 #include "ttdriver.h"
 #include "ttgload.h"
 #include "ttpload.h"
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include "ttgxvar.h"
+#endif
+
+#ifdef TT_CONFIG_OPTION_VARC
+#include "ttvarc.h"
 #endif
 
 #include "tterrors.h"
@@ -562,6 +570,20 @@
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
+#ifdef TT_CONFIG_OPTION_VARC
+
+  FT_DEFINE_SERVICE_VARCREC(
+    tt_service_varc,
+
+    tt_face_load_varc,
+    tt_face_free_varc,
+    tt_face_has_varc_glyph,
+    tt_face_load_varc_glyph
+  )
+
+#endif /* TT_CONFIG_OPTION_VARC */
+
+
   static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
   {
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -583,7 +605,19 @@
   )
 
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#if defined( TT_CONFIG_OPTION_GX_VAR_SUPPORT ) && \
+    defined( TT_CONFIG_OPTION_VARC )
+  FT_DEFINE_SERVICEDESCREC7(
+    tt_services,
+
+    FT_SERVICE_ID_FONT_FORMAT,        FT_FONT_FORMAT_TRUETYPE,
+    FT_SERVICE_ID_MULTI_MASTERS,      &tt_service_gx_multi_masters,
+    FT_SERVICE_ID_METRICS_VARIATIONS, &tt_service_metrics_variations,
+    FT_SERVICE_ID_VARC,               &tt_service_varc,
+    FT_SERVICE_ID_TRUETYPE_ENGINE,    &tt_service_truetype_engine,
+    FT_SERVICE_ID_TT_GLYF,            &tt_service_truetype_glyf,
+    FT_SERVICE_ID_PROPERTIES,         &tt_service_properties )
+#elif defined( TT_CONFIG_OPTION_GX_VAR_SUPPORT )
   FT_DEFINE_SERVICEDESCREC6(
     tt_services,
 
@@ -593,6 +627,15 @@
     FT_SERVICE_ID_TRUETYPE_ENGINE,    &tt_service_truetype_engine,
     FT_SERVICE_ID_TT_GLYF,            &tt_service_truetype_glyf,
     FT_SERVICE_ID_PROPERTIES,         &tt_service_properties )
+#elif defined( TT_CONFIG_OPTION_VARC )
+  FT_DEFINE_SERVICEDESCREC5(
+    tt_services,
+
+    FT_SERVICE_ID_FONT_FORMAT,     FT_FONT_FORMAT_TRUETYPE,
+    FT_SERVICE_ID_VARC,            &tt_service_varc,
+    FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
+    FT_SERVICE_ID_TT_GLYF,         &tt_service_truetype_glyf,
+    FT_SERVICE_ID_PROPERTIES,      &tt_service_properties )
 #else
   FT_DEFINE_SERVICEDESCREC4(
     tt_services,

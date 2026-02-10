@@ -42,6 +42,10 @@
 #include <freetype/internal/services/svkern.h>
 #include <freetype/internal/services/svtteng.h>
 
+#ifdef TT_CONFIG_OPTION_VARC
+#include <freetype/internal/services/svvarc.h>
+#endif
+
 #include <freetype/ftdriver.h>
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
@@ -1016,6 +1020,22 @@
           autohint = TRUE;
       }
     }
+
+#ifdef TT_CONFIG_OPTION_VARC
+    /* Never auto-hint a VARC (variable composite) glyph: its components */
+    /* are already loaded unhinted, and the auto-fitter cannot process   */
+    /* the assembled composite (it also re-enters variation-coordinate   */
+    /* setting).  Use the native hinter / unhinted load instead.         */
+    if ( autohint && FT_IS_SFNT( face ) )
+    {
+      FT_Service_VARC  varc;
+
+
+      FT_FACE_FIND_SERVICE( face, varc, VARC );
+      if ( varc && varc->has_glyph( face, glyph_index ) )
+        autohint = FALSE;
+    }
+#endif
 
     if ( autohint )
     {

@@ -6,8 +6,20 @@ CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Mmm-DD)
     glyphs,  which  significantly improves  its performance  at  sizes
     above 40 ppem.
 
-  - Experimental HVF driver  has been contributed by Apple,  currently
-    available on macOS only.
+  - Support for Variable Composites ('VARC' table) technology has been
+    contributed by Behdad  Esfahbod, using the 'Claude'  LLM to derive
+    basic   code   from   implementations  in   HarfBuzz   and   other
+    applications, followed  by manual fine-tuning, mainly  for greater
+    speed.
+
+    VARC is part of the new  ISO Open Font Format, Edition 5 (released
+    in July  2026); it allows a  file size reduction of  CJK Variation
+    fonts by up to 90%.
+
+      https://github.com/harfbuzz/boring-expansion-spec/blob/main/VARC.md
+
+  - An  experimental  HVF  driver   has  been  contributed  by  Apple,
+    currently available on macOS only.
 
 
   II. IMPORTANT BUG FIXES
