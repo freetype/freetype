@@ -1805,8 +1805,7 @@
         FT_Byte*  q;
 
 
-        size  = rows * pitch;
-        if ( FT_ALLOC( buf, size ) )
+        if ( FT_ALLOC_MULT( buf, rows, pitch ) )
           return error;
 
         p = dstSlot->bitmap.buffer;
