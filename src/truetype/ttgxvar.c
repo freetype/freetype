@@ -628,7 +628,6 @@
       FT_UShort  word_delta_count;
       FT_UInt    region_idx_count;
       FT_UInt    per_region_size;
-      FT_UInt    delta_set_size;
 
 
       if ( FT_STREAM_SEEK( offset + dataOffsetArray[i] ) )
@@ -698,23 +697,9 @@
       if ( long_words )
         per_region_size *= 2;
 
-      /* Check for overflow (we actually test whether the     */
-      /* multiplication of two unsigned values wraps around). */
-      delta_set_size = per_region_size * item_count;
-      if ( per_region_size                                &&
-           delta_set_size / per_region_size != item_count )
-      {
-        FT_TRACE2(( "tt_var_load_item_variation_store:"
-                    " bad delta set array size\n" ));
-        error = FT_THROW( Array_Too_Large );
+      if ( FT_QALLOC_MULT( varData->deltaSet, item_count, per_region_size ) )
         goto Exit;
-      }
-
-      if ( FT_NEW_ARRAY( varData->deltaSet, delta_set_size ) )
-        goto Exit;
-      if ( FT_Stream_Read( stream,
-                           varData->deltaSet,
-                           per_region_size * item_count ) )
+      if ( FT_STREAM_READ( varData->deltaSet, item_count * per_region_size ) )
       {
         FT_TRACE2(( "deltaSet read failed." ));
         error = FT_THROW( Invalid_Table );
