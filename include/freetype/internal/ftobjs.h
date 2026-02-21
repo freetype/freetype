@@ -714,9 +714,9 @@ FT_BEGIN_HEADER
                               const FT_Vector*  origin );
 
   /* Allocate a new bitmap buffer in a glyph slot. */
+  /* Dimensions must be preset in advance.         */
   FT_BASE( FT_Error )
-  ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
-                             FT_ULong      size );
+  ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot );
 
 
   /* Set the bitmap buffer in a glyph slot to a given pointer.  The buffer */

@@ -565,8 +565,7 @@
 
 
   FT_BASE_DEF( FT_Error )
-  ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
-                             FT_ULong      size )
+  ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot )
   {
     FT_Memory  memory = FT_FACE_MEMORY( slot->face );
     FT_Error   error;
@@ -577,7 +576,10 @@
     else
       slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
-    FT_MEM_ALLOC( slot->bitmap.buffer, size );
+    /* dimensions must be preset */
+    FT_MEM_ALLOC_MULT( slot->bitmap.buffer,
+                       slot->bitmap.rows,
+                       slot->bitmap.pitch );
     return error;
   }
 
