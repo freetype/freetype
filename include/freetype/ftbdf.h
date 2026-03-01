@@ -200,8 +200,8 @@ FT_BEGIN_HEADER
    *   In case of error, `aproperty->type` is always set to
    *   @BDF_PROPERTY_TYPE_NONE.
    *
-   *   This also with SFNT fonts that have a 'BDF~' table, after a bitmap
-   *   strike size has been selected.
+   *   This also works with SFNT fonts that have a 'BDF~' table, after a
+   *   bitmap strike size has been selected.
    */
   FT_EXPORT( FT_Error )
   FT_Get_BDF_Property( FT_Face           face,

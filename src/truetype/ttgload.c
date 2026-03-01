@@ -2217,7 +2217,7 @@
       exec = size->context;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      /* reset backward compatibility; note that */ 
+      /* reset backward compatibility; note that */
       /* the CVT program always runs without it  */
       exec->backward_compatibility = 0;
 

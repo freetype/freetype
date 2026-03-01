@@ -1,4 +1,4 @@
-CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mmm-DD)
+CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mar-01)
 
   I. IMPORTANT CHANGES
 
@@ -19,10 +19,18 @@ CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mmm-DD)
 
   II. IMPORTANT BUG FIXES
 
+  - A bunch of potential security problems have been found.  All users
+    should update.
+
   - The italic angle in `PS_FontInfo`  is now stored  as a fixed-point
     value  in degrees  for  all  Type 1 fonts  and  their derivatives,
     consistent  with  CFF  fonts  and  common  practices.  The  broken
     underline position and thickness values are fixed for CFF fonts.
+
+
+  III. MISCELLANEOUS
+
+  - The `x` field in the `FT_Span` structure is now unsigned.
 
 
 ======================================================================
