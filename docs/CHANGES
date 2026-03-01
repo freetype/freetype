@@ -32,6 +32,18 @@ CHANGES BETWEEN 2.14.1 and 2.14.2 (2026-Mar-01)
 
   - The `x` field in the `FT_Span` structure is now unsigned.
 
+  - Demo  program  `ftgrid` got  an  option  `-m`  to select  a  start
+    character to display.
+
+  - Similarly, demo program  `ftmulti` got an option `-m`  to select a
+    text string for rendering.
+
+  - Option  `-d` in  the demo  program `ttdebug`  is now  called `-a`,
+    expecting  a  comma-separated  list  of  axis  values.   The  user
+    interface is also slightly improved.
+
+  - The `ftinspect` demo program can now be compiled with Qt6, too.
+
 
 ======================================================================
 
