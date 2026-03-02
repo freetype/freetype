@@ -50,10 +50,16 @@ How to prepare a new release
 . Run `src/tools/chktrcmp.py` and check that there are no undefined
   `trace_XXXX` macros.
 
-. Update meson subproject files (for both the 'freetype' and
+. Check meson subproject files (for both the 'freetype' and
   'freetype-demos' git repositories) with
 
-    meson subprojects update
+    meson wrap status
+
+  and update wrap files with
+
+    meson wrap update <library>
+
+  if necessary.
 
 . Test meson compilation (for both the 'freetype' and 'freetype-demos'
   git repositories) with
