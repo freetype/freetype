@@ -20,8 +20,6 @@
 #define CFFOBJS_H_
 
 
-
-
 FT_BEGIN_HEADER
 
 

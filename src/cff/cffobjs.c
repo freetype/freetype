@@ -16,7 +16,6 @@
  */
 
 
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftstream.h>
@@ -44,6 +43,7 @@
 
 #define CFF_fixedToInt( x )                          \
           ( (FT_Short)( ( (x) + 0x8000U ) >> 16 ) )
+
 
   /**************************************************************************
    *

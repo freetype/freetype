@@ -113,6 +113,7 @@
    *   // copy SDF data to the target bitmap
    *   copy(dm to t);
    * }
+   * ```
    *
    */
 
