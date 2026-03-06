@@ -884,7 +884,7 @@
 
 
       if ( second_glyph > mid_index )
-        min = max + 1;
+        min = mid + 1;
       else if ( second_glyph < mid_index )
         max = mid;
       else
