@@ -546,7 +546,7 @@
      *
      */
 
-    if ( High )
+    if ( High && ras.bTop + ras.bRight < 256 )
     {
       ras.precision_bits   = 12;
       ras.precision_step   = 256;
