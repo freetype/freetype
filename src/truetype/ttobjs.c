@@ -1061,9 +1061,23 @@
     exec->maxFunc = 0;
     exec->maxIns  = 0;
 
-    /* XXX: We reserve a little more elements on the stack to deal */
-    /*      with broken fonts like arialbs, courbs, timesbs, etc.  */
-    exec->stackSize = maxp->maxStackElements + 32;
+    /* We reserve extra elements on the stack to deal with broken fonts. */
+    /*                                                                   */
+    /* Some fonts (e.g., `Rubik-Italic.ttf`) have buggy hinting bytecode */
+    /* that pushes more values than `maxStackElements` declared in the   */
+    /* 'maxp' table.  For example, `Rubik-Italic.ttf`'s 'prep' program   */
+    /* pushes 255 values but `maxStackElements` is only set to 153.      */
+    /*                                                                   */
+    /* To alleviate this situation we increase the value of              */
+    /* `maxStackElements` based on a percentage of `maxStackElements`,   */
+    /* with a minimum of 128 extra slots.  This allows most broken fonts */
+    /* to work without completely disabling hinting, while adding only a */
+    /* small overhead for correctly authored fonts.                      */
+
+    /* Use 50% more than declared, with minimum safety margin of 128. */
+    exec->stackSize = maxp->maxStackElements +
+                      FT_MAX( maxp->maxStackElements / 2, 128 );
+
     exec->storeSize = maxp->maxStorage;
     exec->cvtSize   = face->cvt_size;
 
