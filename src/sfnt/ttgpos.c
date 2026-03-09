@@ -719,7 +719,7 @@
     return error;
 
   Fail:
-    FT_FREE( gpos );
+    FT_FRAME_RELEASE( gpos );
     FT_FREE( gpos_lookups_kerning );
     FT_FREE( use_lookup_table );
 
