@@ -408,6 +408,8 @@
       FT_UInt   class1Count;
       FT_UInt   class2Count;
 
+      FT_UInt  max_size;
+
 
       /* The number of coverage indices is not relevant here. */
       if ( !tt_face_validate_coverage( coverage, table_limit, FT_UINT_MAX ) )
@@ -432,7 +434,11 @@
 
       /* For our purposes, the first value record only contains */
       /* X advances while the second one is empty.              */
-      limit = p + class1Count * class2Count * 2;
+      max_size = class1Count * class2Count;
+      if ( max_size > FT_UINT_MAX / 2 )
+        return FALSE;
+
+      limit = p + max_size * 2;
       if ( table_limit < limit )
         return FALSE;
 
