@@ -17,7 +17,7 @@ variables:
 .build windows common:
   # TODO: should probably get its own image at some point instead of reusing the GStreamer one
   # See https://gitlab.freedesktop.org/gstreamer/gstreamer/container_registry/18035 for latest
-  image: "registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2022-07-29.3-main"
+  image: "registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2026-02-01.0-main"
   stage: 'build'
   tags:
     - 'docker'
@@ -97,23 +97,23 @@ variables:
 
 # Windows jobs.
 
-windows meson vs2019 amd64:
+windows meson vs2022 amd64:
   extends: '.build windows meson'
   variables:
     ARCH: 'amd64'
 
-windows meson vs2019 x86:
+windows meson vs2022 x86:
   extends: '.build windows meson'
   variables:
     ARCH: 'x86'
 
-windows msbuild vs2019 amd64:
+windows msbuild vs2022 amd64:
   extends: '.build windows msbuild'
   variables:
     ARCH: 'amd64'
     PLATFORM: 'x64'
 
-windows msbuild vs2019 arm64:
+windows msbuild vs2022 arm64:
   extends: '.build windows msbuild'
   variables:
     ARCH: 'arm64'
