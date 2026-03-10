@@ -22,7 +22,7 @@ variables:
   tags:
     - 'docker'
     - 'windows'
-    - '2026'
+    - '2022'
     - 'gstreamer-windows'
 
 .build linux common:
