@@ -856,9 +856,9 @@
       goto Exit;
 
     /* in case of success, copy the bitmap to the glyph bitmap */
-    error = ft_bitmap_glyph_init( (FT_Glyph)bitmap, &dummy );
-    if ( error )
-      goto Exit;
+    bitmap->left   = dummy.bitmap_left;
+    bitmap->top    = dummy.bitmap_top;
+    bitmap->bitmap = dummy.bitmap;
 
     /* copy advance */
     bitmap->root.advance = glyph->advance;
