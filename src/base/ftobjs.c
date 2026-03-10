@@ -499,10 +499,12 @@
     /* Flag the width or height unsuitable for rendering.   */
     /* The limit is based on the ppem value when available. */
     /* FT_Renderer modules should check the return value.   */
-    ret = FT_BOOL( width >= 0x10000 || height >= 0x10000           ||
-            ( slot->face                                         &&
-              ( width  > 10 * slot->face->size->metrics.x_ppem ||
-                height > 10 * slot->face->size->metrics.y_ppem ) ) );
+    ret = FT_BOOL(     width >= 0x10000   ||    height >= 0x10000   ||
+                   pbox.xMin < -0x1000000 || pbox.xMax >= 0x1000000 ||
+                   pbox.yMin < -0x1000000 || pbox.yMax >= 0x1000000 ||
+             ( slot->face                                         &&
+               ( width  > 10 * slot->face->size->metrics.x_ppem ||
+                 height > 10 * slot->face->size->metrics.y_ppem ) ) );
 
     if ( ret )
       FT_TRACE3(( "ft_glyphslot_preset_bitmap: [%ld %ld %ld %ld]\n",
