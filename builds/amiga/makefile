@@ -5,7 +5,7 @@
 #
 
 
-# Copyright (C) 2005-2025 by
+# Copyright (C) 2005-2026 by
 # Werner Lemberg and Detlef Würkner.
 #
 # This file is part of the FreeType project, and may only be used, modified,
