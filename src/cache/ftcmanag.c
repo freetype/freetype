@@ -667,10 +667,22 @@
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager )
   {
-    if ( node                                    &&
-         manager                                 &&
-         node->cache_index < manager->num_caches )
-      node->ref_count--;
+    if ( !node || !manager                        ||
+         node->cache_index >= manager->num_caches )
+      return;
+
+    node->ref_count--;
+
+    /* free unlinked node */
+    if ( node->ref_count <= 0 && node->link == node )
+    {
+      FTC_Cache  cache = manager->caches[node->cache_index];
+
+
+      cache->clazz.node_free( node, cache );
+      cache->slack++;
+      ftc_cache_resize( cache );
+    }
   }
 
 

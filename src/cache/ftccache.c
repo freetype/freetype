@@ -568,9 +568,13 @@
           manager->cur_weight -= cache->clazz.node_weight( node, cache );
           ftc_node_mru_unlink( node, manager );
 
-          cache->clazz.node_free( node, cache );
-
-          cache->slack++;
+          if ( node->ref_count <= 0 )
+          {
+            cache->clazz.node_free( node, cache );
+            cache->slack++;
+          }
+          else
+            node->link = node;  /* mark unlinked */
         }
         else
           pnode = &node->link;
