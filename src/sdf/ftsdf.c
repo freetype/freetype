@@ -3281,7 +3281,7 @@
       goto Exit;
     }
 
-    if ( FT_NEW_ARRAY( dists, bitmap->rows * bitmap->width ) )
+    if ( FT_ALLOC_MULT( dists, bitmap->rows, bitmap->width ) )
       goto Exit;
 
     contours = shape->contours;
