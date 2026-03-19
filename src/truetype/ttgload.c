@@ -1185,9 +1185,7 @@
 
 
     /* make room for phantom points */
-    error = FT_GLYPHLOADER_CHECK_POINTS( loader->gloader,
-                                         outline->n_points + 4,
-                                         0 );
+    error = FT_GLYPHLOADER_CHECK_POINTS( loader->gloader, 4, 0 );
     if ( error )
       return error;
 
