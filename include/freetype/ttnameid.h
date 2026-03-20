@@ -169,7 +169,7 @@ FT_BEGIN_HEADER
 #define TT_MAC_ID_LAOTIAN              22
 #define TT_MAC_ID_GEORGIAN             23
 #define TT_MAC_ID_ARMENIAN             24
-#define TT_MAC_ID_MALDIVIAN            25
+#define TT_MAC_ID_MALDIVIAN            25  /* TrueType version 1.66 */
 #define TT_MAC_ID_SIMPLIFIED_CHINESE   25
 #define TT_MAC_ID_TIBETAN              26
 #define TT_MAC_ID_MONGOLIAN            27
