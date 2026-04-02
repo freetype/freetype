@@ -486,7 +486,25 @@
       sfnt->done_face( tt_face );
   }
 
-#endif /* FT_CONFIG_OPTION_HVF */
+#else /* !FT_CONFIG_OPTION_HVF */
+
+  FT_LOCAL_DEF( FT_Error )
+  hvf_face_init( FT_Stream      stream,
+                 FT_Face        face,
+                 FT_Int         typeface_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  parameters )
+  {
+    FT_UNUSED( stream );
+    FT_UNUSED( face );
+    FT_UNUSED( typeface_index );
+    FT_UNUSED( num_params );
+    FT_UNUSED( parameters );
+
+    return FT_THROW( Unknown_File_Format );
+  }
+
+#endif /* !FT_CONFIG_OPTION_HVF */
 
 
 /* END */
