@@ -27,13 +27,11 @@
 
 FT_BEGIN_HEADER
 
-#ifdef FT_CONFIG_OPTION_HVF
   FT_LOCAL( FT_Error )
   hvf_slot_load_glyph( FT_GlyphSlot  glyph,
                        FT_Size       size,
                        FT_UInt       glyph_index,
                        FT_Int32      load_flags );
-#endif /* FT_CONFIG_OPTION_HVF */
 
 
 FT_END_HEADER

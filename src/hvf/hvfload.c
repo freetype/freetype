@@ -556,7 +556,23 @@
     return error;
   }
 
-#endif /* FT_CONFIG_OPTION_HVF */
+#else /* !FT_CONFIG_OPTION_HVF */
+
+  FT_LOCAL_DEF( FT_Error )
+  hvf_slot_load_glyph( FT_GlyphSlot  glyph,
+                       FT_Size       size,
+                       FT_UInt       glyph_index,
+                       FT_Int32      load_flags )
+  {
+    FT_UNUSED( glyph );
+    FT_UNUSED( size );
+    FT_UNUSED( glyph_index );
+    FT_UNUSED( load_flags );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+#endif /* !FT_CONFIG_OPTION_HVF */
 
 
 /* END */

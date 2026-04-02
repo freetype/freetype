@@ -700,14 +700,14 @@
     sizeof ( FT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
 
-    PUT_HVF_MODULE( hvf_face_init ),        /* FT_Face_InitFunc  init_face */
+    hvf_face_init,                          /* FT_Face_InitFunc  init_face */
     PUT_HVF_MODULE( hvf_face_done ),        /* FT_Face_DoneFunc  done_face */
     NULL,                                   /* FT_Size_InitFunc  init_size */
     NULL,                                   /* FT_Size_DoneFunc  done_size */
     NULL,                                   /* FT_Slot_InitFunc  init_slot */
     NULL,                                   /* FT_Slot_DoneFunc  done_slot */
 
-    PUT_HVF_MODULE( hvf_slot_load_glyph ), /* FT_Slot_LoadFunc  load_glyph */
+    hvf_slot_load_glyph,                   /* FT_Slot_LoadFunc  load_glyph */
 
     PUT_HVF_MODULE( hvf_get_kerning ),
                                   /* FT_Face_GetKerningFunc   get_kerning  */

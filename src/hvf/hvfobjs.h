@@ -126,13 +126,6 @@ FT_BEGIN_HEADER
 
 
   /* Function declarations. */
-  FT_LOCAL( FT_Error )
-  hvf_face_init( FT_Stream      stream,
-                 FT_Face        face,
-                 FT_Int         typeface_index,
-                 FT_Int         num_params,
-                 FT_Parameter*  parameters );
-
   FT_LOCAL( void )
   hvf_face_done( FT_Face  face );
 
@@ -145,6 +138,14 @@ FT_BEGIN_HEADER
           ( (HVFAxisValue)(coord) / 65536.0 )
 
 #endif /* FT_CONFIG_OPTION_HVF */
+
+
+  FT_LOCAL( FT_Error )
+  hvf_face_init( FT_Stream      stream,
+                 FT_Face        face,
+                 FT_Int         typeface_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  parameters );
 
 
 FT_END_HEADER
