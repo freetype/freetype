@@ -2783,8 +2783,8 @@
     {
       do
       {
-        point->y += movement;
-        point     = point->next;
+        point->y = ADD_LONG( point->y, movement );
+        point    = point->next;
 
       } while ( point != first_point );
     }
