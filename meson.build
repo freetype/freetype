@@ -339,7 +339,7 @@ if bzip2_dep.found()
 endif
 
 # PNG support.
-libpng_dep = dependency('libpng',
+libpng_dep = dependency('libpng', 'PNG',
   required: get_option('png'),
   fallback: 'libpng')
 
