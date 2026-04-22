@@ -1,0 +1,34 @@
+README for the builds/plan9 subdirectory.
+
+Copyright (C) 2026 by Yaroslav Kolomiiets.
+
+
+The mkfile is provided for Plan 9 from Bell Labs. To build, run:
+
+	cd ../..	# to the top FreeType directory
+	mk
+
+It produces a library to link against as ../../libfreetype.a𝑂 archive.
+
+
+
+To integrate with your code, add to your mkfile:
+
+FTDIR=/your/path/to/freetype
+LIB=$LIBDIR/libfreetype.a$O
+LIBHFILES=$LIBDIR/builds/plan9/p9ftopt.h
+HFILES=$HFILES $LIBHFILES
+
+CFLAGS=$CFLAGS -p -I$LIBDIR/builds/plan9 -I$LIBDIR/include \
+	-D'FT_CONFIG_OPTIONS_H=<p9ftopt.h>' \
+	-D'FT_CONFIG_STANDARD_LIBRARY_H=<p9lib.h>' \
+
+$LIB $LIBHFILES:
+	cd $FTDIR; mk install
+
+
+This file is part of the FreeType project, and may only be used,
+modified, and distributed under the terms of the FreeType project
+license, LICENSE.TXT.  By continuing to use, modify, or distribute
+this file you indicate that you have read the license and understand
+and accept it fully.
