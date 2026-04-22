@@ -1,0 +1,49 @@
+# mkfile for Plan 9 from Bell Labs
+#
+# Copyright (C) 2026 by Yaroslav Kolomiiets.
+# 
+# This file is part of the FreeType project, and may only be used,
+# modified, and distributed under the terms of the FreeType project
+# license, LICENSE.TXT.  By continuing to use, modify, or distribute
+# this file you indicate that you have read the license and understand
+# and accept it fully.
+#
+</$objtype/mkfile
+
+LIB=../libfreetype.a$O
+LIBHFILES=../builds/plan9/p9ftopt.h
+
+TARG=issue-1063
+OFILES=issue-1063/main.$O
+HFILES=$LIBHFILES
+WFILES=data/As.I.Lay.Dying.ttf
+
+CFLAGS=-p -I../builds/plan9 -I../include \
+	-D'FT_CONFIG_OPTIONS_H=<p9ftopt.h>' \
+	-D'FT_CONFIG_STANDARD_LIBRARY_H=<p9lib.h>' \
+	-D_PLAN9 \
+
+</sys/src/cmd/mkone
+
+%.$O: %.c
+	$CC $CFLAGS -o $stem.$O $stem.c
+
+# compilation requires the generated header
+$OFILES: $LIB
+$LIB:
+	cd ..; mk install
+
+test:V:runtest
+runtest:V: $O.out $WFILES
+	FREETYPE_TESTS_DATA_DIR=data
+	./$O.out
+
+data/%.ttf:
+	mkdir -p data
+	hget https://github.com/python-pillow/Pillow/files/6622147/As.I.Lay.Dying.zip |
+	@{cd data && unzip -s && mv 'As I Lay Dying.ttf' $stem.ttf}
+
+clean:V:
+	rm -f [$OS].* */*.[$OS]
+nuke:V:
+	rm -f [$OS].* */*.[$OS] $WFILES

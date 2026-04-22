@@ -69,7 +69,13 @@ builds/plan9/p9ftopt.h:D: include/freetype/config/ftoption.h
 
 clean:V:
 	rm -f *.[$OS] src/*/*.[$OS] $CLEANFILES
+	cd tests && mk $target
 
 nuke:V:
 	rm -f *.[$OS] src/*/*.[$OS] $CLEANFILES
 	rm -f libfreetype.a[$OS] builds/plan9/p9ftopt.h
+	cd tests && mk $target
+
+test:V: runtest
+runtest:V: $LIB
+	cd tests && mk $target

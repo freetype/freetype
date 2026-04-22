@@ -1,8 +1,9 @@
-#include <stdio.h>
-
 #include <freetype/freetype.h>
 #include <ft2build.h>
 
+#ifndef _PLAN9
+#include <stdio.h>
+#endif
 
 int
 main( void )
@@ -42,6 +43,9 @@ main( void )
       printf( "unknown %d for char %lu, gid %u\n", code, i, gid );
   }
 
+#ifdef _PLAN9
+  exits(0);
+#endif
   return 0;
 }
 
