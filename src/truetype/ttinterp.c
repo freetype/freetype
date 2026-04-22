@@ -6191,14 +6191,14 @@
     IUP_WorkerRec  V;
     FT_Byte        mask;
 
-    FT_UInt   first_point;   /* first point of contour        */
-    FT_UInt   end_point;     /* end point (last+1) of contour */
+    FT_UInt  first_point;   /* first point of contour        */
+    FT_UInt  end_point;     /* end point (last+1) of contour */
 
-    FT_UInt   first_touched; /* first touched point in contour   */
-    FT_UInt   cur_touched;   /* current touched point in contour */
+    FT_UInt  first_touched; /* first touched point in contour   */
+    FT_UInt  cur_touched;   /* current touched point in contour */
 
-    FT_UInt   point;         /* current point   */
-    FT_Short  contour;       /* current contour */
+    FT_UInt  point;         /* current point   */
+    FT_UInt  contour;       /* current contour */
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
