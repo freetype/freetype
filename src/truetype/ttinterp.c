@@ -5135,8 +5135,10 @@
     /*      subtract them.                                         */
     if ( exc->GS.gep2 == 0 )
       limit = exc->zp2.n_points;
-    else
+    else if ( exc->zp2.n_points > 4U )
       limit = exc->zp2.n_points - 4U;
+    else
+      return;
 
     /* XXX: UNDOCUMENTED! SHZ doesn't touch the points */
     for ( i = 0; i < limit; i++ )
