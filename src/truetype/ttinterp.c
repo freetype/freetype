@@ -4967,8 +4967,7 @@
   Move_Zp2_Point( TT_ExecContext  exc,
                   FT_UShort       point,
                   FT_F26Dot6      dx,
-                  FT_F26Dot6      dy,
-                  FT_Bool         touch )
+                  FT_F26Dot6      dy )
   {
     if ( exc->GS.freeVector.x != 0 )
     {
@@ -4978,8 +4977,7 @@
 #endif
         exc->zp2.cur[point].x = ADD_LONG( exc->zp2.cur[point].x, dx );
 
-      if ( touch )
-        exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_X;
+      exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
 
     if ( exc->GS.freeVector.y != 0 )
@@ -4990,8 +4988,7 @@
 #endif
         exc->zp2.cur[point].y = ADD_LONG( exc->zp2.cur[point].y, dy );
 
-      if ( touch )
-        exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_Y;
+      exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
   }
 
@@ -5039,7 +5036,7 @@
         }
       }
       else
-        Move_Zp2_Point( exc, point, dx, dy, TRUE );
+        Move_Zp2_Point( exc, point, dx, dy );
     }
 
   Fail:
@@ -5096,7 +5093,7 @@
     for ( i = start; i < limit; i++ )
     {
       if ( zp.cur != exc->zp2.cur || refp != i )
-        Move_Zp2_Point( exc, i, dx, dy, TRUE );
+        Move_Zp2_Point( exc, i, dx, dy );
     }
   }
 
@@ -5227,11 +5224,11 @@
              ( exc->backward_compatibility != 0x7                     &&
                ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
                  ( exc->zp2.tags[point] & FT_CURVE_TAG_TOUCH_Y )    ) ) )
-          Move_Zp2_Point( exc, point, 0, dy, TRUE );
+          Move_Zp2_Point( exc, point, 0, dy );
       }
       else
 #endif
-        Move_Zp2_Point( exc, point, dx, dy, TRUE );
+        Move_Zp2_Point( exc, point, dx, dy );
     }
 
   Fail:
