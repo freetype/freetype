@@ -4923,37 +4923,38 @@
   Compute_Point_Displacement( TT_ExecContext  exc,
                               FT_F26Dot6*     x,
                               FT_F26Dot6*     y,
-                              TT_GlyphZone    zone,
+                              FT_Vector*      cur,
                               FT_UInt*        refp )
   {
-    TT_GlyphZoneRec  zp;
-    FT_UShort        p;
-    FT_F26Dot6       d;
+    TT_GlyphZone  zp;
+    FT_UShort     p;
+    FT_F26Dot6    d;
 
 
     if ( exc->opcode & 1 )
     {
-      zp = exc->zp0;
+      zp = &exc->zp0;
       p  = exc->GS.rp1;
     }
     else
     {
-      zp = exc->zp1;
+      zp = &exc->zp1;
       p  = exc->GS.rp2;
     }
 
-    if ( BOUNDS( p, zp.n_points ) )
+    if ( BOUNDS( p, zp->n_points ) )
     {
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
-      *refp = 0;
       return FAILURE;
     }
 
-    *zone = zp;
-    *refp = p;
+    /* return reference if zones match */
+    if ( refp )
+      *refp = cur == zp->cur ? p
+                             : ~0U;  /* nan */
 
-    d = PROJECT( zp.cur + p, zp.org + p );
+    d = PROJECT( zp->cur + p, zp->org + p );
 
     *x = FT_MulFix( d, exc->moveVector.x );
     *y = FT_MulFix( d, exc->moveVector.y );
@@ -5004,8 +5005,6 @@
            FT_Long*        args )
   {
     FT_Long          loop = exc->GS.loop;
-    TT_GlyphZoneRec  zp;
-    FT_UInt          refp;
 
     FT_F26Dot6       dx, dy;
     FT_UInt          point;
@@ -5020,7 +5019,7 @@
 
     exc->new_top -= loop;
 
-    if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
+    if ( Compute_Point_Displacement( exc, &dx, &dy, NULL, NULL ) )
       return;
 
     while ( loop-- )
@@ -5058,7 +5057,6 @@
   Ins_SHC( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    TT_GlyphZoneRec  zp;
     FT_UInt          refp, start, limit, i;
     FT_F26Dot6       dx, dy;
 
@@ -5075,11 +5073,8 @@
       return;
     }
 
-    if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
+    if ( Compute_Point_Displacement( exc, &dx, &dy, exc->zp2.cur, &refp ) )
       return;
-
-    if ( zp.cur != exc->zp2.cur )
-      refp = ~0U;  /* nan */
 
     if ( contour == 0 )
       start = 0;
@@ -5111,7 +5106,6 @@
            FT_Long*        args )
   {
     FT_Vector*       cur;
-    TT_GlyphZoneRec  zp;
     FT_UInt          refp, i, limit;
     FT_F26Dot6       dx, dy;
 
@@ -5136,11 +5130,8 @@
       return;
     }
 
-    if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
+    if ( Compute_Point_Displacement( exc, &dx, &dy, cur, &refp ) )
       return;
-
-    if ( zp.cur != cur )
-      refp = ~0U;  /* nan */
 
     /* XXX: UNDOCUMENTED! SHZ doesn't touch the points. */
     if ( dx )
