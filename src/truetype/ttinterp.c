@@ -4924,7 +4924,7 @@
                               FT_F26Dot6*     x,
                               FT_F26Dot6*     y,
                               TT_GlyphZone    zone,
-                              FT_UShort*      refp )
+                              FT_UInt*        refp )
   {
     TT_GlyphZoneRec  zp;
     FT_UShort        p;
@@ -4965,7 +4965,7 @@
   /* See `ttinterp.h' for details on backward compatibility mode. */
   static void
   Move_Zp2_Point( TT_ExecContext  exc,
-                  FT_UShort       point,
+                  FT_UInt         point,
                   FT_F26Dot6      dx,
                   FT_F26Dot6      dy )
   {
@@ -5005,10 +5005,10 @@
   {
     FT_Long          loop = exc->GS.loop;
     TT_GlyphZoneRec  zp;
-    FT_UShort        refp;
+    FT_UInt          refp;
 
     FT_F26Dot6       dx, dy;
-    FT_UShort        point;
+    FT_UInt          point;
 
 
     if ( exc->new_top < loop )
@@ -5025,7 +5025,7 @@
 
     while ( loop-- )
     {
-      point = (FT_UShort)*(--args);
+      point = (FT_UInt)*(--args);
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
@@ -5059,11 +5059,10 @@
            FT_Long*        args )
   {
     TT_GlyphZoneRec  zp;
-    FT_UShort        refp;
+    FT_UInt          refp, start, limit, i;
     FT_F26Dot6       dx, dy;
 
     FT_UShort        contour, bounds;
-    FT_UShort        start, limit, i;
 
 
     contour = (FT_UShort)args[0];
@@ -5079,6 +5078,9 @@
     if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
       return;
 
+    if ( zp.cur != exc->zp2.cur )
+      refp = ~0U;  /* nan */
+
     if ( contour == 0 )
       start = 0;
     else
@@ -5092,7 +5094,7 @@
 
     for ( i = start; i < limit; i++ )
     {
-      if ( zp.cur != exc->zp2.cur || refp != i )
+      if ( refp != i )
         Move_Zp2_Point( exc, i, dx, dy );
     }
   }
@@ -5110,9 +5112,8 @@
   {
     FT_Vector*       cur;
     TT_GlyphZoneRec  zp;
-    FT_UShort        refp, i, limit;
-    FT_F26Dot6       dx,
-                     dy;
+    FT_UInt          refp, i, limit;
+    FT_F26Dot6       dx, dy;
 
 
     /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points, */
@@ -5138,6 +5139,9 @@
     if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
       return;
 
+    if ( zp.cur != cur )
+      refp = ~0U;  /* nan */
+
     /* XXX: UNDOCUMENTED! SHZ doesn't touch the points. */
     if ( dx )
     {
@@ -5147,7 +5151,7 @@
 #endif
         for ( i = 0; i < limit; i++ )
         {
-          if ( zp.cur != cur || refp != i )
+          if ( refp != i )
             cur[i].x = ADD_LONG( cur[i].x, dx );
         }
     }
@@ -5160,7 +5164,7 @@
 #endif
         for ( i = 0; i < limit; i++ )
         {
-          if ( zp.cur != cur || refp != i )
+          if ( refp != i )
             cur[i].y = ADD_LONG( cur[i].y, dy );
         }
     }
@@ -5179,7 +5183,7 @@
   {
     FT_Long     loop = exc->GS.loop;
     FT_F26Dot6  dx, dy;
-    FT_UShort   point;
+    FT_UInt     point;
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     FT_Bool     in_twilight = FT_BOOL( exc->GS.gep0 == 0 ||
                                        exc->GS.gep1 == 0 ||
@@ -5201,7 +5205,7 @@
 
     while ( loop-- )
     {
-      point = (FT_UShort)*(--args);
+      point = (FT_UInt)*(--args);
 
       if ( BOUNDS( point, exc->zp2.n_points ) )
       {
