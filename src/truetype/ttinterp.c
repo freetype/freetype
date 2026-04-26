@@ -5111,16 +5111,28 @@
   Ins_SHZ( TT_ExecContext  exc,
            FT_Long*        args )
   {
+    FT_Vector*       cur;
     TT_GlyphZoneRec  zp;
-    FT_UShort        refp;
+    FT_UShort        refp, i, limit;
     FT_F26Dot6       dx,
                      dy;
 
-    FT_UShort        limit, i;
 
-
-    if ( BOUNDS( args[0], 2 ) )
+    /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points, */
+    /*      which must be subtracted.                          */
+    switch ( (FT_Int)args[0] )
     {
+    case 0:
+      cur   = exc->twilight.cur;
+      limit = exc->twilight.n_points;
+      break;
+
+    case 1:
+      cur   = exc->pts.cur;
+      limit = exc->pts.n_points > 4U ? exc->pts.n_points - 4U : 0;
+      break;
+
+    default:
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
       return;
@@ -5129,22 +5141,31 @@
     if ( Compute_Point_Displacement( exc, &dx, &dy, &zp, &refp ) )
       return;
 
-    /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points.     */
-    /*      Twilight zone has no real contours, so use `n_points'. */
-    /*      Normal zone's `n_points' includes phantoms, so must    */
-    /*      subtract them.                                         */
-    if ( exc->GS.gep2 == 0 )
-      limit = exc->zp2.n_points;
-    else if ( exc->zp2.n_points > 4U )
-      limit = exc->zp2.n_points - 4U;
-    else
-      return;
-
-    /* XXX: UNDOCUMENTED! SHZ doesn't touch the points */
-    for ( i = 0; i < limit; i++ )
+    /* XXX: UNDOCUMENTED! SHZ doesn't touch the points. */
+    if ( dx )
     {
-      if ( zp.cur != exc->zp2.cur || refp != i )
-        Move_Zp2_Point( exc, i, dx, dy, FALSE );
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+      /* See `ttinterp.h' for details on backward compatibility mode. */
+      if ( !exc->backward_compatibility )
+#endif
+        for ( i = 0; i < limit; i++ )
+        {
+          if ( zp.cur != cur || refp != i )
+            cur[i].x = ADD_LONG( cur[i].x, dx );
+        }
+    }
+
+    if ( dy )
+    {
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+      /* See `ttinterp.h' for details on backward compatibility mode. */
+      if ( exc->backward_compatibility != 0x7 )
+#endif
+        for ( i = 0; i < limit; i++ )
+        {
+          if ( zp.cur != cur || refp != i )
+            cur[i].y = ADD_LONG( cur[i].y, dy );
+        }
     }
   }
 
