@@ -4025,13 +4025,13 @@
   /* modeled after `af_iup_shift' */
 
   static void
-  tt_delta_shift( int         p1,
-                  int         p2,
-                  int         ref,
+  tt_delta_shift( FT_UInt     p1,
+                  FT_UInt     p2,
+                  FT_UInt     ref,
                   FT_Vector*  in_points,
                   FT_Vector*  out_points )
   {
-    int        p;
+    FT_UInt    p;
     FT_Vector  delta;
 
 
