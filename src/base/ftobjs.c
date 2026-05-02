@@ -4741,7 +4741,8 @@
 
 
     /* try to render colored glyph layers as a special case */
-    if ( slot->internal->load_flags & FT_LOAD_COLOR )
+    if ( slot->internal->load_flags & FT_LOAD_COLOR &&
+         slot->format == FT_GLYPH_FORMAT_OUTLINE    )
     {
       FT_LayerIterator  iterator;
 
@@ -4777,7 +4778,7 @@
             load_flags &= ~FT_LOAD_COLOR;
 
             /* render into the new `face->glyph' glyph slot */
-            load_flags |= FT_LOAD_RENDER;
+            load_flags |= FT_LOAD_RENDER | FT_LOAD_NO_BITMAP;
 
             error = FT_Load_Glyph( face, glyph_index, load_flags );
             if ( error )
