@@ -838,6 +838,14 @@
       fbx.yMin = FT_MIN( sbx.yMin, tbx.yMin );
       fbx.xMax = FT_MAX( sbx.xMax, tbx.xMax );
       fbx.yMax = FT_MAX( sbx.yMax, tbx.yMax );
+
+      /* sanity check */
+      if ( fbx.xMin < -0x10000 || fbx.xMax >= 0x10000 ||
+           fbx.yMin < -0x10000 || fbx.yMax >= 0x10000 )
+      {
+        FT_TRACE5(( "FT_Bitmap_Blend: final dimension overflow\n" ));
+        return FT_THROW( Invalid_Argument );
+      }
     }
     else
       fbx = sbx;
