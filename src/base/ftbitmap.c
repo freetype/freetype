@@ -776,18 +776,12 @@
     FT_Bitmap         source_bitmap;
     const FT_Bitmap*  source;
 
-    FT_Vector  source_offset;
-    FT_Vector  target_offset;
-
     FT_Bool  free_source_bitmap          = 0;
     FT_Bool  free_target_bitmap_on_error = 0;
 
-    FT_Pos  source_llx, source_lly, source_urx, source_ury;
-    FT_Pos  target_llx, target_lly, target_urx, target_ury;
-    FT_Pos  final_llx, final_lly, final_urx, final_ury;
+    FT_BBox  sbx, tbx, fbx;
 
     unsigned int  final_rows, final_width;
-    long          x, y;
 
 
     if ( !library || !target || !source_ || !atarget_offset )
@@ -811,88 +805,62 @@
     if ( !( source_->width && source_->rows ) )
       return FT_Err_Ok;               /* nothing to do */
 
-    /* assure integer pixel offsets */
-    source_offset.x = FT_PIX_FLOOR( source_offset_.x );
-    source_offset.y = FT_PIX_FLOOR( source_offset_.y );
-    target_offset.x = FT_PIX_FLOOR( atarget_offset->x );
-    target_offset.y = FT_PIX_FLOOR( atarget_offset->y );
+    /* get source bitmap dimensions assuming integer offsets */
+    sbx.xMin = ( source_offset_.x >> 6 );
+    sbx.yMin = ( source_offset_.y >> 6 ) - source_->rows;
+    sbx.xMax = ( source_offset_.x >> 6 ) + source_->width;
+    sbx.yMax = ( source_offset_.y >> 6 );
 
-    /* get source bitmap dimensions */
-    source_llx = source_offset.x;
-    if ( FT_LONG_MIN + (FT_Pos)( source_->rows << 6 ) + 64 > source_offset.y )
+    /* sanity check */
+    if ( sbx.xMin > sbx.xMax || sbx.yMin > sbx.yMax )
     {
-      FT_TRACE5((
-        "FT_Bitmap_Blend: y coordinate overflow in source bitmap\n" ));
+      FT_TRACE5(( "FT_Bitmap_Blend: source dimension overflow\n" ));
       return FT_THROW( Invalid_Argument );
     }
-    source_lly = source_offset.y - ( source_->rows << 6 );
 
-    if ( FT_LONG_MAX - (FT_Pos)( source_->width << 6 ) - 64 < source_llx )
-    {
-      FT_TRACE5((
-        "FT_Bitmap_Blend: x coordinate overflow in source bitmap\n" ));
-      return FT_THROW( Invalid_Argument );
-    }
-    source_urx = source_llx + ( source_->width << 6 );
-    source_ury = source_offset.y;
-
-    /* get target bitmap dimensions */
     if ( target->width && target->rows )
     {
-      target_llx = target_offset.x;
-      if ( FT_LONG_MIN + (FT_Pos)( target->rows << 6 ) > target_offset.y )
-      {
-        FT_TRACE5((
-          "FT_Bitmap_Blend: y coordinate overflow in target bitmap\n" ));
-        return FT_THROW( Invalid_Argument );
-      }
-      target_lly = target_offset.y - ( target->rows << 6 );
+      /* get target bitmap dimensions assuming integer offsets */
+      tbx.xMin = ( atarget_offset->x >> 6 );
+      tbx.yMin = ( atarget_offset->y >> 6 ) - target->rows;
+      tbx.xMax = ( atarget_offset->x >> 6 ) + target->width;
+      tbx.yMax = ( atarget_offset->y >> 6 );
 
-      if ( FT_LONG_MAX - (FT_Pos)( target->width << 6 ) < target_llx )
+      /* sanity check */
+      if ( tbx.xMin > tbx.xMax || tbx.yMin > tbx.yMax )
       {
-        FT_TRACE5((
-          "FT_Bitmap_Blend: x coordinate overflow in target bitmap\n" ));
+        FT_TRACE5(( "FT_Bitmap_Blend: targget dimension overflow\n" ));
         return FT_THROW( Invalid_Argument );
       }
-      target_urx = target_llx + ( target->width << 6 );
-      target_ury = target_offset.y;
+
+      /* compute final bitmap dimensions */
+      fbx.xMin = FT_MIN( sbx.xMin, tbx.xMin );
+      fbx.yMin = FT_MIN( sbx.yMin, tbx.yMin );
+      fbx.xMax = FT_MAX( sbx.xMax, tbx.xMax );
+      fbx.yMax = FT_MAX( sbx.yMax, tbx.yMax );
     }
     else
-    {
-      target_llx = FT_LONG_MAX;
-      target_lly = FT_LONG_MAX;
-      target_urx = FT_LONG_MIN;
-      target_ury = FT_LONG_MIN;
-    }
+      fbx = sbx;
 
-    /* compute final bitmap dimensions */
-    final_llx = FT_MIN( source_llx, target_llx );
-    final_lly = FT_MIN( source_lly, target_lly );
-    final_urx = FT_MAX( source_urx, target_urx );
-    final_ury = FT_MAX( source_ury, target_ury );
-
-    final_width = ( final_urx - final_llx ) >> 6;
-    final_rows  = ( final_ury - final_lly ) >> 6;
+    final_width = fbx.xMax - fbx.xMin;
+    final_rows  = fbx.yMax - fbx.yMin;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_TRACE5(( "FT_Bitmap_Blend:\n" ));
     FT_TRACE5(( "  source bitmap: (%ld, %ld) -- (%ld, %ld); %u x %u\n",
-      source_llx / 64, source_lly / 64,
-      source_urx / 64, source_ury / 64,
+      sbx.xMin, sbx.yMin, sbx.xMax, sbx.yMax,
       source_->width, source_->rows ));
 
     if ( target->width && target->rows )
       FT_TRACE5(( "  target bitmap: (%ld, %ld) -- (%ld, %ld); %u x %u\n",
-        target_llx / 64, target_lly / 64,
-        target_urx / 64, target_ury / 64,
+        tbx.xMin, tbx.yMin, tbx.xMax, tbx.yMax,
         target->width, target->rows ));
     else
       FT_TRACE5(( "  target bitmap: empty\n" ));
 
     if ( final_width && final_rows )
       FT_TRACE5(( "  final bitmap: (%ld, %ld) -- (%ld, %ld); %u x %u\n",
-        final_llx / 64, final_lly / 64,
-        final_urx / 64, final_ury / 64,
+        fbx.xMin, fbx.yMin, fbx.xMax, fbx.yMax,
         final_width, final_rows ));
     else
       FT_TRACE5(( "  final bitmap: empty\n" ));
@@ -900,17 +868,6 @@
 
     if ( !( final_width && final_rows ) )
       return FT_Err_Ok;               /* nothing to do */
-
-    /* for blending, set offset vector of final bitmap */
-    /* temporarily to (0,0)                            */
-    source_llx -= final_llx;
-    source_lly -= final_lly;
-
-    if ( target->width && target->rows )
-    {
-      target_llx -= final_llx;
-      target_lly -= final_lly;
-    }
 
     /* set up target bitmap */
     if ( target->pixel_mode == FT_PIXEL_MODE_NONE )
@@ -949,8 +906,6 @@
         goto Error;
 
       /* copy data to new buffer */
-      x = target_llx >> 6;
-      y = target_lly >> 6;
 
       /* the bitmap flow is from top to bottom, */
       /* but y is measured from bottom to top   */
@@ -960,6 +915,9 @@
       }
       else
       {
+        FT_Pos  x = tbx.xMin - fbx.xMin;
+        FT_Pos  y = tbx.yMin - fbx.yMin;
+
         unsigned char*  p =
           target->buffer;
         unsigned char*  q =
@@ -1008,8 +966,6 @@
 
     /* do blending; the code below returns pre-multiplied channels, */
     /* similar to what FreeType gets from `CBDT' tables             */
-    x = source_llx >> 6;
-    y = source_lly >> 6;
 
     /* the bitmap flow is from top to bottom, */
     /* but y is measured from bottom to top   */
@@ -1019,6 +975,9 @@
     }
     else
     {
+      FT_Pos  x = sbx.xMin - fbx.xMin;
+      FT_Pos  y = sbx.yMin - fbx.yMin;
+
       unsigned char*  p =
         source->buffer;
       unsigned char*  q =
@@ -1064,8 +1023,8 @@
       }
     }
 
-    atarget_offset->x = final_llx;
-    atarget_offset->y = final_lly + ( final_rows << 6 );
+    atarget_offset->x = fbx.xMin << 6;
+    atarget_offset->y = fbx.yMax << 6;
 
   Error:
     if ( error && free_target_bitmap_on_error )
