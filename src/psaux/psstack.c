@@ -211,7 +211,7 @@
                      CF2_UInt   idx,
                      CF2_Fixed  val )
   {
-    if ( idx > cf2_stack_count( stack ) )
+    if ( idx >= cf2_stack_count( stack ) )
     {
       CF2_SET_ERROR( stack->error, Stack_Overflow );
       return;
