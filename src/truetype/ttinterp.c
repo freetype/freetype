@@ -2841,7 +2841,13 @@
         ARRAY_BOUND_ERROR;
     }
     else
+    {
+      Modify_CVT_Check( exc );
+      if ( exc->error )
+        return;
+
       exc->cvt[I] = FT_MulFix( args[1], exc->tt_metrics.scale );
+    }
   }
 
 
