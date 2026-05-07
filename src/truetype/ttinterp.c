@@ -7358,56 +7358,11 @@
       }
 
       if ( exc->error )
-      {
-        switch ( exc->error )
-        {
-        case FT_ERR( Invalid_Opcode ):
-          {
-            TT_DefRecord*  def   = exc->IDefs;
-            TT_DefRecord*  limit = FT_OFFSET( def, exc->numIDefs );
-
-
-            /* looking for redefined instructions */
-            for ( ; def < limit; def++ )
-            {
-              if ( def->active && exc->opcode == (FT_Byte)def->opc )
-              {
-                TT_CallRec*  callrec;
-
-
-                if ( exc->callTop >= exc->callSize )
-                {
-                  exc->error = FT_THROW( Invalid_Reference );
-                  goto LErrorLabel_;
-                }
-
-                callrec = &exc->callStack[exc->callTop];
-
-                callrec->Caller_Range = exc->curRange;
-                callrec->Caller_IP    = exc->IP + 1;
-                callrec->Cur_Count    = 1;
-                callrec->Def          = def;
-
-                if ( Ins_Goto_CodeRange( exc,
-                                         def->range,
-                                         def->start ) == FAILURE )
-                  goto LErrorLabel_;
-
-                goto LSuiteLabel_;
-              }
-            }
-          }
-          FALL_THROUGH;
-
-        default:
-          goto LErrorLabel_;
-        }
-      }
+        goto LErrorLabel_;
 
       exc->top = exc->new_top;
       exc->IP += exc->length;
 
-    LSuiteLabel_:
       if ( exc->IP >= exc->codeSize )
       {
         if ( exc->callTop > 0 )
