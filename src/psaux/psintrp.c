@@ -988,8 +988,8 @@
           FT_TRACE4(( "%s", op1 == cf2_cmdCALLGSUBR ? " callgsubr"
                                                     : " callsubr" ));
 
-          if ( ( !font->isT1 && charstringIndex > CF2_MAX_SUBR )       ||
-               (  font->isT1 && charstringIndex > T1_MAX_SUBRS_CALLS ) )
+          if ( ( !font->isT1 && charstringIndex >= CF2_MAX_SUBR )       ||
+               (  font->isT1 && charstringIndex >= T1_MAX_SUBRS_CALLS ) )
           {
             /* max subr plus one for charstring */
             lastError = FT_THROW( Invalid_Glyph_Format );
