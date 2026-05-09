@@ -17,7 +17,7 @@ variables:
 .build windows common:
   # TODO: should probably get its own image at some point instead of reusing the GStreamer one
   # See https://gitlab.freedesktop.org/gstreamer/gstreamer/container_registry/18035 for latest
-  image: "registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2026-02-01.0-main"
+  image: 'registry.freedesktop.org/gstreamer/gstreamer/amd64/windows:2026-02-09.0-main'
   stage: 'build'
   tags:
     - 'docker'
@@ -34,7 +34,7 @@ variables:
 .build macos common:
   # HVF is available since Sequoia 15.5, but 2024-10-28 seems to be Sequoia 15.0
   # registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/15-sequoia:2024-10-28.0
-  image: "registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/26-tahoe:2025-09-30.0"
+  image: 'registry.freedesktop.org/gstreamer/gstreamer/macos-arm64/26-tahoe:2025-09-30.0'
   stage: 'build'
   tags:
     - gst-mac-arm
