@@ -68,11 +68,14 @@
    *
    * This renderer has the following advantages:
    *
-   * - It doesn't need an intermediate bitmap.  Instead, one can supply a
-   *   callback function that will be called by the renderer to draw gray
-   *   spans on any target surface.  You can thus do direct composition on
-   *   any kind of bitmap, provided that you give the renderer the right
-   *   callback.
+   * - It doesn't need an intermediate bitmap.  Instead,  linked lists
+   *   of cells (pixels visited by an outline) are stored, which requires
+   *   less memory and can be maintained on the stack for small glyphs.
+   *
+   * - One can supply a callback function that will be called by the
+   *   renderer to draw gray spans on any target surface.  You can thus
+   *   do direct composition on any kind of bitmap, provided that you give
+   *   the renderer the right callback.
    *
    * - A perfect anti-aliaser, i.e., it computes the _exact_ coverage on
    *   each pixel cell by straight segments.
@@ -464,7 +467,10 @@ typedef ptrdiff_t  FT_PtrDist;
 
   } TPixmap;
 
-  /* maximum number of gray cells in the buffer */
+  /* Maximum number of gray cells in the stack buffer;  */
+  /* for example, a buffer of 680 cells can accommodate */
+  /* a glyph with the taxicab perimeter of 680 pixels.  */
+  /* A larger buffer can be allocated when necessary.   */
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_GRAY_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( TCell ) )
 #else
