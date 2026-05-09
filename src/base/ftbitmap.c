@@ -1025,8 +1025,8 @@
       }
     }
 
-    atarget_offset->x = fbx.xMin << 6;
-    atarget_offset->y = fbx.yMax << 6;
+    atarget_offset->x = fbx.xMin * 64;
+    atarget_offset->y = fbx.yMax * 64;
 
   Error:
     if ( error && free_target_bitmap_on_error )
