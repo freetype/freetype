@@ -1952,8 +1952,8 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_raster_render( FT_Raster                raster,
                       const FT_Raster_Params*  params )
   {
-    FT_Long  estimate;
-    int      ret;
+    FT_ULong  estimate;
+    int       ret;
 
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
@@ -2032,7 +2032,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* allocate memory based on empirical estimate from CJK fonts */
     estimate = ( ras.cbox.xMax - ras.cbox.xMin +
-                 ras.cbox.yMax - ras.cbox.yMin ) * 10;
+                 ras.cbox.yMax - ras.cbox.yMin ) * 10UL;
     if ( estimate > FT_MAX_GRAY_POOL )
     {
       FT_Error   error;

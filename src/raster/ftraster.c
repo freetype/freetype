@@ -2661,8 +2661,8 @@
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
 
-    FT_Long  estimate;
-    int      ret;
+    FT_ULong  estimate;
+    int       ret;
 
 #ifndef FT_STATIC_RASTER
     black_TWorker  worker[1];
@@ -2712,7 +2712,8 @@
       ras.bOrigin += ras.bTop * ras.bPitch;
 
     /* allocate memory based on empirical estimate from CJK fonts */
-    estimate = ( ras.bTop + ras.bRight ) * 8L + 768L;
+    estimate = ( ras.bTop + ras.bRight ) * 8UL +
+               80UL * sizeof ( TProfile ) / sizeof ( Long );
     if ( estimate > FT_MAX_BLACK_POOL )
     {
       FT_Error   error;
