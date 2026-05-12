@@ -184,9 +184,7 @@
 
 
         /* Move-to or line-to point with pre-calculated scaling factors. */
-        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader,
-                                             ctx->outline->n_points + 1,
-                                             ctx->outline->n_contours );
+        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader, 1, 0 );
         if ( error )
           return HVFPartRenderActionStop;
 
@@ -211,9 +209,7 @@
 
 
         /* Quadratic curve with pre-calculated scaling factors. */
-        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader,
-                                             ctx->outline->n_points + 2,
-                                             ctx->outline->n_contours );
+        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader, 2, 0 );
         if ( error )
           return HVFPartRenderActionStop;
 
@@ -249,9 +245,7 @@
 
 
         /* Cubic curve with pre-calculated scaling factors. */
-        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader,
-                                             ctx->outline->n_points + 3,
-                                             ctx->outline->n_contours );
+        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader, 3, 0 );
         if ( error )
           return HVFPartRenderActionStop;
 
@@ -295,9 +289,7 @@
       if ( ctx->path_begun && ctx->outline->n_points > 0 )
       {
         /* Check space for contour. */
-        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader,
-                                             ctx->outline->n_points,
-                                             ctx->outline->n_contours + 1 );
+        error = FT_GLYPHLOADER_CHECK_POINTS( ctx->loader, 0, 1 );
         if ( error )
           return HVFPartRenderActionStop;
         
@@ -380,7 +372,6 @@
       return FT_THROW( Invalid_Glyph_Index );
 
     /* Initialize render context. */
-    context.face       = face;
     context.loader     = loader;
     context.path_begun = 0;
 
@@ -431,6 +422,7 @@
                     " hvf_set_variation_axes failed (error %d)\n", error ));
       }
 #endif
+      error = FT_Err_Ok;  /* axis failure is non-fatal */
 
       /* Render the glyph using HVF. */
       hvf_result = HVF_render_current_part( (HVFPartRenderer*)face->renderer,
@@ -453,9 +445,7 @@
     if ( context.path_begun && context.outline->n_points > 0 )
     {
       /* Check space for contour. */
-      error = FT_GLYPHLOADER_CHECK_POINTS( loader,
-                                           context.outline->n_points,
-                                           context.outline->n_contours + 1 );
+      error = FT_GLYPHLOADER_CHECK_POINTS( loader, 0, 1 );
       if ( !error )
       {
         context.outline->contours[context.outline->n_contours++] =
@@ -476,14 +466,19 @@
 
     /* Set glyph metrics - get from TrueType infrastructure when possible. */
     {
-      FT_UShort  advance_width = 0;
-      FT_Short   left_bearing  = 0;
+      FT_BBox       bbox;
+      FT_UShort     advance_width = 0;
+      FT_Short      left_bearing  = 0;
 
       TT_Face       tt_face = (TT_Face)face;
       SFNT_Service  sfnt    = (SFNT_Service)tt_face->sfnt;
 
+      FT_Bool       has_vertical_info;
+      FT_Pos        top;      /* vertical top side bearing */
+      FT_Pos        advance;  /* vertical advance height   */
 
-      /* Get metrics from TrueType tables if available. */
+
+      /* Get horizontal metrics from TrueType tables if available. */
       if ( sfnt && glyph_index < (FT_UInt)face->root.root.num_glyphs )
         sfnt->get_metrics( tt_face, 0, glyph_index,
                            &left_bearing, &advance_width );
@@ -494,42 +489,79 @@
         left_bearing  = 0;
       }
 
-      /* Set up unscaled metrics. */
-      glyph->metrics.width        = advance_width;
-      glyph->metrics.height       = size->metrics.y_ppem;
-      glyph->metrics.horiBearingX = left_bearing;
-      glyph->metrics.horiBearingY = glyph->metrics.height;
       glyph->metrics.horiAdvance  = advance_width;
-      glyph->metrics.vertBearingX = glyph->metrics.width / 2;
-      glyph->metrics.vertBearingY = 0;
-      glyph->metrics.vertAdvance  = glyph->metrics.height;
-    }
+      glyph->linearHoriAdvance    = advance_width;
 
-    /* Scale metrics if scaling was applied      */
-    /* (coordinates already scaled in callback). */
-    if ( apply_scaling )
-    {
-      FT_Size_Metrics*  metrics = &size->metrics;
+      /* Get vertical metrics from vmtx table or synthesize them,     */
+      /* consistent with TrueType and CFF drivers for SFNT-based fonts. */
+      has_vertical_info =
+        FT_BOOL( tt_face->vertical_info                   &&
+                 tt_face->vertical.number_Of_VMetrics > 0 );
 
-      
-      /* Scale metrics using size metrics -      */
-      /* coordinates already scaled in callback. */
-      glyph->metrics.width        = FT_MulFix( glyph->metrics.width,
-                                               metrics->x_scale );
-      glyph->metrics.height       = FT_MulFix( glyph->metrics.height,
-                                               metrics->y_scale );
-      glyph->metrics.horiBearingX = FT_MulFix( glyph->metrics.horiBearingX,
-                                               metrics->x_scale );
-      glyph->metrics.horiBearingY = FT_MulFix( glyph->metrics.horiBearingY,
-                                               metrics->y_scale );
-      glyph->metrics.horiAdvance  = FT_MulFix( glyph->metrics.horiAdvance,
-                                               metrics->x_scale );
-      glyph->metrics.vertBearingX = FT_MulFix( glyph->metrics.vertBearingX,
-                                               metrics->x_scale );
-      glyph->metrics.vertBearingY = FT_MulFix( glyph->metrics.vertBearingY,
-                                               metrics->y_scale );
-      glyph->metrics.vertAdvance  = FT_MulFix( glyph->metrics.vertAdvance,
-                                               metrics->y_scale );
+      if ( has_vertical_info )
+      {
+        FT_Short   tsb = 0;
+        FT_UShort  ah  = 0;
+
+
+        sfnt->get_metrics( tt_face, 1, glyph_index, &tsb, &ah );
+
+        top     = tsb;
+        advance = ah;
+      }
+      else
+      {
+        /* Use OS/2 or horizontal header for vertical advance. */
+        if ( tt_face->os2.version != 0xFFFFU )
+          advance = (FT_Pos)( tt_face->os2.sTypoAscender -
+                              tt_face->os2.sTypoDescender );
+        else
+          advance = (FT_Pos)( tt_face->horizontal.Ascender -
+                              tt_face->horizontal.Descender );
+
+        top = 0;  /* computed after bbox is known */
+      }
+
+      glyph->linearVertAdvance = advance;
+
+      /* Scale table-derived metrics if needed.                     */
+      /* Outline coordinates are already in the target coordinate   */
+      /* space (scaled in callback, or 26.6 font units for NO_SCALE) */
+      /* so bbox-derived metrics need no additional scaling.         */
+      if ( apply_scaling )
+      {
+        FT_Fixed  x_scale = size->metrics.x_scale;
+        FT_Fixed  y_scale = size->metrics.y_scale;
+
+
+        glyph->metrics.horiAdvance = FT_MulFix( glyph->metrics.horiAdvance,
+                                                 x_scale );
+        top     = FT_MulFix( top, y_scale );
+        advance = FT_MulFix( advance, y_scale );
+      }
+
+      /* Compute width, height, and bearing metrics from the glyph  */
+      /* outline bounding box, consistent with TrueType and CFF     */
+      /* drivers.                                                    */
+      FT_Outline_Get_CBox( &glyph->outline, &bbox );
+
+      glyph->metrics.width        = bbox.xMax - bbox.xMin;
+      glyph->metrics.height       = bbox.yMax - bbox.yMin;
+      glyph->metrics.horiBearingX = bbox.xMin;
+      glyph->metrics.horiBearingY = bbox.yMax;
+
+      /* Finalize vertical metrics.                                   */
+      /* vertBearingX centers the glyph horizontally for vertical     */
+      /* layout, matching both TrueType and CFF drivers.              */
+      /* When no vmtx data is available, vertBearingY centers the     */
+      /* glyph vertically within the advance height.                  */
+      if ( !has_vertical_info )
+        top = ( advance - glyph->metrics.height ) / 2;
+
+      glyph->metrics.vertBearingX = glyph->metrics.horiBearingX -
+                                      glyph->metrics.horiAdvance / 2;
+      glyph->metrics.vertBearingY = top;
+      glyph->metrics.vertAdvance  = advance;
     }
 
     /* Cache management - clear cache every */
