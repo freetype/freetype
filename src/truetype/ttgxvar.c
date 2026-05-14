@@ -3453,9 +3453,7 @@
     TT_Face       ttface = (TT_Face)face;
     FT_Error      error  = FT_Err_Ok;
     GX_Blend      blend;
-    FT_MM_Var*    mmvar;
-    FT_Var_Axis*  a;
-    FT_UInt       i, nc;
+    FT_UInt       i;
 
 
     if ( !ttface->blend )
@@ -3474,30 +3472,29 @@
         return error;
     }
 
-    nc = num_coords;
     if ( num_coords > blend->num_axis )
     {
       FT_TRACE2(( "TT_Get_Var_Design:"
                   " only using first %u of %u coordinates\n",
                   blend->num_axis, num_coords ));
-      nc = blend->num_axis;
+
+      FT_ARRAY_ZERO( coords + blend->num_axis, num_coords - blend->num_axis );
+      num_coords = blend->num_axis;
     }
 
-    mmvar = blend->mmvar;
-    a     = mmvar->axis;
     if ( ttface->doblend )
     {
-      for ( i = 0; i < nc; i++, a++ )
+      for ( i = 0; i < num_coords; i++ )
         coords[i] = blend->coords[i];
     }
     else
     {
-      for ( i = 0; i < nc; i++, a++ )
+      FT_Var_Axis*  a = blend->mmvar->axis;
+
+
+      for ( i = 0; i < num_coords; i++, a++ )
         coords[i] = a->def;
     }
-
-    for ( ; i < num_coords; i++, a++ )
-      coords[i] = a->def;
 
     return FT_Err_Ok;
   }
