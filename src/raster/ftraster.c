@@ -2447,9 +2447,8 @@
                                Int   y_min,
                                Int   y_max )
   {
-    Int  y_mid;
-    Int  band_top = 0;
-    Int  band_stack[32];  /* enough to bisect 32-bit int bands */
+    Int   band_stack[32];  /* enough to bisect 32-bit int bands */
+    Int*  band = band_stack;
 
 
     FT_TRACE6(( "%s pass [%d..%d]\n",
@@ -2476,10 +2475,8 @@
         FT_TRACE6(( "band [%d..%d]: to be bisected\n",
                     y_min, y_max ));
 
-        y_mid = ( y_min + y_max ) >> 1;
-
-        band_stack[band_top++] = y_min;
-        y_min                  = y_mid + 1;
+        *band++ = y_min;
+        y_min   = ( y_min + y_max + 1 ) >> 1;
       }
       else
       {
@@ -2490,11 +2487,11 @@
         if ( ras.fProfile )
           Draw_Sweep( RAS_VAR );
 
-        if ( --band_top < 0 )
-          break;
+        if ( band == band_stack )
+          break;  /* done */
 
         y_max = y_min - 1;
-        y_min = band_stack[band_top];
+        y_min = *--band;
       }
     }
 
