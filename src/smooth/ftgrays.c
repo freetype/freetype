@@ -1869,7 +1869,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_convert_glyph( RAS_ARG )
   {
     TCoord   bands[32];  /* enough to accommodate bisections */
-    TCoord*  band;
+    TCoord*  band = bands;
 
     int  continued = 0;
     int  error     = Smooth_Err_Ok;
@@ -1885,11 +1885,9 @@ typedef ptrdiff_t  FT_PtrDist;
     ras.ycells = (PCell*)ras.buffer;
 
     ras.min_ex = ras.cbox.xMin;
+    ras.min_ey = ras.cbox.yMin;
     ras.max_ex = ras.cbox.xMax;
-
-    band    = bands;
-    band[1] = ras.cbox.yMin;
-    band[0] = ras.cbox.yMax;
+    ras.max_ey = ras.cbox.yMax;
 
     do
     {
@@ -1897,8 +1895,6 @@ typedef ptrdiff_t  FT_PtrDist;
       TCoord  i;
 
 
-      ras.min_ey   = band[1];
-      ras.max_ey   = band[0];
       ras.count_ey = ras.max_ey - ras.min_ey;
 
       /* memory management: zero out and skip ycells */
@@ -1921,27 +1917,30 @@ typedef ptrdiff_t  FT_PtrDist;
           gray_sweep_direct( RAS_VAR );
         else
           gray_sweep( RAS_VAR );
-        band--;
+
+        if ( band == bands )
+          break;  /* done */
+
+        ras.max_ey = ras.min_ey;
+        ras.min_ey = *--band;
         continue;
       }
       else if ( error != Smooth_Err_Raster_Overflow )
         goto Exit;
 
-      /* render pool overflow; we will reduce the render band by half */
-      i = ( band[0] - band[1] ) >> 1;
-
-      /* this should never happen even with tiny rendering pool */
-      if ( i == 0 )
+      /* this happens only if the rendering pool is too small */
+      if ( ras.count_ey == 1 )
       {
         FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
         error = FT_THROW( Raster_Overflow );
         goto Exit;
       }
 
-      band++;
-      band[1]  = band[0];
-      band[0] += i;
-    } while ( band >= bands );
+      /* render pool overflow; we will reduce the render band by half */
+      *band++     = ras.min_ey;
+      ras.min_ey += ras.count_ey >> 1;
+
+    } while ( 1 );
 
   Exit:
     return error;
