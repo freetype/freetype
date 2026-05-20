@@ -1059,157 +1059,6 @@
   /**************************************************************************
    *
    * @Function:
-   *   Bezier_Up
-   *
-   * @Description:
-   *   Compute the x-coordinates of an ascending Bezier arc and store
-   *   them in the render pool.
-   *
-   * @Input:
-   *   degree ::
-   *     The degree of the Bezier arc (either 2 or 3).
-   *
-   *   splitter ::
-   *     The function to split Bezier arcs.
-   *
-   *   miny ::
-   *     A lower vertical clipping bound value.
-   *
-   *   maxy ::
-   *     An upper vertical clipping bound value.
-   *
-   * @Return:
-   *   SUCCESS on success, FAILURE on render pool overflow.
-   */
-  static Bool
-  Bezier_Up( RAS_ARGS Int        degree,
-                      TPoint*    arc,
-                      TSplitter  splitter,
-                      Long       miny,
-                      Long       maxy )
-  {
-    Long  y1, y2, e, e2, dy;
-    Long  dx, x2;
-
-    PLong  top;
-
-
-    y1 = arc[degree].y;
-    y2 = arc[0].y;
-
-    if ( y2 < miny || y1 > maxy )
-      return SUCCESS;
-
-    e2 = y2 > maxy ? maxy : FLOOR( y2 );
-    e  = y1 < miny ? miny : CEILING( y1 );
-
-    if ( y1 == e )
-      e += ras.precision;
-
-    if ( e2 < e )  /* nothing to do */
-      return SUCCESS;
-
-    top = ras.top;
-
-    if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
-    {
-      ras.error = FT_THROW( Raster_Overflow );
-      return FAILURE;
-    }
-
-    do
-    {
-      y2 = arc[0].y;
-      x2 = arc[0].x;
-
-      if ( y2 > e )
-      {
-        dy = y2 - arc[degree].y;
-        dx = x2 - arc[degree].x;
-
-        /* split condition should be invariant of direction */
-        if (  dy > ras.precision_step ||
-              dx > ras.precision_step ||
-             -dx > ras.precision_step )
-        {
-          splitter( arc );
-          arc += degree;
-        }
-        else
-        {
-          *top++ = x2 - FMulDiv( y2 - e, dx, dy );
-          e     += ras.precision;
-          arc -= degree;
-        }
-      }
-      else
-      {
-        if ( y2 == e )
-        {
-          *top++ = x2;
-          e     += ras.precision;
-        }
-        arc   -= degree;
-      }
-    }
-    while ( e <= e2 );
-
-    ras.top = top;
-    return SUCCESS;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   Bezier_Down
-   *
-   * @Description:
-   *   Compute the x-coordinates of an descending Bezier arc and store
-   *   them in the render pool.
-   *
-   * @Input:
-   *   degree ::
-   *     The degree of the Bezier arc (either 2 or 3).
-   *
-   *   splitter ::
-   *     The function to split Bezier arcs.
-   *
-   *   miny ::
-   *     A lower vertical clipping bound value.
-   *
-   *   maxy ::
-   *     An upper vertical clipping bound value.
-   *
-   * @Return:
-   *   SUCCESS on success, FAILURE on render pool overflow.
-   */
-  static Bool
-  Bezier_Down( RAS_ARGS Int        degree,
-                        TPoint*    arc,
-                        TSplitter  splitter,
-                        Long       miny,
-                        Long       maxy )
-  {
-    Bool  result;
-
-
-    arc[0].y = -arc[0].y;
-    arc[1].y = -arc[1].y;
-    arc[2].y = -arc[2].y;
-    if ( degree > 2 )
-      arc[3].y = -arc[3].y;
-
-    result = Bezier_Up( RAS_VARS degree, arc, splitter, -maxy, -miny );
-
-    arc[0].y = -arc[0].y;
-    return result;
-  }
-
-
-  /**************************************************************************
-   *
-   * @Function:
    *   Line_To
    *
    * @Description:
@@ -1312,8 +1161,7 @@
                      Long  x,
                      Long  y )
   {
-    Long     y1, y2, y3, x3, ymin, ymax;
-    TStates  state_bez;
+    Long     dx1, dy1;
     TPoint   arcs[2 * MaxBezier + 1]; /* The Bezier stack           */
     TPoint*  arc;                     /* current Bezier arc pointer */
 
@@ -1328,63 +1176,21 @@
 
     do
     {
-      y1 = arc[2].y;
-      y2 = arc[1].y;
-      y3 = arc[0].y;
-      x3 = arc[0].x;
+      /* control to bisection distances */
+      dx1 = ( arc[2].x - 2 * arc[1].x + arc[0].x ) * 2;
+      dy1 = ( arc[2].y - 2 * arc[1].y + arc[0].y ) * 2;
 
-      /* first, categorize the Bezier arc */
-
-      if ( y1 <= y3 )
+      if ( dx1 > ras.precision_step || dx1 < -ras.precision_step ||
+           dy1 > ras.precision_step || dy1 < -ras.precision_step )
       {
-        ymin = y1;
-        ymax = y3;
-      }
-      else
-      {
-        ymin = y3;
-        ymax = y1;
-      }
-
-      if ( y2 < FLOOR( ymin ) || y2 > CEILING( ymax ) )
-      {
-        /* this arc has no given direction, split it! */
         Split_Conic( arc );
         arc += 2;
         continue;
       }
-      else if ( y1 != y3 )
-      {
-        /* the arc is y-monotonous, either ascending or descending */
-        /* detect a change of direction                            */
-        state_bez = y1 < y3 ? Ascending_State : Descending_State;
-        if ( ras.state != state_bez )
-        {
-          /* finalize current profile if any */
-          if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VAR )     )
-            goto Fail;
 
-          /* create a new profile */
-          if ( New_Profile( RAS_VARS state_bez ) )
-            goto Fail;
-        }
-
-        /* now call the appropriate routine */
-        if ( state_bez == Ascending_State )
-        {
-          if ( Bezier_Up( RAS_VARS 2, arc, Split_Conic,
-                                   ras.minY, ras.maxY ) )
-            goto Fail;
-        }
-        else
-          if ( Bezier_Down( RAS_VARS 2, arc, Split_Conic,
-                                     ras.minY, ras.maxY ) )
-            goto Fail;
-      }
-
-      ras.lastX = x3;
-      ras.lastY = y3;
+      /* flat enough to draw straight */
+      if ( Line_To( RAS_VARS arc[0].x, arc[0].y ) )
+        goto Fail;
 
       if ( arc == arcs )
         break;
@@ -1440,8 +1246,7 @@
                      Long  x,
                      Long  y )
   {
-    Long     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
-    TStates  state_bez;
+    Long     dx1, dx2, dy1, dy2;
     TPoint   arcs[3 * MaxBezier + 1]; /* The Bezier stack           */
     TPoint*  arc;                     /* current Bezier arc pointer */
 
@@ -1458,74 +1263,26 @@
 
     do
     {
-      y1 = arc[3].y;
-      y2 = arc[2].y;
-      y3 = arc[1].y;
-      y4 = arc[0].y;
-      x4 = arc[0].x;
+      /* control to trisection distances */
+      dx1 = arc[3].x - 3 * arc[1].x + 2 * arc[0].x;
+      dy1 = arc[3].y - 3 * arc[1].y + 2 * arc[0].y;
+      dx2 = 2 * arc[3].x - 3 * arc[2].x + arc[0].x;
+      dy2 = 2 * arc[3].y - 3 * arc[2].y + arc[0].y;
 
-      /* first, categorize the Bezier arc */
-
-      if ( y1 <= y4 )
-      {
-        ymin1 = y1;
-        ymax1 = y4;
-      }
-      else
-      {
-        ymin1 = y4;
-        ymax1 = y1;
-      }
-
-      if ( y2 <= y3 )
-      {
-        ymin2 = y2;
-        ymax2 = y3;
-      }
-      else
-      {
-        ymin2 = y3;
-        ymax2 = y2;
-      }
-
-      if ( ymin2 < FLOOR( ymin1 ) || ymax2 > CEILING( ymax1 ) )
+      if ( dx1 > ras.precision_step || dx1 < -ras.precision_step ||
+           dy1 > ras.precision_step || dy1 < -ras.precision_step ||
+           dx2 > ras.precision_step || dx2 < -ras.precision_step ||
+           dy2 > ras.precision_step || dy2 < -ras.precision_step )
       {
         /* this arc has no given direction, split it! */
         Split_Cubic( arc );
         arc += 3;
         continue;
       }
-      else if ( y1 != y4 )
-      {
-        state_bez = y1 < y4 ? Ascending_State : Descending_State;
 
-        /* detect a change of direction */
-        if ( ras.state != state_bez )
-        {
-          /* finalize current profile if any */
-          if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VAR )     )
-            goto Fail;
-
-          if ( New_Profile( RAS_VARS state_bez ) )
-            goto Fail;
-        }
-
-        /* compute intersections */
-        if ( state_bez == Ascending_State )
-        {
-          if ( Bezier_Up( RAS_VARS 3, arc, Split_Cubic,
-                                   ras.minY, ras.maxY ) )
-            goto Fail;
-        }
-        else
-          if ( Bezier_Down( RAS_VARS 3, arc, Split_Cubic,
-                                     ras.minY, ras.maxY ) )
-            goto Fail;
-      }
-
-      ras.lastX = x4;
-      ras.lastY = y4;
+      /* flat enough to draw straight */
+      if ( Line_To( RAS_VARS arc[0].x, arc[0].y ) )
+        goto Fail;
 
       if ( arc == arcs )
         break;
