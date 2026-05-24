@@ -1084,11 +1084,12 @@
     TStates  state;
 
 
-    if ( y == ras.lastY )
+    /* skip lines that do not reach another scanline */
+    if (   FLOOR( y ) ==   FLOOR( ras.lastY ) &&
+         CEILING( y ) == CEILING( ras.lastY ) )
       goto Fin;
 
-    /* First, detect a change of direction */
-
+    /* detect a change of direction */
     state = ras.lastY < y ? Ascending_State : Descending_State;
 
     if ( ras.state != state )
@@ -1103,8 +1104,7 @@
         goto Fail;
     }
 
-    /* Then compute the lines */
-
+    /* now compute the lines */
     if ( state == Ascending_State )
     {
       if ( Line_Up( RAS_VARS ras.lastX, ras.lastY,
