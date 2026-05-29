@@ -81,6 +81,10 @@
         if ( startGlyphID > endGlyphID )
           return FALSE;
 
+        /* If `endGlyphID` is 0xFFFF it must be the last element. */
+        if ( endGlyphID == 0xFFFF && p < limit )
+          return FALSE;
+
         count += endGlyphID - startGlyphID + 1;
 
         /* We don't validate coverage indices. */
