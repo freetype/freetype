@@ -67,8 +67,8 @@
     {
       FT_UInt   rangeCount = FT_NEXT_USHORT( p );
       FT_Byte*  limit      = p + rangeCount * 6;
-      FT_Int    startGlyphID;
-      FT_Int    endGlyphID = -1;
+      FT_UInt   startGlyphID;
+      FT_UInt   endGlyphID = 0;
 
 
       if ( table_limit < limit )
@@ -77,14 +77,14 @@
       while ( p < limit )
       {
         startGlyphID = FT_NEXT_USHORT( p );
-        if ( startGlyphID <= endGlyphID )
+        if ( startGlyphID < endGlyphID )
           return FALSE;
 
         endGlyphID = FT_NEXT_USHORT( p );
         if ( endGlyphID < startGlyphID )
           return FALSE;
 
-        count += endGlyphID - startGlyphID + 1;
+        count += ++endGlyphID - startGlyphID;
 
         /* We don't validate coverage indices. */
         p += 2;
