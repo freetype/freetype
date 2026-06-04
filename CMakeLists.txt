@@ -558,9 +558,22 @@ if (HVF_RUNTIME_AVAILABLE)
 endif ()
 
 if (BUILD_SHARED_LIBS)
-  set_target_properties(freetype PROPERTIES
-    VERSION ${LIBRARY_VERSION}
-    SOVERSION ${LIBRARY_SOVERSION})
+  if (CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    # For OpenBSD, libtool follows `sunos` version type.
+    set_target_properties(freetype PROPERTIES
+      # libtool does not define its internal `soname_spec` variable
+      # for OpenBSD. So skipping the SOVERSION option.
+      VERSION ${LIBTOOL_CURRENT}.${LIBTOOL_REVISION})
+  elseif (CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+    # For NetBSD, libtool follows `sunos` version type.
+    set_target_properties(freetype PROPERTIES
+      VERSION ${LIBTOOL_CURRENT}.${LIBTOOL_REVISION}
+      SOVERSION ${LIBTOOL_CURRENT})
+  else ()
+    set_target_properties(freetype PROPERTIES
+      VERSION ${LIBRARY_VERSION}
+      SOVERSION ${LIBRARY_SOVERSION})
+  endif ()
 endif ()
 
 # Pick up ftconfig.h and ftoption.h generated above, first.
