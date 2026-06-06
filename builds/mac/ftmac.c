@@ -243,11 +243,12 @@ typedef short ResourceIndex;
 
 
             /* build up a complete face name */
-            ft_strcpy( fullName, famName );
+            ft_strncpy( fullName, famName, sizeof ( fullName ) - 1 );
+            fullName[sizeof ( fullName ) - 1] = '\0';
             if ( style & bold )
-              ft_strcat( fullName, " Bold" );
+              strcat_s( fullName, sizeof ( fullName ), " Bold" );
             if ( style & italic )
-              ft_strcat( fullName, " Italic" );
+              strcat_s( fullName, sizeof ( fullName ), " Italic" );
 
             /* compare with the name we are looking for */
             if ( ft_strcmp( fullName, fontName ) == 0 )
