@@ -1201,11 +1201,12 @@
 
     GX_ItemVarData  varData;
 
-    FT_UInt   master;
-    FT_Int64  returnValue = FT_INT64_ZERO;
-    FT_UInt   shift_base  = 1;
-    FT_UInt   per_region_size;
-    FT_Byte*  bytes;
+    FT_UInt    master;
+    FT_Int64   returnValue = FT_INT64_ZERO;
+    FT_UInt    shift_base  = 1;
+    FT_UInt    per_region_size;
+    FT_Byte*   bytes;
+    FT_Fixed*  regionScalars;
 
 
     if ( !ttface->blend || !ttface->blend->normalizedcoords )
@@ -1243,6 +1244,67 @@
 
     bytes = varData->deltaSet + per_region_size * innerIndex;
 
+    /* The region scalars depend only on the normalized coordinates, which */
+    /* are constant while glyphs are loaded; yet this function is called   */
+    /* once per item (e.g., per glyph for 'HVAR' advances).  Cache the     */
+    /* scalars per store and recompute only when the coordinates change.   */
+    /* `regionScalars` stays NULL (falling back to recomputation) if the   */
+    /* cache cannot be allocated.                                          */
+    regionScalars = itemStore->regionScalars;
+    {
+      FT_Fixed*  ncoords = ttface->blend->normalizedcoords;
+      FT_Bool    fresh   = FT_BOOL( regionScalars != NULL );
+      FT_UInt    a;
+
+
+      if ( fresh )
+      {
+        for ( a = 0; a < itemStore->axisCount; a++ )
+          if ( itemStore->cachedCoords[a] != ncoords[a] )
+          {
+            fresh = FALSE;
+            break;
+          }
+      }
+
+      if ( !fresh )
+      {
+        FT_Memory  memory = FT_FACE_MEMORY( face );
+        FT_Error   error  = FT_Err_Ok;
+
+        FT_UNUSED( error );
+
+
+        if ( !regionScalars )
+        {
+          if ( !FT_QNEW_ARRAY( itemStore->regionScalars,
+                               itemStore->regionCount ) &&
+               !FT_QNEW_ARRAY( itemStore->cachedCoords,
+                               itemStore->axisCount )   )
+            regionScalars = itemStore->regionScalars;
+          else
+          {
+            FT_FREE( itemStore->regionScalars );
+            FT_FREE( itemStore->cachedCoords );
+          }
+        }
+
+        if ( regionScalars )
+        {
+          FT_UInt  r;
+
+
+          for ( r = 0; r < itemStore->regionCount; r++ )
+            regionScalars[r] = tt_calculate_scalar(
+                                 itemStore->varRegionList[r].axisList,
+                                 itemStore->axisCount,
+                                 ncoords );
+          for ( a = 0; a < itemStore->axisCount; a++ )
+            itemStore->cachedCoords[a] = ncoords[a];
+        }
+      }
+    }
+
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
     {
@@ -1250,10 +1312,12 @@
 
       GX_AxisCoords  axis = itemStore->varRegionList[regionIndex].axisList;
 
-      FT_Fixed  scalar = tt_calculate_scalar(
-                           axis,
-                           itemStore->axisCount,
-                           ttface->blend->normalizedcoords );
+      FT_Fixed  scalar = regionScalars
+                           ? regionScalars[regionIndex]
+                           : tt_calculate_scalar(
+                               axis,
+                               itemStore->axisCount,
+                               ttface->blend->normalizedcoords );
 
 
       if ( scalar )
@@ -4855,6 +4919,9 @@
 
       FT_FREE( itemStore->varRegionList );
     }
+
+    FT_FREE( itemStore->regionScalars );
+    FT_FREE( itemStore->cachedCoords );
   }
 
 
