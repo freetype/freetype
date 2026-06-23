@@ -4533,6 +4533,26 @@
     tupleScalars = blend->tuplescalars;
 
     tupleCount &= GX_TC_TUPLE_COUNT_MASK;
+
+    /* The tuple-variation headers are walked sequentially through `p`.   */
+    /* Each header is at least four bytes (`tupleDataSize` and            */
+    /* `tupleIndex`); embedded and intermediate tuples store additional   */
+    /* coordinate arrays after that.  Bounds-check the four-byte minimum  */
+    /* of *all* tuples here, once, so the common path inside the loop     */
+    /* needs no per-tuple check.  This is sound because `p` only ever     */
+    /* advances over these headers -- the variation data of active tuples */
+    /* is read further below through a separate stream cursor -- and      */
+    /* `stream->limit` stays constant within the frame entered above.     */
+    /* Whenever a tuple consumes more than the four-byte minimum, the     */
+    /* embedded/intermediate branches re-check the surplus (see below).   */
+    if ( 4 * tupleCount > (FT_UInt)( stream->limit - p ) )
+    {
+      FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                  " invalid glyph variation array header\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     for ( i = 0; i < tupleCount; i++ )
     {
       FT_UInt    tupleDataSize;
@@ -4542,15 +4562,7 @@
 
       FT_TRACE6(( "  tuple %u:\n", i ));
 
-      /* Enter frame for four bytes. */
-      if ( 4 > stream->limit - p )
-      {
-        FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
-                    " invalid glyph variation array header\n" ));
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
-      }
-
+      /* The four-byte header is already covered by the up-front check. */
       tupleDataSize = FT_NEXT_USHORT( p );
       tupleIndex    = FT_NEXT_USHORT( p );
 
@@ -4586,7 +4598,14 @@
 
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
-        if ( 2 * blend->num_axis > (FT_UInt)( stream->limit - p ) )
+        /* This tuple stores its peak coordinates inline.  `p` has        */
+        /* advanced past the four-byte header, so the up-front check now  */
+        /* only accounts for the four-byte minimum of the tuples still to */
+        /* come, `4 * ( tupleCount - i - 1 )`.  Ensure the embedded       */
+        /* coordinates fit on top of that reserve; this bounds the read   */
+        /* and keeps the invariant intact for the following tuples.       */
+        if ( 2 * blend->num_axis + 4 * ( tupleCount - i - 1 ) >
+               (FT_UInt)( stream->limit - p ) )
         {
           FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                       " invalid glyph variation array header\n" ));
@@ -4616,7 +4635,12 @@
 
       if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
       {
-        if ( 4 * blend->num_axis > (FT_UInt)( stream->limit - p ) )
+        /* Intermediate tuples store inline start and end coordinates,    */
+        /* `4 * num_axis` bytes in total.  As above, check them against   */
+        /* the four-byte reserve of the remaining tuples so the invariant */
+        /* survives into the next iteration.                              */
+        if ( 4 * blend->num_axis + 4 * ( tupleCount - i - 1 ) >
+               (FT_UInt)( stream->limit - p ) )
         {
           FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                       " invalid glyph variation array header\n" ));
