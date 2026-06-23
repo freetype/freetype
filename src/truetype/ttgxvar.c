@@ -2089,7 +2089,16 @@
                          gvar_head.globalCoordCount ) )
         goto Fail2;
 
-      blend->tuplecount = gvar_head.globalCoordCount;
+      /* The tuple index in each glyph variation tuple header is only 12 */
+      /* bits wide (`GX_TI_TUPLE_INDEX_MASK`), so shared tuples with a   */
+      /* higher index can never be referenced.  Clamp the count to the   */
+      /* largest addressable value, `GX_TI_TUPLE_INDEX_MASK + 1`.  This  */
+      /* also lets the fast path in `TT_Vary_Apply_Glyph_Deltas` rely on */
+      /* a set tuple flag forcing the masked value out of range.         */
+      blend->tuplecount =
+        gvar_head.globalCoordCount > GX_TI_TUPLE_INDEX_MASK + 1
+          ? GX_TI_TUPLE_INDEX_MASK + 1
+          : gvar_head.globalCoordCount;
 
       FT_TRACE5(( "\n" ));
 
@@ -4387,6 +4396,8 @@
     FT_Fixed*  point_deltas_x = NULL;
     FT_Fixed*  point_deltas_y = NULL;
 
+    FT_Fixed*  tupleScalars;
+
 
     for ( i = 0; i < n_points; i++ )
     {
@@ -4518,7 +4529,8 @@
                 tupleCount & GX_TC_TUPLE_COUNT_MASK,
                 ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
-    p = stream->cursor;
+    p            = stream->cursor;
+    tupleScalars = blend->tuplescalars;
 
     tupleCount &= GX_TC_TUPLE_COUNT_MASK;
     for ( i = 0; i < tupleCount; i++ )
@@ -4526,12 +4538,9 @@
       FT_UInt    tupleDataSize;
       FT_UInt    tupleIndex;
       FT_Fixed   apply;
-      FT_Fixed*  tupleScalars;
 
 
       FT_TRACE6(( "  tuple %u:\n", i ));
-
-      tupleScalars = blend->tuplescalars;
 
       /* Enter frame for four bytes. */
       if ( 4 > stream->limit - p )
@@ -4545,8 +4554,35 @@
       tupleDataSize = FT_NEXT_USHORT( p );
       tupleIndex    = FT_NEXT_USHORT( p );
 
-      if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
-        tupleScalars = NULL;
+      /* Fast path for the common shared-tuple case.                       */
+      /*                                                                   */
+      /* `blend->tuplecount` is clamped to `GX_TI_TUPLE_INDEX_MASK + 1` at */
+      /* load time, so it is at most 0x1000.  Of the tuple-index flags     */
+      /* only `GX_TI_PRIVATE_POINT_NUMBERS` (0x2000) may legitimately      */
+      /* accompany a shared-tuple index, so it is masked off here; the     */
+      /* embedded (0x8000), intermediate (0x4000), and reserved (0x1000)   */
+      /* flags each yield a value >= 0x1000 >= `blend->tuplecount', so if  */
+      /* any is set the comparison is false.  Entering the body therefore  */
+      /* guarantees a plain shared tuple with an in-range index whose      */
+      /* scalar lives in the cache.                                        */
+      if ( ( tupleIndex & ~GX_TI_PRIVATE_POINT_NUMBERS )
+           < blend->tuplecount )
+      {
+        FT_Fixed  scalar = tupleScalars[tupleIndex & GX_TI_TUPLE_INDEX_MASK];
+
+
+        if ( scalar == 0 )
+        {
+          offsetToData += tupleDataSize;
+          continue;
+        }
+
+        if ( scalar != (FT_Fixed)-0x20000 )
+        {
+          apply = scalar;
+          goto apply_found;
+        }
+      }
 
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
@@ -4562,22 +4598,9 @@
           peak_coords[j] = FT_fdot14ToFixed( FT_NEXT_SHORT( p ) );
 
         tuple_coords = peak_coords;
-        tupleScalars = NULL;
       }
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) < blend->tuplecount )
       {
-        FT_Fixed  scalar =
-                    tupleScalars
-                      ? tupleScalars[tupleIndex & GX_TI_TUPLE_INDEX_MASK]
-                      : (FT_Fixed)-0x20000;
-
-
-        if ( scalar != (FT_Fixed)-0x20000 )
-        {
-          apply = scalar;
-          goto apply_found;
-        }
-
         tuple_coords = blend->tuplecoords +
                          ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) *
                          blend->num_axis;
@@ -4613,7 +4636,9 @@
                                   im_start_coords,
                                   im_end_coords );
 
-      if ( tupleScalars )
+      /* Cache the scalar for shared tuples only (see fast path above). */
+      if ( ( tupleIndex & ~GX_TI_PRIVATE_POINT_NUMBERS )
+           < blend->tuplecount )
         tupleScalars[tupleIndex & GX_TI_TUPLE_INDEX_MASK] = apply;
 
     apply_found:
