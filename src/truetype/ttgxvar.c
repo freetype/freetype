@@ -129,6 +129,12 @@
    *   stream ::
    *     The data stream.
    *
+   *   scratch ::
+   *     A caller-provided scratch buffer for temporary storage.
+   *
+   *   scratch_cap ::
+   *     The size of `scratch`.
+   *
    * @Output:
    *   point_cnt ::
    *     The number of points read.  A zero value means that
@@ -140,8 +146,10 @@
    *   special value ALL_POINTS.
    */
   static FT_UShort*
-  ft_var_readpackedpoints( FT_Stream  stream,
-                           FT_UInt   *point_cnt )
+  ft_var_readpackedpoints( FT_Stream   stream,
+                           FT_UInt    *point_cnt,
+                           FT_UShort*  scratch,
+                           FT_UInt     scratch_cap )
   {
     FT_UShort *points = NULL;
     FT_UInt    n;
@@ -166,7 +174,11 @@
       n  |= FT_GET_BYTE();
     }
 
-    if ( FT_QNEW_ARRAY( points, n ) )
+    /* Re-use `scratch` if it is large enough; this avoids */
+    /* a heap allocation per tuple in the common case.     */
+    if ( scratch && n <= scratch_cap )
+      points = scratch;
+    else if ( FT_QNEW_ARRAY( points, n ) )
       return NULL;
 
     p     = stream->cursor;
@@ -218,7 +230,8 @@
   Fail:
     FT_TRACE1(( "ft_var_readpackedpoints: invalid table\n" ));
 
-    FT_FREE( points );
+    if ( points != scratch )
+      FT_FREE( points );
     return NULL;
   }
 
@@ -3814,7 +3827,8 @@
 
       FT_Stream_SeekSet( stream, offsetToData );
 
-      sharedpoints = ft_var_readpackedpoints( stream, &spoint_count );
+      sharedpoints = ft_var_readpackedpoints( stream, &spoint_count,
+                                              NULL, 0 );
 
       offsetToData = FT_Stream_FTell( stream );
 
@@ -3889,7 +3903,8 @@
 
       if ( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS )
       {
-        localpoints = ft_var_readpackedpoints( stream, &point_count );
+        localpoints = ft_var_readpackedpoints( stream, &point_count,
+                                               NULL, 0 );
         points      = localpoints;
       }
       else
@@ -4273,6 +4288,7 @@
     FT_UInt   peak_coords_size;
     FT_UInt   point_deltas_x_size;
     FT_UInt   deltas_buf_size;
+    FT_UInt   points_buf_size;
     FT_UInt   points_org_size;
     FT_UInt   points_out_size;
     FT_UInt   has_delta_size;
@@ -4290,14 +4306,20 @@
     FT_UInt  point_count;
     FT_UInt  spoint_count = 0;
 
-    FT_UShort*  sharedpoints = NULL;
-    FT_UShort*  localpoints  = NULL;
+    FT_UShort*  sharedpoints      = NULL;
+    FT_UShort*  localpoints       = NULL;
     FT_UShort*  points;
+    /* scratch buffer pool for `sharedpoints` */
+    FT_UShort*  shared_points_buf = NULL;
+    /* scratch buffer pool for `localpoints` */
+    FT_UShort*  local_points_buf;
 
     FT_Fixed*  deltas_x       = NULL;
     FT_Fixed*  deltas_y       = NULL;
-    FT_Fixed*  deltas_x_buf;         /* scratch buffer pool for `deltas_x` */
-    FT_Fixed*  deltas_y_buf;         /* scratch buffer pool for `deltas_y` */
+    /* scratch buffer pool for `deltas_x` */
+    FT_Fixed*  deltas_x_buf;
+    /* scratch buffer pool for `deltas_y` */
+    FT_Fixed*  deltas_y_buf;
     FT_Fixed*  point_deltas_x = NULL;
     FT_Fixed*  point_deltas_y = NULL;
 
@@ -4350,30 +4372,18 @@
 
     offsetToData += glyph_start;
 
-    if ( tupleCount & GX_TC_TUPLES_SHARE_POINT_NUMBERS )
-    {
-      here = FT_Stream_FTell( stream );
-
-      FT_Stream_SeekSet( stream, offsetToData );
-
-      sharedpoints = ft_var_readpackedpoints( stream, &spoint_count );
-
-      offsetToData = FT_Stream_FTell( stream );
-
-      FT_Stream_SeekSet( stream, here );
-    }
-
-    FT_TRACE5(( "gvar: there %s %u tuple%s:\n",
-                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "is" : "are",
-                tupleCount & GX_TC_TUPLE_COUNT_MASK,
-                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
-
+    /* Re-use a per-face scratch pool, grown on demand, instead of      */
+    /* allocating (and freeing) it on every glyph.  This pool is freed  */
+    /* in `tt_done_blend`.  The shared/local point-number lists are     */
+    /* carved out of it too, so it must be set up before they are read. */
     peak_coords_size    = ALIGN_SIZE( 3 * blend->num_axis *
                                       sizeof ( *peak_coords ) );
     point_deltas_x_size = ALIGN_SIZE( 2 * n_points *
                                       sizeof ( *point_deltas_x ) );
     deltas_buf_size     = ALIGN_SIZE( 2 * n_points *
                                       sizeof ( *deltas_x ) );
+    points_buf_size     = ALIGN_SIZE( 2 * n_points *
+                                      sizeof ( *shared_points_buf ) );
     points_org_size     = ALIGN_SIZE( n_points * sizeof ( *points_org ) );
     points_out_size     = ALIGN_SIZE( n_points * sizeof ( *points_out ) );
     has_delta_size      = ALIGN_SIZE( n_points * sizeof ( *has_delta ) );
@@ -4381,13 +4391,11 @@
     pool_size = peak_coords_size    +
                 point_deltas_x_size +
                 deltas_buf_size     +
+                points_buf_size     +
                 points_org_size     +
                 points_out_size     +
                 has_delta_size;
 
-    /* Re-use a per-face scratch pool, grown on demand, instead of */
-    /* allocating (and freeing) it on every glyph.  This pool is   */
-    /* freed in `tt_done_blend'.                                   */
     if ( pool_size > blend->glyph_delta_pool_size )
     {
       if ( FT_QREALLOC( blend->glyph_delta_pool,
@@ -4398,31 +4406,53 @@
     }
     pool = blend->glyph_delta_pool;
 
-    p               = pool;
-    peak_coords     = (FT_Fixed*)p;
-    p              += peak_coords_size;
-    point_deltas_x  = (FT_Fixed*)p;
-    p              += point_deltas_x_size;
-    deltas_x_buf    = (FT_Fixed*)p;
-    p              += deltas_buf_size;
-    points_org      = (FT_Vector*)p;
-    p              += points_org_size;
-    points_out      = (FT_Vector*)p;
-    p              += points_out_size;
-    has_delta       = (FT_Bool*)p;
+    p                  = pool;
+    peak_coords        = (FT_Fixed*)p;
+    p                 += peak_coords_size;
+    point_deltas_x     = (FT_Fixed*)p;
+    p                 += point_deltas_x_size;
+    deltas_x_buf       = (FT_Fixed*)p;
+    p                 += deltas_buf_size;
+    shared_points_buf  = (FT_UShort*)p;
+    p                 += points_buf_size;
+    points_org         = (FT_Vector*)p;
+    p                 += points_org_size;
+    points_out         = (FT_Vector*)p;
+    p                 += points_out_size;
+    has_delta          = (FT_Bool*)p;
 
     FT_ARRAY_ZERO( point_deltas_x, 2 * n_points );
 
-    im_start_coords = peak_coords + blend->num_axis;
-    im_end_coords   = im_start_coords + blend->num_axis;
-    point_deltas_y  = point_deltas_x + n_points;
-    deltas_y_buf    = deltas_x_buf + n_points;
+    im_start_coords  = peak_coords + blend->num_axis;
+    im_end_coords    = im_start_coords + blend->num_axis;
+    point_deltas_y   = point_deltas_x + n_points;
+    deltas_y_buf     = deltas_x_buf + n_points;
+    local_points_buf = shared_points_buf + n_points;
 
     for ( j = 0; j < n_points; j++ )
     {
       points_org[j].x = FT_intToFixed( outline->points[j].x );
       points_org[j].y = FT_intToFixed( outline->points[j].y );
     }
+
+    if ( tupleCount & GX_TC_TUPLES_SHARE_POINT_NUMBERS )
+    {
+      here = FT_Stream_FTell( stream );
+
+      FT_Stream_SeekSet( stream, offsetToData );
+
+      sharedpoints = ft_var_readpackedpoints( stream, &spoint_count,
+                                              shared_points_buf, n_points );
+
+      offsetToData = FT_Stream_FTell( stream );
+
+      FT_Stream_SeekSet( stream, here );
+    }
+
+    FT_TRACE5(( "gvar: there %s %u tuple%s:\n",
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "is" : "are",
+                tupleCount & GX_TC_TUPLE_COUNT_MASK,
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
     p = stream->cursor;
 
@@ -4536,7 +4566,8 @@
 
       if ( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS )
       {
-        localpoints = ft_var_readpackedpoints( stream, &point_count );
+        localpoints = ft_var_readpackedpoints( stream, &point_count,
+                                               local_points_buf, n_points );
         points      = localpoints;
       }
       else
@@ -4679,10 +4710,10 @@
 #endif
       }
 
-      if ( localpoints != ALL_POINTS )
-        FT_FREE( localpoints );
       /* Only free deltas that fell back to a heap allocation; */
       /* the common case reuses the pooled scratch buffers.    */
+      if ( localpoints != ALL_POINTS && localpoints != local_points_buf )
+        FT_FREE( localpoints );
       if ( deltas_x != deltas_x_buf )
         FT_FREE( deltas_x );
       if ( deltas_y != deltas_y_buf )
@@ -4741,7 +4772,7 @@
     }
 
   Exit:
-    if ( sharedpoints != ALL_POINTS )
+    if ( sharedpoints != ALL_POINTS && sharedpoints != shared_points_buf )
       FT_FREE( sharedpoints );
     /* The persistent per-face scratch buffer (`blend->glyph_delta_pool`) */
     /* is freed in `tt_done_blend`, not here.                             */
