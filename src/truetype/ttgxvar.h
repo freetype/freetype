@@ -304,6 +304,11 @@ FT_BEGIN_HEADER
 
     FT_ULong        gvar_size;
 
+    /* Scratch pool reused across glyphs by `TT_Vary_Apply_Glyph_Deltas`, */
+    /* grown on demand, to avoid per-glyph/per-tuple heap allocations.    */
+    FT_Byte*        glyph_delta_pool;
+    FT_ULong        glyph_delta_pool_size;
+
   } GX_BlendRec;
 
 

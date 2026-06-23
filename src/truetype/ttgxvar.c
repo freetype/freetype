@@ -244,6 +244,12 @@
    *   delta_cnt ::
    *     The number of deltas to be read.
    *
+   *   scratch ::
+   *     A caller-provided scratch buffer for temporary storage.
+   *
+   *   scratch_cap ::
+   *     The size of `scratch`.
+   *
    * @Return:
    *   An array of FT_Fixed containing the deltas for the affected
    *   points.  (This only gets the deltas for one dimension.  It will
@@ -256,7 +262,9 @@
    */
   static FT_Fixed*
   ft_var_readpackeddeltas( FT_Stream  stream,
-                           FT_UInt    delta_cnt )
+                           FT_UInt    delta_cnt,
+                           FT_Fixed*  scratch,
+                           FT_UInt    scratch_cap )
   {
     FT_Fixed  *deltas = NULL;
     FT_UInt    runcnt, cnt;
@@ -266,7 +274,11 @@
     FT_Error   error;
 
 
-    if ( FT_QNEW_ARRAY( deltas, delta_cnt ) )
+    /* Re-use `scratch` if it is large enough; this avoids */
+    /* a heap allocation per tuple in the common case.     */
+    if ( scratch && delta_cnt <= scratch_cap )
+      deltas = scratch;
+    else if ( FT_QNEW_ARRAY( deltas, delta_cnt ) )
       return NULL;
 
     p = stream->cursor;
@@ -314,7 +326,8 @@
   Fail:
     FT_TRACE1(( "ft_var_readpackeddeltas: invalid table\n" ));
 
-    FT_FREE( deltas );
+    if ( deltas != scratch )
+      FT_FREE( deltas );
     return NULL;
   }
 
@@ -3888,7 +3901,8 @@
 
       deltas = ft_var_readpackeddeltas( stream,
                                         point_count == 0 ? face->cvt_size
-                                                         : point_count );
+                                                         : point_count,
+                                        NULL, 0 );
 
       if ( !points || !deltas )
         ; /* failure, ignore it */
@@ -4258,6 +4272,7 @@
 
     FT_UInt   peak_coords_size;
     FT_UInt   point_deltas_x_size;
+    FT_UInt   deltas_buf_size;
     FT_UInt   points_org_size;
     FT_UInt   points_out_size;
     FT_UInt   has_delta_size;
@@ -4281,6 +4296,8 @@
 
     FT_Fixed*  deltas_x       = NULL;
     FT_Fixed*  deltas_y       = NULL;
+    FT_Fixed*  deltas_x_buf;         /* scratch buffer pool for `deltas_x` */
+    FT_Fixed*  deltas_y_buf;         /* scratch buffer pool for `deltas_y` */
     FT_Fixed*  point_deltas_x = NULL;
     FT_Fixed*  point_deltas_y = NULL;
 
@@ -4355,24 +4372,39 @@
                                       sizeof ( *peak_coords ) );
     point_deltas_x_size = ALIGN_SIZE( 2 * n_points *
                                       sizeof ( *point_deltas_x ) );
+    deltas_buf_size     = ALIGN_SIZE( 2 * n_points *
+                                      sizeof ( *deltas_x ) );
     points_org_size     = ALIGN_SIZE( n_points * sizeof ( *points_org ) );
     points_out_size     = ALIGN_SIZE( n_points * sizeof ( *points_out ) );
     has_delta_size      = ALIGN_SIZE( n_points * sizeof ( *has_delta ) );
 
     pool_size = peak_coords_size    +
                 point_deltas_x_size +
+                deltas_buf_size     +
                 points_org_size     +
                 points_out_size     +
                 has_delta_size;
 
-    if ( FT_ALLOC( pool, pool_size ) )
-      goto Exit;
+    /* Re-use a per-face scratch pool, grown on demand, instead of */
+    /* allocating (and freeing) it on every glyph.  This pool is   */
+    /* freed in `tt_done_blend'.                                   */
+    if ( pool_size > blend->glyph_delta_pool_size )
+    {
+      if ( FT_QREALLOC( blend->glyph_delta_pool,
+                        blend->glyph_delta_pool_size,
+                        pool_size ) )
+        goto Exit;
+      blend->glyph_delta_pool_size = pool_size;
+    }
+    pool = blend->glyph_delta_pool;
 
     p               = pool;
     peak_coords     = (FT_Fixed*)p;
     p              += peak_coords_size;
     point_deltas_x  = (FT_Fixed*)p;
     p              += point_deltas_x_size;
+    deltas_x_buf    = (FT_Fixed*)p;
+    p              += deltas_buf_size;
     points_org      = (FT_Vector*)p;
     p              += points_org_size;
     points_out      = (FT_Vector*)p;
@@ -4384,6 +4416,7 @@
     im_start_coords = peak_coords + blend->num_axis;
     im_end_coords   = im_start_coords + blend->num_axis;
     point_deltas_y  = point_deltas_x + n_points;
+    deltas_y_buf    = deltas_x_buf + n_points;
 
     for ( j = 0; j < n_points; j++ )
     {
@@ -4514,10 +4547,14 @@
 
       deltas_x = ft_var_readpackeddeltas( stream,
                                           point_count == 0 ? n_points
-                                                           : point_count );
+                                                           : point_count,
+                                          deltas_x_buf,
+                                          n_points );
       deltas_y = ft_var_readpackeddeltas( stream,
                                           point_count == 0 ? n_points
-                                                           : point_count );
+                                                           : point_count,
+                                          deltas_y_buf,
+                                          n_points );
 
       if ( !points || !deltas_y || !deltas_x )
         ; /* failure, ignore it */
@@ -4644,8 +4681,12 @@
 
       if ( localpoints != ALL_POINTS )
         FT_FREE( localpoints );
-      FT_FREE( deltas_x );
-      FT_FREE( deltas_y );
+      /* Only free deltas that fell back to a heap allocation; */
+      /* the common case reuses the pooled scratch buffers.    */
+      if ( deltas_x != deltas_x_buf )
+        FT_FREE( deltas_x );
+      if ( deltas_y != deltas_y_buf )
+        FT_FREE( deltas_y );
 
       offsetToData += tupleDataSize;
 
@@ -4702,7 +4743,8 @@
   Exit:
     if ( sharedpoints != ALL_POINTS )
       FT_FREE( sharedpoints );
-    FT_FREE( pool );
+    /* The persistent per-face scratch buffer (`blend->glyph_delta_pool`) */
+    /* is freed in `tt_done_blend`, not here.                             */
 
   FExit:
     FT_FRAME_EXIT();
@@ -4825,6 +4867,7 @@
       FT_FREE( blend->normalizedcoords );
       FT_FREE( blend->normalized_stylecoords );
       FT_FREE( blend->mmvar );
+      FT_FREE( blend->glyph_delta_pool );
 
       if ( blend->avar_table )
       {
