@@ -964,14 +964,13 @@
     /* direction used for a glyph, given that some fonts are broken (e.g., */
     /* the Arphic ones).  We thus recompute it each time we need to.       */
     /*                                                                     */
+    /* Rather than a separate `FT_Outline_Get_Orientation` call (which     */
+    /* walks all points twice), the contour's signed area is accumulated   */
+    /* in the point-setup loop below; the default direction set here is    */
+    /* flipped afterwards if that area turns out positive (PostScript).    */
+    /*                                                                     */
     hints->axis[AF_DIMENSION_HORZ].major_dir = AF_DIR_UP;
     hints->axis[AF_DIMENSION_VERT].major_dir = AF_DIR_LEFT;
-
-    if ( FT_Outline_Get_Orientation( outline ) == FT_ORIENTATION_POSTSCRIPT )
-    {
-      hints->axis[AF_DIMENSION_HORZ].major_dir = AF_DIR_DOWN;
-      hints->axis[AF_DIMENSION_VERT].major_dir = AF_DIR_RIGHT;
-    }
 
     hints->x_scale = x_scale;
     hints->y_scale = y_scale;
@@ -989,6 +988,12 @@
       /* value 20 in `near_limit' is heuristic */
       FT_UInt  units_per_em = hints->metrics->scaler.face->units_per_EM;
       FT_Int   near_limit   = 20 * units_per_em / 2048;
+
+      /* Signed contour area (shoelace), accumulated below so that the   */
+      /* fill orientation is derived in this same pass; only its sign is */
+      /* used.  A 64-bit accumulator avoids overflow: each term is up to */
+      /* ~34 bits (a 16-bit coordinate difference times a sum).          */
+      FT_Int64  area = 0;
 
 
       /* compute coordinates & Bezier flags, next and prev */
@@ -1032,6 +1037,9 @@
           out_x = point->fx - prev->fx;
           out_y = point->fy - prev->fy;
 
+          /* Shoelace term for the edge `prev` -> `point`. */
+          area += (FT_Int64)out_y * ( point->fx + prev->fx );
+
           if ( FT_ABS( out_x ) + FT_ABS( out_y ) < near_limit )
             prev->flags |= AF_FLAG_NEAR;
 
@@ -1057,6 +1065,14 @@
 #endif
 
         }
+      }
+
+      /* A positive signed area means PostScript fill orientation; */
+      /* flip the default direction set above in that case.        */
+      if ( area > 0 )
+      {
+        hints->axis[AF_DIMENSION_HORZ].major_dir = AF_DIR_DOWN;
+        hints->axis[AF_DIMENSION_VERT].major_dir = AF_DIR_RIGHT;
       }
 
       /* set up the contours array */
