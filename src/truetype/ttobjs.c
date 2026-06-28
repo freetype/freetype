@@ -909,14 +909,14 @@
       error = TT_Run_Context( exec, size );
       FT_TRACE4(( error ? "  failed (error code 0x%x)\n" : "",
                   error ));
+
+      if ( !error )
+        TT_Save_Context( exec, size );
     }
     else
       error = FT_Err_Ok;
 
     size->bytecode_ready = error;
-
-    if ( !error )
-      TT_Save_Context( exec, size );
 
     return error;
   }
@@ -990,14 +990,14 @@
       error = TT_Run_Context( exec, size );
       FT_TRACE4(( error ? "  failed (error code 0x%x)\n" : "",
                   error ));
+
+      if ( !error )
+        TT_Save_Context( exec, size );
     }
     else
       error = FT_Err_Ok;
 
     size->cvt_ready = error;
-
-    if ( !error )
-      TT_Save_Context( exec, size );
 
     return error;
   }
