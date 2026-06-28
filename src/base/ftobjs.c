@@ -503,8 +503,8 @@
                    pbox.xMin < -0x1000000 || pbox.xMax >= 0x1000000 ||
                    pbox.yMin < -0x1000000 || pbox.yMax >= 0x1000000 ||
              ( slot->face                                         &&
-               ( width  > 10 * slot->face->size->metrics.x_ppem ||
-                 height > 10 * slot->face->size->metrics.y_ppem ) ) );
+               ( width  > 16 * slot->face->size->metrics.x_ppem ||
+                 height > 16 * slot->face->size->metrics.y_ppem ) ) );
 
     if ( ret )
       FT_TRACE3(( "ft_glyphslot_preset_bitmap: [%ld %ld %ld %ld]\n",
