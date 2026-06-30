@@ -1050,12 +1050,17 @@
   FT_EXPORT_DEF( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
+    FT_Vector*  points;
+    FT_Int      c, n, first, last;
+
+#ifdef FT_INT64
+    FT_Int64    area = 0;
+#else
     FT_BBox     cbox = { 0, 0, 0, 0 };
     FT_Int      xshift, yshift;
-    FT_Vector*  points;
     FT_Vector   v_prev, v_cur;
-    FT_Int      c, n, first, last;
     FT_Pos      area = 0;
+#endif
 
 
     if ( !outline || outline->n_points <= 0 )
@@ -1065,6 +1070,41 @@
     /* Since glyph outlines behave much more `regular' than arbitrary */
     /* cubic or quadratic curves, this test deals with the polygon    */
     /* only that is spanned up by the control points.                 */
+
+    points = outline->points;
+
+#ifdef FT_INT64
+
+    /* Single-pass shoelace.  The 64-bit accumulator removes the need   */
+    /* for the coordinate shift pre-pass (and its `FT_Outline_Get_CBox` */
+    /* traversal) that the 32-bit variant below uses.                   */
+    last = -1;
+    for ( c = 0; c < outline->n_contours; c++ )
+    {
+      FT_Pos  prev_x, prev_y;
+
+
+      first = last + 1;
+      last  = outline->contours[c];
+
+      prev_x = points[last].x;
+      prev_y = points[last].y;
+
+      for ( n = first; n <= last; n++ )
+      {
+        FT_Pos  cur_x = points[n].x;
+        FT_Pos  cur_y = points[n].y;
+
+
+        area += (FT_Int64)( cur_y - prev_y ) *
+                ( (FT_Int64)cur_x + prev_x );
+
+        prev_x = cur_x;
+        prev_y = cur_y;
+      }
+    }
+
+#else /* !FT_INT64 */
 
     FT_Outline_Get_CBox( outline, &cbox );
 
@@ -1083,8 +1123,6 @@
 
     yshift = FT_MSB( (FT_UInt32)( cbox.yMax - cbox.yMin ) ) - 14;
     yshift = FT_MAX( yshift, 0 );
-
-    points = outline->points;
 
     last = -1;
     for ( c = 0; c < outline->n_contours; c++ )
@@ -1107,6 +1145,8 @@
         v_prev = v_cur;
       }
     }
+
+#endif /* FT_INT64 */
 
     if ( area > 0 )
       return FT_ORIENTATION_POSTSCRIPT;
