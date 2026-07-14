@@ -1096,8 +1096,9 @@
         FT_Pos  cur_y = points[n].y;
 
 
-        area += (FT_Int64)( cur_y - prev_y ) *
-                ( (FT_Int64)cur_x + prev_x );
+        area = ADD_INT64( area,
+                          MUL_INT64( SUB_INT64( cur_y, prev_y ),
+                                     ADD_INT64( cur_x, prev_x ) ) );
 
         prev_x = cur_x;
         prev_y = cur_y;
