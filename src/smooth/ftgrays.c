@@ -2021,7 +2021,7 @@ typedef ptrdiff_t  FT_PtrDist;
       return Smooth_Err_Ok;
 
     /* allocate memory based on empirical estimate from CJK fonts */
-    estimate = ( ras.max_ex - ras.min_ey + ras.max_ey - ras.min_ey ) * 10UL;
+    estimate = ( ras.max_ex - ras.min_ex + ras.max_ey - ras.min_ey ) * 10UL;
     if ( estimate > FT_MAX_GRAY_POOL )
     {
       FT_Error   error;
