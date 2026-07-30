@@ -228,6 +228,9 @@ option(FT_DISABLE_HVF
 option(FT_ENABLE_ERROR_STRINGS
   "Enable support for meaningful error descriptions." OFF)
 
+option(FT_DISABLE_STREAM_SUPPORT
+  "Disable file stream support and require memory-loaded fonts." OFF)
+
 # Disallow in-source builds.
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   message(FATAL_ERROR
@@ -399,6 +402,11 @@ endif ()
 # Create the options file.
 file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftoption.h"
   FTOPTION_H)
+if (FT_DISABLE_STREAM_SUPPORT)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
 if (ZLIB_FOUND)
   string(REGEX REPLACE
     "/\\* +(#define +FT_CONFIG_OPTION_SYSTEM_ZLIB) +\\*/" "\\1"
@@ -501,7 +509,9 @@ set(BASE_SRCS
   src/winfonts/winfnt.c
 )
 
-if (WIN32)
+if (FT_DISABLE_STREAM_SUPPORT)
+  list(APPEND BASE_SRCS "src/base/ftsystem.c")
+elseif (WIN32)
   list(APPEND BASE_SRCS "builds/windows/ftsystem.c")
 elseif (UNIX)
   list(APPEND BASE_SRCS "builds/unix/ftsystem.c")
