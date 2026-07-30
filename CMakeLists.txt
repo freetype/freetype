@@ -61,7 +61,7 @@
 #
 # Some notes.
 #
-# - Say `cmake -LAH` to see all configuration options.
+# - Say `cmake -B build -LAH` to see all configuration options.
 #
 # - `cmake' creates configuration files in
 #
