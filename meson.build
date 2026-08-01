@@ -236,6 +236,7 @@ endif
 # might make these platform-specific files much smaller, and could be moved
 # into `ftsystem.c` as well.
 
+ft2_sources += 'src/dlg/dlgwrap.c'
 if host_machine.system() == 'windows'
   winmod = import('windows')
   ft2_sources += [
