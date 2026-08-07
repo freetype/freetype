@@ -19,6 +19,7 @@ main( void )
    */
   const char*  testdata_dir = getenv( "FREETYPE_TESTS_DATA_DIR" );
   char         filepath[FILENAME_MAX];
+  int          ret = 0;
 
 
   snprintf( filepath, sizeof( filepath ), "%s/%s",
@@ -29,7 +30,8 @@ main( void )
   if ( FT_New_Face( library, filepath, 0, &face ) != 0 )
   {
     fprintf( stderr, "Could not open file: %s\n", filepath );
-    return 1;
+    ret = 1;
+    goto Exit;
   }
 
   for ( FT_ULong  i = 59; i < 171; i++ )
@@ -42,7 +44,9 @@ main( void )
       printf( "unknown %d for char %lu, gid %u\n", code, i, gid );
   }
 
-  return 0;
+Exit:
+  FT_Done_FreeType( library );
+  return ret;
 }
 
 /* EOF */
