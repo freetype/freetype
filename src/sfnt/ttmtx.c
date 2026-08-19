@@ -306,7 +306,9 @@
     }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    if ( var && FT_IS_VARIATION( &face->root ) )
+    if ( var                                     &&
+         ( FT_IS_VARIATION( &face->root )      ||
+           FT_IS_NAMED_INSTANCE( &face->root ) ) )
     {
       FT_Face  f = FT_FACE( face );
       FT_Int   a = (FT_Int)*aadvance;
