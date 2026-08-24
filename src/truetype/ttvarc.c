@@ -529,24 +529,24 @@
           FT_Byte*  prev_p;
 
 
-          prev_p = p + (coverage_index - 1) * offSize;
+          prev_p = p + ( coverage_index - 1 ) * offSize;
           for ( i = 0; i < offSize; i++ )
-            prev_off1 = (prev_off1 << 8) | prev_p[i];
+            prev_off1 = ( prev_off1 << 8 ) | prev_p[i];
 
           prev_p += offSize;
           for ( i = 0; i < offSize; i++ )
-            prev_off2 = (prev_off2 << 8) | prev_p[i];
+            prev_off2 = ( prev_off2 << 8 ) | prev_p[i];
         }
 
         /* read offset for this glyph */
         p_offset = p + coverage_index * offSize;
         for ( i = 0; i < offSize; i++ )
-          offset1 = (offset1 << 8) | p_offset[i];
+          offset1 = ( offset1 << 8 ) | p_offset[i];
 
         /* Read next offset */
         p_offset += offSize;
         for ( i = 0; i < offSize; i++ )
-          offset2 = (offset2 << 8) | p_offset[i];
+          offset2 = ( offset2 << 8 ) | p_offset[i];
 
         if ( offset2 < offset1 || offset2 - offset1 > 0xFFFFU )
           return FT_THROW( Invalid_Table );
@@ -1791,13 +1791,14 @@
             FT_UInt32  b_lo = b & 0xFFFF;
             FT_UInt32  b_hi = b >> 16;
 
-            FT_UInt32  mid = (a_lo * b_hi) + (a_hi * b_lo);
+            FT_UInt32  mid = ( a_lo * b_hi ) + ( a_hi * b_lo );
             FT_UInt32  lo  = a_lo * b_lo;
             FT_UInt32  hi  = a_hi * b_hi;
 
 
-            hi += (mid >> 16) + ( ((lo >> 16) + (mid & 0xFFFF)) >> 16 );
-            lo += (mid << 16);
+            hi += ( mid >> 16 ) +
+                  ( ( ( lo >> 16 ) + ( mid & 0xFFFF ) ) >> 16 );
+            lo += ( mid << 16 );
 
             if ( ( region_delta < 0 ) != ( region_scalar < 0 ) )
             {
@@ -2073,7 +2074,7 @@
         for ( i = 0; i < count; i++ )
         {
           FT_UInt32  sub_off = ( (FT_UInt32)p[0] << 16 ) |
-                               ( (FT_UInt32)p[1] << 8 )  | p[2];
+                               ( (FT_UInt32)p[1] << 8  ) | p[2];
           FT_Bool    r;
 
 
@@ -2192,11 +2193,11 @@
 
     p += axis_indices_index * offSize;
     for ( i = 0; i < offSize; i++ )
-      offset1 = (offset1 << 8) | p[i];
+      offset1 = ( offset1 << 8 ) | p[i];
 
     p += offSize;
     for ( i = 0; i < offSize; i++ )
-      offset2 = (offset2 << 8) | p[i];
+      offset2 = ( offset2 << 8 ) | p[i];
 
     /* decode axis indices from TupleValues */
     tuple_data = offset_base + offset1 - 1;
