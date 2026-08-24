@@ -508,8 +508,12 @@
       if ( offSize < 1 || offSize > 4 )
         return FT_THROW( Invalid_Table );
 
-      /* Read offsets */
-      if ( !CHECK_TABLE_BOUNDS( p, ( count + 1 ) * offSize ) )
+      /* The offset array has `count + 1` entries of `offSize` bytes. */
+      /* We cannot use `CHECK_TABLE_BOUNDS` due to potential overflow */
+      /* and test the bound with a division instead.                  */
+      if ( count >= (FT_UInt)( ( (FT_Byte*)varc->table +
+                                 varc->table_size -
+                                 p ) / offSize ) )
         return FT_THROW( Invalid_Table );
 
       {
