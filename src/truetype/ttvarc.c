@@ -208,13 +208,13 @@
     if ( *p + 1 >= limit )
       return FT_THROW( Invalid_Table );
 
-    val = (FT_Short)( ( (*p)[0] << 8 ) |
-                        (*p)[1]      );
+    val = (FT_Short)( ( (FT_UShort)(*p)[0] << 8 ) |
+                        (FT_UShort)(*p)[1]        );
     *p += 2;
 
     /* FWORD is a signed 16-bit integer,         */
     /* shift left by 6 for FT_Pos (26.6 format). */
-    *value = (FT_Pos)val << 6;
+    *value = (FT_Pos)val * 64;
 
     return FT_Err_Ok;
   }
@@ -253,12 +253,12 @@
     if ( *p + 1 >= limit )
       return FT_THROW( Invalid_Table );
 
-    val = (FT_Short)( ( (*p)[0] << 8 ) |
-                        (*p)[1]      );
+    val = (FT_Short)( ( (FT_UShort)(*p)[0] << 8 ) |
+                        (FT_UShort)(*p)[1]        );
     *p += 2;
 
     /* Convert F4DOT12 (4.12) to F16DOT16 (16.16) by shifting left 4. */
-    *value = (FT_Fixed)val << 4;
+    *value = (FT_Fixed)val * 16;
 
     return FT_Err_Ok;
   }
@@ -297,12 +297,12 @@
     if ( *p + 1 >= limit )
       return FT_THROW( Invalid_Table );
 
-    val = (FT_Short)( ( (*p)[0] << 8 ) |
-                        (*p)[1]      );
+    val = (FT_Short)( ( (FT_UShort)(*p)[0] << 8 ) |
+                        (FT_UShort)(*p)[1]        );
     *p += 2;
 
     /* Simply shift left by 6. */
-    *value = (FT_Fixed)val << 6;
+    *value = (FT_Fixed)val * 64;
 
     return FT_Err_Ok;
   }
@@ -414,7 +414,7 @@
         else if ( glyph_index > end )
           min = mid + 1;
         else
-          return (FT_Int)( ( ( rec[4] << 8 ) | rec[5] ) +
+          return (FT_Int)( ( (FT_UInt)( rec[4] << 8 ) | (FT_UInt)rec[5] ) +
                            ( glyph_index - start ) );
       }
     }
@@ -858,13 +858,13 @@
             {
               /* read as signed 32-bit integer,     */
               /* reinterpret as F2DOT14 -> F16DOT16 */
-              FT_Int32  val = (FT_Int32)( ( (*p)[0] << 24 ) |
-                                          ( (*p)[1] << 16 ) |
-                                          ( (*p)[2] << 8  ) |
-                                            (*p)[3] );
+              FT_Int32  val = (FT_Int32)( ( (FT_UInt32)(*p)[0] << 24 ) |
+                                          ( (FT_UInt32)(*p)[1] << 16 ) |
+                                          ( (FT_UInt32)(*p)[2] << 8  ) |
+                                            (FT_UInt32)(*p)[3]         );
 
 
-              component->axis_values[i++] = (FT_Fixed)( val << 2 );
+              component->axis_values[i++] = (FT_Fixed)( val * 4 );
               *p += 4;
             }
           }
@@ -883,11 +883,11 @@
             {
               /* read as signed 16-bit integer,     */
               /* reinterpret as F2DOT14 -> F16DOT16 */
-              FT_Short  val = (FT_Short)( ( (*p)[0] << 8 ) |
-                                            (*p)[1] );
+              FT_Short  val = (FT_Short)( ( (FT_UShort)(*p)[0] << 8 ) |
+                                            (FT_UShort)(*p)[1]        );
 
 
-              component->axis_values[i++] = (FT_Fixed)( val << 2 );
+              component->axis_values[i++] = (FT_Fixed)( val * 4 );
               *p += 2;
             }
           }
@@ -903,7 +903,7 @@
               FT_Char  val = (FT_Char)(*(*p)++);
 
 
-              component->axis_values[i++] = (FT_Fixed)( val << 2 );
+              component->axis_values[i++] = (FT_Fixed)( val * 4 );
             }
           }
         }
@@ -1149,13 +1149,16 @@
 
       /* read min, peak, max (F2DOT14) - each is 2 bytes, */
       /* advance after each read                          */
-      min_val  = (FT_Short)( ( p[0] << 8 ) | p[1] );
+      min_val  = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
+                               (FT_UShort)p[1]        );
       p += 2;
       /* fixed: read from p[0] after advancing */
-      peak_val = (FT_Short)( ( p[0] << 8 ) | p[1] );
+      peak_val = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
+                               (FT_UShort)p[1]        );
       p += 2;
       /* fixed: read from p[0] after advancing */
-      max_val  = (FT_Short)( ( p[0] << 8 ) | p[1] );
+      max_val  = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
+                               (FT_UShort)p[1]        );
       p += 2;
 
       /* get coordinate for this axis */
@@ -1165,9 +1168,9 @@
       coord = coords[axis_index];
 
       /* convert F2DOT14 to F16DOT16 for comparison */
-      min_16  = (FT_Fixed)min_val  << 2;
-      peak_16 = (FT_Fixed)peak_val << 2;
-      max_16  = (FT_Fixed)max_val  << 2;
+      min_16  = (FT_Fixed)min_val  * 4;
+      peak_16 = (FT_Fixed)peak_val * 4;
+      max_16  = (FT_Fixed)max_val  * 4;
 
       /* Evaluate this axis with the sparse-region tent function, */
       /* matching HarfBuzz (`VarRegionAxis::evaluate`) and skrifa */
@@ -1384,10 +1387,10 @@
         for ( j = 0; j < cnt; j++ )
         {
           /* read as signed 32-bit plain integer */
-          FT_Int32  val = (FT_Int32)( ( p[0] << 24 ) |
-                                      ( p[1] << 16 ) |
-                                      ( p[2] << 8  ) |
-                                        p[3] );
+          FT_Int32  val = (FT_Int32)( ( (FT_UInt32)p[0] << 24 ) |
+                                      ( (FT_UInt32)p[1] << 16 ) |
+                                      ( (FT_UInt32)p[2] << 8  ) |
+                                        (FT_UInt32)p[3]         );
 
 
           deltas[i++] = val;  /* store as plain integer */
@@ -1409,8 +1412,8 @@
         for ( j = 0; j < cnt; j++ )
         {
           /* read as signed 16-bit plain integer */
-          FT_Short  val = (FT_Short)( ( p[0] << 8 ) |
-                                        p[1] );
+          FT_Short  val = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
+                                        (FT_UShort)p[1]        );
 
 
           deltas[i++] = val;  /* store as plain integer */
@@ -1841,8 +1844,8 @@
           (FT_Long)( ( accumulators[i] + rounding ) >> right_shift );
 #else
         /* 32-bit fallback */
-        FT_UInt32 hi = accumulators[i].hi;
-        FT_UInt32 lo = accumulators[i].lo;
+        FT_UInt32  hi = accumulators[i].hi;
+        FT_UInt32  lo = accumulators[i].lo;
 
 
         /* add rounding */
@@ -2020,15 +2023,17 @@
 
         axis_index = ( (FT_UInt)cond[2] << 8 ) | cond[3];
 
-        min_val = (FT_Short)( ( cond[4] << 8 ) | cond[5] );
-        max_val = (FT_Short)( ( cond[6] << 8 ) | cond[7] );
+        min_val = (FT_Short)( ( (FT_UShort)cond[4] << 8 ) |
+                                (FT_UShort)cond[5]        );
+        max_val = (FT_Short)( ( (FT_UShort)cond[6] << 8 ) |
+                                (FT_UShort)cond[7]        );
 
         coord = ( coords && axis_index < num_coords ) ? coords[axis_index]
                                                       : 0;
 
         /* min_val/max_val are F2DOT14; coords are 16.16 (F2DOT14 << 2) */
-        return FT_BOOL( coord >= ( (FT_Fixed)min_val << 2 ) &&
-                        coord <= ( (FT_Fixed)max_val << 2 ) );
+        return FT_BOOL( coord >= ( (FT_Fixed)min_val * 4 ) &&
+                        coord <= ( (FT_Fixed)max_val * 4 ) );
       }
 
     case 2:  /* ConditionValue */
@@ -2041,7 +2046,8 @@
         if ( cond + 8 > table_limit )
           return FALSE;
 
-        default_value = (FT_Short)( ( cond[2] << 8 ) | cond[3] );
+        default_value = (FT_Short)( ( (FT_UShort)cond[2] << 8 ) |
+                                      (FT_UShort)cond[3]        );
 
         var_idx = ( (FT_UInt32)cond[4] << 24 ) |
                   ( (FT_UInt32)cond[5] << 16 ) |
@@ -2078,7 +2084,8 @@
         for ( i = 0; i < count; i++ )
         {
           FT_UInt32  sub_off = ( (FT_UInt32)p[0] << 16 ) |
-                               ( (FT_UInt32)p[1] << 8  ) | p[2];
+                               ( (FT_UInt32)p[1] << 8  ) |
+                                 (FT_UInt32)p[2];
           FT_Bool    r;
 
 
@@ -2108,7 +2115,7 @@
 
         sub_off = ( (FT_UInt32)cond[2] << 16 ) |
                   ( (FT_UInt32)cond[3] << 8  ) |
-                               cond[4];
+                    (FT_UInt32)cond[4];
 
         return FT_BOOL( !tt_varc_eval_condition( face, varc, cond + sub_off,
                                                  table_limit, coords,
@@ -2462,14 +2469,14 @@
       if ( component->flags & VARC_HAVE_TRANSLATE_X )
       {
         /* FWORD: 4+2=6 */
-        component->translate_x += deltas[delta_index] << 2;
+        component->translate_x += deltas[delta_index] * 4;
         delta_index++;
       }
 
       if ( component->flags & VARC_HAVE_TRANSLATE_Y )
       {
         /* FWORD: 4+2=6 */
-        component->translate_y += deltas[delta_index] << 2;
+        component->translate_y += deltas[delta_index] * 4;
         delta_index++;
       }
 
@@ -2483,14 +2490,14 @@
       if ( component->flags & VARC_HAVE_SCALE_X )
       {
         /* F6DOT10: 4+2=6 */
-        component->scale_x += deltas[delta_index] << 2;
+        component->scale_x += deltas[delta_index] * 4;
         delta_index++;
       }
 
       if ( component->flags & VARC_HAVE_SCALE_Y )
       {
         /* F6DOT10: 4+2=6 */
-        component->scale_y += deltas[delta_index] << 2;
+        component->scale_y += deltas[delta_index] * 4;
         delta_index++;
       }
 
@@ -2511,14 +2518,14 @@
       if ( component->flags & VARC_HAVE_TCENTER_X )
       {
         /* FWORD: 4+2=6 */
-        component->tcenter_x += deltas[delta_index] << 2;
+        component->tcenter_x += deltas[delta_index] * 4;
         delta_index++;
       }
 
       if ( component->flags & VARC_HAVE_TCENTER_Y )
       {
         /* FWORD: 4+2=6 */
-        component->tcenter_y += deltas[delta_index] << 2;
+        component->tcenter_y += deltas[delta_index] * 4;
         delta_index++;
       }
 
