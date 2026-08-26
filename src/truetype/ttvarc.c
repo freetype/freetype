@@ -1035,6 +1035,10 @@
     return FT_Err_Ok;
 
   Fail:
+    /* the axis-value reading loop jumps here on truncated data */
+    /* without setting `error`; never report success on failure */
+    if ( !error )
+      error = FT_THROW( Invalid_Table );
     if ( component->axis_values && component->axis_values_on_heap )
       FT_FREE( component->axis_values );
     return error;
