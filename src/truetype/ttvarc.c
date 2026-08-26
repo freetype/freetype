@@ -432,6 +432,83 @@
   /**************************************************************************
    *
    * @Function:
+   *   tt_varc_read_cff2_index_entry
+   *
+   * @Description:
+   *   Read entry `index` from a CFF2-style INDEX:
+   *
+   *     count (uint32) | offSize (uint8) | offset[count + 1] | data
+   *
+   *   Each offset is `offSize` bytes and 1-based.  On success `*data`
+   *   points to the entry's bytes and `*size` is its length.  Every read
+   *   and the returned range are validated against `table_limit`.
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   */
+  static FT_Error
+  tt_varc_read_cff2_index_entry( FT_Byte*   index_data,
+                                 FT_Byte*   table_limit,
+                                 FT_UInt    index,
+                                 FT_Byte**  data,
+                                 FT_UInt*   size )
+  {
+    FT_Byte*   p = index_data;
+    FT_UInt32  count;
+    FT_UInt    offSize;
+    FT_ULong   offset1 = 0;
+    FT_ULong   offset2 = 0;
+    FT_Byte*   offset_base;
+
+    FT_UInt  i;
+
+
+    if ( !p || p + 4 > table_limit )
+      return FT_THROW( Invalid_Table );
+
+    count = ( (FT_UInt32)p[0] << 24 ) |
+            ( (FT_UInt32)p[1] << 16 ) |
+            ( (FT_UInt32)p[2] << 8  ) |
+              (FT_UInt32)p[3];
+    p += 4;
+
+    if ( p >= table_limit )
+      return FT_THROW( Invalid_Table );
+
+    offSize = *p++;
+    if ( offSize < 1 || offSize > 4 || index >= count )
+      return FT_THROW( Invalid_Table );
+
+    /* division avoids overflow in the offset-array bounds check */
+    if ( count >= (FT_UInt32)( ( table_limit - p ) / offSize ) )
+      return FT_THROW( Invalid_Table );
+
+    offset_base = p + ( count + 1 ) * offSize;
+
+    p += index * offSize;
+    for ( i = 0; i < offSize; i++ )
+      offset1 = ( offset1 << 8 ) | p[i];
+
+    p += offSize;
+    for ( i = 0; i < offSize; i++ )
+      offset2 = ( offset2 << 8 ) | p[i];
+
+    /* offsets are 1-based and must stay within the table */
+    if ( offset2 < offset1                                     ||
+         offset1 < 1                                           ||
+         offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
+      return FT_THROW( Invalid_Table );
+
+    *data = offset_base + offset1 - 1;
+    *size = (FT_UInt)( offset2 - offset1 );
+
+    return FT_Err_Ok;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
    *   tt_varc_get_glyph_record
    *
    * @Description:
@@ -460,116 +537,30 @@
                             FT_Byte**  record_data,
                             FT_UInt*   record_size )
   {
-    FT_Byte*  p;
-    FT_UInt   count;
+    FT_Error  error;
     FT_Int    coverage_index;
 
 
     if ( !varc || !varc->var_composite_glyphs )
-    {
       return FT_THROW( Invalid_Table );
-    }
 
-    /* get coverage index */
     coverage_index = tt_varc_get_coverage( varc, glyph_index );
     if ( coverage_index < 0 )
       return FT_THROW( Invalid_Glyph_Index );
 
-    /* CFF2Index structure:                                */
-    /*   count (uint32) + offSize (uint8) + offsets + data */
-    p = varc->var_composite_glyphs;
+    error = tt_varc_read_cff2_index_entry(
+              varc->var_composite_glyphs,
+              (FT_Byte*)varc->table + varc->table_size,
+              (FT_UInt)coverage_index,
+              record_data, record_size );
+    if ( error )
+      return error;
 
-    /* count field is uint32 (not uint32var!) */
-    {
-      FT_UInt32  count32;
-      FT_UInt    offSize;
+    /* a component record is at most 64KB */
+    if ( *record_size > 0xFFFFU )
+      return FT_THROW( Invalid_Table );
 
-
-      if ( !CHECK_TABLE_BOUNDS( p, 4 ) )
-        return FT_THROW( Invalid_Table );
-
-      /* read big-endian uint32 */
-      count32 = ( (FT_UInt32)p[0] << 24 ) |
-                ( (FT_UInt32)p[1] << 16 ) |
-                ( (FT_UInt32)p[2] << 8  ) |
-                  (FT_UInt32)p[3];
-      p += 4;
-
-      count = (FT_UInt)count32;
-
-      if ( (FT_UInt)coverage_index >= count )
-        return FT_THROW( Invalid_Glyph_Index );
-
-      /* read offSize */
-      if ( !CHECK_TABLE_BOUNDS( p, 1 ) )
-        return FT_THROW( Invalid_Table );
-
-      offSize = *p++;
-      if ( offSize < 1 || offSize > 4 )
-        return FT_THROW( Invalid_Table );
-
-      /* The offset array has `count + 1` entries of `offSize` bytes. */
-      /* We cannot use `CHECK_TABLE_BOUNDS` due to potential overflow */
-      /* and test the bound with a division instead.                  */
-      if ( count >= (FT_UInt)( ( (FT_Byte*)varc->table +
-                                 varc->table_size -
-                                 p ) / offSize ) )
-        return FT_THROW( Invalid_Table );
-
-      {
-        FT_ULong  offset1     = 0;
-        FT_ULong  offset2     = 0;
-        FT_Byte*  offset_base = p + ( count + 1 ) * offSize;
-        FT_Byte*  p_offset;
-
-        FT_UInt  i;
-
-
-        /* debug: show offsets around `coverage_index` */
-        if ( coverage_index > 0 && (FT_UInt)(coverage_index - 1) < count )
-        {
-          FT_ULong  prev_off1 = 0;
-          FT_ULong  prev_off2 = 0;
-          FT_Byte*  prev_p;
-
-
-          prev_p = p + ( coverage_index - 1 ) * offSize;
-          for ( i = 0; i < offSize; i++ )
-            prev_off1 = ( prev_off1 << 8 ) | prev_p[i];
-
-          prev_p += offSize;
-          for ( i = 0; i < offSize; i++ )
-            prev_off2 = ( prev_off2 << 8 ) | prev_p[i];
-        }
-
-        /* read offset for this glyph */
-        p_offset = p + coverage_index * offSize;
-        for ( i = 0; i < offSize; i++ )
-          offset1 = ( offset1 << 8 ) | p_offset[i];
-
-        /* Read next offset */
-        p_offset += offSize;
-        for ( i = 0; i < offSize; i++ )
-          offset2 = ( offset2 << 8 ) | p_offset[i];
-
-        if ( offset2 < offset1           ||
-             offset1 < 1                 ||
-             offset2 - offset1 > 0xFFFFU )
-          return FT_THROW( Invalid_Table );
-
-        /* `CFF2Index` offsets are 1-based,          */
-        /* so subtract 1 to get 0-based data pointer */
-        *record_size = (FT_UInt)( offset2 - offset1 );
-        *record_data = offset_base + offset1 - 1;
-
-        if ( !CHECK_TABLE_BOUNDS( *record_data, *record_size ) )
-          return FT_THROW( Invalid_Table );
-      }
-
-      return FT_Err_Ok;
-    }
-
-    return FT_THROW( Invalid_Table );
+    return FT_Err_Ok;
   }
 
 
@@ -682,137 +673,59 @@
     /* read axis values (TupleValues) */
     if ( component->flags & VARC_HAVE_AXES )
     {
-      FT_UInt    axis_count = 0;
-      FT_Byte*   axis_indices_list;
-      FT_Byte*   ai_p;
-      FT_UInt32  tuple_count;
-      FT_UInt    i;
+      FT_UInt   axis_count  = 0;
+      FT_Byte*  table_limit = (FT_Byte*)varc->table + varc->table_size;
+      FT_Byte*  tuple_data;
+      FT_UInt   tuple_size;
 
 
-      /* get axis indices from the axis indices list */
       if ( !varc->axis_indices_list )
         return FT_THROW( Invalid_Table );
 
-      axis_indices_list = varc->axis_indices_list;
-      /* Read count - use table limit, not component limit. */
-      /* `axis_indices_list` is a `CFF2Index`,              */
-      /* so count is fixed uint32 (big-endian)              */
+      error = tt_varc_read_cff2_index_entry( varc->axis_indices_list,
+                                             table_limit,
+                                             component->axis_indices_index,
+                                             &tuple_data, &tuple_size );
+      if ( error )
+        return error;
+
+      /* decode the TupleValues just to count the axis values */
       {
-        FT_Byte*  table_limit = (FT_Byte*)varc->table + varc->table_size;
-        FT_UInt   offSize;
+        FT_Byte*  tuple_limit = tuple_data + tuple_size;
+        FT_Byte*  tp          = tuple_data;
 
 
-        ai_p = axis_indices_list;
-
-        /* read big-endian uint32 count */
-        if ( ai_p + 4 > table_limit )
-          return FT_THROW( Invalid_Table );
-
-        tuple_count = ( (FT_UInt32)ai_p[0] << 24 ) |
-                      ( (FT_UInt32)ai_p[1] << 16 ) |
-                      ( (FT_UInt32)ai_p[2] << 8  ) |
-                        (FT_UInt32)ai_p[3];
-        ai_p += 4;
-        if ( component->axis_indices_index >= tuple_count )
+        while ( tp < tuple_limit )
         {
-          /* Likely reached end of valid component data. */
-          /* Return a special error code that the caller */
-          /* can interpret as "end of components".       */
-          return FT_THROW( Invalid_Table );
-        }
-
-        /* read offSize */
-        if ( ai_p + 1 > table_limit )
-          return FT_THROW( Invalid_Table );
-
-        offSize = *ai_p++;
-        if ( offSize < 1 || offSize > 4 )
-          return FT_THROW( Invalid_Table );
-
-        /* division avoids overflow in the offset-array bounds check */
-        if ( tuple_count >=
-               (FT_UInt32)( ( table_limit - ai_p ) / offSize ) )
-          return FT_THROW( Invalid_Table );
-
-        /* read offset for our tuple */
-        {
-          FT_Byte*  p_offset;
-          FT_Byte*  offset_base = ai_p + ( tuple_count + 1 ) * offSize;
-          FT_ULong  offset1     = 0;
-          FT_ULong  offset2     = 0;
-
-          FT_UInt  j;
+          FT_Byte  control = *tp++;
+          FT_UInt  cnt     = ( control & 0x3F ) + 1;
 
 
-          p_offset = ai_p + component->axis_indices_index * offSize;
-          for ( j = 0; j < offSize; j++ )
-            offset1 = ( offset1 << 8 ) | p_offset[j];
-
-          p_offset += offSize;
-          for ( j = 0; j < offSize; j++ )
-            offset2 = ( offset2 << 8 ) | p_offset[j];
-
-          /* offsets are 1-based and must stay within the table */
-          if ( offset2 < offset1                                     ||
-               offset1 < 1                                           ||
-               offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
-            return FT_THROW( Invalid_Table );
-
-          /* Decode axis indices from TupleValues (packed format).  The */
-          /* data between `offset1` and `offset2` is encoded as         */
-          /* TupleValues.  We need to decode it to count how many axis  */
-          /* indices there are.                                         */
+          if ( ( control & 0xC0 ) == 0xC0 )
           {
-            /* `CFF2Index` offsets are 1-based */
-            FT_Byte*  tuple_data  = offset_base + offset1 - 1;
-            FT_Byte*  tuple_limit = offset_base + offset2 - 1;
-            FT_Byte*  tp          = tuple_data;
-
-
-            axis_count = 0;
-            /* decode TupleValues just to count the values */
-            while ( tp < tuple_limit )
-            {
-              FT_Byte  control;
-              FT_UInt  cnt;
-
-
-              if ( tp >= tuple_limit )
-                break;
-              control = *tp++;
-
-              cnt = ( control & 0x3F ) + 1;
-
-              /* skip the data bytes based on encoding type */
-              if ( ( control & 0xC0 ) == 0xC0 )
-              {
-                /* 32-bit values */
-                if ( tp + 4 * cnt > tuple_limit )
-                  break;
-                tp += 4 * cnt;
-              }
-              else if ( control & 0x80 )
-              {
-                /* zeros - no data bytes */
-              }
-              else if ( control & 0x40 )
-              {
-                /* 2-byte values */
-                if ( tp + 2 * cnt > tuple_limit )
-                  break;
-                tp += 2 * cnt;
-              }
-              else
-              {
-                /* 1-byte values */
-                if ( tp + cnt > tuple_limit )
-                  break;
-                tp += cnt;
-              }
-
-              axis_count += cnt;
-            }
+            /* 32-bit values */
+            if ( tp + 4 * cnt > tuple_limit )
+              break;
+            tp += 4 * cnt;
           }
+          else if ( control & 0x80 )
+            ;  /* zeros - no data bytes */
+          else if ( control & 0x40 )
+          {
+            /* 2-byte values */
+            if ( tp + 2 * cnt > tuple_limit )
+              break;
+            tp += 2 * cnt;
+          }
+          else
+          {
+            /* 1-byte values */
+            if ( tp + cnt > tuple_limit )
+              break;
+            tp += cnt;
+          }
+
+          axis_count += cnt;
         }
       }
 
@@ -820,7 +733,8 @@
 
       if ( axis_count > 0 )
       {
-        FT_UInt  j;  /* declare here for use both in loop and after */
+        FT_UInt  i;
+        FT_UInt  j;
 
 
         /* use caller's stack buffer for small arrays, heap for large */
@@ -1221,112 +1135,6 @@
 
   /**************************************************************************
    *
-   * @Function:
-   *   tt_varc_read_index2_data
-   *
-   * @Description:
-   *   Read data from a CFF2-style INDEX at a given index.
-   *   INDEX2 format: count(u32) + offSize(u8) + offsets[] + data
-   *
-   * @Input:
-   *   index_data ::
-   *     Pointer to the INDEX2 structure.
-   *
-   *   table_limit ::
-   *     End of valid table data.
-   *
-   *   index ::
-   *     Index of the item to read.
-   *
-   * @Output:
-   *   data ::
-   *     Pointer to the data at the given index.
-   *
-   *   size ::
-   *     Size of the data in bytes.
-   *
-   * @Return:
-   *   FreeType error code.  0 means success.
-   */
-  static FT_Error
-  tt_varc_read_index2_data( FT_Byte*   index_data,
-                            FT_Byte*   table_limit,
-                            FT_UInt    index,
-                            FT_Byte**  data,
-                            FT_UInt*   size )
-  {
-    FT_Byte*  p = index_data;
-    FT_UInt32 count;
-    FT_Byte   offSize;
-    FT_ULong  offset1, offset2;
-    FT_Byte*  offset_base;
-
-    FT_UInt  i;
-
-
-    /* read count (u32) */
-    if ( p + 4 > table_limit )
-      return FT_THROW( Invalid_Table );
-
-    count = ( (FT_UInt32)p[0] << 24 ) |
-            ( (FT_UInt32)p[1] << 16 ) |
-            ( (FT_UInt32)p[2] << 8  ) |
-              (FT_UInt32)p[3];
-    p += 4;
-
-    /* if count is 0, there's no `offSize` or data */
-    if ( count == 0 )
-      return FT_THROW( Invalid_Table );
-
-    /* read offSize (u8) */
-    if ( p >= table_limit )
-      return FT_THROW( Invalid_Table );
-
-    offSize = *p++;
-
-    /* validate `offSize` and index */
-    if ( offSize == 0 || offSize > 4 || index >= count )
-      return FT_THROW( Invalid_Table );
-
-    /* division avoids overflow in the offset-array bounds check */
-    if ( count >= (FT_UInt32)( ( table_limit - p ) / offSize ) )
-      return FT_THROW( Invalid_Table );
-
-    /* calculate base for data (after offset array) */
-    offset_base = p + ( count + 1 ) * offSize;
-
-    /* read offset for index and index+1 */
-    p += index * offSize;
-
-    if ( p + 2 * offSize > table_limit )
-      return FT_THROW( Invalid_Table );
-
-    /* read offset1 */
-    offset1 = 0;
-    for ( i = 0; i < offSize; i++ )
-      offset1 = ( offset1 << 8 ) | p[i];
-    p += offSize;
-
-    /* read offset2 */
-    offset2 = 0;
-    for ( i = 0; i < offSize; i++ )
-      offset2 = ( offset2 << 8 ) | p[i];
-
-    /* offsets are 1-based and must stay within the table */
-    if ( offset2 < offset1                                     ||
-         offset1 < 1                                           ||
-         offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
-      return FT_THROW( Invalid_Table );
-
-    *data = offset_base + offset1 - 1;
-    *size = (FT_UInt)( offset2 - offset1 );
-
-    return FT_Err_Ok;
-  }
-
-
-  /**************************************************************************
-   *
    * MultiItemVariationStore Functions
    *
    */
@@ -1642,8 +1450,8 @@
     delta_sets = p;
 
     /* read tuple from INDEX2 at inner index */
-    error = tt_varc_read_index2_data( delta_sets, table_limit, inner,
-                                      &tuple_data, &tuple_size );
+    error = tt_varc_read_cff2_index_entry( delta_sets, table_limit, inner,
+                                           &tuple_data, &tuple_size );
     if ( error )
       return error;
 
@@ -2200,67 +2008,33 @@
                             FT_UInt   num_indices,
                             FT_UInt*  indices )
   {
-    FT_Byte*  axis_list;
-    FT_Byte*  table_limit;
-    FT_UInt   tuple_count;
-    FT_UInt   offSize;
-    FT_Byte*  p;
-    FT_ULong  offset1 = 0;
-    FT_ULong  offset2 = 0;
-    FT_Byte*  offset_base;
-    FT_Byte*  tuple_data;
+    FT_Error  error;
 
-    FT_UInt  i, j;
+    FT_Byte*  table_limit = (FT_Byte*)varc->table + varc->table_size;
+    FT_Byte*  tuple_data;
+    FT_UInt   tuple_size;
+    FT_Byte*  tuple_limit;
+
+    FT_Byte*  p;
+    FT_UInt   i, j;
 
 
     if ( !varc || !varc->axis_indices_list || !indices )
       return FT_THROW( Invalid_Argument );
 
-    axis_list   = varc->axis_indices_list;
-    table_limit = (FT_Byte*)varc->table + varc->table_size;
+    error = tt_varc_read_cff2_index_entry( varc->axis_indices_list,
+                                           table_limit,
+                                           axis_indices_index,
+                                           &tuple_data, &tuple_size );
+    if ( error )
+      return error;
 
-    /* read TupleList header: count (uint32) + offSize (uint8) */
-    if ( !CHECK_TABLE_BOUNDS( axis_list, 5 ) )
-      return FT_THROW( Invalid_Table );
-
-    tuple_count = ( (FT_UInt)axis_list[0] << 24 ) |
-                  ( (FT_UInt)axis_list[1] << 16 ) |
-                  ( (FT_UInt)axis_list[2] << 8  ) |
-                    (FT_UInt)axis_list[3];
-    offSize = axis_list[4];
-    p       = axis_list + 5;
-
-    if ( axis_indices_index >= tuple_count || offSize == 0 || offSize > 4 )
-      return FT_THROW( Invalid_Table );
-
-    /* division avoids overflow in the offset-array bounds check */
-    if ( tuple_count >= (FT_UInt)( ( table_limit - p ) / offSize ) )
-      return FT_THROW( Invalid_Table );
-
-    /* read offsets for this tuple */
-    offset_base = p + ( tuple_count + 1 ) * offSize;
-
-    p += axis_indices_index * offSize;
-    for ( i = 0; i < offSize; i++ )
-      offset1 = ( offset1 << 8 ) | p[i];
-
-    p += offSize;
-    for ( i = 0; i < offSize; i++ )
-      offset2 = ( offset2 << 8 ) | p[i];
-
-    /* offsets are 1-based and must stay within the table */
-    if ( offset2 < offset1                                     ||
-         offset1 < 1                                           ||
-         offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
-      return FT_THROW( Invalid_Table );
-
-    /* decode axis indices from TupleValues */
-    tuple_data = offset_base + offset1 - 1;
-    p          = tuple_data;
+    tuple_limit = tuple_data + tuple_size;
+    p           = tuple_data;
 
     /* read indices using TupleValues encoding */
     i = 0;
-    while ( i < num_indices && p < offset_base + offset2 - 1 )
+    while ( i < num_indices && p < tuple_limit )
     {
       FT_Byte  control;
       FT_UInt  cnt;
