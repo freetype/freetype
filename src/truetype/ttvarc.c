@@ -441,7 +441,8 @@
    *
    *   Each offset is `offSize` bytes and 1-based.  On success `*data`
    *   points to the entry's bytes and `*size` is its length.  Every read
-   *   and the returned range are validated against `table_limit`.
+   *   and the returned range are validated against `table_limit`; the
+   *   caller must pass an `index_data` pointer that lies within the table.
    *
    * @Return:
    *   FreeType error code.  0 means success.
@@ -2040,9 +2041,6 @@
       FT_UInt  cnt;
 
 
-      if ( p >= table_limit )
-        return FT_THROW( Invalid_Table );
-
       control = *p++;
       cnt     = ( control & 0x3F ) + 1;
 
@@ -2052,7 +2050,7 @@
       if ( ( control & 0xC0 ) == 0xC0 )
       {
         /* 32-bit values */
-        if ( p + 4 * cnt > table_limit )
+        if ( p + 4 * cnt > tuple_limit )
           return FT_THROW( Invalid_Table );
 
         for ( j = 0; j < cnt && i < num_indices; j++, i++ )
@@ -2066,14 +2064,14 @@
       }
       else if ( control & 0x80 )
       {
-        /* zeros - implicit sequential indices */
+        /* zeros */
         for ( j = 0; j < cnt && i < num_indices; j++, i++ )
-          indices[i] = i;
+          indices[i] = 0;
       }
       else if ( control & 0x40 )
       {
         /* 2-byte values */
-        if ( p + 2 * cnt > table_limit )
+        if ( p + 2 * cnt > tuple_limit )
           return FT_THROW( Invalid_Table );
 
         for ( j = 0; j < cnt && i < num_indices; j++, i++ )
@@ -2086,7 +2084,7 @@
       else
       {
         /* 1-byte values */
-        if ( p + cnt > table_limit )
+        if ( p + cnt > tuple_limit )
           return FT_THROW( Invalid_Table );
 
         for ( j = 0; j < cnt && i < num_indices; j++, i++ )
