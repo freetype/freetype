@@ -1675,6 +1675,16 @@
 
     /* read ALL deltas from the flat tuple */
     /* (region_count * num_deltas values)  */
+
+    /* a wrapped product would under-size `all_deltas` below */
+    if ( num_deltas != 0 && region_count > FT_UINT_MAX / num_deltas )
+    {
+      if ( accumulators != stack_accumulators )
+        FT_FREE( accumulators );
+      error = FT_THROW( Invalid_Table );
+      goto Cleanup;
+    }
+
     total_deltas = region_count * num_deltas;
 
     /* allocate space for all deltas */
@@ -1684,6 +1694,8 @@
     {
       if ( FT_NEW_ARRAY( all_deltas, total_deltas ) )
       {
+        if ( accumulators != stack_accumulators )
+          FT_FREE( accumulators );
         error = FT_THROW( Out_Of_Memory );
         goto Cleanup;
       }
