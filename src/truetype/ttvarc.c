@@ -552,7 +552,9 @@
         for ( i = 0; i < offSize; i++ )
           offset2 = ( offset2 << 8 ) | p_offset[i];
 
-        if ( offset2 < offset1 || offset2 - offset1 > 0xFFFFU )
+        if ( offset2 < offset1           ||
+             offset1 < 1                 ||
+             offset2 - offset1 > 0xFFFFU )
           return FT_THROW( Invalid_Table );
 
         /* `CFF2Index` offsets are 1-based,          */
@@ -727,8 +729,9 @@
         if ( offSize < 1 || offSize > 4 )
           return FT_THROW( Invalid_Table );
 
-        /* check bounds for offsets array */
-        if ( ai_p + ( tuple_count + 1 ) * offSize > table_limit )
+        /* division avoids overflow in the offset-array bounds check */
+        if ( tuple_count >=
+               (FT_UInt32)( ( table_limit - ai_p ) / offSize ) )
           return FT_THROW( Invalid_Table );
 
         /* read offset for our tuple */
@@ -749,7 +752,10 @@
           for ( j = 0; j < offSize; j++ )
             offset2 = ( offset2 << 8 ) | p_offset[j];
 
-          if ( offset2 < offset1 )
+          /* offsets are 1-based and must stay within the table */
+          if ( offset2 < offset1                                     ||
+               offset1 < 1                                           ||
+               offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
             return FT_THROW( Invalid_Table );
 
           /* Decode axis indices from TupleValues (packed format).  The */
@@ -1278,6 +1284,10 @@
     if ( offSize == 0 || offSize > 4 || index >= count )
       return FT_THROW( Invalid_Table );
 
+    /* division avoids overflow in the offset-array bounds check */
+    if ( count >= (FT_UInt32)( ( table_limit - p ) / offSize ) )
+      return FT_THROW( Invalid_Table );
+
     /* calculate base for data (after offset array) */
     offset_base = p + ( count + 1 ) * offSize;
 
@@ -1298,14 +1308,14 @@
     for ( i = 0; i < offSize; i++ )
       offset2 = ( offset2 << 8 ) | p[i];
 
-    /* calculate data pointer and size; */
-    /* offsets are 1-based in CFF INDEX */
+    /* offsets are 1-based and must stay within the table */
+    if ( offset2 < offset1                                     ||
+         offset1 < 1                                           ||
+         offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
+      return FT_THROW( Invalid_Table );
+
     *data = offset_base + offset1 - 1;
     *size = (FT_UInt)( offset2 - offset1 );
-
-    /* validate data bounds */
-    if ( *data + *size > table_limit )
-      return FT_THROW( Invalid_Table );
 
     return FT_Err_Ok;
   }
@@ -2199,6 +2209,10 @@
     if ( axis_indices_index >= tuple_count || offSize == 0 || offSize > 4 )
       return FT_THROW( Invalid_Table );
 
+    /* division avoids overflow in the offset-array bounds check */
+    if ( tuple_count >= (FT_UInt)( ( table_limit - p ) / offSize ) )
+      return FT_THROW( Invalid_Table );
+
     /* read offsets for this tuple */
     offset_base = p + ( tuple_count + 1 ) * offSize;
 
@@ -2209,6 +2223,12 @@
     p += offSize;
     for ( i = 0; i < offSize; i++ )
       offset2 = ( offset2 << 8 ) | p[i];
+
+    /* offsets are 1-based and must stay within the table */
+    if ( offset2 < offset1                                     ||
+         offset1 < 1                                           ||
+         offset2 - 1 > (FT_ULong)( table_limit - offset_base ) )
+      return FT_THROW( Invalid_Table );
 
     /* decode axis indices from TupleValues */
     tuple_data = offset_base + offset1 - 1;
