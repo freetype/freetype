@@ -1612,6 +1612,9 @@
                         (FT_UInt32)p[3];
 
     /* get `MultiVarData` */
+    if ( data_set_offset > (FT_UInt32)( table_limit - mvs_data ) )
+      return FT_THROW( Invalid_Table );
+
     mvd_data = mvs_data + data_set_offset;
 
     if ( mvd_data + 3 > table_limit )
@@ -1757,14 +1760,15 @@
                       ( (FT_UInt32)region_offset_ptr[1] << 16 ) |
                       ( (FT_UInt32)region_offset_ptr[2] << 8  ) |
                         (FT_UInt32)region_offset_ptr[3];
-          FT_Byte* region_p = region_list_start + region_offset;
 
 
-          if ( region_p < regions_limit )
-            region_scalar = tt_varc_evaluate_region( region_p,
-                                                     regions_limit,
-                                                     current_coords,
-                                                     num_coords );
+          if ( region_offset <
+                 (FT_UInt32)( regions_limit - region_list_start ) )
+            region_scalar =
+              tt_varc_evaluate_region( region_list_start + region_offset,
+                                       regions_limit,
+                                       current_coords,
+                                       num_coords );
           else
             region_scalar = 0;
         }
@@ -1965,6 +1969,10 @@
     if ( cond_index >= count )
       return NULL;
 
+    /* bound the index with division so `cond_index * 4` cannot overflow */
+    if ( cond_index > (FT_UInt32)( ( table_limit - cl - 4 ) / 4 ) )
+      return NULL;
+
     p = cl + 4 + cond_index * 4;
     if ( p + 4 > table_limit )
       return NULL;
@@ -1974,7 +1982,7 @@
           ( (FT_UInt32)p[2] << 8  ) |
             (FT_UInt32)p[3];
 
-    if ( cl + off >= table_limit )
+    if ( off >= (FT_UInt32)( table_limit - cl ) )
       return NULL;
 
     return cl + off;
