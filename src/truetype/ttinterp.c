@@ -6585,11 +6585,23 @@
        * Selector Bit:  11
        * Return Bit(s): 18
        *
-       * The only smoothing method FreeType supports unless someone sets
-       * FT_LOAD_TARGET_MONO.
+       * Report the smoothing mode selected by the DirectWrite-style
+       * ClearType policy for this face and PPEM.
        */
-      if ( ( args[0] & 2048 ) != 0 && exc->mode != FT_RENDER_MODE_MONO )
-        K |= 1 << 18;
+      if ( ( args[0] & 2048 ) != 0          &&
+           exc->mode != FT_RENDER_MODE_MONO )
+      {
+        FT_Bool  symmetric_smoothing;
+
+
+        tt_face_get_cleartype_policy( exc->face,
+                                      exc->metrics.y_ppem,
+                                      &symmetric_smoothing,
+                                      NULL );
+
+        if ( symmetric_smoothing )
+          K |= 1 << 18;
+      }
 
       /*********************************
        * CLEARTYPE HINTING AND

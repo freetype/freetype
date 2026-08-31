@@ -492,6 +492,39 @@
         load_flags |= FT_LOAD_NO_HINTING;
     }
 
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    /*
+     * DirectWrite treats ClearType symmetric grid fitting independently
+     * from symmetric smoothing.  Resolve the grid-fitting decision from the
+     * same policy source that GETINFO uses for symmetric smoothing.
+     *
+     * Only native v40 horizontal-LCD hinting participates.  Caller-disabled
+     * native hinting and the other interpreter/rendering modes are left
+     * alone.
+     */
+    if ( FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LCD &&
+         !( load_flags & FT_LOAD_NO_HINTING )                    &&
+         !FT_IS_TRICKY( face )                                   )
+    {
+      TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
+
+
+      if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
+      {
+        FT_Bool  grid_fit;
+
+
+        tt_face_get_cleartype_policy( (TT_Face)face,
+                                      size->metrics.y_ppem,
+                                      NULL,
+                                      &grid_fit );
+
+        if ( !grid_fit )
+          load_flags |= FT_LOAD_NO_HINTING;
+      }
+    }
+#endif
+
     /* use hinted metrics only if we load a glyph with hinting */
     ttsize->metrics = ( load_flags & FT_LOAD_NO_HINTING )
                         ? &size->metrics
