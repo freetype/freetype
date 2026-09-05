@@ -2944,8 +2944,19 @@
   Ins_ROUND( TT_ExecContext  exc,
              FT_Long*        args )
   {
-    args[0] = exc->func_round( exc, args[0],
-                               exc->GS.compensation[exc->opcode & 3] );
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    /*
+     * Native ClearType applies ROUND to the 1/16-pixel virtual
+     * grid in the ClearType direction.  Approximate this in v40
+     * by leaving the result unrounded.
+     */
+    if ( exc->native_cleartype_x )
+      args[0] = Round_None( exc, args[0],
+                            exc->GS.compensation[exc->opcode & 3] );
+    else
+#endif
+      args[0] = exc->func_round( exc, args[0],
+                                 exc->GS.compensation[exc->opcode & 3] );
   }
 
 
