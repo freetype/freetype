@@ -836,7 +836,7 @@
     {
       error = read_uint32var( p, limit, &component->axis_values_var_index );
       if ( error )
-        return error;
+        goto Fail;
     }
 
     /* read transform variation index */
@@ -844,7 +844,7 @@
     {
       error = read_uint32var( p, limit, &component->transform_var_index );
       if ( error )
-        return error;
+        goto Fail;
     }
 
     /* initialize transform to identity */
