@@ -21,11 +21,26 @@ CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Mmm-DD)
   - An  experimental  HVF  driver   has  been  contributed  by  Apple,
     currently available on macOS only.
 
+  - The  TrueType   version  40  interpreter  got   several  ClearType
+    rendering  improvements.   It  now   better  honors  'gasp'  table
+    requests  for  symmetric  grid  fitting and  smoothing,  and  more
+    closely  emulates  native   ClearType  horizontal  hinting.   This
+    includes improved handling of rounded point instructions, `ROUND`,
+    CVT cut-in, minimum distance, and composite glyph positioning.
+
+    These changes improve  the rendering of fonts such  as 'Segoe UI',
+    'Calibri', 'Corbel', 'Constantia', 'Malgun Gothic', and 'SimSun'.
+
 
   II. IMPORTANT BUG FIXES
 
   - Continued efforts to scrutinize FreeType with AI tools resulted in
     more bugs being fixed, some with potential security implications.
+
+
+  III. MISCELLANEOUS
+
+  - The PFR driver returned wrong kerning values in some cases.
 
 
 ======================================================================
