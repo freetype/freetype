@@ -1149,7 +1149,15 @@
              IS_HINTED( loader->load_flags )    )
         {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-          if ( !loader->exec->backward_compatibility )
+          TT_Driver  driver =
+                       (TT_Driver)FT_FACE_DRIVER( (FT_Face)loader->face );
+
+
+          /* v40 approximates native ClearType's fine horizontal grid by */
+          /* leaving X offsets of components unrounded.                  */
+          if ( driver->interpreter_version != TT_INTERPRETER_VERSION_40 ||
+               loader->exec->mode == FT_RENDER_MODE_MONO                ||
+               FT_IS_TRICKY( (FT_Face)loader->face )                    )
 #endif
             x = FT_PIX_ROUND( x );
 
