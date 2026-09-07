@@ -232,7 +232,8 @@
       if ( lookupType == 7 )
       {
         /* Substitution extension. */
-        FT_Byte*  q = subtable;
+        FT_Byte*   q = subtable;
+        FT_UInt32  offset;
 
 
         if ( table_limit < q + 8 )
@@ -246,7 +247,11 @@
         else if ( real_lookupType != FT_NEXT_USHORT( q ) )
           return FALSE;
 
-        subtable += FT_PEEK_ULONG( q );
+        offset = FT_PEEK_ULONG( q );
+        if ( offset > table_limit - table )
+          return FALSE;
+
+        subtable += offset;
       }
       else
         real_lookupType = lookupType;
