@@ -1874,6 +1874,10 @@
       goto Exit;
     }
 
+    /* don't try to end the path if no segments have been generated */
+    if ( stroker->first_point )
+      goto Exit;
+
     if ( stroker->subpath_open )
     {
       FT_StrokeBorder  right = stroker->borders;
@@ -2225,13 +2229,9 @@
       if ( error )
         goto Exit;
 
-      /* don't try to end the path if no segments have been generated */
-      if ( !stroker->first_point )
-      {
-        error = FT_Stroker_EndSubPath( stroker );
-        if ( error )
-          goto Exit;
-      }
+      error = FT_Stroker_EndSubPath( stroker );
+      if ( error )
+        goto Exit;
     }
 
     return FT_Err_Ok;
