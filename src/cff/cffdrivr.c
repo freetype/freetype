@@ -1100,6 +1100,20 @@
    */
 
   FT_CALLBACK_DEF( FT_Error )
+  cff_varc_init_axes( FT_Face  face,
+                      FT_UInt  axis_count )
+  {
+    CFF_Face         cffface = (CFF_Face)face;
+    FT_Service_VARC  varc    = (FT_Service_VARC)cffface->tt_varc;
+
+
+    return varc && varc->init_axes
+             ? varc->init_axes( face, axis_count )
+             : FT_THROW( Missing_Module );
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
   cff_varc_load( FT_Face    face,
                  FT_Stream  stream )
   {
@@ -1144,17 +1158,33 @@
   {
     CFF_Face         cffface = (CFF_Face)face;
     FT_Service_VARC  varc    = (FT_Service_VARC)cffface->tt_varc;
+    CFF_Font         cff     = (CFF_Font)cffface->extra.data;
+
+    FT_Error  error;
 
 
-    return varc ? varc->load_glyph( face, glyph_slot,
-                                    glyph_index, load_flags )
-                : FT_THROW( Missing_Module );
+    if ( !varc )
+      return FT_THROW( Missing_Module );
+
+    if ( !FT_HAS_MULTIPLE_MASTERS( face ) &&
+         cff                              &&
+         cff->cff2                        &&
+         cff->vstore.axisCount            )
+    {
+      error = varc->init_axes( face, cff->vstore.axisCount );
+      if ( error )
+        return error;
+    }
+
+    return varc->load_glyph( face, glyph_slot,
+                             glyph_index, load_flags );
   }
 
 
   FT_DEFINE_SERVICE_VARCREC(
     cff_service_varc,
 
+    cff_varc_init_axes,
     cff_varc_load,
     cff_varc_done,
     cff_varc_has_glyph,

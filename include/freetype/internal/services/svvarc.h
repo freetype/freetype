@@ -30,6 +30,10 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
+  (*FT_VARC_Init_Axes_Func)( FT_Face  face,
+                             FT_UInt  axis_count );
+
+  typedef FT_Error
   (*FT_VARC_Load_Func)( FT_Face    face,
                         FT_Stream  stream );
 
@@ -49,6 +53,7 @@ FT_BEGIN_HEADER
 
   FT_DEFINE_SERVICE( VARC )
   {
+    FT_VARC_Init_Axes_Func   init_axes;
     FT_VARC_Load_Func        load;
     FT_VARC_Done_Func        done;
     FT_VARC_Has_Glyph_Func   has_glyph;
@@ -57,12 +62,14 @@ FT_BEGIN_HEADER
 
 
 #define FT_DEFINE_SERVICE_VARCREC( class_,       \
+                                   init_axes_,   \
                                    load_,        \
                                    done_,        \
                                    has_glyph_,   \
                                    load_glyph_ ) \
   static const FT_Service_VARCRec  class_ =      \
   {                                              \
+    init_axes_,                                  \
     load_,                                       \
     done_,                                       \
     has_glyph_,                                  \

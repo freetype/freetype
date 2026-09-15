@@ -1871,16 +1871,22 @@
   static FT_Error
   ft_var_load_gvar( TT_Face  face )
   {
-    FT_Stream     stream = FT_FACE_STREAM( face );
-    FT_Memory     memory = stream->memory;
-    GX_Blend      blend  = face->blend;
-    FT_Error      error;
-    FT_UInt       i, j;
-    FT_Byte*      bytes;
-    FT_ULong      table_len;
-    FT_ULong      gvar_start;
-    FT_ULong      offsetToData;
-    FT_ULong      offsets_len;
+    FT_Error  error;
+
+    FT_Stream  stream = FT_FACE_STREAM( face );
+    FT_Memory  memory = stream->memory;
+
+    GX_Blend  blend         = face->blend;
+    FT_Bool   blend_created = FALSE;
+
+    FT_UInt   i, j;
+    FT_Byte*  bytes;
+    FT_ULong  table_len;
+    FT_ULong  gvar_start;
+
+    FT_ULong  offsetToData;
+    FT_ULong  offsets_len;
+
     GX_GVar_Head  gvar_head;
 
     static const FT_Frame_Field  gvar_fields[] =
@@ -1923,7 +1929,23 @@
       goto Exit;
     }
 
-    if ( gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
+    /*
+     * VARC can use normalized coordinates for component-internal axes in a
+     * static font, where 'gvar' is present without 'fvar'.  Set up the
+     * private part of the blend machinery in that case; it deliberately has
+     * no `mmvar`, so the axes remain invisible through the public MM API.
+     */
+    if ( !blend )
+    {
+      if ( FT_SET_ERROR( tt_var_init_blend( FT_FACE( face ),
+                                            gvar_head.axisCount ) ) )
+        goto Exit;
+
+      blend         = face->blend;
+      blend_created = TRUE;
+    }
+
+    if ( gvar_head.axisCount != (FT_UShort)blend->num_axis )
     {
       FT_TRACE1(( "ft_var_load_gvar:"
                   " number of axes in `gvar' and `cvar'\n" ));
@@ -2105,7 +2127,16 @@
       FT_FRAME_EXIT();
     }
 
+    if ( blend_created )
+    {
+      for ( i = 0; i < blend->tuplecount; i++ )
+        blend->tuplescalars[i] = (FT_Fixed)-0x20000L;
+    }
+
   Exit:
+    if ( error && blend_created )
+      tt_done_blend( FT_FACE( face ) );
+
     return error;
 
   Fail2:
@@ -2115,6 +2146,70 @@
     FT_FREE( blend->glyphoffsets );
     blend->gv_glyphcnt = 0;
     goto Exit;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   tt_var_init_gvar
+   *
+   * @Description:
+   *   Initialize the private 'gvar' blend state.  This also supports the
+   *   static-font case where VARC addresses component-internal axes and no
+   *   'fvar' table is present.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  tt_var_init_gvar( FT_Face  face )
+  {
+    TT_Face  ttface = (TT_Face)face;
+
+
+    if ( ttface->blend && ttface->blend->glyphoffsets )
+      return FT_Err_Ok;
+
+    return ft_var_load_gvar( ttface );
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   tt_var_init_blend
+   *
+   * @Description:
+   *   Initialize a private normalized-coordinate vector without 'fvar'.
+   *   CFF2 VARC glyphs use this with the axis count from their variation
+   *   store; TrueType VARC glyphs get the count from 'gvar' above.
+   */
+  FT_LOCAL_DEF( FT_Error )
+  tt_var_init_blend( FT_Face  face,
+                     FT_UInt  axis_count )
+  {
+    TT_Face    ttface = (TT_Face)face;
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+    FT_Error   error  = FT_Err_Ok;
+    GX_Blend   blend  = ttface->blend;
+
+
+    if ( blend )
+      return blend->num_axis == axis_count
+               ? FT_Err_Ok
+               : FT_THROW( Invalid_Table );
+
+    if ( FT_NEW( blend ) )
+      return error;
+
+    blend->num_axis = axis_count;
+    ttface->blend   = blend;
+
+    if ( FT_NEW_ARRAY( blend->normalizedcoords, axis_count ) )
+    {
+      FT_FREE( blend );
+      ttface->blend = NULL;
+    }
+
+    return error;
   }
 
 
@@ -2605,6 +2700,11 @@
         FT_FRAME_USHORT( nameID ),
       FT_FRAME_END
     };
+
+    /* A static VARC face can have a private blend initialized from 'gvar' */
+    /* without exposing variation axes through the public MM API.          */
+    if ( ttface->blend && !ttface->blend->mmvar )
+      return FT_THROW( Table_Missing );
 
     /* `num_instances` holds the number of all named instances including  */
     /* the default instance, which might be missing in the table of named */
@@ -5007,8 +5107,7 @@
       FT_UInt  i, num_axes;
 
 
-      /* blend->num_axis might not be set up yet */
-      num_axes = blend->mmvar->num_axis;
+      num_axes = blend->num_axis;
 
       FT_FREE( blend->coords );
       FT_FREE( blend->normalizedcoords );

@@ -34,6 +34,11 @@ FT_BEGIN_HEADER
 #ifdef TT_CONFIG_OPTION_VARC
 
 
+  FT_LOCAL( FT_Error )
+  tt_face_init_varc_axes( FT_Face  face,
+                          FT_UInt  axis_count );
+
+
   /**************************************************************************
    *
    * VARC component flags from the specification.

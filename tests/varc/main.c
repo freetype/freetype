@@ -85,7 +85,8 @@ main( void )
 {
   static const TestFont  test_fonts[] =
   {
-    { NULL, 0, 0, 0 }
+    { "varc-static-gvar.ttf", 1,  3, 50 },
+    { "varc-static-cff2.otf", 2, 60, 36 }
   };
 
   FT_Library  library;
@@ -105,7 +106,9 @@ main( void )
   }
 
   ret = 0;
-  for ( i = 0; test_fonts[i].filename; i++ )
+  for ( i = 0;
+        i < sizeof ( test_fonts ) / sizeof ( test_fonts[0] );
+        i++ )
     ret |= test_font( library, testdata_dir, &test_fonts[i] );
 
   FT_Done_FreeType( library );

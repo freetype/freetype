@@ -54,6 +54,21 @@
 #define FT_COMPONENT  ttvarc
 
 
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_init_varc_axes( FT_Face  face,
+                          FT_UInt  axis_count )
+  {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    return tt_var_init_blend( face, axis_count );
+#else
+    FT_UNUSED( face );
+    FT_UNUSED( axis_count );
+
+    return FT_Err_Ok;
+#endif
+  }
+
+
   /* Macro for bounds checking when reading from table */
 #define CHECK_TABLE_BOUNDS( p, size )                     \
           ( (FT_Byte*)(p) >=                              \
@@ -2986,6 +3001,9 @@
 
     FT_Fixed*  parent_coords = NULL;
     FT_UInt    num_coords    = 0;
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_Bool    static_axes   = FALSE;
+#endif
 
     FT_Fixed  stack_new_coords[VARC_STACK_COORD_COUNT];
     FT_UInt   stack_axis_indices[VARC_STACK_INDICES_COUNT];
@@ -3029,6 +3047,22 @@
           FT_Done_MM_Var( face->root.driver->root.library,
                           master );
         }
+        else if ( error                                     &&
+                  !FT_HAS_MULTIPLE_MASTERS( (FT_Face)face ) )
+        {
+          if ( !face->blend )
+            (void)tt_var_init_gvar( (FT_Face)face );
+
+          if ( face->blend && !face->blend->mmvar )
+          {
+            (void)tt_get_var_blend( (FT_Face)face,
+                                    &context->num_font_coords,
+                                    NULL,
+                                    NULL,
+                                    NULL );
+            static_axes = TRUE;
+          }
+        }
         error = FT_Err_Ok;  /* non-fatal */
       }
 
@@ -3037,9 +3071,16 @@
         if ( !FT_NEW_ARRAY( context->font_coords,
                             context->num_font_coords ) )
         {
-          error = FT_Get_Var_Blend_Coordinates( (FT_Face)face,
-                                                context->num_font_coords,
-                                                context->font_coords );
+          if ( static_axes )
+            FT_MEM_COPY( context->font_coords,
+                         face->blend->normalizedcoords,
+                         context->num_font_coords * sizeof ( FT_Fixed ) );
+          else
+            error = FT_Get_Var_Blend_Coordinates(
+                      (FT_Face)face,
+                      context->num_font_coords,
+                      context->font_coords );
+
           if ( error )
           {
             FT_FREE( context->font_coords );
@@ -3054,18 +3095,21 @@
             context->current_coords     = context->font_coords;
             context->num_current_coords = context->num_font_coords;
 
-            /* Force blend initialization: allocate `normalizedcoords`,  */
-            /* load gvar, etc.  This ensures                             */
-            /* `tt_varc_set_normalized_coords` can work as a lightweight */
-            /* coord swap later.                                         */
-            face->root.autohint.data      = NULL;
-            face->root.autohint.finalizer = NULL;
+            if ( !static_axes )
+            {
+              /* Force blend initialization: allocate                */
+              /* `normalizedcoords`, load 'gvar', etc.  This ensures */
+              /* `tt_varc_set_normalized_coords` can work as a       */
+              /* lightweight coordinate swapper later.               */
+              face->root.autohint.data      = NULL;
+              face->root.autohint.finalizer = NULL;
 
-            FT_Set_Var_Blend_Coordinates( (FT_Face)face,
-                                           context->num_font_coords,
-                                           context->font_coords );
+              FT_Set_Var_Blend_Coordinates( (FT_Face)face,
+                                             context->num_font_coords,
+                                             context->font_coords );
 
-            face->root.autohint = saved_autohint;
+              face->root.autohint = saved_autohint;
+            }
           }
         }
       }
