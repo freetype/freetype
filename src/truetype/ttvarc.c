@@ -2639,7 +2639,7 @@
       FT_TRACE2(( "is missing\n" ));
       goto Exit;
     }
-    if ( table_size < 20 ) /* minimum header size */
+    if ( table_size < 24 ) /* minimum header size */
     {
       FT_TRACE2(( "is too short\n" ));
       goto Exit;
