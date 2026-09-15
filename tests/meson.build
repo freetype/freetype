@@ -11,4 +11,14 @@ test('issue-1063',
   env: test_env,
   suite: 'regression')
 
+test_varc = executable('varc',
+  files([ 'varc/main.c' ]),
+  dependencies: freetype_dep,
+)
+
+test('varc',
+  test_varc,
+  env: test_env,
+  suite: 'regression')
+
 # EOF
