@@ -5166,6 +5166,9 @@
       FT_FREE( blend->tuplecoords );
       FT_FREE( blend->glyphoffsets );
       FT_FREE( blend );
+
+      /* the face may outlive its blend (e.g., after a failed setup) */
+      ttface->blend = NULL;
     }
   }
 

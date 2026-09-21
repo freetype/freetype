@@ -853,7 +853,6 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     tt_done_blend( ttface );
-    face->blend = NULL;
 #endif
   }
 
