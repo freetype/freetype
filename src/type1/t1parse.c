@@ -268,10 +268,10 @@
 
     if ( parser->in_pfb )
     {
-      /* in the case of the PFB format, the private dictionary can be  */
-      /* made of several segments.  We thus first read the number of   */
-      /* segments to compute the total size of the private dictionary  */
-      /* then re-read them into memory.                                */
+      /* in the case of the PFB format, the private dictionary can be */
+      /* made of several adjacent segments.  We thus first scan the   */
+      /* number of segments to compute the total size of the private  */
+      /* dictionary then read all segments into memory at once.       */
       FT_ULong   start_pos = FT_STREAM_POS();
       FT_UShort  tag;
 
@@ -293,7 +293,6 @@
       }
 
       /* Check that we have a private dictionary there */
-      /* and allocate private dictionary buffer        */
       if ( parser->private_len == 0 )
       {
         FT_ERROR(( "T1_Get_Private_Dict:"
@@ -302,26 +301,10 @@
         goto Fail;
       }
 
-      if ( FT_STREAM_SEEK( start_pos )                            ||
-           FT_QALLOC( parser->private_dict, parser->private_len ) )
+      if ( FT_STREAM_SEEK( start_pos )                                 ||
+           FT_QALLOC( parser->private_dict, parser->private_len )      ||
+           FT_STREAM_READ( parser->private_dict, parser->private_len ) )
         goto Fail;
-
-      parser->private_len = 0;
-      for (;;)
-      {
-        error = read_pfb_tag( stream, &tag, &size );
-        if ( error || tag != 0x8002U )
-        {
-          error = FT_Err_Ok;
-          break;
-        }
-
-        if ( FT_STREAM_READ( parser->private_dict + parser->private_len,
-                             size ) )
-          goto Fail;
-
-        parser->private_len += size;
-      }
     }
     else
     {
