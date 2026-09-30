@@ -556,12 +556,6 @@
 
     *target = NULL;
 
-    if ( !source || !source->clazz )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
     clazz = source->clazz;
     error = ft_new_glyph( source->library, clazz, &copy );
     if ( error )
@@ -637,11 +631,13 @@
     FT_Glyph  glyph;
 
 
-    if ( !slot )
-      return FT_THROW( Invalid_Slot_Handle );
-
     if ( !aglyph )
       return FT_THROW( Invalid_Argument );
+
+    *aglyph = NULL;
+
+    if ( !slot )
+      return FT_THROW( Invalid_Slot_Handle );
 
     /* create FT_Glyph object */
     error = FT_New_Glyph( slot->library, slot->format, &glyph );

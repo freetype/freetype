@@ -73,6 +73,10 @@
     if ( !func_interface )
       return FT_THROW( Invalid_Argument );
 
+    if ( outline->n_contours > 0 &&
+         ( !outline->contours || !outline->points || !outline->tags ) )
+      return FT_THROW( Invalid_Outline );
+
     shift = func_interface->shift;
     delta = func_interface->delta;
 
@@ -310,15 +314,18 @@
     FT_Memory  memory;
 
 
+    if ( !anoutline )
+      return FT_THROW( Invalid_Argument );
+
+    *anoutline = null_outline;
+
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
     memory = library->memory;
 
-    if ( !anoutline || !memory )
+    if ( !memory )
       return FT_THROW( Invalid_Argument );
-
-    *anoutline = null_outline;
 
     if ( numContours < 0                  ||
          (FT_UInt)numContours > numPoints )
@@ -369,6 +376,9 @@
       if ( n_points == 0 || n_contours == 0 )
         goto Bad;
 
+      if ( !outline->contours || !outline->points || !outline->tags )
+        goto Bad;
+
       end0 = -1;
       for ( n = 0; n < n_contours; n++ )
       {
@@ -414,12 +424,21 @@
 
     if ( source->n_points )
     {
+      if ( !target->points || !source->points ||
+           !target->tags   || !source->tags )
+        return FT_THROW( Invalid_Argument );
+
       FT_ARRAY_COPY( target->points, source->points, source->n_points );
       FT_ARRAY_COPY( target->tags,   source->tags,   source->n_points );
     }
 
     if ( source->n_contours )
+    {
+      if ( !target->contours || !source->contours )
+        return FT_THROW( Invalid_Argument );
+
       FT_ARRAY_COPY( target->contours, source->contours, source->n_contours );
+    }
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     is_owner      = target->flags & FT_OUTLINE_OWNER;
@@ -473,44 +492,46 @@
     FT_Pos  xMin, yMin, xMax, yMax;
 
 
-    if ( outline && acbox )
+    if ( !acbox )
+      return;
+
+    if ( !outline || outline->n_points == 0 || !outline->points )
     {
-      if ( outline->n_points == 0 )
-      {
-        xMin = 0;
-        yMin = 0;
-        xMax = 0;
-        yMax = 0;
-      }
-      else
-      {
-        FT_Vector*  vec   = outline->points;
-        FT_Vector*  limit = vec + outline->n_points;
-
-
-        xMin = xMax = vec->x;
-        yMin = yMax = vec->y;
-        vec++;
-
-        for ( ; vec < limit; vec++ )
-        {
-          FT_Pos  x, y;
-
-
-          x = vec->x;
-          if ( x < xMin ) xMin = x;
-          if ( x > xMax ) xMax = x;
-
-          y = vec->y;
-          if ( y < yMin ) yMin = y;
-          if ( y > yMax ) yMax = y;
-        }
-      }
-      acbox->xMin = xMin;
-      acbox->xMax = xMax;
-      acbox->yMin = yMin;
-      acbox->yMax = yMax;
+      acbox->xMin = 0;
+      acbox->xMax = 0;
+      acbox->yMin = 0;
+      acbox->yMax = 0;
+      return;
     }
+
+    {
+      FT_Vector*  vec   = outline->points;
+      FT_Vector*  limit = vec + outline->n_points;
+
+
+      xMin = xMax = vec->x;
+      yMin = yMax = vec->y;
+      vec++;
+
+      for ( ; vec < limit; vec++ )
+      {
+        FT_Pos  x, y;
+
+
+        x = vec->x;
+        if ( x < xMin ) xMin = x;
+        if ( x > xMax ) xMax = x;
+
+        y = vec->y;
+        if ( y < yMin ) yMin = y;
+        if ( y > yMax ) yMax = y;
+      }
+    }
+
+    acbox->xMin = xMin;
+    acbox->xMax = xMax;
+    acbox->yMin = yMin;
+    acbox->yMax = yMax;
   }
 
 
@@ -525,7 +546,7 @@
     FT_Vector*  vec;
 
 
-    if ( !outline )
+    if ( !outline || !outline->points )
       return;
 
     vec = outline->points;
@@ -549,6 +570,10 @@
 
 
     if ( !outline )
+      return;
+
+    if ( outline->n_contours <= 0 || outline->n_points <= 0 ||
+         !outline->contours || !outline->points || !outline->tags )
       return;
 
     last = -1;
@@ -926,6 +951,10 @@
     if ( !outline )
       return FT_THROW( Invalid_Outline );
 
+    if ( outline->n_contours > 0 &&
+         ( !outline->points || !outline->contours ) )
+      return FT_THROW( Invalid_Outline );
+
     xstrength /= 2;
     ystrength /= 2;
     if ( xstrength == 0 && ystrength == 0 )
@@ -1063,7 +1092,8 @@
 #endif
 
 
-    if ( !outline || outline->n_points <= 0 )
+    if ( !outline || outline->n_points <= 0 || outline->n_contours <= 0 ||
+         !outline->points || !outline->contours )
       return FT_ORIENTATION_TRUETYPE;
 
     /* We use the nonzero winding rule to find the orientation.       */
