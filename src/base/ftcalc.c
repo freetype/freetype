@@ -732,7 +732,7 @@
       return 0;
 
     /* Scale matrix to avoid overflows */
-    shift = FT_MSB( val ) - 4 * sizeof ( FT_ULong ) - 2;
+    shift = FT_MSB( val ) - 4 * sizeof ( FT_ULong ) + 2;
 
     if ( shift > 0 )
     {
