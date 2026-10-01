@@ -279,14 +279,14 @@
       {
         error = read_pfb_tag( stream, &tag, &size );
         if ( error )
-          goto Fail;
+          break;
 
-        if ( tag != 0x8002U )
+        if ( tag != 0x8002U || size > stream->size - stream->pos )
           break;
 
         if ( FT_QREALLOC( priv_dict, priv_len, priv_len + size ) ||
              FT_STREAM_READ( priv_dict + priv_len, size )        )
-          goto Fail;
+          break;
 
         priv_len += size;
       }
