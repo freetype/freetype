@@ -1343,6 +1343,10 @@
    *   num_coords ::
    *     Number of coords in `current_coords`.
    *
+   *   condition_defaults ::
+   *     Optional defaults for condition values.  If non-NULL, return each
+   *     unrounded value's positive sign (0 or 1), instead of scaled deltas.
+   *
    * @Output:
    *   deltas ::
    *     Array to store the deltas (must have space for `num_deltas`).
@@ -1359,7 +1363,8 @@
                            FT_Long*   deltas,
                            FT_UInt    shift,
                            FT_Fixed*  current_coords,
-                           FT_UInt    num_coords )
+                           FT_UInt    num_coords,
+                           FT_Short*  condition_defaults )
   {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -1402,7 +1407,8 @@
     {
       /* no variation store - return zeros */
       for ( i = 0; i < num_deltas; i++ )
-        deltas[i] = 0;
+        deltas[i] = condition_defaults ? FT_BOOL( condition_defaults[i] > 0 )
+                                       : 0;
       return FT_Err_Ok;
     }
 
@@ -1505,6 +1511,18 @@
 
     /* initialize accumulators to zero */
     FT_ARRAY_ZERO( accumulators, num_deltas );
+    if ( condition_defaults )
+    {
+      for ( i = 0; i < num_deltas; i++ )
+      {
+#ifdef FT_INT64
+        accumulators[i] = (FT_Int64)condition_defaults[i] * 0x10000L;
+#else
+        accumulators[i].lo = (FT_UInt32)(FT_Int32)condition_defaults[i] << 16;
+        accumulators[i].hi = condition_defaults[i] < 0 ? 0xFFFFFFFFU : 0;
+#endif
+      }
+    }
 
     /* parse `SparseVarRegionList` to get region definitions */
     if ( regions_offset > 0 && regions_offset < varc->table_size )
@@ -1661,10 +1679,8 @@
           else
           {
             /* slow path - full 64-bit signed multiplication */
-            FT_UInt32 a = ( region_delta < 0 ) ? -(FT_UInt32)region_delta
-                                               : (FT_UInt32)region_delta;
-            FT_UInt32 b = ( region_scalar < 0 ) ? -(FT_UInt32)region_scalar
-                                                : (FT_UInt32)region_scalar;
+            FT_UInt32  a = (FT_UInt32)ULABS( region_delta );
+            FT_UInt32  b = (FT_UInt32)ULABS( region_scalar );
 
             FT_UInt32  a_lo = a & 0xFFFF;
             FT_UInt32  a_hi = a >> 16;
@@ -1713,13 +1729,22 @@
       for ( i = 0; i < num_deltas; i++ )
       {
 #ifdef FT_INT64
-        deltas[i] =
-          (FT_Long)( ( accumulators[i] + rounding ) >> right_shift );
+        if ( condition_defaults )
+          deltas[i] = FT_BOOL( accumulators[i] > 0 );
+        else
+          deltas[i] =
+            (FT_Long)( ( accumulators[i] + rounding ) >> right_shift );
 #else
         /* 32-bit fallback */
         FT_UInt32  hi = accumulators[i].hi;
         FT_UInt32  lo = accumulators[i].lo;
 
+
+        if ( condition_defaults )
+        {
+          deltas[i] = FT_BOOL( !( hi & 0x80000000U ) && ( hi || lo ) );
+          continue;
+        }
 
         /* add rounding */
         lo += (FT_UInt32)rounding;
@@ -1755,6 +1780,7 @@
     FT_UNUSED( shift );
     FT_UNUSED( current_coords );
     FT_UNUSED( num_coords );
+    FT_UNUSED( condition_defaults );
 
     return FT_THROW( Unimplemented_Feature );
 
@@ -1922,7 +1948,7 @@
       {
         FT_Short   default_value;
         FT_UInt32  var_idx;
-        FT_Long    delta = 0;
+        FT_Long    positive;
 
 
         if ( cond + 8 > table_limit )
@@ -1936,14 +1962,16 @@
                   ( (FT_UInt32)cond[6] << 8  ) |
                     (FT_UInt32)cond[7];
 
-        /* A variable value: default plus the interpolated (integer)      */
-        /* delta from the `MultiItemVariationStore`.  shift=0 returns the */
-        /* delta as a plain integer.                                      */
+        /* Compare the unrounded default plus interpolated delta. */
+        /* Even a small positive fraction makes a condition true. */
+        positive = FT_BOOL( default_value > 0 );
         if ( var_idx != 0xFFFFFFFFUL )
-          (void)tt_varc_get_item_deltas( face, varc, var_idx, 1, &delta, 0,
-                                         coords, num_coords );
+          (void)tt_varc_get_item_deltas( face, varc, var_idx, 1,
+                                         &positive, 0,
+                                         coords, num_coords,
+                                         &default_value );
 
-        return FT_BOOL( (FT_Long)default_value + delta > 0 );
+        return FT_BOOL( positive );
       }
 
     case 3:  /* ConditionAnd */
@@ -2210,7 +2238,7 @@
                                      component->num_axis_values,
                                      deltas, 2,
                                      current_coords,
-                                     num_coords );
+                                     num_coords, NULL );
     if ( !error )
     {
       for ( i = 0; i < component->num_axis_values; i++ )
@@ -2315,7 +2343,7 @@
                                      num_deltas,
                                      deltas, 4,
                                      current_coords,
-                                     num_coords );
+                                     num_coords, NULL );
     if ( !error )
     {
       /* Apply deltas to transform components in order.             */

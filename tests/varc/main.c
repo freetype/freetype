@@ -92,6 +92,71 @@ Exit:
 
 
 static int
+test_value_conditions( FT_Library   library,
+                       const char*  testdata_dir )
+{
+  static const FT_Short  defaults[] = { 0, 1, -1, 0, 1 };
+  static const FT_Short  deltas[]   = { 1, -1, 2, -1, -2 };
+
+  static const FT_Fixed  coordinates[] =
+  {
+    0, 4, 0x4000L, 0x7C00L, 0x8000L, 0x8400L, 0xC000L, 0x10000L
+  };
+
+  FT_Face  face = NULL;
+  char     filepath[FILENAME_MAX];
+
+  FT_UInt  i, j, negated;
+  int      ret = 1;
+
+
+  snprintf( filepath, sizeof ( filepath ), "%s/varc-value-conditions.ttf",
+            testdata_dir );
+  if ( FT_New_Face( library, filepath, 0, &face ) )
+    goto Exit;
+
+  for ( i = 0; i < sizeof ( coordinates ) / sizeof ( coordinates[0] ); i++ )
+  {
+    FT_Fixed  coordinate = coordinates[i];
+
+
+    if ( FT_Set_Var_Design_Coordinates( face, 1, &coordinate ) )
+      goto Exit;
+
+    for ( j = 0; j < sizeof ( defaults ) / sizeof ( defaults[0] ); j++ )
+    {
+      FT_Bool  positive = FT_BOOL( defaults[j] * 0x10000L +
+                                  deltas[j] * coordinate > 0 );
+
+
+      for ( negated = 0; negated < 2; negated++ )
+      {
+        FT_UInt  glyph = 2 + j * 2 + negated;
+        FT_UInt  expected_points = ( positive != negated ) ? 3 : 0;
+
+
+        if ( FT_Load_Glyph( face, glyph,
+                            FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) )
+          goto Exit;
+        if ( (FT_UInt)face->glyph->outline.n_points != expected_points )
+        {
+          fprintf( stderr,
+                   "VARC value condition %u at %ld rounded its sign\n",
+                   glyph, coordinate );
+          goto Exit;
+        }
+      }
+    }
+  }
+  ret = 0;
+
+Exit:
+  FT_Done_Face( face );
+  return ret;
+}
+
+
+static int
 test_reset_without_axes( FT_Library   library,
                          const char*  testdata_dir )
 {
@@ -113,14 +178,15 @@ test_reset_without_axes( FT_Library   library,
     FT_BBox   box;
 
 
-    if ( FT_Set_Var_Design_Coordinates( face, 1, &coordinate ) ||
+    if ( FT_Set_Var_Design_Coordinates( face, 1, &coordinate )           ||
          FT_Load_Glyph( face, 3, FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) )
       goto Exit;
     FT_Outline_Get_CBox( &face->glyph->outline, &box );
     if ( box.xMin != 100 || box.xMax != ( i ? 225 : 200 ) ||
-         box.yMin != 0   || box.yMax != 100 )
+         box.yMin != 0   || box.yMax != 100               )
     {
-      fprintf( stderr, "VARC reset without axes retained parent coordinates\n" );
+      fprintf( stderr,
+               "VARC reset without axes retained parent coordinates\n" );
       goto Exit;
     }
   }
@@ -166,6 +232,7 @@ main( void )
     ret |= test_font( library, testdata_dir, &test_fonts[i] );
 
   ret |= test_reset_without_axes( library, testdata_dir );
+  ret |= test_value_conditions( library, testdata_dir );
 
   FT_Done_FreeType( library );
   return ret;
