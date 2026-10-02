@@ -1461,8 +1461,14 @@
     {
       if ( cur[0]->encoding == FT_ENCODING_UNICODE )
       {
-        face->charmap = cur[0];
-        return FT_Err_Ok;
+        FT_Long  format = FT_Get_CMap_Format( cur[0] );
+
+
+        if ( format != 14 && format != 15 )
+        {
+          face->charmap = cur[0];
+          return FT_Err_Ok;
+        }
       }
     }
 
@@ -3796,11 +3802,16 @@
 
     for ( ; cur < limit; cur++ )
     {
-      if ( cur[0] == charmap                    &&
-           FT_Get_CMap_Format ( charmap ) != 14 )
+      if ( cur[0] == charmap )
       {
-        face->charmap = cur[0];
-        return FT_Err_Ok;
+        FT_Long  format = FT_Get_CMap_Format( charmap );
+
+
+        if ( format != 14 && format != 15 )
+        {
+          face->charmap = cur[0];
+          return FT_Err_Ok;
+        }
       }
     }
 
