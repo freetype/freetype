@@ -1845,7 +1845,7 @@
     FT_UShort  axisCount;
     FT_UShort  globalCoordCount;
     FT_ULong   offsetToCoord;
-    FT_UShort  glyphCount;
+    FT_UInt32  glyphCount;
     FT_UShort  flags;
     FT_ULong   offsetToData;
 
@@ -1878,11 +1878,13 @@
 
     GX_Blend  blend         = face->blend;
     FT_Bool   blend_created = FALSE;
+    FT_Bool   is_extended   = FALSE;
 
     FT_UInt   i, j;
     FT_Byte*  bytes;
     FT_ULong  table_len;
     FT_ULong  gvar_start;
+    FT_ULong  header_size;
 
     FT_ULong  offsetToData;
     FT_ULong  offsets_len;
@@ -1895,31 +1897,66 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  GX_GVar_Head
 
-      FT_FRAME_START( 20 ),
+      FT_FRAME_START( 12 ),
         FT_FRAME_LONG  ( version ),
         FT_FRAME_USHORT( axisCount ),
         FT_FRAME_USHORT( globalCoordCount ),
         FT_FRAME_ULONG ( offsetToCoord ),
-        FT_FRAME_USHORT( glyphCount ),
-        FT_FRAME_USHORT( flags ),
-        FT_FRAME_ULONG ( offsetToData ),
       FT_FRAME_END
     };
 
 
     FT_TRACE2(( "GVAR " ));
 
-    if ( FT_SET_ERROR( face->goto_table( face,
-                                         TTAG_gvar,
-                                         stream,
-                                         &table_len ) ) )
+    error = face->goto_table( face,
+                              face->is_extended_glyf ? TTAG_GVAR
+                                                     : TTAG_gvar,
+                              stream,
+                              &table_len );
+    if ( FT_ERR_EQ( error, Table_Missing ) && !face->is_extended_glyf )
+    {
+      error = face->goto_table( face, TTAG_GVAR, stream, &table_len );
+      if ( !error )
+        is_extended = TRUE;
+    }
+    else if ( !error && face->is_extended_glyf )
+      is_extended = TRUE;
+
+    if ( error )
     {
       FT_TRACE2(( "is missing\n" ));
       goto Exit;
     }
 
+    header_size = is_extended ? 21 : 20;
+    if ( table_len < header_size )
+    {
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     gvar_start = FT_STREAM_POS( );
     if ( FT_STREAM_READ_FIELDS( gvar_fields, &gvar_head ) )
+      goto Exit;
+
+    if ( is_extended )
+    {
+      if ( FT_READ_UOFF3( gvar_head.glyphCount ) )
+        goto Exit;
+    }
+    else
+    {
+      FT_UShort  glyph_count;
+
+
+      if ( FT_READ_USHORT( glyph_count ) )
+        goto Exit;
+
+      gvar_head.glyphCount = glyph_count;
+    }
+
+    if ( FT_READ_USHORT( gvar_head.flags )       ||
+         FT_READ_ULONG( gvar_head.offsetToData ) )
       goto Exit;
 
     if ( gvar_head.version != 0x00010000L )
@@ -1944,6 +1981,8 @@
       blend         = face->blend;
       blend_created = TRUE;
     }
+
+    blend->gvar_is_extended = is_extended;
 
     if ( gvar_head.axisCount != (FT_UShort)blend->num_axis )
     {
@@ -1970,7 +2009,7 @@
                   ( ( gvar_head.flags & 1 ) ? 4L : 2L );
 
     /* rough sanity check */
-    if (offsets_len > table_len )
+    if ( offsets_len > table_len - header_size )
     {
       FT_TRACE1(( "ft_var_load_gvar: invalid number of glyphs\n" ));
       error = FT_THROW( Invalid_Table );
@@ -4531,8 +4570,15 @@
 
     /* each set of glyph variation data is formatted similarly to `cvar' */
 
+    if ( dataSize < ( blend->gvar_is_extended ? 5U : 4U ) )
+    {
+      error = FT_THROW( Invalid_Table );
+      goto FExit;
+    }
+
     tupleCount   = FT_GET_USHORT();
-    offsetToData = FT_GET_USHORT();
+    offsetToData = blend->gvar_is_extended ? FT_GET_UOFF3()
+                                           : FT_GET_USHORT();
 
     /* rough sanity test */
     if ( offsetToData > dataSize                                ||

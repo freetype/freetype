@@ -262,6 +262,10 @@ FT_BEGIN_HEADER
    *   gv_glyphcnt ::
    *     The number of glyphs handled in the `gvar' table.
    *
+   *   gvar_is_extended ::
+   *     A boolean which is set when glyph variation data comes from the
+   *     'GVAR' table (instead of 'gvar').
+   *
    *   glyphoffsets ::
    *     Offsets into the glyph variation data array.
    *
@@ -300,6 +304,7 @@ FT_BEGIN_HEADER
     FT_Fixed*       tuplescalars;     /* tuplescalars[tuplecount]          */
 
     FT_UInt         gv_glyphcnt;
+    FT_Bool         gvar_is_extended;
     FT_ULong*       glyphoffsets;         /* glyphoffsets[gv_glyphcnt + 1] */
 
     FT_ULong        gvar_size;
