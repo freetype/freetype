@@ -79,6 +79,7 @@ FT_BEGIN_HEADER
 #define TTAG_LWFN  FT_MAKE_TAG( 'L', 'W', 'F', 'N' )
 #define TTAG_MATH  FT_MAKE_TAG( 'M', 'A', 'T', 'H' )
 #define TTAG_maxp  FT_MAKE_TAG( 'm', 'a', 'x', 'p' )
+#define TTAG_MAXP  FT_MAKE_TAG( 'M', 'A', 'X', 'P' )
 #define TTAG_META  FT_MAKE_TAG( 'M', 'E', 'T', 'A' )
 #define TTAG_MMFX  FT_MAKE_TAG( 'M', 'M', 'F', 'X' )
 #define TTAG_MMSD  FT_MAKE_TAG( 'M', 'M', 'S', 'D' )

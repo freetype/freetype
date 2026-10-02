@@ -3838,7 +3838,7 @@
             ft_validator_init( FT_VALIDATOR( &valid ), cmap, limit,
                                FT_VALIDATE_DEFAULT );
 
-            valid.num_glyphs = (FT_UInt)face->max_profile.numGlyphs;
+            valid.num_glyphs = face->maxp_num_glyphs;
 
             if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer) == 0 )
             {

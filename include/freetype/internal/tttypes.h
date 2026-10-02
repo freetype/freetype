@@ -1135,6 +1135,11 @@ FT_BEGIN_HEADER
    *     some maximum values cannot be taken directly from this table.  We
    *     thus define additional fields below to hold the computed maxima.
    *
+   *   maxp_num_glyphs ::
+   *     The glyph count from the font's maximum profile table.  This can be
+   *     larger than the public `TT_MaxProfile.numGlyphs` field when the font
+   *     uses the 24-bit 'MAXP' table.
+   *
    *   vertical_info ::
    *     A boolean which is set when the font file contains vertical metrics.
    *     If not, the value of the 'vertical' field is undefined.
@@ -1450,6 +1455,7 @@ FT_BEGIN_HEADER
     TT_HoriHeader         horizontal;   /* TrueType horizontal header     */
 
     TT_MaxProfile         max_profile;
+    FT_UInt               maxp_num_glyphs;
 
     FT_Bool               vertical_info;
     TT_VertHeader         vertical;     /* TT Vertical header, if present */

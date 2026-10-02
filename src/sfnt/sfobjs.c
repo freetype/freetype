@@ -1118,7 +1118,7 @@
     LOAD_( gpos );
 #endif
 
-    face->root.num_glyphs = face->max_profile.numGlyphs;
+    face->root.num_glyphs = face->maxp_num_glyphs;
 
     /* Bit 8 of the `fsSelection' field in the `OS/2' table denotes  */
     /* a WWS-only font face.  `WWS' stands for `weight', width', and */
