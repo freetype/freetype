@@ -1130,6 +1130,15 @@ FT_BEGIN_HEADER
    *     The font's horizontal header ('hhea' table).  This field also
    *     contains the associated horizontal metrics table ('hmtx').
    *
+   *   horz_metrics_count ::
+   *     The number of horizontal metrics.  This can be larger than the
+   *     public `TT_HoriHeader.number_Of_HMetrics` field when the font uses
+   *     the 'HHEA table (instead of 'hhea').
+   *
+   *   horz_metrics_is_extended ::
+   *     A boolean which is set when the font uses 'HHEA' and 'HMTX' tables
+   *     (instead of 'hhea' and 'hmtx').
+   *
    *   max_profile ::
    *     The font's maximum profile table.  Read on font opening.  Note that
    *     some maximum values cannot be taken directly from this table.  We
@@ -1153,6 +1162,15 @@ FT_BEGIN_HEADER
    *     the associated vertical metrics table ('vmtx'), if found.
    *     IMPORTANT: The contents of this field is undefined if the
    *     `vertical_info` field is unset.
+   *
+   *   vert_metrics_count ::
+   *     The number of vertical metrics.  This can be larger than the public
+   *     `TT_VertHeader.number_Of_VMetrics` field when the font uses the
+   *     'VHEA' table (instead of 'vhea').
+   *
+   *   vert_metrics_is_extended ::
+   *     A boolean which is set when the font uses the 'VHEA' and 'VMTX'
+   *     tables (instead of 'vhea' and 'vmtx').
    *
    *   num_names ::
    *     The number of name records within this TrueType font.
@@ -1457,6 +1475,8 @@ FT_BEGIN_HEADER
 
     TT_Header             header;       /* TrueType header table          */
     TT_HoriHeader         horizontal;   /* TrueType horizontal header     */
+    FT_UInt32             horz_metrics_count;
+    FT_Bool               horz_metrics_is_extended;
 
     TT_MaxProfile         max_profile;
     FT_UInt               maxp_num_glyphs;
@@ -1464,6 +1484,8 @@ FT_BEGIN_HEADER
 
     FT_Bool               vertical_info;
     TT_VertHeader         vertical;     /* TT Vertical header, if present */
+    FT_UInt32             vert_metrics_count;
+    FT_Bool               vert_metrics_is_extended;
 
     FT_UShort             num_names;    /* number of name records  */
     TT_NameTableRec       name_table;   /* name table              */

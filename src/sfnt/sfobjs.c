@@ -1019,6 +1019,7 @@
                  get_glyph_metrics                                 )
           {
             face->horizontal.number_Of_HMetrics = 0;
+            face->horz_metrics_count            = 0;
             error                               = FT_Err_Ok;
           }
 #endif
@@ -1046,6 +1047,7 @@
                  get_glyph_metrics                                 )
           {
             face->horizontal.number_Of_HMetrics = 0;
+            face->horz_metrics_count            = 0;
             error                               = FT_Err_Ok;
           }
 #endif

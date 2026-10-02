@@ -227,7 +227,9 @@
         /* ignore in general).                                            */
 
         if ( table.Tag == TTAG_hmtx ||
-             table.Tag == TTAG_vmtx )
+             table.Tag == TTAG_HMTX ||
+             table.Tag == TTAG_vmtx ||
+             table.Tag == TTAG_VMTX )
           valid_entries++;
         else
         {
@@ -439,7 +441,9 @@
       else if ( entry.Length > stream->size - entry.Offset )
       {
         if ( entry.Tag == TTAG_hmtx ||
-             entry.Tag == TTAG_vmtx )
+             entry.Tag == TTAG_HMTX ||
+             entry.Tag == TTAG_vmtx ||
+             entry.Tag == TTAG_VMTX )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
           FT_ULong  old_length = entry.Length;
