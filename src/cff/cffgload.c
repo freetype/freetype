@@ -239,7 +239,7 @@
           return FT_THROW( Invalid_Argument );
       }
     }
-    else if ( glyph_index >= cff->num_glyphs )
+    else if ( glyph_index >= (FT_ULong)face->root.num_glyphs )
       return FT_THROW( Invalid_Argument );
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -477,6 +477,10 @@
     }
 
 #endif /* TT_CONFIG_OPTION_VARC */
+
+    /* A VARC-only glyph has no CFF2 fallback CharString. */
+    if ( glyph_index >= cff->num_glyphs )
+      return FT_THROW( Invalid_Argument );
 
     /* top-level code ensures that FT_LOAD_NO_HINTING is set */
     /* if FT_LOAD_NO_SCALE is active                         */

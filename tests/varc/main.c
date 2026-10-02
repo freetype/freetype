@@ -12,6 +12,7 @@ typedef struct  TestFont_
   FT_UInt      glyph_index;
   FT_UInt      point_count;
   FT_Pos       first_x;
+  FT_Long      glyph_count;
 
 } TestFont;
 
@@ -39,6 +40,13 @@ test_font( FT_Library       library,
   if ( FT_HAS_MULTIPLE_MASTERS( face ) )
   {
     fprintf( stderr, "%s unexpectedly exposes variation axes\n",
+             test_font->filename );
+    goto Exit;
+  }
+
+  if ( face->num_glyphs != test_font->glyph_count )
+  {
+    fprintf( stderr, "Unexpected glyph count from %s\n",
              test_font->filename );
     goto Exit;
   }
@@ -127,8 +135,9 @@ main( void )
 {
   static const TestFont  test_fonts[] =
   {
-    { "varc-static-gvar.ttf", 1,  3, 50 },
-    { "varc-static-cff2.otf", 2, 60, 36 }
+    { "varc-static-gvar.ttf", 1,  3,  50, 3 },
+    { "varc-static-cff2.otf", 2, 60,  36, 9 },
+    { "varc-short-cff2.otf",  3,  3, 600, 4 }
   };
 
   FT_Library  library;
