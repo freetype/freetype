@@ -575,10 +575,14 @@
     last = -1;
     for ( n = 0; n < outline->n_contours; n++ )
     {
-      /* keep the first contour point as is and swap points around it */
-      /* to guarantee that the cubic arches stay valid after reverse  */
-      first = last + 2;
+      first = last + 1;
       last  = outline->contours[n];
+
+      /* Keep the first point unless it is a cubic control.  In that */
+      /* case, reverse the entire contour to preserve control pairs, */
+      /* including contours with no explicit on-curve points.        */
+      if ( FT_CURVE_TAG( outline->tags[first] ) != FT_CURVE_TAG_CUBIC )
+        first++;
 
       /* reverse point table */
       {

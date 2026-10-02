@@ -21,4 +21,11 @@ test('varc',
   env: test_env,
   suite: 'regression')
 
+test_outline_reverse = executable('outline-reverse',
+  files([ 'outline-reverse/main.c' ]),
+  dependencies: freetype_dep,
+)
+
+test('outline-reverse', test_outline_reverse, suite: 'regression')
+
 # EOF
