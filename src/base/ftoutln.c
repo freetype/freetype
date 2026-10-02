@@ -102,15 +102,14 @@
       tags  = outline->tags   + first;
       tag   = FT_CURVE_TAG( tags[0] );
 
-      /* A contour cannot start with a cubic control point! */
-      if ( tag == FT_CURVE_TAG_CUBIC )
-        goto Invalid_Outline;
-
       /* check first point to determine origin */
-      if ( tag == FT_CURVE_TAG_CONIC )
+      if ( tag != FT_CURVE_TAG_ON )
       {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_CURVE_TAG_ON )
+        FT_Int  last_tag = FT_CURVE_TAG( outline->tags[last] );
+
+
+        /* first point is a control point.  Yes, this happens. */
+        if ( last_tag == FT_CURVE_TAG_ON )
         {
           /* start at last point if it is on the curve */
           v_start = v_last;
@@ -118,13 +117,16 @@
         }
         else
         {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
+          if ( last_tag != tag )
+            goto Invalid_Outline;
+
+          /* if both first and last points are controls,   */
+          /* start at their middle and record its position */
+          /* for closure                                   */
           v_start.x = ( v_start.x + v_last.x ) / 2;
           v_start.y = ( v_start.y + v_last.y ) / 2;
 
-       /* v_last = v_start; */
+          /* v_last = v_start; */
         }
         point--;
         tags--;
@@ -242,10 +244,23 @@
             if ( point <= limit )
             {
               FT_Vector  vec;
+              FT_Vector  v_middle;
 
+
+              tag = FT_CURVE_TAG( tags[0] );
 
               vec.x = SCALED( point->x );
               vec.y = SCALED( point->y );
+
+              if ( tag == FT_CURVE_TAG_CUBIC )
+              {
+                v_middle.x = ( vec2.x + vec.x ) / 2;
+                v_middle.y = ( vec2.y + vec.y ) / 2;
+
+                vec = v_middle;
+              }
+              else if ( tag != FT_CURVE_TAG_ON )
+                goto Invalid_Outline;
 
               FT_TRACE5(( "  cubic to (%.2f, %.2f)"
                           " with controls (%.2f, %.2f) and (%.2f, %.2f)\n",
@@ -258,6 +273,12 @@
               error = func_interface->cubic_to( &vec1, &vec2, &vec, user );
               if ( error )
                 goto Exit;
+
+              if ( tag == FT_CURVE_TAG_CUBIC )
+              {
+                point--;
+                tags--;
+              }
               continue;
             }
 
