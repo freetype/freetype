@@ -1165,6 +1165,21 @@
     if ( FT_FRAME_EXTRACT( face->cmap_size, face->cmap_table ) )
       face->cmap_size = 0;
 
+    if ( error )
+      goto Exit;
+
+    error = face->goto_table( face, TTAG_DMAP, stream, &face->dmap_size );
+    if ( error )
+    {
+      face->dmap_size = 0;
+      if ( FT_ERR_EQ( error, Table_Missing ) )
+        error = FT_Err_Ok;
+      goto Exit;
+    }
+
+    if ( FT_FRAME_EXTRACT( face->dmap_size, face->dmap_table ) )
+      face->dmap_size = 0;
+
   Exit:
     return error;
   }

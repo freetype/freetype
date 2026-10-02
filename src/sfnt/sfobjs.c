@@ -1282,13 +1282,10 @@
 
       tt_face_build_cmaps( face );  /* ignore errors */
 
-
       /* set the encoding fields */
       {
         FT_Int   m;
-#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-        FT_Bool  has_unicode = FALSE;
-#endif
+        FT_UInt  n;
 
 
         for ( m = 0; m < root->num_charmaps; m++ )
@@ -1298,38 +1295,58 @@
 
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
+        }
+
+        for ( n = 0; n < face->num_dmap_charmaps; n++ )
+        {
+          FT_CharMap  charmap = &face->dmap_charmaps[n]->charmap;
+
+
+          charmap->encoding = sfnt_find_encoding( charmap->platform_id,
+                                                  charmap->encoding_id );
+        }
+
+        tt_face_build_dmaps( face );  /* ignore errors */
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
-          if ( charmap->encoding == FT_ENCODING_UNICODE   ||
-               charmap->encoding == FT_ENCODING_MS_SYMBOL )  /* PUA */
-            has_unicode = TRUE;
-        }
-
-        /* synthesize Unicode charmap if one is missing */
-        if ( !has_unicode                                &&
-             root->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
         {
-          FT_CharMapRec  cmaprec;
+          FT_Bool  has_unicode = FALSE;
 
 
-          cmaprec.face        = root;
-          cmaprec.platform_id = TT_PLATFORM_MICROSOFT;
-          cmaprec.encoding_id = TT_MS_ID_UNICODE_CS;
-          cmaprec.encoding    = FT_ENCODING_UNICODE;
+          for ( m = 0; m < root->num_charmaps; m++ )
+          {
+            FT_CharMap  charmap = root->charmaps[m];
 
 
-          error = FT_CMap_New( (FT_CMap_Class)&tt_cmap_unicode_class_rec,
-                               NULL, &cmaprec, NULL );
-          if ( error                                      &&
-               FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) &&
-               FT_ERR_NEQ( error, Unimplemented_Feature ) )
-            goto Exit;
-          error = FT_Err_Ok;
+            if ( charmap->encoding == FT_ENCODING_UNICODE   ||
+                 charmap->encoding == FT_ENCODING_MS_SYMBOL )  /* PUA */
+              has_unicode = TRUE;
+          }
+
+          /* synthesize Unicode charmap if one is missing */
+          if ( !has_unicode                                &&
+               root->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
+          {
+            FT_CharMapRec  cmaprec;
+
+
+            cmaprec.face        = root;
+            cmaprec.platform_id = TT_PLATFORM_MICROSOFT;
+            cmaprec.encoding_id = TT_MS_ID_UNICODE_CS;
+            cmaprec.encoding    = FT_ENCODING_UNICODE;
+
+
+            error = FT_CMap_New( (FT_CMap_Class)&tt_cmap_unicode_class_rec,
+                                 NULL, &cmaprec, NULL );
+            if ( error                                      &&
+                 FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) &&
+                 FT_ERR_NEQ( error, Unimplemented_Feature ) )
+              goto Exit;
+            error = FT_Err_Ok;
+          }
+        }
 
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
-        }
       }
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -1605,9 +1622,14 @@
       FT_Stream  stream = FT_FACE_STREAM( face );
 
 
-      /* simply release the 'cmap' table frame */
+      tt_face_done_dmaps( face );
+
+      /* simply release the 'cmap' and 'DMAP' table frames */
       FT_FRAME_RELEASE( face->cmap_table );
       face->cmap_size = 0;
+
+      FT_FRAME_RELEASE( face->dmap_table );
+      face->dmap_size = 0;
     }
 
     face->horz_metrics_size = 0;

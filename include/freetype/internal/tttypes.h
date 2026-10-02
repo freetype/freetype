@@ -1193,6 +1193,25 @@ FT_BEGIN_HEADER
    *   cmap_size ::
    *     The size in bytes of the `cmap_table` described above.
    *
+   *   dmap_table ::
+   *     Address of the face's 'DMAP' SFNT table in memory (it's an extracted
+   *     frame).
+   *
+   *   dmap_size ::
+   *     The size in bytes of the `dmap_table` described above.
+   *
+   *   dmap_charmaps ::
+   *     The array of 'DMAP' charmaps.
+   *
+   *   num_dmap_charmaps ::
+   *     The number of elements in `dmap_charmaps`.
+   *
+   *   dmap_results ::
+   *     An array used while merging a dmap with its corresponding cmap.
+   *
+   *   dmap_max_results ::
+   *     The current size of `dmap_results`.
+   *
    *   goto_table ::
    *     A function called by each TrueType table loader to position a
    *     stream's cursor to the start of a given table according to its tag.
@@ -1495,6 +1514,13 @@ FT_BEGIN_HEADER
 
     FT_Byte*              cmap_table;   /* extracted `cmap' table */
     FT_ULong              cmap_size;
+
+    FT_Byte*              dmap_table;   /* extracted 'DMAP' table */
+    FT_ULong              dmap_size;
+    FT_CMap*              dmap_charmaps;
+    FT_UInt               num_dmap_charmaps;
+    FT_UInt32*            dmap_results;
+    FT_UInt32             dmap_max_results;
 
     TT_Loader_GotoTableFunc   goto_table;
 

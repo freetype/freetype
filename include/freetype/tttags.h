@@ -49,6 +49,7 @@ FT_BEGIN_HEADER
 #define TTAG_CPAL  FT_MAKE_TAG( 'C', 'P', 'A', 'L' )
 #define TTAG_cvar  FT_MAKE_TAG( 'c', 'v', 'a', 'r' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
+#define TTAG_DMAP  FT_MAKE_TAG( 'D', 'M', 'A', 'P' )
 #define TTAG_DSIG  FT_MAKE_TAG( 'D', 'S', 'I', 'G' )
 #define TTAG_EBDT  FT_MAKE_TAG( 'E', 'B', 'D', 'T' )
 #define TTAG_EBLC  FT_MAKE_TAG( 'E', 'B', 'L', 'C' )
