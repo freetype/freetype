@@ -3,6 +3,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_MULTIPLE_MASTERS_H
+#include FT_OUTLINE_H
 
 
 typedef struct  TestFont_
@@ -80,6 +81,47 @@ Exit:
 }
 
 
+static int
+test_reset_without_axes( FT_Library   library,
+                         const char*  testdata_dir )
+{
+  FT_Face  face = NULL;
+  char     filepath[FILENAME_MAX];
+  FT_UInt  i;
+  int      ret = 1;
+
+
+  /* Outer overrides TEST to 1; inner resets without HAVE_AXES. */
+  snprintf( filepath, sizeof ( filepath ), "%s/varc-reset-only.ttf",
+            testdata_dir );
+  if ( FT_New_Face( library, filepath, 0, &face ) )
+    goto Exit;
+
+  for ( i = 0; i < 2; i++ )
+  {
+    FT_Fixed  coordinate = i ? 0x4000L : 0;
+    FT_BBox   box;
+
+
+    if ( FT_Set_Var_Design_Coordinates( face, 1, &coordinate ) ||
+         FT_Load_Glyph( face, 3, FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) )
+      goto Exit;
+    FT_Outline_Get_CBox( &face->glyph->outline, &box );
+    if ( box.xMin != 100 || box.xMax != ( i ? 225 : 200 ) ||
+         box.yMin != 0   || box.yMax != 100 )
+    {
+      fprintf( stderr, "VARC reset without axes retained parent coordinates\n" );
+      goto Exit;
+    }
+  }
+  ret = 0;
+
+Exit:
+  FT_Done_Face( face );
+  return ret;
+}
+
+
 int
 main( void )
 {
@@ -110,6 +152,8 @@ main( void )
         i < sizeof ( test_fonts ) / sizeof ( test_fonts[0] );
         i++ )
     ret |= test_font( library, testdata_dir, &test_fonts[i] );
+
+  ret |= test_reset_without_axes( library, testdata_dir );
 
   FT_Done_FreeType( library );
   return ret;

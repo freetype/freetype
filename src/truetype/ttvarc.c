@@ -3282,10 +3282,10 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( component.num_axis_values > 0 &&
-           component.axis_values         &&
-           num_coords > 0                &&
-           parent_coords                 )
+      if ( ( ( component.num_axis_values > 0 && component.axis_values ) ||
+             ( component.flags & VARC_RESET_UNSPECIFIED_AXES )          ) &&
+           num_coords > 0                                                 &&
+           parent_coords                                                  )
       {
         /* allocate new_coords only                  */
         /* (`parent_coords` replaces `saved_coords`) */
