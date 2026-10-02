@@ -1140,6 +1140,10 @@ FT_BEGIN_HEADER
    *     larger than the public `TT_MaxProfile.numGlyphs` field when the font
    *     uses the 24-bit 'MAXP' table.
    *
+   *   is_extended_glyf ::
+   *     A boolean which is set when the font uses the 'GLYF' and 'LOCA'
+   *     tables (extending 'glyf' and 'loca', respectively).
+   *
    *   vertical_info ::
    *     A boolean which is set when the font file contains vertical metrics.
    *     If not, the value of the 'vertical' field is undefined.
@@ -1456,6 +1460,7 @@ FT_BEGIN_HEADER
 
     TT_MaxProfile         max_profile;
     FT_UInt               maxp_num_glyphs;
+    FT_Bool               is_extended_glyf;
 
     FT_Bool               vertical_info;
     TT_VertHeader         vertical;     /* TT Vertical header, if present */
@@ -1596,7 +1601,7 @@ FT_BEGIN_HEADER
     FT_ULong              horz_metrics_size;
     FT_ULong              vert_metrics_size;
 
-    FT_ULong              num_locations; /* up to 0xFFFF + 1 */
+    FT_ULong              num_locations; /* up to 0xFFFFFF + 1 */
     FT_Byte*              glyph_locations;
 
     FT_Byte*              hdmx_table;

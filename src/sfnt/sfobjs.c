@@ -778,9 +778,10 @@
       FT_FREE( default_values );
       FT_FREE( instance_values );
 
-      /* we don't support Multiple Master CFFs yet; */
-      /* note that `glyf' or `CFF2' have precedence */
-      if ( face->goto_table( face, TTAG_glyf, stream, 0 ) &&
+      /* we don't support Multiple Master CFFs yet;          */
+      /* note that 'GLYF', 'glyf', or 'CFF2' have precedence */
+      if ( face->goto_table( face, TTAG_GLYF, stream, 0 ) &&
+           face->goto_table( face, TTAG_glyf, stream, 0 ) &&
            face->goto_table( face, TTAG_CFF2, stream, 0 ) &&
            face->goto_table( face, TTAG_hvgl, stream, 0 ) &&
            !face->goto_table( face, TTAG_CFF, stream, 0 ) )
@@ -922,12 +923,20 @@
 
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
+    face->is_extended_glyf =
+      FT_BOOL( tt_face_lookup_table( face, TTAG_GLYF ) );
+
     has_outline = FT_BOOL( face->root.internal->incremental_interface ||
+                           face->is_extended_glyf                     ||
                            tt_face_lookup_table( face, TTAG_glyf )    ||
                            tt_face_lookup_table( face, TTAG_CFF )     ||
                            tt_face_lookup_table( face, TTAG_CFF2 )    );
 #else
-    has_outline = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) ||
+    face->is_extended_glyf =
+      FT_BOOL( tt_face_lookup_table( face, TTAG_GLYF ) );
+
+    has_outline = FT_BOOL( face->is_extended_glyf                  ||
+                           tt_face_lookup_table( face, TTAG_glyf ) ||
                            tt_face_lookup_table( face, TTAG_CFF )  ||
                            tt_face_lookup_table( face, TTAG_CFF2 ) );
 #endif
