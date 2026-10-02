@@ -369,13 +369,19 @@
     format = ( p[0] << 8 ) | p[1];
     p += 2;
 
-    /* format 1: list of glyph IDs */
-    if ( format == 1 )
+    /* formats 1 and 3: list of 16-bit or 24-bit glyph IDs */
+    if ( format == 1 || format == 3 )
     {
-      count = ( p[0] << 8 ) | p[1];
-      p += 2;
+      FT_UInt  glyph_size = format == 1 ? 2 : 3;
 
-      if ( !CHECK_TABLE_BOUNDS( p, count * 2 ) )
+
+      if ( !CHECK_TABLE_BOUNDS( p, glyph_size ) )
+        return -1;
+
+      count = format == 1 ? FT_NEXT_USHORT( p )
+                          : FT_NEXT_UOFF3( p );
+
+      if ( !CHECK_TABLE_BOUNDS( p, count * glyph_size ) )
         return -1;
 
       /* binary search */
@@ -387,8 +393,9 @@
         while ( min < max )
         {
           FT_UInt   mid   = ( min + max ) >> 1;
-          FT_Byte*  gid_p = p + mid * 2;
-          FT_UInt   gid   = ( gid_p[0] << 8 ) | gid_p[1];
+          FT_Byte*  gid_p = p + mid * glyph_size;
+          FT_UInt   gid   = format == 1 ? FT_PEEK_USHORT( gid_p )
+                                        : FT_PEEK_UOFF3( gid_p );
 
 
           if ( gid == glyph_index )
@@ -401,16 +408,21 @@
       }
     }
 
-    /* format 2: range list */
-    else if ( format == 2 )
+    /* formats 2 and 4: range list with 16-bit or 24-bit values */
+    else if ( format == 2 || format == 4 )
     {
+      FT_UInt  value_size  = format == 2 ? 2 : 3;
+      FT_UInt  record_size = value_size * 3;
       FT_UInt  min, max;
 
 
-      count = ( p[0] << 8 ) | p[1];
-      p += 2;
+      if ( !CHECK_TABLE_BOUNDS( p, value_size ) )
+        return -1;
 
-      if ( !CHECK_TABLE_BOUNDS( p, count * 6 ) )
+      count = format == 2 ? FT_NEXT_USHORT( p )
+                          : FT_NEXT_UOFF3( p );
+
+      if ( !CHECK_TABLE_BOUNDS( p, count * record_size ) )
         return -1;
 
       /* binary search the sorted ranges */
@@ -419,9 +431,11 @@
       while ( min < max )
       {
         FT_UInt   mid   = ( min + max ) >> 1;
-        FT_Byte*  rec   = p + mid * 6;
-        FT_UInt   start = ( rec[0] << 8 ) | rec[1];
-        FT_UInt   end   = ( rec[2] << 8 ) | rec[3];
+        FT_Byte*  rec   = p + mid * record_size;
+        FT_UInt   start = format == 2 ? FT_PEEK_USHORT( rec )
+                                      : FT_PEEK_UOFF3( rec );
+        FT_UInt   end   = format == 2 ? FT_PEEK_USHORT( rec + value_size )
+                                      : FT_PEEK_UOFF3( rec + value_size );
 
 
         if ( glyph_index < start )
@@ -429,8 +443,14 @@
         else if ( glyph_index > end )
           min = mid + 1;
         else
-          return (FT_Int)( ( (FT_UInt)( rec[4] << 8 ) | (FT_UInt)rec[5] ) +
-                           ( glyph_index - start ) );
+        {
+          FT_Byte*  index_p = rec + value_size * 2;
+          FT_UInt   index   = format == 2 ? FT_PEEK_USHORT( index_p )
+                                          : FT_PEEK_UOFF3( index_p );
+
+
+          return (FT_Int)( index + glyph_index - start );
+        }
       }
     }
 
