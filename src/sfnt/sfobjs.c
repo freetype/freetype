@@ -444,7 +444,10 @@
 
     if ( tag == TTAG_ttcf )
     {
-      FT_Int  n;
+      FT_ULong  version;
+      FT_ULong  count;
+      FT_Bool   has_extended_offsets;
+      FT_Int    n;
 
 
       FT_TRACE3(( "sfnt_open_font: file is a collection\n" ));
@@ -452,10 +455,13 @@
       if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
         return error;
 
-      FT_TRACE3(( "                with %ld subfonts\n",
-                  face->ttc_header.count ));
+      version = (FT_ULong)face->ttc_header.version;
+      count   = (FT_ULong)face->ttc_header.count;
 
-      if ( face->ttc_header.count == 0 )
+      has_extended_offsets = ( version >> 16 == 1 || version >> 16 == 2 ) &&
+                             ( version & 0xFFFF ) >= 1;
+
+      if ( !has_extended_offsets && face->ttc_header.count == 0 )
         return FT_THROW( Invalid_Table );
 
       /* a rough size estimate: let's conservatively assume that there   */
@@ -463,7 +469,38 @@
       /* 28 bytes), thus we have (at least) `12 + 4*count' bytes for the */
       /* size of the TTC header plus `28*count' bytes for all subfont    */
       /* headers                                                         */
-      if ( (FT_ULong)face->ttc_header.count > stream->size / ( 28 + 4 ) )
+      if ( count > stream->size / ( 28 + 4 ) )
+        return FT_THROW( Array_Too_Large );
+
+      if ( has_extended_offsets )
+      {
+        FT_TRACE3(( "                with %lu compatibility subfonts\n",
+                    count ));
+
+        if ( FT_STREAM_SKIP( count * 4L ) )
+          return error;
+
+        /* In version 2.1 the extended count and offsets follow the */
+        /* three version 2 DSIG fields.                             */
+        if ( version >> 16 == 2 && FT_STREAM_SKIP( 12 ) )
+          return error;
+
+        if ( FT_READ_ULONG( count ) )
+          return error;
+
+        if ( count > FT_LONG_MAX )
+          return FT_THROW( Array_Too_Large );
+
+        face->ttc_header.count = (FT_Long)count;
+      }
+
+      FT_TRACE3(( "                with %ld subfonts\n",
+                  face->ttc_header.count ));
+
+      if ( face->ttc_header.count == 0 )
+        return FT_THROW( Invalid_Table );
+
+      if ( count > stream->size / ( 28 + 4 ) )
         return FT_THROW( Array_Too_Large );
 
       /* now read the offsets of each font in the file */
