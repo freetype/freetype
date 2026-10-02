@@ -2936,7 +2936,8 @@
    * Ranges are sorted by `uniStart'.
    */
 
-#ifdef TT_CONFIG_CMAP_FORMAT_14
+#if defined( TT_CONFIG_CMAP_FORMAT_14 ) || \
+    defined( TT_CONFIG_CMAP_FORMAT_15 )
 
   typedef struct  TT_CMap14Rec_
   {
@@ -3009,9 +3010,20 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_Error )
-  tt_cmap14_validate( FT_Byte*      table,
-                      FT_Validator  valid )
+  static FT_Bool
+  tt_cmap14_is_extended( FT_CMap  cmap )
+  {
+    TT_CMap_Class  clazz = (TT_CMap_Class)cmap->clazz;
+
+
+    return FT_BOOL( clazz->format == 15 );
+  }
+
+
+  static FT_Error
+  tt_cmap14_validate_internal( FT_Byte*      table,
+                               FT_Validator  valid,
+                               FT_Bool       is_extended )
   {
     FT_Byte*  p;
     FT_ULong  length;
@@ -3092,9 +3104,10 @@
         /* and the non-default table (these glyphs are specified here) */
         if ( nondefOff != 0 )
         {
-          FT_Byte*  ndp        = table + nondefOff;
+          FT_Byte*  ndp         = table + nondefOff;
           FT_ULong  numMappings;
-          FT_ULong  i, lastUni = 0;
+          FT_UInt   record_size = is_extended ? 6 : 5;
+          FT_ULong  i, lastUni  = 0;
 
 
           if ( ndp + 4 > valid->limit )
@@ -3102,14 +3115,15 @@
 
           numMappings = TT_NEXT_ULONG( ndp );
 
-          /* numMappings * 5 > (FT_ULong)( valid->limit - ndp ) ? */
-          if ( numMappings > ( (FT_ULong)( valid->limit - ndp ) ) / 5 )
+          if ( numMappings >
+                 ( (FT_ULong)( valid->limit - ndp ) ) / record_size )
             FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numMappings; i++ )
           {
             FT_ULong  uni = TT_NEXT_UINT24( ndp );
-            FT_ULong  gid = TT_NEXT_USHORT( ndp );
+            FT_ULong  gid = is_extended ? TT_NEXT_UINT24( ndp )
+                                        : TT_NEXT_USHORT( ndp );
 
 
             if ( uni >= 0x110000UL )                     /* end of Unicode */
@@ -3130,6 +3144,30 @@
 
     return FT_Err_Ok;
   }
+
+
+#ifdef TT_CONFIG_CMAP_FORMAT_14
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap14_validate( FT_Byte*      table,
+                      FT_Validator  valid )
+  {
+    return tt_cmap14_validate_internal( table, valid, FALSE );
+  }
+
+#endif /* TT_CONFIG_CMAP_FORMAT_14 */
+
+
+#ifdef TT_CONFIG_CMAP_FORMAT_15
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap15_validate( FT_Byte*      table,
+                      FT_Validator  valid )
+  {
+    return tt_cmap14_validate_internal( table, valid, TRUE );
+  }
+
+#endif /* TT_CONFIG_CMAP_FORMAT_15 */
 
 
   FT_CALLBACK_DEF( FT_UInt )
@@ -3160,9 +3198,10 @@
   tt_cmap14_get_info( FT_CharMap    cmap,
                       TT_CMapInfo  *cmap_info )
   {
-    FT_UNUSED( cmap );
+    TT_CMap_Class  clazz = (TT_CMap_Class)FT_CMAP( cmap )->clazz;
 
-    cmap_info->format   = 14;
+
+    cmap_info->format   = clazz->format;
     /* subtable 14 does not define a language field */
     cmap_info->language = 0xFFFFFFFFUL;
 
@@ -3206,10 +3245,12 @@
 
   static FT_UInt
   tt_cmap14_char_map_nondef_binary( FT_Byte    *base,
-                                    FT_UInt32   char_code )
+                                    FT_UInt32   char_code,
+                                    FT_Bool     is_extended )
   {
     FT_UInt32  numMappings = TT_PEEK_ULONG( base );
     FT_UInt32  max, min;
+    FT_UInt    record_size = is_extended ? 6 : 5;
 
 
     min = 0;
@@ -3221,7 +3262,7 @@
     while ( min < max )
     {
       FT_UInt32  mid = ( min + max ) >> 1;
-      FT_Byte*   p   = base + 5 * mid;
+      FT_Byte*   p   = base + record_size * mid;
       FT_UInt32  uni = (FT_UInt32)TT_NEXT_UINT24( p );
 
 
@@ -3230,7 +3271,7 @@
       else if ( char_code > uni )
         min = mid + 1;
       else
-        return TT_PEEK_USHORT( p );
+        return is_extended ? TT_PEEK_UINT24( p ) : TT_PEEK_USHORT( p );
     }
 
     return 0;
@@ -3278,6 +3319,7 @@
   {
     TT_CMap  ttcmap  = (TT_CMap)cmap;
     TT_CMap  ttucmap = (TT_CMap)ucmap;
+    FT_Bool  is_extended = tt_cmap14_is_extended( cmap );
 
     FT_Byte*  p = tt_cmap14_find_variant( ttcmap->data + 6,
                                           variantSelector );
@@ -3301,7 +3343,8 @@
 
     if ( nondefOff != 0 )
       return tt_cmap14_char_map_nondef_binary( ttcmap->data + nondefOff,
-                                               charcode );
+                                               charcode,
+                                               is_extended );
 
     return 0;
   }
@@ -3313,6 +3356,7 @@
                                 FT_UInt32  variantSelector )
   {
     TT_CMap   ttcmap = (TT_CMap)cmap;
+    FT_Bool   is_extended = tt_cmap14_is_extended( cmap );
     FT_Byte*  p      = tt_cmap14_find_variant( ttcmap->data + 6,
                                                variantSelector );
     FT_ULong  defOff;
@@ -3331,7 +3375,8 @@
 
     if ( nondefOff != 0                                              &&
          tt_cmap14_char_map_nondef_binary( ttcmap->data + nondefOff,
-                                           charcode ) != 0           )
+                                           charcode,
+                                           is_extended ) != 0        )
       return 0;
 
     return -1;
@@ -3375,6 +3420,7 @@
     FT_UInt32   count  = cmap14->num_selectors;
     FT_Byte*    p      = ttcmap->data + 10;
     FT_UInt32*  q;
+    FT_Bool     is_extended = tt_cmap14_is_extended( cmap );
 
 
     if ( tt_cmap14_ensure( cmap14, ( count + 1 ), memory ) )
@@ -3392,7 +3438,8 @@
                                             charCode )                   ) ||
            ( nondefOff != 0                                              &&
              tt_cmap14_char_map_nondef_binary( ttcmap->data + nondefOff,
-                                               charCode ) != 0           ) )
+                                               charCode,
+                                               is_extended ) != 0        ) )
       {
         q[0] = varSel;
         q++;
@@ -3462,7 +3509,8 @@
   static FT_UInt32*
   tt_cmap14_get_nondef_chars( TT_CMap     cmap,
                               FT_Byte    *p,
-                              FT_Memory   memory )
+                              FT_Memory   memory,
+                              FT_Bool     is_extended )
   {
     TT_CMap14   cmap14 = (TT_CMap14) cmap;
     FT_UInt32   numMappings;
@@ -3479,7 +3527,7 @@
     for ( i = 0; i < numMappings; i++ )
     {
       ret[i] = (FT_UInt32)TT_NEXT_UINT24( p );
-      p += 2;
+      p += is_extended ? 3 : 2;
     }
     ret[i] = 0;
 
@@ -3495,6 +3543,7 @@
     TT_CMap   ttcmap = (TT_CMap)cmap;
     FT_Byte  *p      = tt_cmap14_find_variant( ttcmap->data + 6,
                                                variantSelector );
+    FT_Bool   is_extended = tt_cmap14_is_extended( cmap );
     FT_Int    i;
     FT_ULong  defOff;
     FT_ULong  nondefOff;
@@ -3511,7 +3560,7 @@
 
     if ( defOff == 0 )
       return tt_cmap14_get_nondef_chars( ttcmap, ttcmap->data + nondefOff,
-                                         memory );
+                                         memory, is_extended );
     else if ( nondefOff == 0 )
       return tt_cmap14_get_def_chars( ttcmap, ttcmap->data + defOff,
                                       memory );
@@ -3543,7 +3592,7 @@
                                         memory );
       if ( dcnt == 0 )
         return tt_cmap14_get_nondef_chars( ttcmap, ttcmap->data + nondefOff,
-                                           memory );
+                                           memory, is_extended );
 
       if ( tt_cmap14_ensure( cmap14, ( dcnt + numMappings + 1 ), memory ) )
         return NULL;
@@ -3553,7 +3602,7 @@
       dcnt = FT_NEXT_BYTE( dp );
       di   = 1;
       nuni = (FT_UInt32)TT_NEXT_UINT24( p );
-      p   += 2;
+      p   += is_extended ? 3 : 2;
       ni   = 1;
       i    = 0;
 
@@ -3583,7 +3632,7 @@
             break;
 
           nuni = (FT_UInt32)TT_NEXT_UINT24( p );
-          p += 2;
+          p += is_extended ? 3 : 2;
         }
       }
 
@@ -3596,7 +3645,7 @@
         while ( ni < numMappings )
         {
           ret[i++] = (FT_UInt32)TT_NEXT_UINT24( p );
-          p += 2;
+          p += is_extended ? 3 : 2;
           ni++;
         }
       }
@@ -3626,6 +3675,8 @@
   }
 
 
+#ifdef TT_CONFIG_CMAP_FORMAT_14
+
   FT_DEFINE_TT_CMAP(
     tt_cmap14_class_rec,
 
@@ -3649,6 +3700,35 @@
   )
 
 #endif /* TT_CONFIG_CMAP_FORMAT_14 */
+
+
+#ifdef TT_CONFIG_CMAP_FORMAT_15
+
+  FT_DEFINE_TT_CMAP(
+    tt_cmap15_class_rec,
+
+      sizeof ( TT_CMap14Rec ),
+
+      (FT_CMap_InitFunc)     tt_cmap14_init,        /* init       */
+      (FT_CMap_DoneFunc)     tt_cmap14_done,        /* done       */
+      (FT_CMap_CharIndexFunc)tt_cmap14_char_index,  /* char_index */
+      (FT_CMap_CharNextFunc) tt_cmap14_char_next,   /* char_next  */
+
+      /* Format 15 extension functions */
+      (FT_CMap_CharVarIndexFunc)    tt_cmap14_char_var_index,
+      (FT_CMap_CharVarIsDefaultFunc)tt_cmap14_char_var_isdefault,
+      (FT_CMap_VariantListFunc)     tt_cmap14_variants,
+      (FT_CMap_CharVariantListFunc) tt_cmap14_char_variants,
+      (FT_CMap_VariantCharListFunc) tt_cmap14_variant_chars,
+
+    15,
+    (TT_CMap_ValidateFunc)tt_cmap15_validate,  /* validate      */
+    (TT_CMap_Info_GetFunc)tt_cmap14_get_info   /* get_cmap_info */
+  )
+
+#endif /* TT_CONFIG_CMAP_FORMAT_15 */
+
+#endif /* TT_CONFIG_CMAP_FORMAT_14 || TT_CONFIG_CMAP_FORMAT_15 */
 
 
   /*************************************************************************/
