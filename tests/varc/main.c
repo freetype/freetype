@@ -13,6 +13,7 @@ typedef struct  TestFont_
   FT_UInt      point_count;
   FT_Pos       first_x;
   FT_Long      glyph_count;
+  FT_Bool      public_axes;
 
 } TestFont;
 
@@ -37,9 +38,9 @@ test_font( FT_Library       library,
     goto Exit;
   }
 
-  if ( FT_HAS_MULTIPLE_MASTERS( face ) )
+  if ( !!FT_HAS_MULTIPLE_MASTERS( face ) != test_font->public_axes )
   {
-    fprintf( stderr, "%s unexpectedly exposes variation axes\n",
+    fprintf( stderr, "%s exposes unexpected variation axes\n",
              test_font->filename );
     goto Exit;
   }
@@ -68,6 +69,7 @@ test_font( FT_Library       library,
     goto Exit;
   }
 
+  if ( !test_font->public_axes )
   {
     FT_MM_Var*  master = NULL;
 
@@ -135,9 +137,10 @@ main( void )
 {
   static const TestFont  test_fonts[] =
   {
-    { "varc-static-gvar.ttf", 1,  3,  50, 3 },
-    { "varc-static-cff2.otf", 2, 60,  36, 9 },
-    { "varc-short-cff2.otf",  3,  3, 600, 4 }
+    { "varc-static-gvar.ttf",    1,  3,  50, 3, 0 },
+    { "varc-static-cff2.otf",    2, 60,  36, 9, 0 },
+    { "varc-short-cff2.otf",     3,  3, 600, 4, 0 },
+    { "varc-null-condition.ttf", 1, 48,  86, 8, 1 }
   };
 
   FT_Library  library;

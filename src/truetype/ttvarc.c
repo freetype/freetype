@@ -1880,6 +1880,11 @@
     FT_UInt  format;
 
 
+    /* A zero condition offset represents True.  Top-level zero offsets */
+    /* resolve to the start of the ConditionList.                       */
+    if ( cond == varc->condition_list )
+      return TRUE;
+
     if ( !cond                             ||
          depth > TT_VARC_MAX_NESTING_LEVEL ||
          cond + 2 > table_limit            )
@@ -1968,11 +1973,12 @@
 
 
           p += 3;
-          r = tt_varc_eval_condition( face, varc,
-                                      cond + sub_off,
-                                      table_limit,
-                                      coords, num_coords,
-                                      depth + 1 );
+          r = sub_off == 0 ? TRUE
+                           : tt_varc_eval_condition( face, varc,
+                                                     cond + sub_off,
+                                                     table_limit,
+                                                     coords, num_coords,
+                                                     depth + 1 );
 
           if ( is_and && !r )
             return FALSE;
@@ -1994,6 +2000,9 @@
         sub_off = ( (FT_UInt32)cond[2] << 16 ) |
                   ( (FT_UInt32)cond[3] << 8  ) |
                     (FT_UInt32)cond[4];
+
+        if ( sub_off == 0 )
+          return FALSE;
 
         return FT_BOOL( !tt_varc_eval_condition( face, varc, cond + sub_off,
                                                  table_limit, coords,
