@@ -1504,8 +1504,7 @@
     }
 
     /* initialize accumulators to zero */
-    for ( i = 0; i < num_deltas; i++ )
-      accumulators[i] = FT_INT64_ZERO;
+    FT_ARRAY_ZERO( accumulators, num_deltas );
 
     /* parse `SparseVarRegionList` to get region definitions */
     if ( regions_offset > 0 && regions_offset < varc->table_size )
@@ -1647,7 +1646,7 @@
           accumulators[k] += product;
 #else /* !FT_INT64 */
           /* 32-bit fallback */
-          if ( (FT_UInt32)( region_delta + 0x8000 ) <= 0x20000 )
+          if ( (FT_UInt32)region_delta + 0x8000U <= 0xFFFFU )
           {
             /* fast path - multiplication fits in 32 bits */
             FT_Int32  product = region_delta * region_scalar;
@@ -1655,7 +1654,7 @@
 
             accumulators[k].lo += (FT_UInt32)product;
             if ( accumulators[k].lo < (FT_UInt32)product )
-              accumulators[k].hi += ( product < 0 ) ? 0 : 1;
+              accumulators[k].hi += 1;
             if ( product < 0 )
               accumulators[k].hi -= 1;
           }
@@ -1663,9 +1662,9 @@
           {
             /* slow path - full 64-bit signed multiplication */
             FT_UInt32 a = ( region_delta < 0 ) ? -(FT_UInt32)region_delta
-                                               : region_delta;
+                                               : (FT_UInt32)region_delta;
             FT_UInt32 b = ( region_scalar < 0 ) ? -(FT_UInt32)region_scalar
-                                                : region_scalar;
+                                                : (FT_UInt32)region_scalar;
 
             FT_UInt32  a_lo = a & 0xFFFF;
             FT_UInt32  a_hi = a >> 16;
@@ -1728,11 +1727,11 @@
           hi += 1;
 
         /* shift right by (16 - shift) bits */
-        if ( right_shift >= 16 )
-          deltas[i] = (FT_Long)hi;
+        if ( right_shift == 0 )
+          deltas[i] = (FT_Long)(FT_Int32)lo;
         else
-          deltas[i] = (FT_Long)( ( hi << ( 16 + shift ) ) |
-                                 ( lo >> right_shift )    );
+          deltas[i] = (FT_Long)(FT_Int32)( ( hi << ( 16 + shift ) ) |
+                                           ( lo >> right_shift )    );
 #endif
       }
     }
@@ -3511,12 +3510,19 @@
 
             /* Convert from 26.6 font units to 26.6 device pixels. */
             /* 26.6 * 16.16 = 42.22; >> 22 gives 26.6.             */
+#ifdef FT_INT64
             internal->transform_delta.x =
               (FT_Pos)( ( (FT_Int64)composed_delta.x * x_scale +
                           0x200000L ) >> 22 );
             internal->transform_delta.y =
               (FT_Pos)( ( (FT_Int64)composed_delta.y * y_scale +
                           0x200000L ) >> 22 );
+#else
+            internal->transform_delta.x =
+              FT_MulDiv( composed_delta.x, x_scale, 0x400000L );
+            internal->transform_delta.y =
+              FT_MulDiv( composed_delta.y, y_scale, 0x400000L );
+#endif
           }
           else
           {
