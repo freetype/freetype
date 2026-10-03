@@ -1070,9 +1070,10 @@
     if ( !coords || coord_count == 0 )
       return scalar;  /* no coords available, return 1.0 */
 
-    /* `SparseVarRegionList` region format:
+    /* `SparseVariationRegion` table:
      *
      *   regionAxisCount (u16) - number of non-default axes
+     *   axisOffsets (u32[regionAxisCount]) - relative to this region
      *   for each sparse axis:
      *     axisIndex (u16)
      *     startCoord (F2DOT14)
@@ -1080,12 +1081,15 @@
      *     endCoord (F2DOT14)
      */
 
-    if ( p + 2 > limit )
+    if ( limit - p < 2 )
       return 0;
 
     /* read sparse axis count (u16) */
     axis_count = ( (FT_UInt)p[0] << 8 ) | p[1];
     p += 2;
+
+    if ( axis_count > (FT_ULong)( limit - p ) / 4 )
+      return 0;
 
     /* process each axis range */
     for ( i = 0; i < axis_count; i++ )
@@ -1094,32 +1098,38 @@
       FT_Short   min_val, peak_val, max_val;
       FT_Fixed   coord;
       FT_Fixed   axis_scalar;
+      FT_UInt32  axis_offset;
+      FT_Byte*   axis;
 
       FT_Fixed  min_16;
       FT_Fixed  peak_16;
       FT_Fixed  max_16;
 
 
-      /* read axis index (u16) */
-      if ( p + 8 > limit )
+      axis_offset = ( (FT_UInt32)p[0] << 24 ) |
+                    ( (FT_UInt32)p[1] << 16 ) |
+                    ( (FT_UInt32)p[2] << 8  ) |
+                      (FT_UInt32)p[3];
+      p += 4;
+
+      if ( axis_offset > (FT_ULong)( limit - region_data )     ||
+           (FT_ULong)( limit - region_data ) - axis_offset < 8 )
         return 0;
 
-      axis_index = ( (FT_UInt16)p[0] << 8 ) | p[1];
-      p += 2;
+      axis       = region_data + axis_offset;
+      axis_index = ( (FT_UInt16)axis[0] << 8 ) | axis[1];
+      axis      += 2;
 
       /* read min, peak, max (F2DOT14) - each is 2 bytes, */
       /* advance after each read                          */
-      min_val  = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
-                               (FT_UShort)p[1]        );
-      p += 2;
-      /* fixed: read from p[0] after advancing */
-      peak_val = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
-                               (FT_UShort)p[1]        );
-      p += 2;
-      /* fixed: read from p[0] after advancing */
-      max_val  = (FT_Short)( ( (FT_UShort)p[0] << 8 ) |
-                               (FT_UShort)p[1]        );
-      p += 2;
+      min_val  = (FT_Short)( ( (FT_UShort)axis[0] << 8 ) |
+                               (FT_UShort)axis[1]        );
+      axis += 2;
+      peak_val = (FT_Short)( ( (FT_UShort)axis[0] << 8 ) |
+                               (FT_UShort)axis[1]        );
+      axis += 2;
+      max_val  = (FT_Short)( ( (FT_UShort)axis[0] << 8 ) |
+                               (FT_UShort)axis[1]        );
 
       /* get coordinate for this axis */
       if ( axis_index >= coord_count )
@@ -1385,15 +1395,18 @@
     FT_Byte    mvd_format;
     FT_UInt16  region_count;
     FT_Byte*   delta_sets;
+    FT_UInt32  delta_sets_offset;
     FT_Byte*   tuple_data;
     FT_UInt    tuple_size;
 
     FT_Int64   stack_accumulators[VARC_STACK_DELTA_COUNT];
     /* deltas * regions */
     FT_Int32   stack_all_deltas[VARC_STACK_DELTA_COUNT * 16];
-    FT_Int64*  accumulators   = NULL;
-    FT_Byte*   regions_data   = NULL;
-    FT_Byte*   regions_limit  = NULL;
+    FT_Int64*  accumulators      = NULL;
+    FT_Byte*   regions_data      = NULL;
+    FT_Byte*   regions_limit     = NULL;
+    FT_UInt32  region_list_count = 0;
+
     FT_UInt    total_deltas;
     FT_Int32*  all_deltas     = NULL;
     FT_UInt    bytes_consumed = 0;
@@ -1439,8 +1452,6 @@
                        (FT_UInt32)p[3];
     p += 4;
 
-    FT_UNUSED( regions_offset );  /* TODO: Use for region evaluation */
-
     /* read dataSets count (u16) */
     data_sets_count = ( (FT_UInt16)p[0] << 8 ) | p[1];
     p += 2;
@@ -1467,7 +1478,7 @@
 
     mvd_data = mvs_data + data_set_offset;
 
-    if ( mvd_data + 3 > table_limit )
+    if ( table_limit - mvd_data < 7 )
       return FT_THROW( Invalid_Table );
 
     /* parse `MultiVarData` header */
@@ -1482,14 +1493,23 @@
     /* read `regionIndices` count (u16) */
     region_count = ( (FT_UInt16)p[0] << 8 ) | p[1];
     p += 2;
-    /* skip `regionIndices` array */
+
+    if ( region_count > (FT_ULong)( table_limit - p ) / 2 )
+      return FT_THROW( Invalid_Table );
     p += region_count * 2;
 
-    if ( p > table_limit )
+    if ( table_limit - p < 4 )
       return FT_THROW( Invalid_Table );
 
-    /* Now `p` points to `deltaSets` (INDEX2) */
-    delta_sets = p;
+    delta_sets_offset = ( (FT_UInt32)p[0] << 24 ) |
+                        ( (FT_UInt32)p[1] << 16 ) |
+                        ( (FT_UInt32)p[2] << 8  ) |
+                          (FT_UInt32)p[3];
+    if ( !delta_sets_offset                                           ||
+         delta_sets_offset > (FT_ULong)( table_limit - mvd_data )     ||
+         (FT_ULong)( table_limit - mvd_data ) - delta_sets_offset < 4 )
+      return FT_THROW( Invalid_Table );
+    delta_sets = mvd_data + delta_sets_offset;
 
     /* read tuple from INDEX2 at inner index */
     error = tt_varc_read_cff2_index_entry( delta_sets, table_limit, inner,
@@ -1525,16 +1545,35 @@
     }
 
     /* parse `SparseVarRegionList` to get region definitions */
-    if ( regions_offset > 0 && regions_offset < varc->table_size )
+    if ( regions_offset > 0                                     &&
+         regions_offset <= (FT_ULong)( table_limit - mvs_data ) )
     {
       regions_data  = mvs_data + regions_offset;
       regions_limit = table_limit;
 
-      /* read and skip region count (u16) */
-      if ( regions_data + 2 <= regions_limit )
-        regions_data += 2;
+      /* read region count (u32) */
+      if ( regions_limit - regions_data >= 4 )
+      {
+        region_list_count = ( (FT_UInt32)regions_data[0] << 24 ) |
+                            ( (FT_UInt32)regions_data[1] << 16 ) |
+                            ( (FT_UInt32)regions_data[2] << 8  ) |
+                              (FT_UInt32)regions_data[3];
+        regions_data += 4;
+
+        if ( region_list_count >
+               (FT_ULong)( regions_limit - regions_data ) / 4 )
+          regions_data = NULL;
+      }
       else
         regions_data = NULL;
+    }
+
+    if ( !regions_data )
+    {
+      if ( accumulators != stack_accumulators )
+        FT_FREE( accumulators );
+      error = FT_THROW( Invalid_Table );
+      goto Cleanup;
     }
 
     /* read ALL deltas from the flat tuple */
@@ -1604,23 +1643,27 @@
       {
         /* SparseVarRegionList format:
          *
-         *   u16: regionCount
+         *   u32: regionCount
          *   u32[regionCount]: array of offsets (from start of list)
          *                     to each region
          */
 
         /* back to start (before count) */
-        FT_Byte*  region_list_start = regions_data - 2;
-        FT_Byte*  region_offset_ptr = regions_data + region_index * 4;
+        FT_Byte*  region_list_start = regions_data - 4;
+        FT_Byte*  region_offset_ptr;
 
 
-        if ( region_offset_ptr + 4 <= regions_limit )
+        if ( region_index < region_list_count                              &&
+             region_index < (FT_ULong)( regions_limit - regions_data ) / 4 )
         {
-          FT_UInt32 region_offset =
-                      ( (FT_UInt32)region_offset_ptr[0] << 24 ) |
-                      ( (FT_UInt32)region_offset_ptr[1] << 16 ) |
-                      ( (FT_UInt32)region_offset_ptr[2] << 8  ) |
-                        (FT_UInt32)region_offset_ptr[3];
+          FT_UInt32  region_offset;
+
+
+          region_offset_ptr = regions_data + region_index * 4;
+          region_offset = ( (FT_UInt32)region_offset_ptr[0] << 24 ) |
+                          ( (FT_UInt32)region_offset_ptr[1] << 16 ) |
+                          ( (FT_UInt32)region_offset_ptr[2] << 8  ) |
+                            (FT_UInt32)region_offset_ptr[3];
 
 
           if ( region_offset <

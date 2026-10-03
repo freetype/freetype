@@ -198,6 +198,51 @@ Exit:
 }
 
 
+static int
+test_variation_store( FT_Library   library,
+                      const char*  testdata_dir )
+{
+  FT_Face  face = NULL;
+  char     filepath[FILENAME_MAX];
+
+  FT_UInt  i;
+  int      ret = 1;
+
+
+  /* A triangle translated by 100, plus a TEST-axis delta of 100. */
+  snprintf( filepath, sizeof ( filepath ), "%s/varc-variation-store.ttf",
+            testdata_dir );
+  if ( FT_New_Face( library, filepath, 0, &face ) )
+    goto Exit;
+
+  for ( i = 0; i < 3; i++ )
+  {
+    FT_Fixed  coordinate = (FT_Fixed)i * 0x8000L;
+    FT_BBox   box;
+
+
+    if ( FT_Set_Var_Design_Coordinates( face, 1, &coordinate ) ||
+         FT_Load_Glyph( face, 2, FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) )
+      goto Exit;
+
+    FT_Outline_Get_CBox( &face->glyph->outline, &box );
+    if ( box.xMin != 100 + (FT_Pos)i * 50 ||
+         box.xMax != 200 + (FT_Pos)i * 50 ||
+         box.yMin != 0                    ||
+         box.yMax != 100                  )
+    {
+      fprintf( stderr, "Unexpected VARC variation-store outline\n" );
+      goto Exit;
+    }
+  }
+  ret = 0;
+
+Exit:
+  FT_Done_Face( face );
+  return ret;
+}
+
+
 int
 main( void )
 {
@@ -233,6 +278,7 @@ main( void )
 
   ret |= test_reset_without_axes( library, testdata_dir );
   ret |= test_value_conditions( library, testdata_dir );
+  ret |= test_variation_store( library, testdata_dir );
 
   FT_Done_FreeType( library );
   return ret;
