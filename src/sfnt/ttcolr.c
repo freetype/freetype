@@ -1874,45 +1874,78 @@
       alpha = face->palette[color_index].alpha;
     }
 
-    /* Reject pixel modes other than GRAY/MONO. */
-    if ( srcSlot->bitmap.pixel_mode != FT_PIXEL_MODE_GRAY &&
-         srcSlot->bitmap.pixel_mode != FT_PIXEL_MODE_MONO )
-      return FT_Err_Invalid_Glyph_Format;
-
     src = srcSlot->bitmap.buffer;
     dst = dstSlot->bitmap.buffer +
           dstSlot->bitmap.pitch * ( dstSlot->bitmap_top - srcSlot->bitmap_top ) +
           4 * ( srcSlot->bitmap_left - dstSlot->bitmap_left );
 
-    for ( y = 0; y < srcSlot->bitmap.rows; y++ )
+    switch ( srcSlot->bitmap.pixel_mode )
     {
-      for ( x = 0; x < srcSlot->bitmap.width; x++ )
-      {
-        int  aa = srcSlot->bitmap.pixel_mode == FT_PIXEL_MODE_MONO
-                    ? ( src[x >> 3] & ( 0x80 >> ( x & 7 ) ) ) ? 255 : 0
-                    : src[x];
-        int  fa = alpha * aa / 255;
+      case FT_PIXEL_MODE_GRAY:
+        for ( y = 0; y < srcSlot->bitmap.rows; y++ )
+        {
+          for ( x = 0; x < srcSlot->bitmap.width; x++ )
+          {
+            int  aa = src[x];
+            int  fa = alpha * aa / 255;
 
-        int  fb = b * fa / 255;
-        int  fg = g * fa / 255;
-        int  fr = r * fa / 255;
+            int  fb = b * fa / 255;
+            int  fg = g * fa / 255;
+            int  fr = r * fa / 255;
 
-        int  ba2 = 255 - fa;
+            int  ba2 = 255 - fa;
 
-        int  bb = dst[4 * x + 0];
-        int  bg = dst[4 * x + 1];
-        int  br = dst[4 * x + 2];
-        int  ba = dst[4 * x + 3];
+            int  bb = dst[4 * x + 0];
+            int  bg = dst[4 * x + 1];
+            int  br = dst[4 * x + 2];
+            int  ba = dst[4 * x + 3];
 
+            dst[4 * x + 0] = (FT_Byte)( bb * ba2 / 255 + fb );
+            dst[4 * x + 1] = (FT_Byte)( bg * ba2 / 255 + fg );
+            dst[4 * x + 2] = (FT_Byte)( br * ba2 / 255 + fr );
+            dst[4 * x + 3] = (FT_Byte)( ba * ba2 / 255 + fa );
+          }
 
-        dst[4 * x + 0] = (FT_Byte)( bb * ba2 / 255 + fb );
-        dst[4 * x + 1] = (FT_Byte)( bg * ba2 / 255 + fg );
-        dst[4 * x + 2] = (FT_Byte)( br * ba2 / 255 + fr );
-        dst[4 * x + 3] = (FT_Byte)( ba * ba2 / 255 + fa );
-      }
+          src += srcSlot->bitmap.pitch;
+          dst += dstSlot->bitmap.pitch;
+        }
+        break;
 
-      src += srcSlot->bitmap.pitch;
-      dst += dstSlot->bitmap.pitch;
+      case FT_PIXEL_MODE_MONO:
+        {
+          int  fb = b * alpha / 255;
+          int  fg = g * alpha / 255;
+          int  fr = r * alpha / 255;
+
+          int  ba2 = 255 - alpha;
+
+          for ( y = 0; y < srcSlot->bitmap.rows; y++ )
+          {
+            for ( x = 0; x < srcSlot->bitmap.width; x++ )
+            {
+              if ( src[x >> 3] & ( 0x80 >> ( x & 7 ) ) )
+              {
+                int  bb = dst[4 * x + 0];
+                int  bg = dst[4 * x + 1];
+                int  br = dst[4 * x + 2];
+                int  ba = dst[4 * x + 3];
+
+                dst[4 * x + 0] = (FT_Byte)( bb * ba2 / 255 + fb );
+                dst[4 * x + 1] = (FT_Byte)( bg * ba2 / 255 + fg );
+                dst[4 * x + 2] = (FT_Byte)( br * ba2 / 255 + fr );
+                dst[4 * x + 3] = (FT_Byte)( ba * ba2 / 255 + alpha );
+              }
+            }
+
+            src += srcSlot->bitmap.pitch;
+            dst += dstSlot->bitmap.pitch;
+          }
+        }
+        break;
+
+      default:
+        /* Reject pixel modes other than GRAY/MONO. */
+        return FT_Err_Invalid_Glyph_Format;
     }
 
     return FT_Err_Ok;
