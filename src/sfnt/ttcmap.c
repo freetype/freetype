@@ -17,6 +17,7 @@
 
 
 #include <freetype/internal/ftdebug.h>
+#include <freetype/ttnameid.h>
 
 #include "sferrors.h"                      /* must come before `ftvalid.h' */
 
