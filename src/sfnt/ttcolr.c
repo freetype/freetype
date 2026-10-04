@@ -1874,7 +1874,11 @@
       alpha = face->palette[color_index].alpha;
     }
 
-    /* XXX Convert if srcSlot.bitmap is not grey? */
+    /* Reject pixel modes other than GRAY/MONO. */
+    if ( srcSlot->bitmap.pixel_mode != FT_PIXEL_MODE_GRAY &&
+         srcSlot->bitmap.pixel_mode != FT_PIXEL_MODE_MONO )
+      return FT_Err_Invalid_Glyph_Format;
+
     src = srcSlot->bitmap.buffer;
     dst = dstSlot->bitmap.buffer +
           dstSlot->bitmap.pitch * ( dstSlot->bitmap_top - srcSlot->bitmap_top ) +
@@ -1884,7 +1888,9 @@
     {
       for ( x = 0; x < srcSlot->bitmap.width; x++ )
       {
-        int  aa = src[x];
+        int  aa = srcSlot->bitmap.pixel_mode == FT_PIXEL_MODE_MONO
+                    ? ( src[x >> 3] & ( 0x80 >> ( x & 7 ) ) ) ? 255 : 0
+                    : src[x];
         int  fa = alpha * aa / 255;
 
         int  fb = b * fa / 255;
