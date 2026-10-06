@@ -1499,7 +1499,9 @@
    *
    * @Note:
    *   See `ttinterp.h' for details on backward compatibility mode.
-   *   `Touches' the point.
+   *   `Touches' the point.  When both freedom and projection vectors
+   *   are aligned along the axes, the moves are handled by simplified
+   *   versions of this function; more complex moves are handled here.
    */
   static void
   Direct_Move( TT_ExecContext  exc,
@@ -1514,10 +1516,10 @@
     if ( v != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      /* Exception to the post-IUP curfew: Allow the x component of */
-      /* diagonal moves, but only post-IUP.  DejaVu tries to adjust */
-      /* diagonal stems like on `Z' and `z' post-IUP.               */
-      if ( !exc->backward_compatibility )
+      /* See `ttinterp.h' for details on backward compatibility mode.   */
+      /* Exception for horizontal projection is made for Comic Sans MS. */
+      if ( !exc->backward_compatibility ||
+           exc->GS.projVector.y == 0    )
 #endif
         zone->cur[point].x = ADD_LONG( zone->cur[point].x,
                                        FT_MulFix( distance, v ) );
@@ -1529,8 +1531,10 @@
     if ( v != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      /* See `ttinterp.h' for details on backward compatibility mode. */
-      if ( exc->backward_compatibility != 0x7 )
+      /* See `ttinterp.h' for details on backward compatibility mode.   */
+      /* Exception for horizontal projection is made for Comic Sans MS. */
+      if ( exc->backward_compatibility != 0x7 ||
+           exc->GS.projVector.y == 0          )
 #endif
         zone->cur[point].y = ADD_LONG( zone->cur[point].y,
                                        FT_MulFix( distance, v ) );

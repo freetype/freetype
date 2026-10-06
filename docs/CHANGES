@@ -33,7 +33,8 @@ CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Mmm-DD)
     CVT cut-in, minimum distance, and composite glyph positioning.
 
     These changes improve  the rendering of fonts such  as 'Segoe UI',
-    'Calibri', 'Corbel', 'Constantia', 'Malgun Gothic', and 'SimSun'.
+    'Calibri', 'Corbel', 'Constantia', 'Malgun Gothic', 'SimSun',  and
+    'Comic Sans MS'.
 
 
   II. IMPORTANT BUG FIXES
