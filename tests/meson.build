@@ -64,4 +64,31 @@ test('issue-1469',
   timeout: 180,
 )
 
+###
+
+if harfbuzz_opt == 'YES' or harfbuzz_opt == 'dynamic'
+  issue_1441_c_args = []
+  if harfbuzz_opt == 'dynamic'
+    issue_1441_c_args += ['-DTEST_DYNAMIC_HARFBUZZ']
+  endif
+
+  issue_1441_fonts = custom_target('issue-1441-fonts',
+    output: ['issue-1441-latin.ttf', 'issue-1441-mixed.ttf'],
+    command: [python_exe, files('issue-1441/make-fonts.py'), '@OUTPUT@'],
+  )
+
+  test_issue_1441 = executable('issue-1441',
+    files('issue-1441/main.c'),
+    dependencies: freetype_dep,
+    c_args: issue_1441_c_args,
+  )
+
+  test('issue-1441',
+    test_issue_1441,
+    depends: issue_1441_fonts,
+    args: [issue_1441_fonts[0], issue_1441_fonts[1]],
+    suite: 'regression',
+  )
+endif
+
 # EOF
