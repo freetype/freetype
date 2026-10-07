@@ -423,9 +423,19 @@
     CF2_UInt  delta;
     CF2_UInt  base;
     CF2_UInt  i, j;
-    CF2_UInt  numOperands = (CF2_UInt)( numBlends * blend->lenBV );
+    CF2_UInt  numOperands;
     CF2_UInt  count       = cf2_stack_count( opStack );
 
+
+    /* `numBlends' comes from the charstring and is attacker-controlled.  */
+    /* Check for overflow before multiplying: a wrapped `numOperands'     */
+    /* would bypass the stack underflow check below and the loop that     */
+    /* follows would then run up to 2^32 iterations (CPU exhaustion).     */
+    if ( blend->lenBV == 0 ||
+         numBlends > count / blend->lenBV )
+      return FT_THROW( Stack_Underflow );
+
+    numOperands = numBlends * blend->lenBV;  /* cannot overflow here */
 
     if ( numOperands > count )
       return FT_THROW( Stack_Underflow );
