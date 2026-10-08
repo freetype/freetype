@@ -423,10 +423,15 @@
     CF2_UInt  delta;
     CF2_UInt  base;
     CF2_UInt  i, j;
-    CF2_UInt  numOperands = (CF2_UInt)( numBlends * blend->lenBV );
-    CF2_UInt  count       = cf2_stack_count( opStack );
+    CF2_UInt  numOperands;
+    CF2_UInt  count = cf2_stack_count( opStack );
 
 
+    if ( blend->lenBV == 0                ||
+         numBlends > count / blend->lenBV )
+      return FT_THROW( Stack_Underflow );
+
+    numOperands = numBlends * blend->lenBV;  /* cannot overflow here */
     if ( numOperands > count )
       return FT_THROW( Stack_Underflow );
 
