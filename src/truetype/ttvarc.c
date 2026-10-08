@@ -820,7 +820,7 @@
                                             (FT_UInt32)(*p)[3]         );
 
 
-              component->axis_values[i++] = (FT_Fixed)( val * 4 );
+              component->axis_values[i++] = (FT_Fixed)MUL_INT32( val, 4 );
               *p += 4;
             }
           }
@@ -3460,7 +3460,7 @@
               if ( v >= 0 )
                 v = ( v + 2 ) & ~(FT_Fixed)3;
               else
-                v = -( ( -v + 2 ) & ~(FT_Fixed)3 );
+                v = NEG_LONG( ( NEG_LONG( v ) + 2 ) & ~(FT_Fixed)3 );
 
               new_coords[axis_idx] = v;
               FT_TRACE7(( "    axis %u: %.5f\n",
