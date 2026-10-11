@@ -1,4 +1,4 @@
-CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Mmm-DD)
+CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Oct-12)
 
   I. IMPORTANT CHANGES
 
@@ -47,6 +47,8 @@ CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Mmm-DD)
   III. MISCELLANEOUS
 
   - The PFR driver returned wrong kerning values in some cases.
+
+  - A port to the Plan 9 operating system is now available.
 
 
 ======================================================================
