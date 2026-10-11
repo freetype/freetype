@@ -512,13 +512,14 @@
     CID_FaceInfo   cid    = &face->cid;
     FT_Memory      memory = face->root.memory;
     FT_Stream      stream = face->cid_stream;
+    PSAux_Service  psaux  = (PSAux_Service)face->psaux;
     FT_Error       error;
+
     FT_UInt        n;
     CID_Subrs      subr;
     FT_UInt        max_offsets = 0;
-    FT_ULong*      offsets = NULL;
-    FT_ULong       cum_len = 0;
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    FT_ULong*      offsets     = NULL;
+    FT_ULong       cum_len     = 0;
 
 
     if ( FT_NEW_ARRAY( face->subrs, cid->num_dicts ) )

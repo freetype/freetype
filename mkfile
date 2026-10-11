@@ -1,9 +1,9 @@
 # mkfile for Plan 9 from Bell Labs
 #
 # See builds/plan9/README for usage.
-# 
+#
 # Copyright (C) 2026 by Yaroslav Kolomiiets.
-# 
+#
 # This file is part of the FreeType project, and may only be used,
 # modified, and distributed under the terms of the FreeType project
 # license, LICENSE.TXT.  By continuing to use, modify, or distribute

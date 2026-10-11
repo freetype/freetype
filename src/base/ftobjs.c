@@ -4773,7 +4773,7 @@
     FT_Error     error = FT_Err_Ok;
     FT_Face      face  = slot->face;
     FT_Renderer  renderer;
-    FT_ListNode  node = NULL;
+    FT_ListNode  node  = NULL;
 
 
     /* try to render colored glyph layers as a special case */
@@ -4867,7 +4867,7 @@
            FT_ERR_NEQ( error, Cannot_Render_Glyph ) )
         break;
 
-      /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */
+      /* `FT_Err_Cannot_Render_Glyph` is returned if the render mode */
       /* is unsupported by the current renderer for this glyph image */
       /* format.                                                     */
 
