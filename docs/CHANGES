@@ -23,7 +23,7 @@ CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Oct-12)
     above 40 ppem.
 
   - An  experimental  HVF  driver   has  been  contributed  by  Apple,
-    currently available on macOS only.
+    currently available on Apple platforms (macOS, iOS, etc.) only.
 
   - The  TrueType   version  40  interpreter  got   several  ClearType
     rendering  improvements.   It  now   better  honors  'gasp'  table

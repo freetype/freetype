@@ -180,8 +180,8 @@ How to prepare a new release
                     $FT2DEMOS_SIGNATURES \
                     $FTDOC_SIGNATURES"
 
-    scp -O $PACKAGE_LIST $SIGNATURE_LIST \
-      $SAVANNAH_USER@dl.sv.nongnu.org:/releases/freetype/
+    scp $PACKAGE_LIST $SIGNATURE_LIST \
+      $SAVANNAH_USER@download.savannah.nongnu.org:/srv/download/freetype/
 
     echo $sourceforge_password | sshpass \
       rsync -avP -e ssh $FREETYPE_PACKAGES $FREETYPE_SIGNATURES \
