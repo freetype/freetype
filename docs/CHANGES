@@ -1,3 +1,14 @@
+CHANGES BETWEEN 2.15.0 and 2.15.1 (YYYY-MMM-DD)
+
+  I. MISCELLANEOUS
+
+  - The  configuration  option  'TT_CONFIG_OPTION_NO_BORING_EXPANSION'
+    has been removed since FreeType now supports ISO Open Font Format,
+    Edition 5.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.14.3 and 2.15.0 (2026-Oct-12)
 
   I. IMPORTANT CHANGES
