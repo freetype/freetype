@@ -2642,6 +2642,14 @@
     if ( error )
       goto Exit;
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* The incremental interface accepts glyph indices beyond   */
+    /* `num_glyphs`, but the `hdmx` records only cover the font */
+    /* glyphs; use the scaled advance for the others.           */
+    if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
+      loader.widthp = NULL;
+#endif
+
     /* done if we are only interested in the `hdmx` advance */
     if ( load_flags & FT_LOAD_ADVANCE_ONLY         &&
          !( load_flags & FT_LOAD_VERTICAL_LAYOUT ) &&
