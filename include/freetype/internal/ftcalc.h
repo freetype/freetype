@@ -77,8 +77,8 @@ FT_BEGIN_HEADER
 #endif /* FT_INT64 */
 
 
-#define ULABS( a )  ( a >= 0 ? (FT_ULong)a : 0UL - (FT_ULong)a )
-#define  UABS( a )  ( a >= 0 ?  (FT_UInt)a : 0U  -  (FT_UInt)a )
+#define ULABS( a )  ( (a) >= 0 ? (FT_ULong)(a) : 0UL - (FT_ULong)(a) )
+#define  UABS( a )  ( (a) >= 0 ?  (FT_UInt)(a) : 0U  -  (FT_UInt)(a) )
 
 
   /**************************************************************************
