@@ -276,10 +276,7 @@
 
     /* round theta to acknowledge its error that mostly comes */
     /* from accumulated rounding errors in the arctan table   */
-    if ( theta >= 0 )
-      theta = FT_PAD_ROUND( theta, 16 );
-    else
-      theta = -FT_PAD_ROUND( -theta, 16 );
+    theta = ( theta - ( theta < 0 ) + 8 ) & ~0xF;
 
     vec->x = x;
     vec->y = theta;
