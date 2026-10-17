@@ -264,16 +264,14 @@
     /* the shift off y's dependency chain.                            */
     for ( i = 1, b = 1; i < FT_TRIG_MAX_ITERS; b <<= 1, i++ )
     {
-      FT_Fixed  m  = -(FT_Fixed)( y > 0 );
-      FT_Fixed  dy = ( y + b ) >> i;
-      FT_Fixed  dx = ( x + b ) >> i;
-      FT_Fixed  a  = *arctanptr++;
+      FT_Fixed  m = -(FT_Fixed)( y < 0 );
+      FT_Fixed  a = *arctanptr++;
 
 
-      xtemp = x - ( ( dy ^ m ) - m );
-      y     = y + ( ( dx ^ m ) - m );
+      xtemp = x + ( ( ( y ^ m ) + b ) >> i );
+      y     = y - ( ( ( x ^ m ) + b ) >> i );
       x     = xtemp;
-      theta = theta - ( ( a ^ m ) - m );
+      theta = theta + ( ( a ^ m ) - m );
     }
 
     /* round theta to acknowledge its error that mostly comes */
