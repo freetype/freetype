@@ -413,7 +413,7 @@
 
     FT_TRACE2(( "loaded\n" ));
 
-    if ( axisCount != (FT_Long)blend->mmvar->num_axis )
+    if ( axisCount != (FT_Long)blend->num_axis )
     {
       FT_TRACE2(( "ft_var_load_avar:"
                   " number of axes in `avar' and `fvar'\n" ));
@@ -571,7 +571,7 @@
          FT_READ_USHORT( region_count ) )
       goto Exit;
 
-    if ( axis_count != (FT_Long)blend->mmvar->num_axis )
+    if ( axis_count != (FT_Long)blend->num_axis )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " number of axes in item variation store\n" ));

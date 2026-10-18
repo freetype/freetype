@@ -15,6 +15,12 @@ test('issue-1063',
 
 ###
 
+varc_hvvar_fonts = custom_target('varc-hvvar-fonts',
+  input: files('data/varc-static-gvar.ttf'),
+  output: ['varc-static-hvar.ttf', 'varc-static-vvar.ttf'],
+  command: [python_exe, files('varc/make-hvvar-fonts.py'), '@INPUT@', '@OUTPUT@'],
+)
+
 test_varc = executable('varc',
   files([ 'varc/main.c' ]),
   dependencies: freetype_dep,
@@ -23,6 +29,8 @@ test_varc = executable('varc',
 test('varc',
   test_varc,
   env: test_env,
+  depends: varc_hvvar_fonts,
+  args: [varc_hvvar_fonts[0], varc_hvvar_fonts[1]],
   suite: 'regression')
 
 ###

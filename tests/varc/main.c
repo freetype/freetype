@@ -29,8 +29,11 @@ test_font( FT_Library       library,
   int  ret = 1;
 
 
-  snprintf( filepath, sizeof ( filepath ), "%s/%s",
-            testdata_dir, test_font->filename );
+  if ( testdata_dir )
+    snprintf( filepath, sizeof ( filepath ), "%s/%s",
+              testdata_dir, test_font->filename );
+  else
+    snprintf( filepath, sizeof ( filepath ), "%s", test_font->filename );
 
   if ( FT_New_Face( library, filepath, 0, &face ) )
   {
@@ -244,7 +247,8 @@ Exit:
 
 
 int
-main( void )
+main( int     argc,
+      char**  argv )
 {
   static const TestFont  test_fonts[] =
   {
@@ -275,6 +279,16 @@ main( void )
         i < sizeof ( test_fonts ) / sizeof ( test_fonts[0] );
         i++ )
     ret |= test_font( library, testdata_dir, &test_fonts[i] );
+
+  /* Generated HVAR/VVAR fixtures retain the static gvar font's outline. */
+  for ( i = 1; i < (FT_UInt)argc; i++ )
+  {
+    TestFont  font = { NULL, 1, 3, 50, 3, 0 };
+
+
+    font.filename = argv[i];
+    ret |= test_font( library, NULL, &font );
+  }
 
   ret |= test_reset_without_axes( library, testdata_dir );
   ret |= test_value_conditions( library, testdata_dir );
