@@ -163,9 +163,8 @@
              FT_Long  b_,
              FT_Long  c_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt64  a, b, c, d;
-    FT_Long    d_;
 
 
     FT_MOVE_SIGN( FT_UInt64, a_, a, s );
@@ -175,9 +174,7 @@
     d = c > 0 ? ( a * b + ( c >> 1 ) ) / c
               : 0x7FFFFFFFUL;
 
-    d_ = (FT_Long)d;
-
-    return s < 0 ? NEG_LONG( d_ ) : d_;
+    return MUL_LONG( s, d );
   }
 
 
@@ -188,9 +185,8 @@
                       FT_Long  b_,
                       FT_Long  c_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt64  a, b, c, d;
-    FT_Long    d_;
 
 
     FT_MOVE_SIGN( FT_UInt64, a_, a, s );
@@ -200,9 +196,7 @@
     d = c > 0 ? a * b / c
               : 0x7FFFFFFFUL;
 
-    d_ = (FT_Long)d;
-
-    return s < 0 ? NEG_LONG( d_ ) : d_;
+    return MUL_LONG( s, d );
   }
 
 
@@ -233,9 +227,8 @@
   FT_DivFix( FT_Long  a_,
              FT_Long  b_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt64  a, b, q;
-    FT_Long    q_;
 
 
     FT_MOVE_SIGN( FT_UInt64, a_, a, s );
@@ -244,9 +237,7 @@
     q = b > 0 ? ( ( a << 16 ) + ( b >> 1 ) ) / b
               : 0x7FFFFFFFUL;
 
-    q_ = (FT_Long)q;
-
-    return s < 0 ? NEG_LONG( q_ ) : q_;
+    return MUL_LONG( s, q );
   }
 
 
@@ -394,7 +385,7 @@
              FT_Long  b_,
              FT_Long  c_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt32  a, b, c;
 
 
@@ -427,9 +418,7 @@
                            : ft_div64by32( temp.hi, temp.lo, c );
     }
 
-    a_ = (FT_Long)a;
-
-    return s < 0 ? NEG_LONG( a_ ) : a_;
+    return MUL_LONG( s, a );
   }
 
 
@@ -438,7 +427,7 @@
                       FT_Long  b_,
                       FT_Long  c_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt32  a, b, c;
 
 
@@ -466,9 +455,7 @@
                            : ft_div64by32( temp.hi, temp.lo, c );
     }
 
-    a_ = (FT_Long)a;
-
-    return s < 0 ? NEG_LONG( a_ ) : a_;
+    return MUL_LONG( s, a );
   }
 
 
@@ -539,7 +526,7 @@
 
 #else /* 0 */
 
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt32  a, b;
 
 
@@ -559,9 +546,7 @@
           ( ( al * ( b & 0xFFFFUL ) + 0x8000UL ) >> 16 );
     }
 
-    a_ = (FT_Long)a;
-
-    return s < 0 ? NEG_LONG( a_ ) : a_;
+    return MUL_LONG( s, a );
 
 #endif /* 0 */
 
@@ -574,9 +559,8 @@
   FT_DivFix( FT_Long  a_,
              FT_Long  b_ )
   {
-    FT_Int     s = 1;
+    FT_Long    s = 1;
     FT_UInt32  a, b, q;
-    FT_Long    q_;
 
 
     /* XXX: this function does not allow 64-bit arguments */
@@ -609,9 +593,7 @@
       q = ft_div64by32( temp.hi, temp.lo, b );
     }
 
-    q_ = (FT_Long)q;
-
-    return s < 0 ? NEG_LONG( q_ ) : q_;
+    return MUL_LONG( s, q );
   }
 
 
