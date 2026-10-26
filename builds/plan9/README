@@ -15,11 +15,11 @@ It produces a library to link against as ../../libfreetype.a𝑂 archive.
 To integrate with your code, add to your mkfile:
 
 FTDIR=/your/path/to/freetype
-LIB=$LIBDIR/libfreetype.a$O
-LIBHFILES=$LIBDIR/builds/plan9/p9ftopt.h
+LIB=$FTDIR/libfreetype.a$O
+LIBHFILES=$FTDIR/builds/plan9/p9ftopt.h
 HFILES=$HFILES $LIBHFILES
 
-CFLAGS=$CFLAGS -p -I$LIBDIR/builds/plan9 -I$LIBDIR/include \
+CFLAGS=$CFLAGS -p -I$FTDIR/builds/plan9 -I$FTDIR/include \
 	-D'FT_CONFIG_OPTIONS_H=<p9ftopt.h>' \
 	-D'FT_CONFIG_STANDARD_LIBRARY_H=<p9lib.h>' \
 
