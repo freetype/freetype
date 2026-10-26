@@ -771,8 +771,8 @@
     FT_UInt32  x, y, u, v, l;
 
 
-    FT_MOVE_SIGN( FT_UInt32, vector->x, x, sx );
-    FT_MOVE_SIGN( FT_UInt32, vector->y, y, sy );
+    FT_MOVE_SIGN( FT_UInt32, (FT_Int32)vector->x, x, sx );
+    FT_MOVE_SIGN( FT_UInt32, (FT_Int32)vector->y, y, sy );
 
     /* trivial cases */
     if ( x == 0 )
