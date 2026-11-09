@@ -927,7 +927,7 @@
 
           while ( p < limit_p )
           {
-            FT_MEM_COPY( q, p, pitch );
+            FT_MEM_COPY( q, p, target->width * 4 );
 
             p += pitch;
             q += new_pitch;

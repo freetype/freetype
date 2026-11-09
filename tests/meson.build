@@ -1,6 +1,15 @@
 test_env = ['FREETYPE_TESTS_DATA_DIR='
             + join_paths(meson.current_source_dir(), 'data')]
 
+test_bitmap_blend = executable('bitmap-blend',
+  files('bitmap-blend/main.c'),
+  dependencies: freetype_dep,
+)
+
+test('bitmap-blend',
+  test_bitmap_blend,
+  suite: 'regression')
+
 ###
 
 test_issue_1063 = executable('issue-1063',
