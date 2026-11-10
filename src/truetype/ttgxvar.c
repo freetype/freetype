@@ -585,7 +585,16 @@
       goto Exit;
     itemStore->regionCount = region_count;
 
-    if ( FT_FRAME_ENTER( (FT_Long)region_count * axis_count * 6 ) )
+    /* a wrapped frame length would under-size the frame below */
+    if ( axis_count && region_count > FT_ULONG_MAX / 6 / axis_count )
+    {
+      FT_TRACE2(( "tt_var_load_item_variation_store:"
+                  " too large variation region list\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    if ( FT_FRAME_ENTER( (FT_ULong)region_count * axis_count * 6 ) )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " not enough data for variation regions\n" ));
