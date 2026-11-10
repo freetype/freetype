@@ -857,7 +857,8 @@ typedef short ResourceIndex;
     if ( noErr != FSRefMakePath( &par_ref, path_lwfn, path_size ) )
       return FT_THROW( Invalid_Argument );
 
-    if ( ft_strlen( (char *)path_lwfn ) + 1 + base_lwfn[0] > path_size )
+    if ( (size_t)path_size <=
+           ft_strlen( (char *)path_lwfn ) + 1 + base_lwfn[0] )
       return FT_THROW( Invalid_Argument );
 
     /* now we have absolute dirname in path_lwfn */
@@ -867,6 +868,13 @@ typedef short ResourceIndex;
       ft_strcat( (char *)path_lwfn, ":" );
 
     dirname_len = ft_strlen( (char *)path_lwfn );
+
+    /* Guard: `base_lwfn` is a Pascal string (length byte + data).   */
+    /* If the data is not NUL-terminated within its declared length, */
+    /* `ft_strcat` would read past the buffer.                       */
+    if ( ft_strlen( (char *)base_lwfn + 1 ) > (size_t)base_lwfn[0] )
+      return FT_THROW( Invalid_Argument );
+
     ft_strcat( (char *)path_lwfn, (char *)base_lwfn + 1 );
     path_lwfn[dirname_len + base_lwfn[0]] = '\0';
 
@@ -1058,6 +1066,13 @@ typedef short ResourceIndex;
           size_p = p;   /* save for later */
           p += 4;       /* make space for size field */
         }
+      }
+
+      /* Guard: the PFB chunk size must fit in the remaining buffer */
+      if ( post_size > total_size )
+      {
+        error = FT_ERR( Array_Too_Large );
+        goto Error;
       }
 
       ft_memcpy( p, *post_data + 2, post_size );
