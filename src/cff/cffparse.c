@@ -182,16 +182,16 @@
   static FT_Fixed
   cff_parse_real( FT_Byte*  start,
                   FT_Byte*  limit,
-                  FT_Long   power_ten,
-                  FT_Long*  scaling )
+                  FT_Int    exponent_add,
+                  FT_Int*   scaling )
   {
     FT_Byte*  p = start;
     FT_Int    nib;
     FT_UInt   phase = 4;
 
-    FT_Long   result = 0, number = 0, exponent = 0;
-    FT_Long   sign = 1, exponent_sign = 1;
-    FT_Long   exponent_add = 0, integer_length = 0, fraction_length = 0;
+    FT_Long   result = 0, number = 0, sign = 1;
+    FT_Int    exponent = 0, exponent_sign = 1;
+    FT_Int    integer_length = 0, fraction_length = 0;
 
 
     if ( scaling )
@@ -310,7 +310,7 @@
       goto Overflow;
 
     /* We don't check `power_ten' and `exponent_add'. */
-    exponent += power_ten + exponent_add;
+    exponent += exponent_add;
 
     if ( scaling )
     {
@@ -477,7 +477,7 @@
   static FT_Fixed
   do_fixed( CFF_Parser  parser,
             FT_Byte**   d,
-            FT_Long     scaling )
+            FT_Int      scaling )
   {
     if ( **d == 30 )
       return cff_parse_real( *d, parser->limit, scaling, NULL );
@@ -549,7 +549,7 @@
   static FT_Fixed
   cff_parse_fixed_scaled( CFF_Parser  parser,
                           FT_Byte**   d,
-                          FT_Long     scaling )
+                          FT_Int      scaling )
   {
     return do_fixed( parser, d, scaling );
   }
@@ -561,7 +561,7 @@
   static FT_Fixed
   cff_parse_fixed_dynamic( CFF_Parser  parser,
                            FT_Byte**   d,
-                           FT_Long*    scaling )
+                           FT_Int*     scaling )
   {
     FT_ASSERT( scaling );
 
@@ -614,9 +614,9 @@
     if ( parser->top >= parser->stack + 6 )
     {
       FT_Fixed  values[6];
-      FT_Long   scalings[6];
+      FT_Int    scalings[6];
 
-      FT_Long  min_scaling, max_scaling;
+      FT_Int   min_scaling = FT_INT_MAX, max_scaling = FT_INT_MIN;
       int      i;
 
 
@@ -627,9 +627,6 @@
       /* loss of precision, we use the magnitude of the largest matrix     */
       /* element to scale all other elements.  The scaling factor is then  */
       /* contained in the `units_per_em' value.                            */
-
-      max_scaling = FT_LONG_MIN;
-      min_scaling = FT_LONG_MAX;
 
       for ( i = 0; i < 6; i++ )
       {
@@ -649,7 +646,7 @@
            ( max_scaling - min_scaling ) > 9 )
       {
         FT_TRACE1(( "cff_parse_font_matrix:"
-                    " strange scaling values (minimum %ld, maximum %ld),\n",
+                    " strange scaling values (minimum %d, maximum %d),\n",
                     min_scaling, max_scaling ));
         FT_TRACE1(( "                      "
                     " using default matrix\n" ));
