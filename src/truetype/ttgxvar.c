@@ -585,7 +585,8 @@
       goto Exit;
     itemStore->regionCount = region_count;
 
-    /* a wrapped frame length would under-size the frame below */
+    /* a wrapped frame length would under-size the frame below, */
+    /* only *after* multiplication by 6                         */
     if ( region_count * axis_count > FT_ULONG_MAX / 6 )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
@@ -594,7 +595,7 @@
       goto Exit;
     }
 
-    if ( FT_FRAME_ENTER( (FT_ULong)region_count * axis_count * 6 ) )
+    if ( FT_FRAME_ENTER( region_count * axis_count * 6UL ) )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " not enough data for variation regions\n" ));
