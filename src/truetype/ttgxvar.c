@@ -586,7 +586,7 @@
     itemStore->regionCount = region_count;
 
     /* a wrapped frame length would under-size the frame below */
-    if ( axis_count && region_count > FT_ULONG_MAX / 6 / axis_count )
+    if ( axis_count && region_count * axis_count > FT_ULONG_MAX / 6 )
     {
       FT_TRACE2(( "tt_var_load_item_variation_store:"
                   " too large variation region list\n" ));
