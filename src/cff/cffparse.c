@@ -187,28 +187,17 @@
   {
     FT_Byte*  p = start;
     FT_Int    nib;
-    FT_UInt   phase;
+    FT_UInt   phase = 4;
 
-    FT_Long   result, number, exponent;
-    FT_Int    sign = 0, exponent_sign = 0, have_overflow = 0;
-    FT_Long   exponent_add, integer_length, fraction_length;
+    FT_Long   result = 0, number = 0, exponent = 0;
+    FT_Long   sign = 1, exponent_sign = 1;
+    FT_Long   exponent_add = 0, integer_length = 0, fraction_length = 0;
 
 
     if ( scaling )
       *scaling = 0;
 
-    result = 0;
-
-    number   = 0;
-    exponent = 0;
-
-    exponent_add    = 0;
-    integer_length  = 0;
-    fraction_length = 0;
-
     /* First of all, read the integer part. */
-    phase = 4;
-
     for (;;)
     {
       /* If we entered this iteration with phase == 4, we need to */
@@ -223,11 +212,11 @@
       }
 
       /* Get the nibble. */
-      nib   = (FT_Int)( p[0] >> phase ) & 0xF;
-      phase = 4 - phase;
+      nib    = (FT_Int)( p[0] >> phase ) & 0xF;
+      phase ^= 4;
 
       if ( nib == 0xE )
-        sign = 1;
+        sign = -1;
       else if ( nib > 9 )
         break;
       else
@@ -260,8 +249,8 @@
         }
 
         /* Get the nibble. */
-        nib   = ( p[0] >> phase ) & 0xF;
-        phase = 4 - phase;
+        nib    = ( p[0] >> phase ) & 0xF;
+        phase ^= 4;
         if ( nib >= 10 )
           break;
 
@@ -279,7 +268,7 @@
     /* Read exponent, if any. */
     if ( nib == 12 )
     {
-      exponent_sign = 1;
+      exponent_sign = -1;
       nib           = 11;
     }
 
@@ -299,32 +288,26 @@
         }
 
         /* Get the nibble. */
-        nib   = ( p[0] >> phase ) & 0xF;
-        phase = 4 - phase;
+        nib    = ( p[0] >> phase ) & 0xF;
+        phase ^= 4;
         if ( nib >= 10 )
           break;
 
         /* Arbitrarily limit exponent. */
-        if ( exponent > 1000 )
-          have_overflow = 1;
-        else
+        if ( exponent < 204 )
           exponent = exponent * 10 + nib;
       }
 
-      if ( exponent_sign )
-        exponent = -exponent;
+      exponent *= exponent_sign;
     }
 
     if ( !number )
       goto Exit;
 
-    if ( have_overflow )
-    {
-      if ( exponent_sign )
-        goto Underflow;
-      else
-        goto Overflow;
-    }
+    if ( exponent < -204 )
+      goto Underflow;
+    else if ( exponent > 204 )
+      goto Overflow;
 
     /* We don't check `power_ten' and `exponent_add'. */
     exponent += power_ten + exponent_add;
@@ -431,8 +414,7 @@
     }
 
   Exit:
-    if ( sign )
-      result = -result;
+    result *= sign;
 
     return result;
 
