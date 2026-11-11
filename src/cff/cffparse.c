@@ -375,7 +375,7 @@
       }
       else
       {
-        if ( ( number / power_tens[fraction_length - 5] ) > 0x7FFFL )
+        if ( ( number >> 15 ) >= power_tens[fraction_length - 5] )
         {
           result   = FT_DivFix( number, power_tens[fraction_length - 4] );
           *scaling = exponent - 4;
@@ -414,7 +414,7 @@
       /* Convert into 16.16 format. */
       if ( fraction_length > 0 )
       {
-        if ( ( number / power_tens[fraction_length] ) > 0x7FFFL )
+        if ( ( number >> 15 ) >= power_tens[fraction_length] )
           goto Exit;
 
         result = FT_DivFix( number, power_tens[fraction_length] );
