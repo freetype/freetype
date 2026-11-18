@@ -190,14 +190,13 @@
     FT_UInt   phase = 4;
 
     FT_Long   result = 0, number = 0, sign = 1;
-    FT_Int    exponent = 0, exponent_sign = 1;
-    FT_Int    integer_length = 0, fraction_length = 0;
+    FT_Int    frac = 0, exponent = 0, exponent_sign = 1;
 
 
     if ( scaling )
       *scaling = 0;
 
-    /* First of all, read the integer part. */
+    /* Read mantissa */
     for (;;)
     {
       /* If we entered this iteration with phase == 4, we need to */
@@ -215,64 +214,32 @@
       nib    = (FT_Int)( p[0] >> phase ) & 0xF;
       phase ^= 4;
 
-      if ( nib == 0xE )
+      if ( nib < 0xA )
+      {
+        if ( number < 0xCCCCCCCL )
+        {
+          number = number * 10 + nib;
+          exponent_add -= frac;
+        }
+        else
+          exponent_add += !frac;
+      }
+      else if ( nib == 0xE )
         sign = -1;
-      else if ( nib > 9 )
-        break;
+      else if ( nib == 0xA )
+        frac = 1;
       else
-      {
-        /* Increase exponent if we can't add the digit. */
-        if ( number >= 0xCCCCCCCL )
-          exponent_add++;
-        /* Skip leading zeros. */
-        else if ( nib || number )
-        {
-          integer_length++;
-          number = number * 10 + nib;
-        }
-      }
+        break;
     }
-
-    /* Read fraction part, if any. */
-    if ( nib == 0xA )
-      for (;;)
-      {
-        /* If we entered this iteration with phase == 4, we need */
-        /* to read a new byte.                                   */
-        if ( phase )
-        {
-          p++;
-
-          /* Make sure we don't read past the end. */
-          if ( p + 1 > limit && limit >= p )
-            goto Bad;
-        }
-
-        /* Get the nibble. */
-        nib    = ( p[0] >> phase ) & 0xF;
-        phase ^= 4;
-        if ( nib >= 10 )
-          break;
-
-        /* Skip leading zeros if possible. */
-        if ( !nib && !number )
-          exponent_add--;
-        /* Only add digit if we don't overflow. */
-        else if ( number < 0xCCCCCCCL && fraction_length < 9 )
-        {
-          fraction_length++;
-          number = number * 10 + nib;
-        }
-      }
 
     /* Read exponent, if any. */
-    if ( nib == 12 )
+    if ( nib == 0xC )
     {
       exponent_sign = -1;
-      nib           = 11;
+      nib           = 0xB;
     }
 
-    if ( nib == 11 )
+    if ( nib == 0xB )
     {
       for (;;)
       {
@@ -290,128 +257,66 @@
         /* Get the nibble. */
         nib    = ( p[0] >> phase ) & 0xF;
         phase ^= 4;
-        if ( nib >= 10 )
+        if ( nib > 9 )
           break;
 
         /* Arbitrarily limit exponent. */
-        if ( exponent < 204 )
+        if ( exponent + exponent_add < 204 && exponent - exponent_add < 204 )
           exponent = exponent * 10 + nib;
       }
 
       exponent *= exponent_sign;
     }
 
+    exponent += exponent_add;
+
     if ( !number )
       goto Exit;
 
-    if ( exponent < -204 )
-      goto Underflow;
-    else if ( exponent > 204 )
-      goto Overflow;
-
-    /* We don't check `power_ten' and `exponent_add'. */
-    exponent += exponent_add;
-
     if ( scaling )
     {
-      /* Only use `fraction_length'. */
-      fraction_length += integer_length;
-      exponent        += integer_length;
-
-      if ( fraction_length <= 5 )
+      if ( number < 0x8000 )
+        result = number << 16;
+      else if ( number < 327679794 )
       {
-        if ( number > 0x7FFFL )
-        {
-          result   = FT_DivFix( number, 10 );
-          *scaling = exponent - fraction_length + 1;
-        }
-        else
-        {
-          if ( exponent > 0 )
-          {
-            FT_Long  new_fraction_length, shift;
-
-
-            /* Make `scaling' as small as possible. */
-            new_fraction_length = FT_MIN( exponent, 5 );
-            shift               = new_fraction_length - fraction_length;
-
-            if ( shift > 0 )
-            {
-              exponent -= new_fraction_length;
-              number   *= power_tens[shift];
-              if ( number > 0x7FFFL )
-              {
-                number   /= 10;
-                exponent += 1;
-              }
-            }
-            else
-              exponent -= fraction_length;
-          }
-          else
-            exponent -= fraction_length;
-
-          result   = (FT_Long)( (FT_ULong)number << 16 );
-          *scaling = exponent;
-        }
+        result    = FT_MulFix( number, 429497 );
+        exponent += 4;
       }
       else
       {
-        if ( ( number >> 15 ) >= power_tens[fraction_length - 5] )
-        {
-          result   = FT_DivFix( number, power_tens[fraction_length - 4] );
-          *scaling = exponent - 4;
-        }
-        else
-        {
-          result   = FT_DivFix( number, power_tens[fraction_length - 5] );
-          *scaling = exponent - 5;
-        }
+        result    = FT_MulFix( number, 42950 );
+        exponent += 5;
       }
+
+      *scaling = exponent;
     }
     else
     {
-      integer_length  += exponent;
-      fraction_length -= exponent;
 
-      if ( integer_length > 5 )
+      if ( exponent > 9 )
         goto Overflow;
-      if ( integer_length < -5 )
-        goto Underflow;
-
-      /* Remove non-significant digits. */
-      if ( integer_length < 0 )
+      else if ( exponent >= 0 )
       {
-        number          /= power_tens[-integer_length];
-        fraction_length += integer_length;
+        if ( number > power_ten_limits[exponent] )
+          goto Overflow;
+        else
+          result = number * power_tens[exponent];
       }
-
-      /* this can only happen if exponent was non-zero */
-      if ( fraction_length == 10 )
+      else if ( exponent >= -9 )
       {
-        number          /= 10;
-        fraction_length -= 1;
-      }
+        const FT_Long  magick[] = { 4, 43, 429,
+                                    4295, 42950, 429497,
+                                    4294967, 42949673, 429496730 };
 
-      /* Convert into 16.16 format. */
-      if ( fraction_length > 0 )
-      {
-        if ( ( number >> 15 ) >= power_tens[fraction_length] )
-          goto Exit;
 
-        result = FT_DivFix( number, power_tens[fraction_length] );
+        result = FT_MulFix( magick[9 + exponent], number );
       }
       else
-      {
-        number *= power_tens[-fraction_length];
-
-        if ( number > 0x7FFFL )
-          goto Overflow;
-
-        result = (FT_Long)( (FT_ULong)number << 16 );
-      }
+        goto Underflow;
     }
+
+   if ( result > 0x7FFFFFFFL )
+     result = 0x7FFFFFFFL;
 
   Exit:
     result *= sign;
