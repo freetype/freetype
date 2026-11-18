@@ -194,167 +194,110 @@
   FT_LOCAL_DEF( FT_Fixed )
   PS_Conv_ToFixed( FT_Byte**  cursor,
                    FT_Byte*   limit,
-                   FT_Long    power_ten )
+                   FT_Int     power_ten )
   {
-    FT_Byte*  p = *cursor;
-    FT_Byte*  curp;
-
-    FT_Fixed  integral = 0;
-    FT_Long   decimal  = 0;
-    FT_Long   divider  = 1;
-
-    FT_Bool   sign           = 0;
-    FT_Bool   have_overflow  = 0;
-    FT_Bool   have_underflow = 0;
+    FT_Byte*       p = *cursor;
+    FT_Long        decimal = 0, sign = 1;
+    FT_Int         frac = 0;
+    const FT_Long  lim[] = { 32767, 3276, 327, 32, 3 };
 
 
     if ( p >= limit )
       goto Bad;
 
-    if ( *p == '-' || *p == '+' )
+    /* read mantissa */
+    for ( ; p < limit; p++ )
     {
-      sign = FT_BOOL( *p == '-' );
+      FT_Int  c;
 
-      p++;
-      if ( p == limit )
-        goto Bad;
 
-      /* only a single sign is allowed */
-      if ( *p == '-' || *p == '+' )
-        return 0;
-    }
+      if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
+        break;
 
-    /* read the integer part */
-    if ( *p != '.' )
-    {
-      curp     = p;
-      integral = PS_Conv_ToInt( &p, limit );
+      /* ignore redundant signs and dots for speed */
+      if ( *p == '+' )
+        continue;
 
-      if ( p == curp )
-        return 0;
-
-      if ( integral > 0x7FFF )
-        have_overflow = 1;
-      else
-        integral = (FT_Fixed)( (FT_UInt32)integral << 16 );
-    }
-
-    /* read the decimal part */
-    if ( p < limit && *p == '.' )
-    {
-      p++;
-
-      for ( ; p < limit; p++ )
+      if ( *p == '-' )
       {
-        FT_Char  c;
-
-
-        if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
-          break;
-
-        c = ft_char_table[*p & 0x7F];
-
-        if ( c < 0 || c >= 10 )
-          break;
-
-        /* only add digit if we don't overflow */
-        if ( divider < 0xCCCCCCCL && decimal < 0xCCCCCCCL )
-        {
-          decimal = decimal * 10 + c;
-
-          if ( !integral && power_ten > 0 )
-            power_ten--;
-          else
-            divider *= 10;
-        }
+        sign = -1;
+        continue;
       }
+
+      if ( *p == '.' )
+      {
+        frac = 1;
+        continue;
+      }
+
+      c = *p - '0';
+
+      if ( c < 0 || c >= 10 )
+        break;
+
+      /* only add digit if we don't overflow */
+      if ( decimal < 0xCCCCCCCL )
+      {
+        decimal = decimal * 10 + c;
+        power_ten -= frac;
+      }
+      else
+        power_ten += !frac;
     }
 
     /* read exponent, if any */
     if ( p + 1 < limit && ( *p == 'e' || *p == 'E' ) )
     {
-      FT_Long  exponent;
+      FT_Long   exponent;
+      FT_Byte*  curp = ++p;
 
 
-      p++;
-
-      curp     = p;
       exponent = PS_Conv_ToInt( &p, limit );
 
       if ( curp == p )
-        return 0;
+        goto Bad;
 
-      /* arbitrarily limit exponent */
-      if ( exponent > 1000 )
-        have_overflow = 1;
-      else if ( exponent < -1000 )
-        have_underflow = 1;
-      else
-        power_ten += exponent;
+      power_ten = ADD_INT( power_ten, exponent );
     }
 
     *cursor = p;
 
-    if ( !integral && !decimal )
-      return 0;
-
-    if ( have_overflow )
-      goto Overflow;
-    if ( have_underflow )
+    if ( !decimal )
+      goto Exit;
+    else if ( power_ten < -9 )
       goto Underflow;
-
-    while ( power_ten > 0 )
+    else if ( power_ten < 0 )
     {
-      if ( integral >= 0xCCCCCCCL )
+      const FT_Long  e[] = { 4, 43, 429,
+                             4295, 42950, 429497,
+                             4294967, 42949673, 429496730 };
+
+
+      decimal = FT_MulFix( e[9 + power_ten], decimal );
+
+      if ( decimal > 0x7FFFFFFFL )  /* 64-bit only */
         goto Overflow;
-      integral *= 10;
-
-      if ( decimal >= 0xCCCCCCCL )
-      {
-        if ( divider == 1 )
-          goto Overflow;
-        divider /= 10;
-      }
-      else
-        decimal *= 10;
-
-      power_ten--;
     }
-
-    while ( power_ten < 0 )
+    else if ( power_ten < 5 && decimal <= lim[power_ten] )
     {
-      integral /= 10;
-      if ( divider < 0xCCCCCCCL )
-        divider *= 10;
-      else
-        decimal /= 10;
+      const FT_Long  e[] = { 65536, 655360, 6553600,
+                             65536000, 655360000 };
 
-      if ( !integral && !decimal )
-        goto Underflow;
 
-      power_ten++;
+      decimal *= e[power_ten];
     }
-
-    if ( decimal )
-    {
-      decimal = FT_DivFix( decimal, divider );
-      /* it's not necessary to check this addition for overflow */
-      /* due to the structure of the real number representation */
-      integral += decimal;
-    }
+    else
+      goto Overflow;
 
   Exit:
-    if ( sign )
-      integral = -integral;
-
-    return integral;
+    return sign * decimal;
 
   Bad:
     FT_TRACE4(( "!!!END OF DATA:!!!" ));
     return 0;
 
   Overflow:
-    integral = 0x7FFFFFFFL;
+    decimal = 0x7FFFFFFFL;
     FT_TRACE4(( "!!!OVERFLOW:!!!" ));
     goto Exit;
 

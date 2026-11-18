@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Fixed )
   PS_Conv_ToFixed( FT_Byte**  cursor,
                    FT_Byte*   limit,
-                   FT_Long    power_ten );
+                   FT_Int     power_ten );
 
 #if 0
   FT_LOCAL( FT_UInt )
