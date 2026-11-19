@@ -2183,6 +2183,7 @@
 
   Fail:
     FT_FREE( blend->glyphoffsets );
+    FT_FREE( blend->tuplecoords );
     blend->gv_glyphcnt = 0;
     goto Exit;
   }
