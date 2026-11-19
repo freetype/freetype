@@ -360,7 +360,8 @@
     else
       peak <<= -shift;
 
-    return peak;
+    /* a split may end at an extremum below 0, which is no peak */
+    return peak > 0 ? peak : 0;
   }
 
 
