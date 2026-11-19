@@ -679,8 +679,11 @@
 
       instance_index = FT_ABS( face_instance_index ) >> 16;
 
-      /* test whether current face is a GX font with named instances */
-      if ( face->goto_table( face, TTAG_fvar, stream, &fvar_len ) ||
+      /* test whether current face is a GX font with named instances; */
+      /* it is not without the MM service of the `truetype' module,   */
+      /* which the `cff' module depends on, too                       */
+      if ( !face->mm                                              ||
+           face->goto_table( face, TTAG_fvar, stream, &fvar_len ) ||
            fvar_len < 20                                          ||
            FT_READ_ULONG( version )                               ||
            FT_READ_USHORT( offset )                               ||

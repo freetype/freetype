@@ -492,6 +492,15 @@
     face = (TT_Face)decoder->builder.face;
     mm   = (FT_Service_MultiMasters)face->mm;
 
+    /* without the MM service, use the default instance */
+    if ( !mm )
+    {
+      *len = 0;
+      *vec = NULL;
+
+      return FT_Err_Ok;
+    }
+
     return mm->get_var_blend( FT_FACE( face ), len, NULL, vec, NULL );
   }
 #endif
