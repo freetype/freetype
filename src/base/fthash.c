@@ -144,7 +144,14 @@
     hash->limit  = hash->size / 3;
 
     if ( FT_NEW_ARRAY( hash->table, hash->size ) )
+    {
+      /* keep the old table */
+      hash->table = obp;
+      hash->size  = sz;
+      hash->limit = sz / 3;
+
       goto Exit;
+    }
 
     for ( i = 0, bp = obp; i < sz; i++, bp++ )
     {
@@ -212,7 +219,8 @@
   ft_hash_str_free( FT_Hash    hash,
                     FT_Memory  memory )
   {
-    if ( hash )
+    /* there is no table if `hash_init` failed */
+    if ( hash && hash->table )
     {
       FT_UInt       sz = hash->size;
       FT_Hashnode*  bp = hash->table;
@@ -256,7 +264,12 @@
       {
         error = hash_rehash( hash, memory );
         if ( error )
+        {
+          /* the old table is still in place; undo the insertion */
+          FT_FREE( *bp );
+
           goto Exit;
+        }
       }
 
       hash->used++;
