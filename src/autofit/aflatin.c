@@ -3603,7 +3603,10 @@
     if ( dim != AF_DIMENSION_VERT )
       return;
 
-    val = ft_hash_num_lookup( (FT_Int)glyph_index, reverse_charmap );
+    /* the map is missing if it could not be built */
+    val = NULL;
+    if ( reverse_charmap )
+      val = ft_hash_num_lookup( (FT_Int)glyph_index, reverse_charmap );
     if ( val )
     {
       FT_UInt  codepoint = *val;
@@ -4907,8 +4910,11 @@
       FT_Pos  y_offset;
 
 
-      val = ft_hash_num_lookup( (FT_Int)glyph_index,
-                                metrics->root.reverse_charmap );
+      /* the map is missing if it could not be built */
+      val = NULL;
+      if ( metrics->root.reverse_charmap )
+        val = ft_hash_num_lookup( (FT_Int)glyph_index,
+                                  metrics->root.reverse_charmap );
       if ( val )
       {
         FT_UInt    codepoint = *val;
