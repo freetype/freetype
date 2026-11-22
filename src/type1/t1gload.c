@@ -337,7 +337,8 @@
     {
       error = T1_Parse_Glyph( &decoder, first + nn );
       if ( !error )
-        advances[nn] = FIXED_TO_INT( decoder.builder.advance.x );
+        advances[nn] = FT_MulFix( FIXED_TO_INT( decoder.builder.advance.x ),
+                                  decoder.font_matrix.xx );
       else
         advances[nn] = 0;
 
@@ -492,8 +493,6 @@
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance =
           FIXED_TO_INT( decoder.builder.advance.x );
-        t1glyph->linearHoriAdvance =
-          FIXED_TO_INT( decoder.builder.advance.x );
         t1glyph->internal->glyph_transformed = 0;
 
         if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
@@ -523,6 +522,8 @@
           metrics->vertAdvance = FT_MulFix( metrics->vertAdvance,
                                             font_matrix.yy );
         }
+
+        t1glyph->linearHoriAdvance = metrics->horiAdvance;
 
         if ( font_offset.x || font_offset.y )
         {

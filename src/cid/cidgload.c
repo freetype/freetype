@@ -560,8 +560,6 @@
       /* copy the _unscaled_ advance width */
       metrics->horiAdvance =
         FIXED_TO_INT( decoder.builder.advance.x );
-      cidglyph->linearHoriAdvance =
-        FIXED_TO_INT( decoder.builder.advance.x );
       cidglyph->internal->glyph_transformed = 0;
 
       /* make up vertical ones */
@@ -580,6 +578,8 @@
         metrics->vertAdvance = FT_MulFix( metrics->vertAdvance,
                                           font_matrix.yy );
       }
+
+      cidglyph->linearHoriAdvance = metrics->horiAdvance;
 
       if ( font_offset.x || font_offset.y )
       {

@@ -220,6 +220,7 @@
 
     FT_Matrix  font_matrix;
     FT_Vector  font_offset;
+    FT_Long    top_upm = 1, sub_upm = 1;
 
 
     force_scaling = FALSE;
@@ -507,7 +508,6 @@
     /* this scaling is only relevant if the PS hinter isn't active */
     if ( cff->num_subfonts )
     {
-      FT_Long  top_upm, sub_upm;
       FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select,
                                              glyph_index );
 
@@ -711,8 +711,14 @@
         else
         {
           /* copy the _unscaled_ advance width */
-          metrics->horiAdvance          = decoder.glyph_width;
-          glyph->root.linearHoriAdvance = decoder.glyph_width;
+          metrics->horiAdvance = decoder.glyph_width;
+
+          /* Unlike `hmtx', a charstring width is in glyph space. */
+          glyph->root.linearHoriAdvance = FT_MulFix( decoder.glyph_width,
+                                                     font_matrix.xx );
+          if ( top_upm != sub_upm )
+            glyph->root.linearHoriAdvance =
+              FT_MulDiv( glyph->root.linearHoriAdvance, top_upm, sub_upm );
         }
 
         glyph->root.internal->glyph_transformed = 0;
