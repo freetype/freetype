@@ -585,6 +585,8 @@
       goto Exit;
     itemStore->regionCount = region_count;
 
+#if FT_ULONG_MAX == FT_UINT_MAX
+
     /* a wrapped frame length would under-size the frame below, */
     /* only *after* multiplication by 6                         */
     if ( region_count * axis_count > FT_ULONG_MAX / 6 )
@@ -594,6 +596,8 @@
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
+
+#endif
 
     if ( FT_FRAME_ENTER( region_count * axis_count * 6UL ) )
     {
