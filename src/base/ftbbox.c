@@ -290,6 +290,7 @@
     /* to be downscaled to avoid overflows during bisection.             */
     /* It is called with either q2 or q3 positive, which is necessary    */
     /* for the peak to exist and avoids undefined FT_MSB.                */
+    /* On the contrary, q1 and q4 should not be positive.                */
 
     shift = 8 * sizeof ( FT_Pos ) - 5 - FT_MSB( ULABS( q1 ) |
                                                 ULABS( q2 ) |
@@ -314,9 +315,7 @@
       q4 >>= -shift;
     }
 
-    /* for a peak to exist above 0, the cubic segment must have */
-    /* at least one of its control off-points above 0.          */
-    while ( q2 > 0 || q3 > 0 )
+    do
     {
       /* determine which half contains the maximum and split */
       if ( q1 + q2 > q3 + q4 ) /* first half */
@@ -343,17 +342,20 @@
       }
 
       /* check whether either end reached the maximum */
-      if ( q1 == q2 && q1 >= q3 )
+      if ( q2 == q1 && q2 > 0 )
       {
-        peak = q1;
+        peak = q2;
         break;
       }
-      if ( q3 == q4 && q2 <= q4 )
+      if ( q3 == q4 && q3 > 0 )
       {
-        peak = q4;
+        peak = q3;
         break;
       }
-    }
+
+    /* for a peak to exist above 0, the cubic segment must have */
+    /* at least one of its control off-points above 0.          */
+    } while ( q2 > 0 || q3 > 0 );
 
     if ( shift > 0 )
       peak >>=  shift;
@@ -361,7 +363,7 @@
       peak <<= -shift;
 
     /* a split may end at an extremum below 0, which is no peak */
-    return peak > 0 ? peak : 0;
+    return peak;
   }
 
 
